@@ -1,0 +1,7 @@
+export const BOOKMARKS_STORAGE_KEY = 'lifeboard.bookmarks'
+export const BOOKMARKS_STORAGE_VERSION = 1
+
+export const BOOKMARK_TITLE_MAX_LENGTH = 120
+export const BOOKMARK_CATEGORY_MAX_LENGTH = 40
+export const BOOKMARK_NOTE_MAX_LENGTH = 280
+export const BOOKMARK_URL_MAX_LENGTH = 2_048

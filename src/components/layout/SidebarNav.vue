@@ -1,0 +1,60 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import { navigationItems } from '@/shared/constants/navigation'
+</script>
+
+<template>
+  <aside
+    class="fixed inset-y-0 left-0 z-30 hidden w-[17rem] border-r border-[var(--color-border-soft)] bg-[var(--color-canvas)] px-4 py-5 lg:block"
+    aria-label="Primary"
+  >
+    <div class="flex h-full flex-col">
+      <RouterLink
+        :to="{ name: 'home' }"
+        class="interactive-surface flex min-h-16 items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 hover:bg-[var(--color-surface)]"
+      >
+        <span
+          class="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-accent-soft)] text-sm font-semibold text-[var(--color-accent-text)]"
+          aria-hidden="true"
+        >
+          LB
+        </span>
+        <span class="min-w-0">
+          <span class="block text-lg font-semibold leading-tight text-[var(--color-text-primary)]">
+            LifeBoard
+          </span>
+          <span class="mt-1 block text-caption text-[var(--color-text-secondary)]">
+            Personal daily workspace
+          </span>
+        </span>
+      </RouterLink>
+
+      <nav class="mt-10 flex flex-1 flex-col gap-1.5" aria-label="Main sections">
+        <RouterLink
+          v-for="item in navigationItems"
+          :key="item.label"
+          :to="item.to"
+          class="interactive-surface group flex min-h-14 items-center gap-3 rounded-[var(--radius-md)] border border-transparent px-2.5 py-2 text-[var(--color-text-secondary)] hover:border-[var(--color-border-soft)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]"
+          exact-active-class="border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] text-[var(--color-accent-text)] shadow-[var(--shadow-soft)]"
+        >
+          <span
+            class="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-inset)] text-[0.6875rem] font-semibold text-[var(--color-text-tertiary)] transition-[background-color,color] duration-[var(--motion-fast)] group-[.router-link-exact-active]:bg-[var(--color-accent-soft)] group-[.router-link-exact-active]:text-[var(--color-accent-text)]"
+            aria-hidden="true"
+          >
+            {{ item.marker }}
+          </span>
+          <span class="min-w-0">
+            <span class="block text-sm font-medium">{{ item.label }}</span>
+            <span class="mt-0.5 block text-caption text-[var(--color-text-tertiary)]">
+              {{ item.description }}
+            </span>
+          </span>
+        </RouterLink>
+      </nav>
+
+      <p class="px-3 text-caption text-[var(--color-text-tertiary)]">
+        Modules remain quiet until connected.
+      </p>
+    </div>
+  </aside>
+</template>

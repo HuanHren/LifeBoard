@@ -1,0 +1,102 @@
+<script setup lang="ts">
+import BaseButton from '@/components/base/BaseButton.vue'
+import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
+import type { BackupImportSummaryData } from '@/modules/settings/types/settings'
+
+interface Props {
+  importSummary: BackupImportSummaryData | null
+  error: string | null
+  success: string | null
+  exportDisabled?: boolean
+  importDisabled?: boolean
+}
+
+interface Emits {
+  export: []
+  fileSelected: [file: File]
+  confirmImport: []
+  discardImport: []
+}
+
+withDefaults(defineProps<Props>(), {
+  exportDisabled: false,
+  importDisabled: false,
+})
+const emit = defineEmits<Emits>()
+
+function handleFileSelection(event: Event) {
+  const input = event.currentTarget as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (file) emit('fileSelected', file)
+  input.value = ''
+}
+</script>
+
+<template>
+  <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]">
+    <div class="grid gap-6 p-5 md:grid-cols-2 md:p-6">
+      <div class="space-y-3">
+        <div>
+          <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Export backup</h3>
+          <p class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
+            Download theme, selected city, tasks, countdowns, and bookmarks as JSON.
+          </p>
+        </div>
+        <BaseButton variant="primary" :disabled="exportDisabled" @click="emit('export')">
+          Export LifeBoard data
+        </BaseButton>
+      </div>
+
+      <div class="space-y-3 border-t border-[var(--color-border-soft)] pt-5 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+        <div>
+          <h3 class="text-base font-semibold text-[var(--color-text-primary)]">Import backup</h3>
+          <p id="backup-file-help" class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
+            Select a LifeBoard JSON backup up to 1MB. The file stays in this browser.
+          </p>
+        </div>
+        <label
+          class="interactive-surface inline-flex min-h-11 cursor-pointer items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
+        >
+          Choose backup file
+          <input
+            accept=".json,application/json"
+            aria-describedby="backup-file-help"
+            class="sr-only"
+            :disabled="importDisabled"
+            type="file"
+            @change="handleFileSelection"
+          />
+        </label>
+      </div>
+    </div>
+
+    <div v-if="error || success || importSummary" class="space-y-4 border-t border-[var(--color-border-soft)] p-5 md:p-6">
+      <p
+        v-if="error"
+        class="rounded-[var(--radius-md)] border border-[var(--color-danger)] bg-[var(--color-danger-soft)] p-4 text-sm font-medium text-[var(--color-text-primary)]"
+        role="alert"
+      >
+        {{ error }}
+      </p>
+      <p
+        v-if="success"
+        class="rounded-[var(--radius-md)] bg-[var(--color-accent-wash)] p-4 text-sm font-medium text-[var(--color-text-primary)]"
+        aria-live="polite"
+      >
+        {{ success }}
+      </p>
+      <template v-if="importSummary">
+        <BackupImportSummary :summary="importSummary" />
+        <div class="flex flex-wrap gap-2">
+          <BaseButton variant="primary" @click="emit('confirmImport')">
+            Review replacement
+          </BaseButton>
+          <BaseButton variant="ghost" @click="emit('discardImport')">
+            Discard file
+          </BaseButton>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>
