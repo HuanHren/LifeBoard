@@ -8,10 +8,14 @@ interface Props {
   marker: string
   to: RouteLocationRaw
   prominence?: 'feature' | 'standard'
+  statusLabel?: string
+  actionLabel?: string
 }
 
 withDefaults(defineProps<Props>(), {
   prominence: 'standard',
+  statusLabel: 'Connected',
+  actionLabel: 'Open module',
 })
 </script>
 
@@ -32,7 +36,9 @@ withDefaults(defineProps<Props>(), {
       >
         {{ marker }}
       </span>
-      <span class="text-caption font-medium text-[var(--color-text-secondary)]">Not connected</span>
+      <span class="text-caption font-medium text-[var(--color-text-secondary)]">
+        {{ statusLabel }}
+      </span>
     </div>
 
     <div class="mt-8">
@@ -43,7 +49,7 @@ withDefaults(defineProps<Props>(), {
       <span
         class="mt-5 inline-flex min-h-11 items-center text-sm font-medium text-[var(--color-accent-text)]"
       >
-        Open module
+        {{ actionLabel }}
         <span
           class="ml-2 transition-transform duration-[var(--motion-fast)] group-hover:translate-x-1"
           aria-hidden="true"

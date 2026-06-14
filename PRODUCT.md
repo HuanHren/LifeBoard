@@ -2,45 +2,32 @@
 
 ## Purpose
 
-LifeBoard is a personal daily utility workspace for one person managing practical life and work context in a single website.
-
-## Product Direction
-
-The app combines weather, todos, countdowns, tools, bookmarks, and settings into one warm, clear, polished, practical daily workspace. This first stage builds only the foundation for that direction.
+LifeBoard is a calm personal workspace for checking daily context, planning small tasks, using private browser utilities, and keeping useful references together.
 
 ## Audience
 
-The primary user is an individual who opens the app during normal daily routines to check useful context, organize small tasks, and reach common utilities without switching between scattered pages.
+LifeBoard is designed for an individual who wants practical daily information and lightweight organization without accounts, team workflows, or cloud complexity.
 
-## First-Stage Scope
+## Implemented Product
 
-- Vite, Vue 3, and TypeScript project skeleton
-- Vue Router routes for the main product areas
-- Pinia stores for theme and app shell state
-- Tailwind CSS v4 integration through the Vite plugin
-- CSS variable design tokens
-- Light and dark theme foundations
-- App shell with sidebar, topbar, and mobile navigation
-- Page shells for Home, Weather, Todos, Tools, Bookmarks, and Settings
-- Shared base components for the first UI layer
+- Home overview connected to real module state
+- Weather assistant using Open-Meteo for city search and forecasts
+- Locally persisted todos and countdowns
+- Private in-browser text and data tools
+- Locally persisted bookmarks with categories and pinning
+- Settings for appearance, local data status, backup, restore, privacy, and clearing
+- Responsive app shell with desktop and mobile navigation
+- Light, dark, and system themes
 
-## Out Of Scope
+## Privacy Model
 
-- Weather API integration
-- Todo creation, completion, filtering, or persistence
-- Real tool implementations
-- Bookmark persistence
-- Countdown logic
-- Backend services
-- Authentication
-- Charts
-- Image generation
-- Heavy animation systems
+LifeBoard is local-first. It has no backend, authentication, analytics, or cloud sync. Saved preferences and personal content remain in browser storage. Tool input is not saved. Open-Meteo is the only external service and receives weather-related requests only.
 
 ## Product Principles
 
 - Be useful before decorative.
-- Keep placeholders honest and avoid fake data.
+- Keep user data local and boundaries explicit.
 - Favor calm hierarchy over dashboard density.
+- Use real state and honest empty or error messages.
 - Keep navigation visible and predictable.
-- Build future modules behind clear boundaries.
+- Avoid fake metrics, unnecessary charts, and performative complexity.

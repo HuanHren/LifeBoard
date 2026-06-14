@@ -48,8 +48,32 @@ export const useWeatherStore = defineStore('weather', () => {
   )
 
   function persistLocation(location: WeatherLocation) {
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') {
+      return true
+    }
+
+    try {
       window.localStorage.setItem(WEATHER_STORAGE_KEY, JSON.stringify(location))
+      return true
+    } catch {
+      searchError.value =
+        'The selected city could not be saved in this browser. Check local storage access and try again.'
+      return false
+    }
+  }
+
+  function removePersistedLocation() {
+    if (typeof window === 'undefined') {
+      return true
+    }
+
+    try {
+      window.localStorage.removeItem(WEATHER_STORAGE_KEY)
+      return true
+    } catch {
+      searchError.value =
+        'The selected city could not be cleared from this browser. Check local storage access and try again.'
+      return false
     }
   }
 
@@ -58,7 +82,16 @@ export const useWeatherStore = defineStore('weather', () => {
       return null
     }
 
-    const stored = window.localStorage.getItem(WEATHER_STORAGE_KEY)
+    let stored: string | null = null
+
+    try {
+      stored = window.localStorage.getItem(WEATHER_STORAGE_KEY)
+    } catch {
+      forecastError.value =
+        'The saved city could not be read from this browser. Check local storage access and reload.'
+      forecastStatus.value = 'error'
+      return null
+    }
 
     if (!stored) {
       return null
@@ -73,11 +106,11 @@ export const useWeatherStore = defineStore('weather', () => {
         return location
       }
     } catch {
-      window.localStorage.removeItem(WEATHER_STORAGE_KEY)
+      removePersistedLocation()
       return null
     }
 
-    window.localStorage.removeItem(WEATHER_STORAGE_KEY)
+    removePersistedLocation()
     return null
   }
 
@@ -153,12 +186,16 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   async function selectLocation(location: WeatherLocation) {
+    if (!persistLocation(location)) {
+      return false
+    }
+
     selectedLocation.value = location
-    persistLocation(location)
     searchResults.value = []
     searchStatus.value = 'idle'
     searchError.value = null
     await loadForecast(location)
+    return true
   }
 
   function selectSearchResult(result: OpenMeteoGeocodingResult) {
@@ -173,16 +210,18 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   function resetLocation() {
+    if (!removePersistedLocation()) {
+      return false
+    }
+
     forecastController?.abort()
     selectedLocation.value = null
     weather.value = null
     forecastStatus.value = 'idle'
     forecastError.value = null
     lastUpdatedAt.value = null
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(WEATHER_STORAGE_KEY)
-    }
+    searchError.value = null
+    return true
   }
 
   function synchronizeLocation(location: WeatherLocation | null) {

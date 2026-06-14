@@ -53,7 +53,7 @@ import { navigationItems } from '@/shared/constants/navigation'
       </nav>
 
       <p class="px-3 text-caption text-[var(--color-text-tertiary)]">
-        Modules remain quiet until connected.
+        Local-first by design. Saved data stays in this browser.
       </p>
     </div>
   </aside>

@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onUnmounted, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
 
-onMounted(() => {
-  themeStore.initializeTheme()
-})
+themeStore.initializeTheme()
 
 watch(
   () => themeStore.resolvedTheme,
@@ -17,6 +15,10 @@ watch(
   },
   { immediate: true },
 )
+
+onUnmounted(() => {
+  themeStore.disposeThemeListener()
+})
 </script>
 
 <template>

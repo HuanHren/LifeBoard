@@ -7,7 +7,8 @@ import HomeWeatherSummary from '@/modules/home/HomeWeatherSummary.vue'
 import { navigationItems } from '@/shared/constants/navigation'
 
 const moduleCopy: Record<string, string> = {
-  Settings: 'Choose appearance now, with more workspace preferences added later.',
+  Settings:
+    'Manage appearance, review local data, create or restore a backup, understand privacy, and clear saved information.',
 }
 
 const moduleItems = navigationItems
@@ -57,8 +58,7 @@ const moduleItems = navigationItems
           Workspace settings
         </h2>
         <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-          Appearance is available now. Broader workspace preferences remain clearly marked while
-          they are still being built.
+          Keep appearance and browser-local data controls in one clear place.
         </p>
       </div>
 
@@ -70,6 +70,8 @@ const moduleItems = navigationItems
           :marker="item.marker"
           :title="item.label"
           :to="item.to"
+          action-label="Open settings"
+          status-label="Local controls"
         />
       </div>
     </section>

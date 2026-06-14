@@ -1,22 +1,48 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, shallowRef } from 'vue'
 import { useRoute } from 'vue-router'
 import ThemeToggle from '@/components/base/ThemeToggle.vue'
 
 const route = useRoute()
+const now = shallowRef(new Date())
+let rolloverTimer: ReturnType<typeof window.setTimeout> | null = null
 
 const pageTitle = computed(() => (typeof route.meta.title === 'string' ? route.meta.title : 'LifeBoard'))
-const now = new Date()
-const currentDate = new Intl.DateTimeFormat('en-US', {
-  weekday: 'long',
-  month: 'long',
-  day: 'numeric',
-}).format(now)
-const currentDateTime = [
-  now.getFullYear(),
-  String(now.getMonth() + 1).padStart(2, '0'),
-  String(now.getDate()).padStart(2, '0'),
-].join('-')
+const currentDate = computed(() =>
+  new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  }).format(now.value),
+)
+const currentDateTime = computed(() => [
+  now.value.getFullYear(),
+  String(now.value.getMonth() + 1).padStart(2, '0'),
+  String(now.value.getDate()).padStart(2, '0'),
+].join('-'))
+
+function scheduleDateRollover() {
+  const current = new Date()
+  const nextDay = new Date(
+    current.getFullYear(),
+    current.getMonth(),
+    current.getDate() + 1,
+  )
+  const delay = Math.max(1_000, nextDay.getTime() - current.getTime() + 1_000)
+
+  rolloverTimer = window.setTimeout(() => {
+    now.value = new Date()
+    scheduleDateRollover()
+  }, delay)
+}
+
+onMounted(scheduleDateRollover)
+
+onUnmounted(() => {
+  if (rolloverTimer !== null) {
+    window.clearTimeout(rolloverTimer)
+  }
+})
 </script>
 
 <template>

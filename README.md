@@ -1,53 +1,21 @@
 # LifeBoard
 
-LifeBoard is a personal daily utility workspace built with Vue 3, TypeScript, Vite, Vue Router, Pinia, Tailwind CSS, and CSS variables.
+LifeBoard is a local-first personal daily workspace built with Vue 3, TypeScript, Vite, Vue Router, Pinia, Tailwind CSS v4, and CSS variables.
 
-This repository currently contains the first-stage project skeleton only.
+Repository: https://github.com/HuanHren/LifeBoard
 
-## Stack
+## Modules
 
-- Vue 3 with `<script setup lang="ts">`
-- TypeScript
-- Vite
-- Vue Router
-- Pinia
-- Tailwind CSS v4 through `@tailwindcss/vite`
-- CSS variable design tokens
+- Home: real summaries and entry points for the connected modules
+- Weather: city search, current conditions, hourly and daily forecasts, and practical advice from Open-Meteo
+- Todos: locally persisted tasks and countdowns
+- Tools: private in-browser text, JSON, timestamp, case, and counting utilities
+- Bookmarks: locally persisted links with categories and pinning
+- Settings: theme controls, local data review, backup, restore, privacy information, and selective clearing
 
-## Routes
+## Privacy
 
-- `/`
-- `/weather`
-- `/todos`
-- `/tools`
-- `/bookmarks`
-- `/settings`
-
-## Project Structure
-
-```text
-src/
-  app/
-  assets/
-    styles/
-  components/
-    base/
-    layout/
-  modules/
-    home/
-    weather/
-    todos/
-    tools/
-    bookmarks/
-    settings/
-  router/
-  stores/
-  shared/
-    composables/
-    constants/
-    types/
-    utils/
-```
+LifeBoard has no account system, backend, analytics, or cloud sync. Theme, selected city, todos, countdowns, and bookmarks stay in browser storage. Tool input is not persisted. Open-Meteo is the only external data service and is used only for city search and weather forecasts.
 
 ## Development
 
@@ -56,36 +24,10 @@ npm install
 npm run dev
 ```
 
-## Build
+## Production Build
 
 ```bash
 npm run build
 ```
 
-## Current Scope
-
-Implemented:
-
-- Project skeleton
-- App shell
-- Router setup with lazy route components
-- Pinia setup
-- Theme store
-- App shell store
-- Light and dark theme foundation
-- Sidebar, topbar, and mobile navigation
-- Route page shells
-- Base components
-- Product and design documentation
-
-Not implemented:
-
-- Weather API
-- Todo logic
-- Real tools
-- Bookmark persistence
-- Backend
-- Authentication
-- Charts
-- Image generation
-- Heavy animation
+The application routes are `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, and `/settings`.

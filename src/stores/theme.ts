@@ -16,6 +16,8 @@ export const useThemeStore = defineStore('theme', () => {
   const mode = shallowRef<ThemeMode>('system')
   const systemTheme = shallowRef<ResolvedTheme>(getSystemTheme())
   const persistenceError = shallowRef<string | null>(null)
+  let systemThemeQuery: MediaQueryList | null = null
+  let systemThemeChangeHandler: ((event: MediaQueryListEvent) => void) | null = null
 
   const resolvedTheme = computed<ResolvedTheme>(() => {
     if (mode.value === 'system') {
@@ -71,12 +73,23 @@ export const useThemeStore = defineStore('theme', () => {
       mode.value = storedMode
     }
 
-    const query = window.matchMedia('(prefers-color-scheme: dark)')
-    systemTheme.value = query.matches ? 'dark' : 'light'
+    disposeThemeListener()
+    systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    systemTheme.value = systemThemeQuery.matches ? 'dark' : 'light'
 
-    query.addEventListener('change', (event) => {
+    systemThemeChangeHandler = (event) => {
       systemTheme.value = event.matches ? 'dark' : 'light'
-    })
+    }
+    systemThemeQuery.addEventListener('change', systemThemeChangeHandler)
+  }
+
+  function disposeThemeListener() {
+    if (systemThemeQuery && systemThemeChangeHandler) {
+      systemThemeQuery.removeEventListener('change', systemThemeChangeHandler)
+    }
+
+    systemThemeQuery = null
+    systemThemeChangeHandler = null
   }
 
   return {
@@ -88,6 +101,7 @@ export const useThemeStore = defineStore('theme', () => {
     synchronizeMode,
     cycleMode,
     initializeTheme,
+    disposeThemeListener,
   }
 })
 
