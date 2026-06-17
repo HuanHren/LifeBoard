@@ -97,6 +97,8 @@ export const weatherTranslationKeys = [
   'weather.favorites.message.duplicate',
   'weather.favorites.message.storageError',
   'weather.favorites.message.invalidStorage',
+  'weather.providerNotice.openMeteoActive',
+  'weather.providerNotice.caiyunMissingToken',
   'weather.location.capitalCity',
   'weather.location.regionalCapital',
   'weather.location.country',

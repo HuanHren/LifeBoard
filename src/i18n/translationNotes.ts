@@ -9,6 +9,20 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Polite status announcement after changing language. Keep the {language} placeholder.',
   'settings.translationExport.privacy':
     'Privacy boundary for the translation export. Do not imply that personal data is included.',
+  'settings.weatherProvider.helper':
+    'Stage 16.2 boundary. Open-Meteo still powers forecasts; Caiyun is a stored preference only.',
+  'settings.weatherProvider.tokenHelper':
+    'Do not include or request a real token in translations. This is generic UI guidance.',
+  'settings.weatherProvider.privacy':
+    'Security/privacy caveat. Keep backup/export exclusion and browser DevTools visibility meaning.',
+  'settings.weatherProvider.message.tokenSaved':
+    'Must not include the token value or any partial token.',
+  'settings.weatherProvider.error.emptyToken':
+    'Validation message for an empty password-style token field.',
+  'weather.providerNotice.openMeteoActive':
+    'Weather page status. Must say Open-Meteo still powers forecasts in this stage.',
+  'weather.providerNotice.caiyunMissingToken':
+    'Weather page status for Caiyun selected without a saved token. Must not block Open-Meteo loading.',
   'settings.localData.selectedCity':
     'The {city} placeholder is an Open-Meteo city name and must remain verbatim.',
   'weather.favorites.description':

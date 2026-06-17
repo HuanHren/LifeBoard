@@ -101,6 +101,10 @@ export const zhCNModules = {
     '无法在此浏览器中保存常用城市。请检查本地存储权限后重试。',
   'weather.favorites.message.invalidStorage':
     '无法读取已保存的常用城市。现有数据已保持不变，便于恢复。',
+  'weather.providerNotice.openMeteoActive':
+    '当前预报仍由 Open-Meteo 提供。彩云天气数据源将在下一阶段接入。',
+  'weather.providerNotice.caiyunMissingToken':
+    '已选择彩云天气，但还没有保存 Token。请在设置中填写。本阶段天气预报仍会从 Open-Meteo 加载。',
   'weather.location.capitalCity': '首都',
   'weather.location.regionalCapital': '地区首府',
   'weather.location.country': '国家',

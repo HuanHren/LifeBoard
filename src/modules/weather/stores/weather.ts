@@ -6,6 +6,12 @@ import {
   saveWeatherFavoritesStorage,
 } from '@/modules/weather/services/weatherFavoritesStorage'
 import {
+  clearCaiyunToken as clearStoredCaiyunToken,
+  loadWeatherProviderPreferences,
+  saveCaiyunToken as saveStoredCaiyunToken,
+  saveWeatherProviderPreference,
+} from '@/modules/weather/services/weatherProviderStorage'
+import {
   fetchOpenMeteoForecast,
   searchOpenMeteoLocations,
   WeatherServiceError,
@@ -14,6 +20,11 @@ import type {
   WeatherFavoriteCity,
   WeatherFavoriteMessage,
 } from '@/modules/weather/types/weatherFavorites'
+import type {
+  WeatherProviderId,
+  WeatherProviderMessage,
+  WeatherProviderStorageError,
+} from '@/modules/weather/types/weatherProvider'
 import type { OpenMeteoGeocodingResult } from '@/modules/weather/types/openMeteo'
 import type {
   WeatherLocation,
@@ -50,6 +61,10 @@ export const useWeatherStore = defineStore('weather', () => {
   const forecastError = shallowRef<string | null>(null)
   const favoriteCities = shallowRef<WeatherFavoriteCity[]>([])
   const favoriteMessage = shallowRef<WeatherFavoriteMessage | null>(null)
+  const provider = shallowRef<WeatherProviderId>('openMeteo')
+  const hasCaiyunToken = shallowRef(false)
+  const providerMessage = shallowRef<WeatherProviderMessage | null>(null)
+  const providerPersistenceError = shallowRef<WeatherProviderStorageError | null>(null)
   const lastUpdatedAt = shallowRef<string | null>(null)
   const isInitialized = shallowRef(false)
 
@@ -151,6 +166,21 @@ export const useWeatherStore = defineStore('weather', () => {
       result.error === 'storageUnavailable' ? 'storageError' : 'invalidStorage'
   }
 
+  function initializeProviderPreferences() {
+    const result = loadWeatherProviderPreferences()
+
+    if (result.ok) {
+      provider.value = result.data.provider
+      hasCaiyunToken.value = result.data.hasCaiyunToken
+      providerPersistenceError.value = null
+      return
+    }
+
+    provider.value = 'openMeteo'
+    hasCaiyunToken.value = false
+    providerPersistenceError.value = result.error
+  }
+
   function commitFavoriteCities(nextFavorites: WeatherFavoriteCity[]) {
     const result = saveWeatherFavoritesStorage(nextFavorites)
 
@@ -200,6 +230,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
     isInitialized.value = true
     initializeFavorites()
+    initializeProviderPreferences()
     const storedLocation = readStoredLocation()
 
     if (!storedLocation) {
@@ -303,6 +334,56 @@ export const useWeatherStore = defineStore('weather', () => {
     favoriteMessage.value = null
   }
 
+  function setProvider(nextProvider: WeatherProviderId) {
+    const result = saveWeatherProviderPreference(nextProvider)
+
+    if (!result.ok) {
+      providerPersistenceError.value = result.error
+      providerMessage.value = null
+      return false
+    }
+
+    provider.value = nextProvider
+    providerPersistenceError.value = null
+    providerMessage.value = 'providerSaved'
+    return true
+  }
+
+  function saveCaiyunToken(tokenInput: string) {
+    const result = saveStoredCaiyunToken(tokenInput)
+
+    if (!result.ok) {
+      providerPersistenceError.value = result.error
+      providerMessage.value = null
+      return false
+    }
+
+    hasCaiyunToken.value = true
+    providerPersistenceError.value = null
+    providerMessage.value = 'tokenSaved'
+    return true
+  }
+
+  function clearCaiyunToken() {
+    const result = clearStoredCaiyunToken()
+
+    if (!result.ok) {
+      providerPersistenceError.value = result.error
+      providerMessage.value = null
+      return false
+    }
+
+    hasCaiyunToken.value = false
+    providerPersistenceError.value = null
+    providerMessage.value = 'tokenCleared'
+    return true
+  }
+
+  function clearProviderMessage() {
+    providerMessage.value = null
+    providerPersistenceError.value = null
+  }
+
   function clearSearchResults() {
     searchController?.abort()
     searchResults.value = []
@@ -340,6 +421,13 @@ export const useWeatherStore = defineStore('weather', () => {
     favoriteMessage.value = null
   }
 
+  function synchronizeProviderPreferences(nextProvider: WeatherProviderId) {
+    provider.value = nextProvider
+    hasCaiyunToken.value = false
+    providerMessage.value = null
+    providerPersistenceError.value = null
+  }
+
   return {
     selectedLocation,
     searchQuery,
@@ -351,6 +439,10 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastError,
     favoriteCities,
     favoriteMessage,
+    provider,
+    hasCaiyunToken,
+    providerMessage,
+    providerPersistenceError,
     lastUpdatedAt,
     isInitialized,
     hasLocation,
@@ -358,6 +450,7 @@ export const useWeatherStore = defineStore('weather', () => {
     hasSelectedFavorite,
     isInitialLoading,
     initializeWeather,
+    initializeProviderPreferences,
     searchCities,
     selectLocation,
     selectSearchResult,
@@ -365,11 +458,16 @@ export const useWeatherStore = defineStore('weather', () => {
     removeFavoriteCity,
     selectFavoriteCity,
     clearFavoriteMessage,
+    setProvider,
+    saveCaiyunToken,
+    clearCaiyunToken,
+    clearProviderMessage,
     loadForecast,
     clearSearchResults,
     resetLocation,
     synchronizeLocation,
     synchronizeFavoriteCities,
+    synchronizeProviderPreferences,
   }
 })
 

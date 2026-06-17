@@ -14,6 +14,7 @@ import PrivacyPanel from '@/modules/settings/components/PrivacyPanel.vue'
 import SettingsConfirmationDialog from '@/modules/settings/components/SettingsConfirmationDialog.vue'
 import ThemeModeControl from '@/modules/settings/components/ThemeModeControl.vue'
 import TranslationExportPanel from '@/modules/settings/components/TranslationExportPanel.vue'
+import WeatherProviderPreferences from '@/modules/settings/components/WeatherProviderPreferences.vue'
 import {
   createPortableExport,
   downloadPortableExport,
@@ -57,6 +58,10 @@ const { mode, persistenceError: themeError } = storeToRefs(themeStore)
 const {
   selectedLocation,
   favoriteCities,
+  provider,
+  hasCaiyunToken,
+  providerMessage,
+  providerPersistenceError,
   isInitialized: weatherInitialized,
 } = storeToRefs(weatherStore)
 const { tasks, countdowns } = storeToRefs(todosStore)
@@ -104,6 +109,8 @@ const localizedClearSuccess = computed(() =>
 const hasAnyData = computed(
   () =>
     mode.value !== 'system' ||
+    provider.value !== 'openMeteo' ||
+    hasCaiyunToken.value ||
     selectedLocation.value !== null ||
     weatherFavoriteCount.value > 0 ||
     taskCount.value > 0 ||
@@ -209,6 +216,12 @@ function changeTheme(nextMode: ThemeMode) {
   backupSuccess.value = null
   clearSuccess.value = null
   themeStore.setMode(nextMode)
+}
+
+function changeWeatherProvider(nextProvider: 'openMeteo' | 'caiyun') {
+  backupSuccess.value = null
+  clearSuccess.value = null
+  weatherStore.setProvider(nextProvider)
 }
 
 function exportBackup() {
@@ -342,6 +355,7 @@ function confirmClear() {
 
   if (target === 'all') {
     themeStore.synchronizeMode('system')
+    weatherStore.synchronizeProviderPreferences('openMeteo')
   }
 
   backupError.value = null
@@ -363,6 +377,7 @@ function confirmDialogAction() {
 }
 
 onMounted(() => {
+  weatherStore.initializeProviderPreferences()
   const result = loadSettingsSnapshot()
 
   if (!result.ok) {
@@ -397,6 +412,22 @@ onMounted(() => {
         <LanguageControl />
         <TranslationExportPanel />
       </div>
+    </BaseSection>
+
+    <BaseSection
+      :title="t('settings.section.weatherProvider.title')"
+      :description="t('settings.section.weatherProvider.description')"
+    >
+      <WeatherProviderPreferences
+        :error="providerPersistenceError"
+        :has-caiyun-token="hasCaiyunToken"
+        :message="providerMessage"
+        :provider="provider"
+        @clear-message="weatherStore.clearProviderMessage"
+        @clear-token="weatherStore.clearCaiyunToken"
+        @save-token="weatherStore.saveCaiyunToken"
+        @update-provider="changeWeatherProvider"
+      />
     </BaseSection>
 
     <BaseSection

@@ -33,6 +33,9 @@ export const zhCN = {
   'settings.section.language.title': '语言',
   'settings.section.language.description':
     '选择界面语言，并下载内置翻译源文件。',
+  'settings.section.weatherProvider.title': '天气偏好',
+  'settings.section.weatherProvider.description':
+    '选择偏好的天气数据源，并管理仅保存在此浏览器中的彩云天气 Token。',
   'settings.section.localData.title': '本地数据',
   'settings.section.localData.description':
     '直接查看 LifeBoard 当前保存在此浏览器中的数据。',
@@ -67,6 +70,33 @@ export const zhCN = {
   'settings.translationExport.action': '下载翻译源文件',
   'settings.translationExport.success': '翻译源文件已下载。',
   'settings.translationExport.error': '无法创建或下载翻译源文件。',
+  'settings.weatherProvider.legend': '天气预报数据源偏好',
+  'settings.weatherProvider.helper':
+    '此阶段的天气预报仍由 Open-Meteo 提供。现在可以先选择彩云天气，为下一阶段接入准备本地偏好。',
+  'settings.weatherProvider.openMeteoLabel': 'Open-Meteo',
+  'settings.weatherProvider.openMeteoDescription':
+    '不需要 Token。当前城市搜索和天气预报会继续使用 Open-Meteo。',
+  'settings.weatherProvider.caiyunLabel': '彩云天气',
+  'settings.weatherProvider.caiyunDescription':
+    '需要你提供 Token。本阶段尚未把天气预报请求接入彩云天气。',
+  'settings.weatherProvider.tokenLabel': '彩云天气 Token',
+  'settings.weatherProvider.tokenHelper':
+    '仅在你已经拥有 Token 时填写。它只保存在此浏览器中，并且不会完整显示。',
+  'settings.weatherProvider.saveToken': '保存 Token',
+  'settings.weatherProvider.clearToken': '清除 Token',
+  'settings.weatherProvider.tokenSavedState': '此浏览器中已保存彩云天气 Token。',
+  'settings.weatherProvider.tokenMissingState': '尚未保存彩云天气 Token。',
+  'settings.weatherProvider.privacy':
+    'Token 不会包含在 LifeBoard 备份文件、便携导出文件或翻译源导出文件中。LifeBoard 是纯前端应用，等彩云天气请求接入后，浏览器中使用的 Token 可能会被此浏览器用户通过 DevTools Network 查看。',
+  'settings.weatherProvider.dismiss': '关闭',
+  'settings.weatherProvider.message.providerSaved': '天气数据源偏好已保存。',
+  'settings.weatherProvider.message.tokenSaved': '彩云天气 Token 已保存在此浏览器中。',
+  'settings.weatherProvider.message.tokenCleared': '彩云天气 Token 已从此浏览器中清除。',
+  'settings.weatherProvider.error.storage':
+    '无法在此浏览器中保存天气数据源偏好。请检查本地存储权限后重试。',
+  'settings.weatherProvider.error.emptyToken': '请先输入彩云天气 Token 再保存。',
+  'settings.weatherProvider.error.invalidProvider':
+    '已保存的天气数据源偏好无效，当前将使用 Open-Meteo。',
   'settings.common.weather': '天气',
   'settings.common.todos': '待办',
   'settings.common.bookmarks': '书签',

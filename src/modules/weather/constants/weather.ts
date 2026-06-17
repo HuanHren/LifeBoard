@@ -1,6 +1,8 @@
 export const WEATHER_STORAGE_KEY = 'lifeboard-weather-location'
 export const WEATHER_FAVORITES_STORAGE_KEY = 'lifeboard-weather-favorite-cities'
 export const WEATHER_FAVORITES_STORAGE_VERSION = 1
+export const WEATHER_PROVIDER_STORAGE_KEY = 'lifeboard.weather.provider'
+export const WEATHER_CAIYUN_TOKEN_STORAGE_KEY = 'lifeboard.weather.caiyunToken'
 export const MIN_SEARCH_LENGTH = 2
 export const SEARCH_RESULT_LIMIT = 8
 export const HOURLY_FORECAST_LENGTH = 24

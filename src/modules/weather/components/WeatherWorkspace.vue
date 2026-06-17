@@ -11,6 +11,7 @@ import WeatherAdvicePanel from '@/modules/weather/components/WeatherAdvicePanel.
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
 import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
+import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
 import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
 import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
@@ -30,6 +31,8 @@ const {
   forecastError,
   favoriteCities,
   favoriteMessage,
+  provider,
+  hasCaiyunToken,
   hasSelectedFavorite,
 } = storeToRefs(weatherStore)
 const {
@@ -74,6 +77,11 @@ onMounted(() => {
       @clear-message="clearFavoriteMessage"
       @remove="removeFavoriteCity"
       @select="selectFavoriteCity"
+    />
+
+    <WeatherProviderNotice
+      :has-caiyun-token="hasCaiyunToken"
+      :provider="provider"
     />
 
     <WeatherSearchResults

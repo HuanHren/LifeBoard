@@ -22,8 +22,10 @@ import {
 } from '@/modules/todos/constants/todos'
 import { loadTodosStorage } from '@/modules/todos/services/todosStorage'
 import {
+  WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_VERSION,
+  WEATHER_PROVIDER_STORAGE_KEY,
   WEATHER_STORAGE_KEY,
 } from '@/modules/weather/constants/weather'
 import { loadWeatherFavoritesStorage } from '@/modules/weather/services/weatherFavoritesStorage'
@@ -35,6 +37,8 @@ const OWNED_STORAGE_KEYS = [
   THEME_STORAGE_KEY,
   WEATHER_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_KEY,
+  WEATHER_PROVIDER_STORAGE_KEY,
+  WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
   TODOS_STORAGE_KEY,
   BOOKMARKS_STORAGE_KEY,
 ] as const
@@ -301,6 +305,8 @@ export function clearLifeBoardData(target: SettingsClearTarget): SettingsResult 
 
     if (target === 'all') {
       storage.removeItem(THEME_STORAGE_KEY)
+      storage.removeItem(WEATHER_PROVIDER_STORAGE_KEY)
+      storage.removeItem(WEATHER_CAIYUN_TOKEN_STORAGE_KEY)
     }
   })
 }

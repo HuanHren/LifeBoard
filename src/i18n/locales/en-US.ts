@@ -34,6 +34,9 @@ export const enUS = {
   'settings.section.language.title': 'Language',
   'settings.section.language.description':
     'Choose the interface language and download the built-in translation source.',
+  'settings.section.weatherProvider.title': 'Weather preferences',
+  'settings.section.weatherProvider.description':
+    'Choose a preferred weather source and manage browser-local Caiyun token storage.',
   'settings.section.localData.title': 'Local data',
   'settings.section.localData.description':
     'A direct view of what LifeBoard currently keeps in this browser.',
@@ -75,6 +78,33 @@ export const enUS = {
   'settings.translationExport.success': 'Translation source downloaded.',
   'settings.translationExport.error':
     'The translation source could not be created or downloaded.',
+  'settings.weatherProvider.legend': 'Forecast provider preference',
+  'settings.weatherProvider.helper':
+    'Open-Meteo still powers forecasts in this stage. Caiyun Weather can be selected now so the next stage has a local preference ready.',
+  'settings.weatherProvider.openMeteoLabel': 'Open-Meteo',
+  'settings.weatherProvider.openMeteoDescription':
+    'No token required. Current city search and forecasts continue to use Open-Meteo.',
+  'settings.weatherProvider.caiyunLabel': 'Caiyun Weather',
+  'settings.weatherProvider.caiyunDescription':
+    'Requires a token you provide. Forecast requests are not connected to Caiyun yet.',
+  'settings.weatherProvider.tokenLabel': 'Caiyun token',
+  'settings.weatherProvider.tokenHelper':
+    'Enter a token only if you already have one. It is saved only in this browser and is never shown in full.',
+  'settings.weatherProvider.saveToken': 'Save token',
+  'settings.weatherProvider.clearToken': 'Clear token',
+  'settings.weatherProvider.tokenSavedState': 'A Caiyun token is saved in this browser.',
+  'settings.weatherProvider.tokenMissingState': 'No Caiyun token is saved.',
+  'settings.weatherProvider.privacy':
+    'The token is excluded from LifeBoard backup files, portable exports, and translation source exports. LifeBoard is frontend-only, so once Caiyun requests are implemented, a browser-used token can be visible to this browser user through DevTools Network.',
+  'settings.weatherProvider.dismiss': 'Dismiss',
+  'settings.weatherProvider.message.providerSaved': 'Weather provider preference saved.',
+  'settings.weatherProvider.message.tokenSaved': 'Caiyun token saved in this browser.',
+  'settings.weatherProvider.message.tokenCleared': 'Caiyun token cleared from this browser.',
+  'settings.weatherProvider.error.storage':
+    'Weather provider preferences could not be saved in this browser. Check local storage access and try again.',
+  'settings.weatherProvider.error.emptyToken': 'Enter a Caiyun token before saving.',
+  'settings.weatherProvider.error.invalidProvider':
+    'The saved weather provider preference is invalid. Open-Meteo is being used.',
   'settings.common.weather': 'Weather',
   'settings.common.todos': 'Todos',
   'settings.common.bookmarks': 'Bookmarks',

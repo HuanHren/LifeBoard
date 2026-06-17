@@ -105,6 +105,10 @@ export const enUSModules = {
     'Favorite cities could not be saved in this browser. Check local storage access and try again.',
   'weather.favorites.message.invalidStorage':
     'Saved favorite cities could not be read. Existing data was left unchanged for recovery.',
+  'weather.providerNotice.openMeteoActive':
+    'Forecasts are still powered by Open-Meteo. Caiyun Weather will be connected in the next stage.',
+  'weather.providerNotice.caiyunMissingToken':
+    'Caiyun Weather is selected, but no token is saved. Add one in Settings. Forecasts still load from Open-Meteo in this stage.',
   'weather.location.capitalCity': 'Capital city',
   'weather.location.regionalCapital': 'Regional capital',
   'weather.location.country': 'Country',
