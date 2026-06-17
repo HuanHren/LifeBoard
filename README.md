@@ -4,6 +4,8 @@ LifeBoard is a local-first personal life workspace for checking daily context, p
 
 Repository: https://github.com/HuanHren/LifeBoard
 
+Live demo: https://life-board-two.vercel.app/
+
 ## Screenshots
 
 | Home | Weather |
@@ -20,28 +22,31 @@ Repository: https://github.com/HuanHren/LifeBoard
 - **Tools**: JSON formatting, timestamp conversion, text cleanup, line deduplication, case conversion, and text counting
 - **Bookmarks**: locally save, categorize, search, edit, pin, and remove useful links
 - **Settings**: theme controls, local data status, backup, restore, privacy information, and selective data clearing
-- **Languages**: built-in Simplified Chinese and US English with a local translation-source export
+- **Language Switching**: built-in Simplified Chinese and US English
+- **Backup and Restore**: local JSON export and import for LifeBoard-owned browser data
+- **Translation Source Export**: export static UI text for translation work without including user data
 - **Not Found**: a clear recovery page for unknown routes
 
 ## Tech Stack
 
-- Vue 3 with `<script setup lang="ts">`
+- Vue 3
 - TypeScript
 - Vite
 - Vue Router
 - Pinia
 - Tailwind CSS v4
+- Open-Meteo
 - CSS variables and OKLCH design tokens
 
 ## Privacy And External Services
 
-LifeBoard is local-first. It has no accounts, backend, analytics, cloud sync, or mobile application.
+LifeBoard is local-first. It has no account system, backend, analytics, cloud sync, or mobile application.
 
-Open-Meteo is the only external service. It is used for city geocoding and weather forecasts and does not require an API key.
+Open-Meteo is the only external service. Weather and geocoding requests are sent directly to Open-Meteo and do not require an API key.
 
 Interface translation is bundled locally. LifeBoard does not use a machine translation API.
 
-LifeBoard stores these values in the current browser:
+LifeBoard stores these values in this browser's `localStorage`:
 
 - Theme preference
 - Selected weather city
@@ -50,13 +55,15 @@ LifeBoard stores these values in the current browser:
 
 Tools input is processed in memory and is not persisted. Forecast response data is not included in backups.
 
+Backup files are generated locally. Translation source export contains only static UI text, not user-created content or local data.
+
 ## Backup And Restore
 
 Settings can export a JSON backup containing the LifeBoard-owned local data listed above. Import validates the file before replacing current local data. Restore operations use the existing storage formats and roll back if a browser storage write fails.
 
 Backups are user-controlled files. LifeBoard does not upload them.
 
-## Local Setup
+## Local Running
 
 Requirements:
 
@@ -113,7 +120,7 @@ src/
 
 ### Vercel
 
-Vercel is the configured deployment target.
+LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 
 1. Push the repository to GitHub.
 2. Import `https://github.com/HuanHren/LifeBoard` into Vercel.
@@ -130,11 +137,24 @@ A custom domain can be connected from Vercel Project Settings > Domains after th
 
 GitHub Pages is possible but is not configured in this repository. A project-site deployment would require a `/LifeBoard/` Vite base path and explicit handling for direct SPA route requests. GitHub Pages does not provide Vercel-style rewrites, so clean route refreshes require a `404.html` workaround or hash-based routing.
 
+## Route Check
+
+After local preview or deployment, verify these routes load:
+
+- `/`
+- `/weather`
+- `/todos`
+- `/tools`
+- `/bookmarks`
+- `/settings`
+- `/missing-route`
+
 ## Roadmap
 
-- Add automated regression coverage for storage and module workflows
-- Add deployment-domain metadata after a stable public URL exists
-- Continue focused accessibility and browser compatibility verification
+- Add more language packs
+- Add optional local utilities where they fit the daily workspace
+- Improve backup and import review flows
+- Continue mobile polish for dense everyday workflows
 
 The roadmap does not include accounts or cloud sync unless the product direction changes.
 
