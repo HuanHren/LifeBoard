@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
+
 interface Props {
   searchQuery: string
   activeCategory: string | null
@@ -14,6 +16,7 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 
 const ALL_VALUE = '__all__'
 const UNCATEGORIZED_VALUE = '__uncategorized__'
@@ -42,16 +45,20 @@ function handleCategoryChange(event: Event) {
     class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-4"
     aria-labelledby="bookmark-controls-title"
   >
-    <h2 id="bookmark-controls-title" class="sr-only">Find bookmarks</h2>
+    <h2 id="bookmark-controls-title" class="sr-only">
+      {{ t('bookmarks.controls.title') }}
+    </h2>
     <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_15rem_auto] md:items-end">
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-search">Search bookmarks</label>
+        <label class="block text-sm font-semibold" for="bookmark-search">
+          {{ t('bookmarks.controls.searchLabel') }}
+        </label>
         <input
           id="bookmark-search"
           :value="searchQuery"
           autocomplete="off"
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
-          placeholder="Search title, URL, category, or note"
+          :placeholder="t('bookmarks.controls.searchPlaceholder')"
           type="search"
           @input="emit('updateSearch', ($event.target as HTMLInputElement).value)"
         />
@@ -59,7 +66,7 @@ function handleCategoryChange(event: Event) {
 
       <div class="space-y-2">
         <label class="block text-sm font-semibold" for="bookmark-category-filter">
-          Category
+          {{ t('bookmarks.controls.categoryLabel') }}
         </label>
         <select
           id="bookmark-category-filter"
@@ -67,9 +74,9 @@ function handleCategoryChange(event: Event) {
           :value="categoryValue(activeCategory)"
           @change="handleCategoryChange"
         >
-          <option :value="ALL_VALUE">All categories</option>
+          <option :value="ALL_VALUE">{{ t('bookmarks.controls.allCategories') }}</option>
           <option v-if="hasUncategorized" :value="UNCATEGORIZED_VALUE">
-            Uncategorized
+            {{ t('bookmarks.controls.uncategorized') }}
           </option>
           <option
             v-for="category in categories"
@@ -87,7 +94,7 @@ function handleCategoryChange(event: Event) {
         type="button"
         @click="emit('clear')"
       >
-        Clear filters
+        {{ t('bookmarks.controls.clear') }}
       </button>
     </div>
   </section>

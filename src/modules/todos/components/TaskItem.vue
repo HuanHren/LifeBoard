@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import InlineDeleteConfirmation from '@/modules/todos/components/InlineDeleteConfirmation.vue'
 import TaskEditForm from '@/modules/todos/components/TaskEditForm.vue'
 import { useTodosStore } from '@/modules/todos/stores/todos'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { locale, t } = useI18n()
 const todosStore = useTodosStore()
 const isEditing = shallowRef(false)
 const isConfirmingDelete = shallowRef(false)
@@ -71,7 +73,7 @@ function toggleTask(event: Event) {
         </label>
         <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption">
           <span v-if="isCompleted" class="font-medium text-[var(--color-text-secondary)]">
-            Completed
+            {{ t('todos.tasks.completed') }}
           </span>
           <time
             v-if="task.dueDate"
@@ -82,7 +84,8 @@ function toggleTask(event: Event) {
                 : 'text-[var(--color-text-secondary)]'
             "
           >
-            {{ isPastDue ? 'Past due · ' : '' }}{{ formatReadableDate(task.dueDate) }}
+            {{ isPastDue ? `${t('todos.tasks.pastDue')} · ` : ''
+            }}{{ formatReadableDate(task.dueDate, locale) }}
           </time>
           <span
             v-if="task.label"
@@ -100,9 +103,11 @@ function toggleTask(event: Event) {
           @confirm="deleteTask"
         />
         <div v-else class="mt-2 flex flex-wrap justify-end gap-1">
-          <BaseButton size="sm" variant="ghost" @click="isEditing = true">Edit</BaseButton>
+          <BaseButton size="sm" variant="ghost" @click="isEditing = true">
+            {{ t('todos.tasks.editAction') }}
+          </BaseButton>
           <BaseButton size="sm" variant="ghost" @click="isConfirmingDelete = true">
-            Delete
+            {{ t('todos.tasks.deleteAction') }}
           </BaseButton>
         </div>
       </div>

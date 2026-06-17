@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { nextTick, shallowRef, useTemplateRef, type ComponentPublicInstance } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import BookmarkDeleteConfirmation from '@/modules/bookmarks/components/BookmarkDeleteConfirmation.vue'
 import BookmarkEditForm from '@/modules/bookmarks/components/BookmarkEditForm.vue'
 import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 const bookmarksStore = useBookmarksStore()
 const isEditing = shallowRef(false)
 const isConfirmingDelete = shallowRef(false)
@@ -50,7 +52,7 @@ function deleteBookmark() {
               v-if="bookmark.pinned"
               class="rounded-[var(--radius-sm)] bg-[var(--color-accent-soft)] px-2 py-1 text-caption font-medium text-[var(--color-accent-text)]"
             >
-              Pinned
+              {{ t('bookmarks.item.pinned') }}
             </span>
             <span
               v-if="bookmark.category"
@@ -78,7 +80,7 @@ function deleteBookmark() {
           rel="noopener noreferrer"
           target="_blank"
         >
-          Open in new tab
+          {{ t('bookmarks.item.openNewTab') }}
         </a>
       </div>
 
@@ -96,16 +98,22 @@ function deleteBookmark() {
           variant="ghost"
           @click="bookmarksStore.togglePinned(bookmark.id)"
         >
-          {{ bookmark.pinned ? 'Unpin' : 'Pin' }}
+          {{
+            bookmark.pinned
+              ? t('bookmarks.item.unpin')
+              : t('bookmarks.item.pin')
+          }}
         </BaseButton>
-        <BaseButton size="sm" variant="ghost" @click="isEditing = true">Edit</BaseButton>
+        <BaseButton size="sm" variant="ghost" @click="isEditing = true">
+          {{ t('bookmarks.item.edit') }}
+        </BaseButton>
         <BaseButton
           ref="deleteButton"
           size="sm"
           variant="ghost"
           @click="isConfirmingDelete = true"
         >
-          Delete
+          {{ t('bookmarks.item.delete') }}
         </BaseButton>
       </div>
     </div>

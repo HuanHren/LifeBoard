@@ -4,18 +4,16 @@ import HomeModuleLink from '@/modules/home/HomeModuleLink.vue'
 import HomeToolsSummary from '@/modules/home/HomeToolsSummary.vue'
 import HomeTodosSummary from '@/modules/home/HomeTodosSummary.vue'
 import HomeWeatherSummary from '@/modules/home/HomeWeatherSummary.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { navigationItems } from '@/shared/constants/navigation'
 
-const moduleCopy: Record<string, string> = {
-  Settings:
-    'Manage appearance, review local data, create or restore a backup, understand privacy, and clear saved information.',
-}
+const { t } = useI18n()
 
 const moduleItems = navigationItems
-  .filter((item) => item.label === 'Settings')
+  .filter((item) => item.labelKey === 'navigation.settings.label')
   .map((item) => ({
     ...item,
-    homeDescription: moduleCopy[item.label],
+    homeDescriptionKey: 'home.settings.cardDescription' as const,
   }))
 </script>
 
@@ -27,19 +25,20 @@ const moduleItems = navigationItems
     >
       <div class="px-6 py-9 sm:px-8 sm:py-12">
         <h1 id="home-title" class="text-page-title max-w-xl text-[var(--color-text-primary)]">
-          Your day, in one place.
+          {{ t('home.hero.title') }}
         </h1>
         <p class="mt-4 max-w-xl text-base leading-7 text-[var(--color-text-secondary)]">
-          Start with local weather, saved plans, private tools, and useful references.
+          {{ t('home.hero.description') }}
         </p>
       </div>
       <div
         class="border-t border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-6 py-7 sm:px-8 lg:border-t-0 lg:border-l"
       >
-        <p class="text-sm font-semibold text-[var(--color-text-primary)]">Useful, without pretense</p>
+        <p class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('home.hero.contextTitle') }}
+        </p>
         <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-          Weather follows your selected city. Todos and countdowns reflect what you save locally,
-          Tools keeps private input off Home, and Bookmarks shows only the references you save.
+          {{ t('home.hero.contextDescription') }}
         </p>
       </div>
     </section>
@@ -55,23 +54,23 @@ const moduleItems = navigationItems
     <section aria-labelledby="modules-title">
       <div class="max-w-2xl">
         <h2 id="modules-title" class="text-section-title text-[var(--color-text-primary)]">
-          Workspace settings
+          {{ t('home.settings.title') }}
         </h2>
         <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-          Keep appearance and browser-local data controls in one clear place.
+          {{ t('home.settings.description') }}
         </p>
       </div>
 
       <div class="mt-6 max-w-2xl">
         <HomeModuleLink
           v-for="item in moduleItems"
-          :key="item.label"
-          :description="item.homeDescription"
+          :key="item.labelKey"
+          :description="t(item.homeDescriptionKey)"
           :marker="item.marker"
-          :title="item.label"
+          :title="t(item.labelKey)"
           :to="item.to"
-          action-label="Open settings"
-          status-label="Local controls"
+          :action-label="t('home.settings.action')"
+          :status-label="t('home.settings.status')"
         />
       </div>
     </section>

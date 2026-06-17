@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { MIN_SEARCH_LENGTH } from '@/modules/weather/constants/weather'
 import type { WeatherRequestStatus } from '@/modules/weather/types/weather'
+import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   status: WeatherRequestStatus
@@ -19,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   compact: false,
 })
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const query = shallowRef('')
 const validationError = shallowRef<string | null>(null)
 
@@ -45,7 +48,9 @@ function submitSearch() {
   const normalizedQuery = query.value.trim()
 
   if (normalizedQuery.length < MIN_SEARCH_LENGTH) {
-    validationError.value = `Enter at least ${MIN_SEARCH_LENGTH} characters.`
+    validationError.value = t('weather.search.validation', {
+      count: MIN_SEARCH_LENGTH,
+    })
     return
   }
 
@@ -74,7 +79,11 @@ function handleInput() {
           class="block text-sm font-semibold text-[var(--color-text-primary)]"
           for="weather-city-search"
         >
-          {{ compact ? 'Search another city' : 'Search for a city' }}
+          {{
+            compact
+              ? t('weather.search.anotherLabel')
+              : t('weather.search.label')
+          }}
         </label>
         <input
           id="weather-city-search"
@@ -84,7 +93,7 @@ function handleInput() {
           autocomplete="off"
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-text-tertiary)] bg-[var(--color-surface-inset)] px-3 text-base text-[var(--color-text-primary)] transition-[background-color,border-color] duration-[var(--motion-fast)] placeholder:text-[var(--color-text-secondary)] hover:border-[var(--color-accent)]"
           name="city"
-          placeholder="City or postal code"
+          :placeholder="t('weather.search.placeholder')"
           type="search"
           @input="handleInput"
         />
@@ -96,7 +105,11 @@ function handleInput() {
         type="submit"
         variant="primary"
       >
-        {{ isLoading ? 'Searching' : 'Search' }}
+        {{
+          isLoading
+            ? t('weather.search.searching')
+            : t('weather.search.action')
+        }}
       </BaseButton>
     </div>
 
@@ -105,7 +118,7 @@ function handleInput() {
       class="text-caption text-[var(--color-text-secondary)]"
       :class="compact ? 'sr-only' : 'mt-2'"
     >
-      Search is submitted only when you press the button.
+      {{ t('weather.search.helper') }}
     </p>
     <p
       v-if="validationError"
@@ -121,10 +134,10 @@ function handleInput() {
       class="mt-2 text-sm font-medium text-[var(--color-danger)]"
       role="alert"
     >
-      {{ serviceError }}
+      {{ localizeWeatherError(serviceError, t) }}
     </p>
     <p class="sr-only" aria-live="polite">
-      {{ isLoading ? 'Searching for matching cities.' : '' }}
+      {{ isLoading ? t('weather.search.loadingAnnouncement') : '' }}
     </p>
   </form>
 </template>

@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { computed, reactive, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import ToolOutput from '@/modules/tools/components/ToolOutput.vue'
 import ToolPanelHeader from '@/modules/tools/components/ToolPanelHeader.vue'
 import ToolTextArea from '@/modules/tools/components/ToolTextArea.vue'
 import { getInputLimitError } from '@/modules/tools/constants/tools'
 import type { DeduplicateResult } from '@/modules/tools/types/tools'
 import { deduplicateLines } from '@/modules/tools/utils/deduplicateTools'
+import {
+  getToolDefinitionCopy,
+  localizeToolsError,
+} from '@/modules/tools/utils/toolsI18n'
 
+const { formatNumber, t } = useI18n()
 const input = shallowRef('')
 const result = shallowRef<DeduplicateResult | null>(null)
 const options = reactive({
@@ -16,6 +22,7 @@ const options = reactive({
   removeBlankLines: false,
 })
 const sizeError = computed(() => getInputLimitError(input.value))
+const definition = computed(() => getToolDefinitionCopy('deduplicate', t))
 
 function processLines() {
   if (sizeError.value) {
@@ -34,8 +41,8 @@ function clearOutput() {
 <template>
   <div class="space-y-6">
     <ToolPanelHeader
-      description="Keep the first occurrence of each line and preserve the original order."
-      title="Deduplicate lines"
+      :description="definition.description"
+      :title="definition.title"
     />
 
     <div class="grid min-w-0 gap-6 xl:grid-cols-2">
@@ -43,22 +50,24 @@ function clearOutput() {
         <ToolTextArea
           id="deduplicate-input"
           v-model="input"
-          :count-metadata="`${input.length.toLocaleString()} characters`"
-          :error="sizeError"
-          helper="Comparison options affect matching only; retained lines keep their original text."
-          label="Lines to check"
-          placeholder="Paste one item per line."
+          :count-metadata="t('tools.common.characters', { count: formatNumber(input.length) })"
+          :error="localizeToolsError(sizeError, t)"
+          :helper="t('tools.deduplicate.inputHelper')"
+          :label="t('tools.deduplicate.inputLabel')"
+          :placeholder="t('tools.deduplicate.inputPlaceholder')"
         />
 
         <fieldset class="space-y-1">
-          <legend class="mb-1 text-sm font-semibold">Comparison options</legend>
+          <legend class="mb-1 text-sm font-semibold">
+            {{ t('tools.deduplicate.options') }}
+          </legend>
           <label class="flex min-h-11 items-center gap-3 text-sm">
             <input
               v-model="options.caseInsensitive"
               class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
-            Ignore letter case
+            {{ t('tools.deduplicate.ignoreCase') }}
           </label>
           <label class="flex min-h-11 items-center gap-3 text-sm">
             <input
@@ -66,7 +75,7 @@ function clearOutput() {
               class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
-            Ignore outer whitespace when comparing
+            {{ t('tools.deduplicate.ignoreWhitespace') }}
           </label>
           <label class="flex min-h-11 items-center gap-3 text-sm">
             <input
@@ -74,11 +83,13 @@ function clearOutput() {
               class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
-            Remove blank lines
+            {{ t('tools.deduplicate.removeBlank') }}
           </label>
         </fieldset>
 
-        <BaseButton variant="primary" @click="processLines">Remove duplicates</BaseButton>
+        <BaseButton variant="primary" @click="processLines">
+          {{ t('tools.deduplicate.action') }}
+        </BaseButton>
       </div>
 
       <div class="min-w-0 space-y-3">
@@ -87,21 +98,27 @@ function clearOutput() {
           class="grid grid-cols-3 gap-2 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-3 text-center"
         >
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">Source lines</dt>
+            <dt class="text-caption text-[var(--color-text-secondary)]">
+              {{ t('tools.deduplicate.sourceLines') }}
+            </dt>
             <dd class="mt-1 font-semibold tabular-nums">{{ result.sourceLines }}</dd>
           </div>
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">Result lines</dt>
+            <dt class="text-caption text-[var(--color-text-secondary)]">
+              {{ t('tools.deduplicate.resultLines') }}
+            </dt>
             <dd class="mt-1 font-semibold tabular-nums">{{ result.resultLines }}</dd>
           </div>
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">Duplicates removed</dt>
+            <dt class="text-caption text-[var(--color-text-secondary)]">
+              {{ t('tools.deduplicate.removed') }}
+            </dt>
             <dd class="mt-1 font-semibold tabular-nums">{{ result.removedDuplicates }}</dd>
           </div>
         </dl>
         <ToolOutput
           id="deduplicate-output"
-          empty-copy="Unique lines will appear here."
+          :empty-copy="t('tools.deduplicate.emptyOutput')"
           :output="result?.output ?? ''"
           @clear="clearOutput"
         />

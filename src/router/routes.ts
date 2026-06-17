@@ -6,7 +6,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'home',
     component: () => import('@/modules/home/HomePage.vue'),
     meta: {
-      title: 'Home',
+      titleKey: 'navigation.home.label',
     },
   },
   {
@@ -14,7 +14,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'weather',
     component: () => import('@/modules/weather/WeatherPage.vue'),
     meta: {
-      title: 'Weather',
+      titleKey: 'navigation.weather.label',
     },
   },
   {
@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'todos',
     component: () => import('@/modules/todos/TodosPage.vue'),
     meta: {
-      title: 'Todos',
+      titleKey: 'navigation.todos.label',
     },
   },
   {
@@ -30,7 +30,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'tools',
     component: () => import('@/modules/tools/ToolsPage.vue'),
     meta: {
-      title: 'Tools',
+      titleKey: 'navigation.tools.label',
     },
   },
   {
@@ -38,7 +38,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'bookmarks',
     component: () => import('@/modules/bookmarks/BookmarksPage.vue'),
     meta: {
-      title: 'Bookmarks',
+      titleKey: 'navigation.bookmarks.label',
     },
   },
   {
@@ -46,7 +46,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'settings',
     component: () => import('@/modules/settings/SettingsPage.vue'),
     meta: {
-      title: 'Settings',
+      titleKey: 'navigation.settings.label',
     },
   },
   {
@@ -54,7 +54,7 @@ export const routes: RouteRecordRaw[] = [
     name: 'not-found',
     component: () => import('@/modules/not-found/NotFoundPage.vue'),
     meta: {
-      title: 'Page not found',
+      titleKey: 'notFound.routeTitle',
     },
   },
 ]

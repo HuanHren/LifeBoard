@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
+import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
   title: string
@@ -12,11 +14,16 @@ interface Props {
   actionLabel?: string
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   prominence: 'standard',
-  statusLabel: 'Connected',
-  actionLabel: 'Open module',
 })
+const { t } = useI18n()
+const resolvedStatusLabel = computed(
+  () => props.statusLabel ?? t('shared.status.connected'),
+)
+const resolvedActionLabel = computed(
+  () => props.actionLabel ?? t('shared.action.openModule'),
+)
 </script>
 
 <template>
@@ -37,7 +44,7 @@ withDefaults(defineProps<Props>(), {
         {{ marker }}
       </span>
       <span class="text-caption font-medium text-[var(--color-text-secondary)]">
-        {{ statusLabel }}
+        {{ resolvedStatusLabel }}
       </span>
     </div>
 
@@ -49,7 +56,7 @@ withDefaults(defineProps<Props>(), {
       <span
         class="mt-5 inline-flex min-h-11 items-center text-sm font-medium text-[var(--color-accent-text)]"
       >
-        {{ actionLabel }}
+        {{ resolvedActionLabel }}
         <span
           class="ml-2 transition-transform duration-[var(--motion-fast)] group-hover:translate-x-1"
           aria-hidden="true"

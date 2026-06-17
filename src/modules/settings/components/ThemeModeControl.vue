@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { TranslationKey } from '@/i18n/keys'
+import { useI18n } from '@/i18n/useI18n'
 import type { ThemeMode } from '@/shared/types/theme'
 
 interface Props {
@@ -12,34 +14,42 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 
-const options: Array<{ value: ThemeMode; label: string; description: string }> = [
+const options: Array<{
+  value: ThemeMode
+  labelKey: TranslationKey
+  descriptionKey: TranslationKey
+}> = [
   {
     value: 'system',
-    label: 'System',
-    description: 'Follow this device preference.',
+    labelKey: 'shell.theme.system',
+    descriptionKey: 'settings.theme.systemDescription',
   },
   {
     value: 'light',
-    label: 'Light',
-    description: 'Use the light LifeBoard palette.',
+    labelKey: 'shell.theme.light',
+    descriptionKey: 'settings.theme.lightDescription',
   },
   {
     value: 'dark',
-    label: 'Dark',
-    description: 'Use the dark LifeBoard palette.',
+    labelKey: 'shell.theme.dark',
+    descriptionKey: 'settings.theme.darkDescription',
   },
 ]
 </script>
 
 <template>
-  <fieldset aria-describedby="theme-mode-help theme-mode-error" class="space-y-4">
+  <fieldset
+    :aria-describedby="error ? 'theme-mode-help theme-mode-error' : 'theme-mode-help'"
+    class="space-y-4"
+  >
     <div>
       <legend class="text-base font-semibold text-[var(--color-text-primary)]">
-        Theme mode
+        {{ t('settings.theme.legend') }}
       </legend>
       <p id="theme-mode-help" class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
-        Choose how LifeBoard appears on this browser.
+        {{ t('settings.theme.helper') }}
       </p>
     </div>
 
@@ -64,10 +74,10 @@ const options: Array<{ value: ThemeMode; label: string; description: string }> =
         />
         <span class="min-w-0">
           <span class="block text-sm font-semibold text-[var(--color-text-primary)]">
-            {{ option.label }}
+            {{ t(option.labelKey) }}
           </span>
           <span class="mt-1 block text-sm leading-5 text-[var(--color-text-secondary)]">
-            {{ option.description }}
+            {{ t(option.descriptionKey) }}
           </span>
         </span>
       </label>
@@ -79,7 +89,7 @@ const options: Array<{ value: ThemeMode; label: string; description: string }> =
       class="text-sm font-medium text-[var(--color-danger)]"
       role="alert"
     >
-      {{ error }}
+      {{ t('settings.theme.storageError') }}
     </p>
   </fieldset>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import {
   TASK_LABEL_MAX_LENGTH,
   TASK_TITLE_MAX_LENGTH,
@@ -11,7 +12,9 @@ import {
   hasValidationErrors,
   validateTaskDraft,
 } from '@/modules/todos/utils/todoValidation'
+import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
+const { t } = useI18n()
 const todosStore = useTodosStore()
 const title = shallowRef('')
 const dueDate = shallowRef('')
@@ -36,12 +39,12 @@ function submitTask() {
   errors.value = nextErrors
 
   if (hasValidationErrors(nextErrors)) {
-    announcement.value = 'Check the task form for errors.'
+    announcement.value = t('todos.tasks.announcement.checkForm')
     return
   }
 
   if (!todosStore.addTask(draft)) {
-    announcement.value = 'The task was not saved.'
+    announcement.value = t('todos.tasks.announcement.notSaved')
     return
   }
 
@@ -49,7 +52,7 @@ function submitTask() {
   dueDate.value = ''
   label.value = ''
   errors.value = { title: null, date: null, label: null }
-  announcement.value = 'Task added.'
+  announcement.value = t('todos.tasks.announcement.added')
 }
 </script>
 
@@ -60,15 +63,19 @@ function submitTask() {
     @submit.prevent="submitTask"
   >
     <div class="mb-4">
-      <h2 class="text-section-title text-[var(--color-text-primary)]">Add a task</h2>
+      <h2 class="text-section-title text-[var(--color-text-primary)]">
+        {{ t('todos.tasks.addTitle') }}
+      </h2>
       <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-        Capture one clear next step. A date and label are optional.
+        {{ t('todos.tasks.addDescription') }}
       </p>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_11rem_10rem_auto] lg:items-start">
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="task-title">Task title</label>
+        <label class="block text-sm font-semibold" for="task-title">
+          {{ t('todos.tasks.titleLabel') }}
+        </label>
         <input
           id="task-title"
           v-model="title"
@@ -78,11 +85,11 @@ function submitTask() {
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="TASK_TITLE_MAX_LENGTH"
           name="task-title"
-          placeholder="What needs your attention?"
+          :placeholder="t('todos.tasks.titlePlaceholder')"
           type="text"
         />
         <p id="task-title-helper" class="text-caption text-[var(--color-text-secondary)]">
-          Keep it specific and easy to scan.
+          {{ t('todos.tasks.titleHelper') }}
         </p>
         <p
           v-if="errors.title"
@@ -90,12 +97,14 @@ function submitTask() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.title }}
+          {{ localizeTodosError(errors.title, t) }}
         </p>
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="task-due-date">Due date</label>
+        <label class="block text-sm font-semibold" for="task-due-date">
+          {{ t('todos.tasks.dueDateLabel') }}
+        </label>
         <input
           id="task-due-date"
           v-model="dueDate"
@@ -111,12 +120,14 @@ function submitTask() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.date }}
+          {{ localizeTodosError(errors.date, t) }}
         </p>
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="task-label">Label</label>
+        <label class="block text-sm font-semibold" for="task-label">
+          {{ t('todos.tasks.labelLabel') }}
+        </label>
         <input
           id="task-label"
           v-model="label"
@@ -126,11 +137,11 @@ function submitTask() {
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="TASK_LABEL_MAX_LENGTH"
           name="task-label"
-          placeholder="Optional"
+          :placeholder="t('todos.tasks.labelPlaceholder')"
           type="text"
         />
         <p id="task-label-helper" class="text-caption text-[var(--color-text-secondary)]">
-          A short context word.
+          {{ t('todos.tasks.labelHelper') }}
         </p>
         <p
           v-if="errors.label"
@@ -138,12 +149,12 @@ function submitTask() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.label }}
+          {{ localizeTodosError(errors.label, t) }}
         </p>
       </div>
 
       <BaseButton class="w-full lg:mt-7 lg:w-auto" type="submit" variant="primary">
-        Add task
+        {{ t('todos.tasks.addAction') }}
       </BaseButton>
     </div>
     <p class="sr-only" aria-live="polite">{{ announcement }}</p>

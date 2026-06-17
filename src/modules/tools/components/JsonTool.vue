@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import ToolOutput from '@/modules/tools/components/ToolOutput.vue'
 import ToolPanelHeader from '@/modules/tools/components/ToolPanelHeader.vue'
 import ToolTextArea from '@/modules/tools/components/ToolTextArea.vue'
@@ -10,14 +11,22 @@ import type {
   JsonIndentation,
 } from '@/modules/tools/types/tools'
 import { transformJson } from '@/modules/tools/utils/jsonTools'
+import {
+  getToolDefinitionCopy,
+  localizeToolsError,
+} from '@/modules/tools/utils/toolsI18n'
 
+const { formatNumber, t } = useI18n()
 const input = shallowRef('')
 const output = shallowRef('')
 const processingError = shallowRef<string | null>(null)
 const indentation = shallowRef<JsonIndentation>(2)
 const sizeError = computed(() => getInputLimitError(input.value))
 const inputError = computed(() => sizeError.value ?? processingError.value)
-const inputCount = computed(() => `${input.value.length.toLocaleString()} characters`)
+const inputCount = computed(() =>
+  t('tools.common.characters', { count: formatNumber(input.value.length) }),
+)
+const definition = computed(() => getToolDefinitionCopy('json', t))
 
 function processJson(action: JsonAction) {
   processingError.value = null
@@ -36,8 +45,8 @@ function processJson(action: JsonAction) {
 <template>
   <div class="space-y-6">
     <ToolPanelHeader
-      description="Validate any JSON value, then format it for reading or minify it for compact use."
-      title="JSON formatter and minifier"
+      :description="definition.description"
+      :title="definition.title"
     />
 
     <div class="grid min-w-0 gap-6 xl:grid-cols-2">
@@ -46,16 +55,16 @@ function processJson(action: JsonAction) {
           id="json-input"
           v-model="input"
           :count-metadata="inputCount"
-          :error="inputError"
-          helper="Accepts objects, arrays, strings, numbers, booleans, and null."
-          label="JSON input"
+          :error="localizeToolsError(inputError, t)"
+          :helper="t('tools.json.inputHelper')"
+          :label="t('tools.json.inputLabel')"
           placeholder='{"name":"LifeBoard"}'
           @update:model-value="processingError = null"
         />
 
         <fieldset class="space-y-2">
           <legend class="text-sm font-semibold text-[var(--color-text-primary)]">
-            Format indentation
+            {{ t('tools.json.indentation') }}
           </legend>
           <div class="flex flex-wrap gap-4">
             <label class="flex min-h-11 items-center gap-2 text-sm">
@@ -66,7 +75,7 @@ function processJson(action: JsonAction) {
                 :value="2"
                 type="radio"
               />
-              Two spaces
+              {{ t('tools.json.spaces', { count: 2 }) }}
             </label>
             <label class="flex min-h-11 items-center gap-2 text-sm">
               <input
@@ -76,20 +85,24 @@ function processJson(action: JsonAction) {
                 :value="4"
                 type="radio"
               />
-              Four spaces
+              {{ t('tools.json.spaces', { count: 4 }) }}
             </label>
           </div>
         </fieldset>
 
         <div class="flex flex-wrap gap-2">
-          <BaseButton variant="primary" @click="processJson('format')">Format JSON</BaseButton>
-          <BaseButton variant="secondary" @click="processJson('minify')">Minify JSON</BaseButton>
+          <BaseButton variant="primary" @click="processJson('format')">
+            {{ t('tools.json.format') }}
+          </BaseButton>
+          <BaseButton variant="secondary" @click="processJson('minify')">
+            {{ t('tools.json.minify') }}
+          </BaseButton>
         </div>
       </div>
 
       <ToolOutput
         id="json-output"
-        empty-copy="Processed JSON will appear here."
+        :empty-copy="t('tools.json.emptyOutput')"
         :output="output"
         @clear="output = ''"
       />

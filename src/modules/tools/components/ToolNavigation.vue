@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
 import { TOOL_DEFINITIONS } from '@/modules/tools/constants/tools'
 import type { ToolId } from '@/modules/tools/types/tools'
+import { getToolDefinitionCopy } from '@/modules/tools/utils/toolsI18n'
 
 interface Props {
   activeTool: ToolId
@@ -12,10 +14,11 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 </script>
 
 <template>
-  <nav aria-label="Available tools">
+  <nav :aria-label="t('tools.navigation.label')">
     <div
       class="flex max-w-full gap-1 overflow-x-auto p-1 lg:block lg:space-y-1 lg:overflow-visible lg:p-0"
     >
@@ -32,7 +35,7 @@ const emit = defineEmits<Emits>()
         type="button"
         @click="emit('select', tool.id)"
       >
-        {{ tool.shortTitle }}
+        {{ getToolDefinitionCopy(tool.id, t).shortTitle }}
       </button>
     </div>
   </nav>

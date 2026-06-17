@@ -2,6 +2,7 @@
 import { computed, shallowRef, watch } from 'vue'
 import type { Component } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from '@/i18n/useI18n'
 import CaseConverterTool from '@/modules/tools/components/CaseConverterTool.vue'
 import DeduplicateLinesTool from '@/modules/tools/components/DeduplicateLinesTool.vue'
 import JsonTool from '@/modules/tools/components/JsonTool.vue'
@@ -14,6 +15,7 @@ import type { ToolId } from '@/modules/tools/types/tools'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 const initialTool = isToolId(route.query.tool) ? route.query.tool : 'json'
 const activeTool = shallowRef<ToolId>(initialTool)
 
@@ -56,13 +58,13 @@ watch(
       class="min-w-0 border-b border-[var(--color-border-soft)] bg-[var(--color-surface)] p-3 lg:border-r lg:border-b-0 lg:p-4"
     >
       <p class="mb-2 px-2 text-caption font-medium text-[var(--color-text-secondary)]">
-        Choose a tool
+        {{ t('tools.navigation.label') }}
       </p>
       <ToolNavigation :active-tool="activeTool" @select="selectTool" />
     </aside>
 
     <section
-      aria-label="Active tool workspace"
+      :aria-label="t('tools.navigation.label')"
       class="min-w-0 p-5 sm:p-6 lg:p-8"
     >
       <KeepAlive>

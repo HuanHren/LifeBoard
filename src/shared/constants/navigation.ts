@@ -1,47 +1,48 @@
 import type { RouteLocationRaw } from 'vue-router'
+import type { TranslationKey } from '@/i18n/keys'
 
 export interface NavigationItem {
-  label: string
+  labelKey: TranslationKey
   marker: string
-  description: string
+  descriptionKey: TranslationKey
   to: RouteLocationRaw
 }
 
 export const navigationItems: NavigationItem[] = [
   {
-    label: 'Home',
+    labelKey: 'navigation.home.label',
     marker: 'HM',
-    description: 'Daily overview',
+    descriptionKey: 'navigation.home.description',
     to: { name: 'home' },
   },
   {
-    label: 'Weather',
+    labelKey: 'navigation.weather.label',
     marker: 'WE',
-    description: 'Local conditions',
+    descriptionKey: 'navigation.weather.description',
     to: { name: 'weather' },
   },
   {
-    label: 'Todos',
+    labelKey: 'navigation.todos.label',
     marker: 'TD',
-    description: 'Task planning',
+    descriptionKey: 'navigation.todos.description',
     to: { name: 'todos' },
   },
   {
-    label: 'Tools',
+    labelKey: 'navigation.tools.label',
     marker: 'TL',
-    description: 'Everyday utilities',
+    descriptionKey: 'navigation.tools.description',
     to: { name: 'tools' },
   },
   {
-    label: 'Bookmarks',
+    labelKey: 'navigation.bookmarks.label',
     marker: 'BK',
-    description: 'Saved references',
+    descriptionKey: 'navigation.bookmarks.description',
     to: { name: 'bookmarks' },
   },
   {
-    label: 'Settings',
+    labelKey: 'navigation.settings.label',
     marker: 'ST',
-    description: 'Appearance and layout',
+    descriptionKey: 'navigation.settings.description',
     to: { name: 'settings' },
   },
 ]

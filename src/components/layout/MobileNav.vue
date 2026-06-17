@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useI18n } from '@/i18n/useI18n'
 import { navigationItems } from '@/shared/constants/navigation'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <nav
     class="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-2 safe-bottom lg:hidden"
-    aria-label="Mobile primary"
+    :aria-label="t('shell.mobile.primaryLabel')"
   >
     <div class="grid grid-cols-3 gap-1">
       <RouterLink
         v-for="item in navigationItems"
-        :key="item.label"
+        :key="item.labelKey"
         :to="item.to"
         class="interactive-surface group flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-sm)] px-2 py-2 text-center text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
         exact-active-class="bg-[var(--color-accent-soft)] text-[var(--color-accent-text)]"
@@ -22,7 +25,7 @@ import { navigationItems } from '@/shared/constants/navigation'
         >
           {{ item.marker }}
         </span>
-        <span class="truncate">{{ item.label }}</span>
+        <span class="truncate">{{ t(item.labelKey) }}</span>
       </RouterLink>
     </div>
   </nav>

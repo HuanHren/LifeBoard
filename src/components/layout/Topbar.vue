@@ -2,18 +2,24 @@
 import { computed, onMounted, onUnmounted, shallowRef } from 'vue'
 import { useRoute } from 'vue-router'
 import ThemeToggle from '@/components/base/ThemeToggle.vue'
+import type { TranslationKey } from '@/i18n/keys'
+import { useI18n } from '@/i18n/useI18n'
 
 const route = useRoute()
+const { t, formatDate } = useI18n()
 const now = shallowRef(new Date())
 let rolloverTimer: ReturnType<typeof window.setTimeout> | null = null
 
-const pageTitle = computed(() => (typeof route.meta.title === 'string' ? route.meta.title : 'LifeBoard'))
+const pageTitle = computed(() => {
+  const titleKey = route.meta.titleKey as TranslationKey | undefined
+  return titleKey ? t(titleKey) : 'LifeBoard'
+})
 const currentDate = computed(() =>
-  new Intl.DateTimeFormat('en-US', {
+  formatDate(now.value, {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
-  }).format(now.value),
+  }),
 )
 const currentDateTime = computed(() => [
   now.value.getFullYear(),

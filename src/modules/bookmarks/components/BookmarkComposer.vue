@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef, useTemplateRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import {
   BOOKMARK_CATEGORY_MAX_LENGTH,
   BOOKMARK_NOTE_MAX_LENGTH,
@@ -16,7 +17,9 @@ import {
   hasBookmarkValidationErrors,
   prepareBookmarkDraft,
 } from '@/modules/bookmarks/utils/bookmarkValidation'
+import { localizeBookmarkError } from '@/modules/bookmarks/utils/bookmarksI18n'
 
+const { t } = useI18n()
 const bookmarksStore = useBookmarksStore()
 const title = shallowRef('')
 const url = shallowRef('')
@@ -57,12 +60,12 @@ function submitBookmark() {
   errors.value = prepared.validation
 
   if (hasBookmarkValidationErrors(prepared.validation)) {
-    announcement.value = 'Check the bookmark form for errors.'
+    announcement.value = t('bookmarks.composer.announcement.checkForm')
     return
   }
 
   if (!bookmarksStore.addBookmark(prepared.draft)) {
-    announcement.value = 'The bookmark was not saved.'
+    announcement.value = t('bookmarks.composer.announcement.notSaved')
     return
   }
 
@@ -71,7 +74,7 @@ function submitBookmark() {
   category.value = ''
   note.value = ''
   errors.value = { title: null, url: null, category: null, note: null }
-  announcement.value = 'Bookmark added.'
+  announcement.value = t('bookmarks.composer.announcement.added')
 }
 
 function focusTitle() {
@@ -89,16 +92,18 @@ defineExpose({ focusTitle })
   >
     <div class="mb-5">
       <h2 class="text-section-title text-balance text-[var(--color-text-primary)]">
-        Add a bookmark
+        {{ t('bookmarks.composer.title') }}
       </h2>
       <p class="mt-1 max-w-2xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        Save a useful link with enough context to recognize it later.
+        {{ t('bookmarks.composer.description') }}
       </p>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_12rem_auto] lg:items-start">
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-title">Title</label>
+        <label class="block text-sm font-semibold" for="bookmark-title">
+          {{ t('bookmarks.form.titleLabel') }}
+        </label>
         <input
           id="bookmark-title"
           ref="titleInput"
@@ -109,11 +114,11 @@ defineExpose({ focusTitle })
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_TITLE_MAX_LENGTH"
           name="bookmark-title"
-          placeholder="Reference title"
+          :placeholder="t('bookmarks.form.titlePlaceholder')"
           type="text"
         />
         <p id="bookmark-title-helper" class="text-caption text-[var(--color-text-secondary)]">
-          Use a name that will scan well in a list.
+          {{ t('bookmarks.composer.titleHelper') }}
         </p>
         <p
           v-if="errors.title"
@@ -121,12 +126,14 @@ defineExpose({ focusTitle })
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.title }}
+          {{ localizeBookmarkError(errors.title, t) }}
         </p>
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-url">URL</label>
+        <label class="block text-sm font-semibold" for="bookmark-url">
+          {{ t('bookmarks.form.urlLabel') }}
+        </label>
         <input
           id="bookmark-url"
           v-model="url"
@@ -136,11 +143,11 @@ defineExpose({ focusTitle })
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_URL_MAX_LENGTH + 1"
           name="bookmark-url"
-          placeholder="example.com"
+          :placeholder="t('bookmarks.form.urlPlaceholder')"
           type="url"
         />
         <p id="bookmark-url-helper" class="text-caption text-[var(--color-text-secondary)]">
-          A missing protocol will be saved as HTTPS.
+          {{ t('bookmarks.composer.urlHelper') }}
         </p>
         <p
           v-if="errors.url"
@@ -148,12 +155,14 @@ defineExpose({ focusTitle })
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.url }}
+          {{ localizeBookmarkError(errors.url, t) }}
         </p>
       </div>
 
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-category">Category</label>
+        <label class="block text-sm font-semibold" for="bookmark-category">
+          {{ t('bookmarks.form.categoryLabel') }}
+        </label>
         <input
           id="bookmark-category"
           v-model="category"
@@ -163,11 +172,11 @@ defineExpose({ focusTitle })
           class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_CATEGORY_MAX_LENGTH"
           name="bookmark-category"
-          placeholder="Optional"
+          :placeholder="t('bookmarks.form.categoryPlaceholder')"
           type="text"
         />
         <p id="bookmark-category-helper" class="text-caption text-[var(--color-text-secondary)]">
-          A short grouping name.
+          {{ t('bookmarks.composer.categoryHelper') }}
         </p>
         <p
           v-if="errors.category"
@@ -175,17 +184,19 @@ defineExpose({ focusTitle })
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.category }}
+          {{ localizeBookmarkError(errors.category, t) }}
         </p>
       </div>
 
       <BaseButton class="w-full lg:mt-7 lg:w-auto" type="submit" variant="primary">
-        Add bookmark
+        {{ t('bookmarks.form.addAction') }}
       </BaseButton>
     </div>
 
     <div class="mt-4 space-y-2">
-      <label class="block text-sm font-semibold" for="bookmark-note">Note</label>
+      <label class="block text-sm font-semibold" for="bookmark-note">
+        {{ t('bookmarks.form.noteLabel') }}
+      </label>
       <textarea
         id="bookmark-note"
         v-model="note"
@@ -194,11 +205,11 @@ defineExpose({ focusTitle })
         class="min-h-24 w-full resize-y rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 py-2 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
         :maxlength="BOOKMARK_NOTE_MAX_LENGTH"
         name="bookmark-note"
-        placeholder="Why is this useful?"
+        :placeholder="t('bookmarks.form.notePlaceholder')"
         rows="3"
       />
       <p id="bookmark-note-helper" class="text-caption text-[var(--color-text-secondary)]">
-        Optional context, up to {{ BOOKMARK_NOTE_MAX_LENGTH }} characters.
+        {{ t('bookmarks.composer.noteHelper', { count: BOOKMARK_NOTE_MAX_LENGTH }) }}
       </p>
       <p
         v-if="errors.note"
@@ -206,7 +217,7 @@ defineExpose({ focusTitle })
         class="text-sm font-medium text-[var(--color-danger)]"
         role="alert"
       >
-        {{ errors.note }}
+        {{ localizeBookmarkError(errors.note, t) }}
       </p>
     </div>
 

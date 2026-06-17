@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
+
 interface Props {
   title: string
   description: string
 }
 
 defineProps<Props>()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -16,7 +19,7 @@ defineProps<Props>()
       {{ description }}
     </p>
     <p class="mt-2 text-caption text-[var(--color-text-tertiary)]">
-      Processed only in this browser. Input is not saved or sent anywhere.
+      {{ t('tools.privacy') }}
     </p>
   </header>
 </template>

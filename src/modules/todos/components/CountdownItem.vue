@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, toRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import CountdownForm from '@/modules/todos/components/CountdownForm.vue'
 import InlineDeleteConfirmation from '@/modules/todos/components/InlineDeleteConfirmation.vue'
 import { useCountdownStatus } from '@/modules/todos/composables/useCountdownStatus'
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { locale, t } = useI18n()
 const todosStore = useTodosStore()
 const isEditing = shallowRef(false)
 const isConfirmingDelete = shallowRef(false)
@@ -53,7 +55,7 @@ function deleteCountdown() {
             class="mt-1 block text-caption text-[var(--color-text-secondary)]"
             :datetime="countdown.targetDate"
           >
-            {{ formatReadableDate(countdown.targetDate) }}
+            {{ formatReadableDate(countdown.targetDate, locale) }}
           </time>
         </div>
       </div>
@@ -66,9 +68,11 @@ function deleteCountdown() {
         @confirm="deleteCountdown"
       />
       <div v-else class="mt-2 flex justify-end gap-1">
-        <BaseButton size="sm" variant="ghost" @click="isEditing = true">Edit</BaseButton>
+        <BaseButton size="sm" variant="ghost" @click="isEditing = true">
+          {{ t('todos.tasks.editAction') }}
+        </BaseButton>
         <BaseButton size="sm" variant="ghost" @click="isConfirmingDelete = true">
-          Delete
+          {{ t('todos.tasks.deleteAction') }}
         </BaseButton>
       </div>
     </div>

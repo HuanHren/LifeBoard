@@ -2,11 +2,14 @@
 import MobileNav from '@/components/layout/MobileNav.vue'
 import SidebarNav from '@/components/layout/SidebarNav.vue'
 import Topbar from '@/components/layout/Topbar.vue'
+import { useI18n } from '@/i18n/useI18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="min-h-dvh bg-[var(--color-canvas)] text-[var(--color-text-primary)]">
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <a class="skip-link" href="#main-content">{{ t('shell.skipToMain') }}</a>
     <SidebarNav />
     <div class="min-h-dvh lg:pl-[17rem]">
       <Topbar />

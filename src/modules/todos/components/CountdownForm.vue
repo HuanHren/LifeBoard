@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { COUNTDOWN_TITLE_MAX_LENGTH } from '@/modules/todos/constants/todos'
 import { useTodosStore } from '@/modules/todos/stores/todos'
 import type {
@@ -12,6 +13,7 @@ import {
   hasValidationErrors,
   validateCountdownDraft,
 } from '@/modules/todos/utils/todoValidation'
+import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
 interface Props {
   countdown?: Countdown | null
@@ -26,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   countdown: null,
 })
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const todosStore = useTodosStore()
 const title = shallowRef(props.countdown?.title ?? '')
 const targetDate = shallowRef(props.countdown?.targetDate ?? '')
@@ -53,7 +56,7 @@ function saveCountdown() {
   <form class="space-y-4" novalidate @submit.prevent="saveCountdown">
     <div class="space-y-2">
       <label class="block text-sm font-semibold" :for="`countdown-title-${countdown?.id ?? 'new'}`">
-        Countdown title
+        {{ t('todos.countdowns.titleLabel') }}
       </label>
       <input
         :id="`countdown-title-${countdown?.id ?? 'new'}`"
@@ -65,7 +68,7 @@ function saveCountdown() {
         autocomplete="off"
         class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 placeholder:text-[var(--color-text-tertiary)]"
         :maxlength="COUNTDOWN_TITLE_MAX_LENGTH"
-        placeholder="What are you looking ahead to?"
+        :placeholder="t('todos.countdowns.titlePlaceholder')"
         type="text"
       />
       <p
@@ -74,12 +77,12 @@ function saveCountdown() {
         class="text-sm font-medium text-[var(--color-danger)]"
         role="alert"
       >
-        {{ errors.title }}
+        {{ localizeTodosError(errors.title, t) }}
       </p>
     </div>
     <div class="space-y-2">
       <label class="block text-sm font-semibold" :for="`countdown-date-${countdown?.id ?? 'new'}`">
-        Target date
+        {{ t('todos.countdowns.targetDateLabel') }}
       </label>
       <input
         :id="`countdown-date-${countdown?.id ?? 'new'}`"
@@ -97,13 +100,19 @@ function saveCountdown() {
         class="text-sm font-medium text-[var(--color-danger)]"
         role="alert"
       >
-        {{ errors.date }}
+        {{ localizeTodosError(errors.date, t) }}
       </p>
     </div>
     <div class="flex flex-wrap justify-end gap-2">
-      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">Cancel</BaseButton>
+      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">
+        {{ t('todos.tasks.cancelAction') }}
+      </BaseButton>
       <BaseButton size="sm" type="submit" variant="primary">
-        {{ countdown ? 'Save countdown' : 'Add countdown' }}
+        {{
+          countdown
+            ? t('todos.countdowns.saveAction')
+            : t('todos.countdowns.addAction')
+        }}
       </BaseButton>
     </div>
   </form>

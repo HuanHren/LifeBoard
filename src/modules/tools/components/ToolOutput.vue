@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import CopyButton from '@/modules/tools/components/CopyButton.vue'
 
 interface Props {
@@ -14,18 +15,19 @@ interface Emits {
   clear: []
 }
 
-withDefaults(defineProps<Props>(), {
-  label: 'Output',
+const props = withDefaults(defineProps<Props>(), {
+  label: undefined,
   allowClear: true,
 })
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="min-w-0 space-y-2">
     <div class="flex flex-wrap items-center justify-between gap-3">
       <label class="text-sm font-semibold text-[var(--color-text-primary)]" :for="id">
-        {{ label }}
+        {{ props.label ?? t('tools.common.output') }}
       </label>
       <div class="flex flex-wrap items-start gap-2">
         <CopyButton :content="output" />
@@ -36,7 +38,7 @@ const emit = defineEmits<Emits>()
           variant="ghost"
           @click="emit('clear')"
         >
-          Clear output
+          {{ t('tools.common.clearOutput') }}
         </BaseButton>
       </div>
     </div>

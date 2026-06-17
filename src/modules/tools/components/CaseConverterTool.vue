@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import ToolOutput from '@/modules/tools/components/ToolOutput.vue'
 import ToolPanelHeader from '@/modules/tools/components/ToolPanelHeader.vue'
 import ToolTextArea from '@/modules/tools/components/ToolTextArea.vue'
 import { CASE_MODES, getInputLimitError } from '@/modules/tools/constants/tools'
 import type { CaseMode } from '@/modules/tools/types/tools'
 import { convertCase } from '@/modules/tools/utils/caseTools'
+import {
+  getCaseModeLabel,
+  getToolDefinitionCopy,
+  localizeToolsError,
+} from '@/modules/tools/utils/toolsI18n'
 
+const { formatNumber, t } = useI18n()
 const input = shallowRef('')
 const output = shallowRef('')
 const mode = shallowRef<CaseMode>('lowercase')
 const sizeError = computed(() => getInputLimitError(input.value))
+const definition = computed(() => getToolDefinitionCopy('case', t))
 
 function processText() {
   if (sizeError.value) {
@@ -26,8 +34,8 @@ function processText() {
 <template>
   <div class="space-y-6">
     <ToolPanelHeader
-      description="Convert text into common writing and identifier case styles."
-      title="Case converter"
+      :description="definition.description"
+      :title="definition.title"
     />
 
     <div class="grid min-w-0 gap-6 xl:grid-cols-2">
@@ -35,15 +43,17 @@ function processText() {
         <ToolTextArea
           id="case-input"
           v-model="input"
-          :count-metadata="`${input.length.toLocaleString()} characters`"
-          :error="sizeError"
-          helper="Punctuation and acronym handling are intentionally conservative."
-          label="Text input"
-          placeholder="Paste text to convert."
+          :count-metadata="t('tools.common.characters', { count: formatNumber(input.length) })"
+          :error="localizeToolsError(sizeError, t)"
+          :helper="t('tools.case.inputHelper')"
+          :label="t('tools.case.inputLabel')"
+          :placeholder="t('tools.case.inputPlaceholder')"
         />
 
         <fieldset class="space-y-2">
-          <legend class="text-sm font-semibold">Output style</legend>
+          <legend class="text-sm font-semibold">
+            {{ t('tools.case.outputStyle') }}
+          </legend>
           <div class="flex flex-wrap gap-2">
             <label
               v-for="caseMode in CASE_MODES"
@@ -62,17 +72,19 @@ function processText() {
                 type="radio"
                 :value="caseMode.value"
               />
-              {{ caseMode.label }}
+              {{ getCaseModeLabel(caseMode.value, t) }}
             </label>
           </div>
         </fieldset>
 
-        <BaseButton variant="primary" @click="processText">Convert case</BaseButton>
+        <BaseButton variant="primary" @click="processText">
+          {{ t('tools.case.action') }}
+        </BaseButton>
       </div>
 
       <ToolOutput
         id="case-output"
-        empty-copy="Converted text will appear here."
+        :empty-copy="t('tools.case.emptyOutput')"
         :output="output"
         @clear="output = ''"
       />

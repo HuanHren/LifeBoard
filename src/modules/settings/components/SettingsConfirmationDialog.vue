@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from 'vue'
+import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
   open: boolean
@@ -16,6 +17,7 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const dialog = ref<HTMLDialogElement | null>(null)
 const cancelButton = ref<HTMLButtonElement | null>(null)
 const acknowledged = ref(false)
@@ -120,7 +122,7 @@ watch(
           type="button"
           @click="cancel"
         >
-          Cancel
+          {{ t('settings.common.cancel') }}
         </button>
         <button
           class="border-[var(--color-danger)] bg-[var(--color-danger)] text-[var(--color-text-inverse)] hover:border-[var(--color-danger)]"

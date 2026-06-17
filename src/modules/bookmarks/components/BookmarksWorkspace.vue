@@ -4,11 +4,14 @@ import { storeToRefs } from 'pinia'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import BookmarkComposer from '@/modules/bookmarks/components/BookmarkComposer.vue'
 import BookmarkControls from '@/modules/bookmarks/components/BookmarkControls.vue'
 import BookmarkSection from '@/modules/bookmarks/components/BookmarkSection.vue'
 import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
+import { localizeBookmarkError } from '@/modules/bookmarks/utils/bookmarksI18n'
 
+const { t } = useI18n()
 const bookmarksStore = useBookmarksStore()
 const {
   activeCategory,
@@ -50,7 +53,7 @@ onMounted(() => {
   <div class="space-y-6">
     <BookmarkComposer ref="composer" />
 
-    <BaseSkeleton v-if="!isInitialized" label="Loading your bookmarks" />
+    <BaseSkeleton v-if="!isInitialized" :label="t('home.bookmarks.loading')" />
 
     <template v-else>
       <BookmarkControls
@@ -65,23 +68,23 @@ onMounted(() => {
 
       <BaseError
         v-if="persistenceError"
-        :message="persistenceError"
-        title="Bookmarks could not be saved or loaded"
+        :message="localizeBookmarkError(persistenceError, t) ?? ''"
+        :title="t('bookmarks.error.persistenceTitle')"
       />
 
       <BaseEmpty
         v-if="!hasBookmarks"
-        action-label="Add your first bookmark"
-        description="Save a useful website, project link, document, or reference. It will stay in this browser."
-        title="No bookmarks saved yet"
+        :action-label="t('bookmarks.form.addAction')"
+        :description="t('bookmarks.empty.description')"
+        :title="t('bookmarks.empty.title')"
         @action="focusComposer"
       />
 
       <BaseEmpty
         v-else-if="!hasVisibleBookmarks"
-        action-label="Clear filters"
-        description="No saved bookmarks match the current search and category."
-        title="No matching bookmarks"
+        :action-label="t('bookmarks.controls.clear')"
+        :description="t('bookmarks.empty.filteredDescription')"
+        :title="t('bookmarks.empty.filteredTitle')"
         @action="clearFilters"
       />
 
@@ -89,8 +92,8 @@ onMounted(() => {
         <BookmarkSection
           v-if="filteredPinnedBookmarks.length > 0"
           :bookmarks="filteredPinnedBookmarks"
-          description="Pinned references stay close while respecting the current filters."
-          title="Pinned"
+          :description="t('bookmarks.section.pinnedDescription')"
+          :title="t('bookmarks.section.pinned')"
           tone="pinned"
         />
 
@@ -99,10 +102,10 @@ onMounted(() => {
           :bookmarks="filteredBookmarks"
           :description="
             filtersActive
-              ? 'Saved references matching the current filters.'
-              : 'Your saved references, ordered by the most recently updated.'
+              ? t('bookmarks.section.filteredDescription')
+              : t('bookmarks.section.savedDescription')
           "
-          title="Bookmarks"
+          :title="t('bookmarks.section.saved')"
         />
       </template>
     </template>

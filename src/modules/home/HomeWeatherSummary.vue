@@ -5,13 +5,20 @@ import { RouterLink } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import {
   formatFullLocalTime,
   formatLocationName,
   formatTemperature,
 } from '@/modules/weather/utils/weatherFormatting'
+import {
+  localizeAdviceItem,
+  localizeWeatherCondition,
+  localizeWeatherError,
+} from '@/modules/weather/utils/weatherI18n'
 
+const { locale, t } = useI18n()
 const weatherStore = useWeatherStore()
 const {
   selectedLocation,
@@ -41,6 +48,12 @@ const adviceHighlight = computed(() => {
 const umbrellaAdvice = computed(
   () => weather.value?.advice.items.find((item) => item.kind === 'umbrella') ?? null,
 )
+const localizedAdviceHighlight = computed(() =>
+  adviceHighlight.value ? localizeAdviceItem(adviceHighlight.value, t) : null,
+)
+const localizedUmbrellaAdvice = computed(() =>
+  umbrellaAdvice.value ? localizeAdviceItem(umbrellaAdvice.value, t) : null,
+)
 
 function refreshWeather() {
   void loadForecast()
@@ -59,10 +72,10 @@ onMounted(() => {
           id="home-weather-title"
           class="text-section-title text-balance text-[var(--color-text-primary)]"
         >
-          Weather at a glance
+          {{ t('home.weather.title') }}
         </h2>
         <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          Real conditions and practical guidance from your selected city.
+          {{ t('home.weather.description') }}
         </p>
       </div>
       <RouterLink
@@ -70,18 +83,18 @@ onMounted(() => {
         class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'weather' }"
       >
-        Open full weather
+        {{ t('home.weather.open') }}
         <span class="ml-2" aria-hidden="true">&rarr;</span>
       </RouterLink>
     </div>
 
-    <BaseSkeleton v-if="isPreparing" label="Loading your weather summary" />
+    <BaseSkeleton v-if="isPreparing" :label="t('home.weather.loading')" />
 
     <BaseError
       v-else-if="forecastStatus === 'error' && selectedLocation"
-      action-label="Load latest weather"
-      :message="forecastError ?? 'The latest forecast could not be loaded.'"
-      title="Weather summary unavailable"
+      :action-label="t('home.weather.retry')"
+      :message="localizeWeatherError(forecastError, t) ?? t('home.weather.errorFallback')"
+      :title="t('home.weather.errorTitle')"
       @action="refreshWeather"
     />
 
@@ -99,52 +112,54 @@ onMounted(() => {
           </p>
           <div class="pb-0.5">
             <p class="text-lg font-semibold text-balance text-[var(--color-text-primary)]">
-              {{ weather.current.condition.label }}
+              {{ localizeWeatherCondition(weather.current.condition, t) }}
             </p>
             <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-              Feels like
               {{
-                formatTemperature(
-                  weather.current.apparentTemperature,
-                  weather.units.temperature,
-                )
+                t('home.weather.feelsLike', {
+                  temperature: formatTemperature(
+                    weather.current.apparentTemperature,
+                    weather.units.temperature,
+                  ),
+                })
               }}
             </p>
           </div>
         </div>
         <p class="mt-6 text-caption text-[var(--color-text-secondary)]">
-          Updated
-          <time :datetime="weather.current.time">
-            {{ formatFullLocalTime(weather.current.time) }}
-          </time>
-          {{ weather.timezoneAbbreviation }}
+          {{
+            t('home.weather.updated', {
+              time: formatFullLocalTime(weather.current.time, locale),
+              timezone: weather.timezoneAbbreviation,
+            })
+          }}
         </p>
       </div>
 
       <div
         class="border-t border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-6 sm:p-8 lg:border-t-0 lg:border-l"
       >
-        <div v-if="adviceHighlight">
+        <div v-if="localizedAdviceHighlight">
           <p class="text-caption font-medium text-[var(--color-text-secondary)]">
-            Daily guidance
+            {{ t('home.weather.guidance') }}
           </p>
           <p class="mt-2 text-base font-semibold leading-6 text-pretty text-[var(--color-text-primary)]">
-            {{ adviceHighlight.summary }}
+            {{ localizedAdviceHighlight.summary }}
           </p>
           <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-            {{ adviceHighlight.detail }}
+            {{ localizedAdviceHighlight.detail }}
           </p>
         </div>
 
         <div
-          v-if="umbrellaAdvice"
+          v-if="localizedUmbrellaAdvice"
           class="mt-5 border-t border-[var(--color-border-soft)] pt-4"
         >
           <p class="text-caption font-medium text-[var(--color-text-secondary)]">
-            Umbrella
+            {{ t('home.weather.umbrella') }}
           </p>
           <p class="mt-1 text-sm font-semibold leading-6 text-pretty text-[var(--color-text-primary)]">
-            {{ umbrellaAdvice.summary }}
+            {{ localizedUmbrellaAdvice.summary }}
           </p>
         </div>
       </div>
@@ -155,13 +170,13 @@ onMounted(() => {
       class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-6"
     >
       <h3 class="text-section-title text-balance text-[var(--color-text-primary)]">
-        Load weather for {{ selectedLocation.name }}
+        {{ t('home.weather.loadTitle', { city: selectedLocation.name }) }}
       </h3>
       <p class="mt-2 max-w-xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        Your city is saved, but current conditions have not been loaded in this session.
+        {{ t('home.weather.loadDescription') }}
       </p>
       <BaseButton class="mt-4" size="sm" variant="primary" @click="refreshWeather">
-        Load latest weather
+        {{ t('home.weather.retry') }}
       </BaseButton>
     </article>
 
@@ -170,16 +185,16 @@ onMounted(() => {
       class="rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8"
     >
       <h3 class="text-section-title text-balance text-[var(--color-text-primary)]">
-        Connect your local weather
+        {{ t('home.weather.connectTitle') }}
       </h3>
       <p class="mt-2 max-w-xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        Choose a city in Weather to connect this summary.
+        {{ t('home.weather.connectDescription') }}
       </p>
       <RouterLink
         class="interactive-surface mt-4 inline-flex min-h-11 items-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
         :to="{ name: 'weather' }"
       >
-        Choose a city
+        {{ t('home.weather.chooseCity') }}
       </RouterLink>
     </article>
   </section>

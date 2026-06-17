@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import { formatLocationName } from '@/modules/weather/utils/weatherFormatting'
+import { localizeLocationKind } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   query: string
@@ -13,6 +15,7 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -24,13 +27,17 @@ const emit = defineEmits<Emits>()
       id="weather-search-results-title"
       class="text-base font-semibold text-[var(--color-text-primary)]"
     >
-      {{ results.length > 0 ? 'Choose a location' : 'No matching cities found' }}
+      {{
+        results.length > 0
+          ? t('weather.results.chooseTitle')
+          : t('weather.results.emptyTitle')
+      }}
     </h2>
     <p class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]" aria-live="polite">
       {{
         results.length > 0
-          ? `${results.length} matches for ${query}.`
-          : `Check the spelling of ${query}, or include a region.`
+          ? t('weather.results.matches', { count: results.length, query })
+          : t('weather.results.noMatches', { query })
       }}
     </p>
 
@@ -45,7 +52,7 @@ const emit = defineEmits<Emits>()
             {{ location.name }}
           </span>
           <span class="mt-1 block text-caption text-[var(--color-text-secondary)]">
-            {{ location.kind }} - {{ formatLocationName(location) }}
+            {{ localizeLocationKind(location.kind, t) }} · {{ formatLocationName(location) }}
           </span>
         </button>
       </li>

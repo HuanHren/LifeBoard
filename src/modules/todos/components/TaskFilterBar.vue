@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
 import { TASK_FILTERS } from '@/modules/todos/constants/todos'
 import type { TaskFilter } from '@/modules/todos/types/todos'
+import { getTaskFilterLabel } from '@/modules/todos/utils/todosI18n'
 
 interface Props {
   activeFilter: TaskFilter
@@ -12,12 +14,13 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 </script>
 
 <template>
   <div
     class="flex max-w-full gap-1 overflow-x-auto rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-1"
-    aria-label="Filter tasks"
+    :aria-label="t('todos.tasks.filterLabel')"
     role="group"
   >
     <button
@@ -33,7 +36,7 @@ const emit = defineEmits<Emits>()
       type="button"
       @click="emit('change', filter.value)"
     >
-      {{ filter.label }}
+      {{ getTaskFilterLabel(filter.value, t) }}
     </button>
   </div>
 </template>

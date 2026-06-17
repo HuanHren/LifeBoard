@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
+import { useI18n } from '@/i18n/useI18n'
 import CurrentWeatherSummary from '@/modules/weather/components/CurrentWeatherSummary.vue'
 import DailyForecastStrip from '@/modules/weather/components/DailyForecastStrip.vue'
 import HourlyForecastStrip from '@/modules/weather/components/HourlyForecastStrip.vue'
@@ -13,8 +14,10 @@ import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vu
 import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
+import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 const weatherStore = useWeatherStore()
+const { t } = useI18n()
 const {
   selectedLocation,
   searchQuery,
@@ -60,33 +63,42 @@ onMounted(() => {
       v-if="!selectedLocation && forecastStatus === 'idle' && searchStatus !== 'success'"
       aria-labelledby="weather-setup-title"
     >
-      <h2 id="weather-setup-title" class="sr-only">Weather setup</h2>
+      <h2 id="weather-setup-title" class="sr-only">
+        {{ t('weather.state.setupTitle') }}
+      </h2>
       <BaseEmpty
-        action-label="Focus city search"
-        description="Choose a city to load real conditions, practical guidance, and forecast details."
-        title="Start with your city"
+        :action-label="t('weather.state.setupAction')"
+        :description="t('weather.state.setupDescription')"
+        :title="t('weather.state.setupHeading')"
         @action="focusCitySearch"
       />
     </section>
 
     <section v-else-if="forecastStatus === 'loading'" aria-labelledby="weather-loading-title">
-      <h2 id="weather-loading-title" class="sr-only">Loading weather</h2>
+      <h2 id="weather-loading-title" class="sr-only">
+        {{ t('weather.state.loadingTitle') }}
+      </h2>
       <WeatherLoadingState />
     </section>
 
     <section v-else-if="forecastStatus === 'error'" aria-labelledby="weather-error-title">
-      <h2 id="weather-error-title" class="sr-only">Weather loading error</h2>
+      <h2 id="weather-error-title" class="sr-only">
+        {{ t('weather.state.errorTitle') }}
+      </h2>
       <BaseError
-        action-label="Retry forecast"
-        :message="forecastError ?? 'The forecast could not be loaded.'"
-        title="Weather unavailable"
+        :action-label="t('weather.state.retry')"
+        :message="
+          localizeWeatherError(forecastError, t) ??
+          t('weather.state.errorFallback')
+        "
+        :title="t('weather.state.errorHeading')"
         @action="loadForecast()"
       />
     </section>
 
     <div v-else-if="weather" class="space-y-10">
       <p class="sr-only" role="status">
-        Weather loaded for {{ weather.location.name }}.
+        {{ t('weather.state.loaded', { city: weather.location.name }) }}
       </p>
       <div class="grid items-start gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <CurrentWeatherSummary

@@ -3,6 +3,7 @@ import { shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
+import { useI18n } from '@/i18n/useI18n'
 import CountdownForm from '@/modules/todos/components/CountdownForm.vue'
 import CountdownList from '@/modules/todos/components/CountdownList.vue'
 import type { Countdown } from '@/modules/todos/types/todos'
@@ -13,6 +14,7 @@ interface Props {
 }
 
 defineProps<Props>()
+const { t } = useI18n()
 const isCreating = shallowRef(false)
 </script>
 
@@ -20,9 +22,11 @@ const isCreating = shallowRef(false)
   <BaseCard as="section">
     <div class="flex items-start justify-between gap-4">
       <div>
-        <h2 class="text-section-title text-[var(--color-text-primary)]">Countdowns</h2>
+        <h2 class="text-section-title text-[var(--color-text-primary)]">
+          {{ t('todos.countdowns.title') }}
+        </h2>
         <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-          Keep important dates close without turning them into tasks.
+          {{ t('todos.countdowns.description') }}
         </p>
       </div>
       <BaseButton
@@ -32,7 +36,7 @@ const isCreating = shallowRef(false)
         variant="secondary"
         @click="isCreating = true"
       >
-        Add
+        {{ t('todos.countdowns.addAction') }}
       </BaseButton>
     </div>
 
@@ -46,9 +50,9 @@ const isCreating = shallowRef(false)
     <div class="mt-5 border-t border-[var(--color-border-soft)] pt-5">
       <BaseEmpty
         v-if="countdowns.length === 0"
-        action-label="Add a countdown"
-        description="Add a date you want to keep in view."
-        title="No countdowns yet"
+        :action-label="t('todos.countdowns.addAction')"
+        :description="t('todos.countdowns.emptyDescription')"
+        :title="t('todos.countdowns.emptyTitle')"
         @action="isCreating = true"
       />
       <CountdownList v-else :countdowns="countdowns" :today="today" />

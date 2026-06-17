@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import type { SettingsClearTarget } from '@/modules/settings/types/settings'
 
 interface Props {
@@ -16,8 +18,33 @@ interface Emits {
   requestClear: [target: SettingsClearTarget, trigger: HTMLElement]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
+
+const todosDescription = computed(() => {
+  const parameters = {
+    taskCount: props.taskCount,
+    countdownCount: props.countdownCount,
+  }
+
+  if (props.taskCount === 1 && props.countdownCount === 1) {
+    return t('settings.clearData.todosOneOne')
+  }
+  if (props.taskCount === 1) {
+    return t('settings.clearData.todosOneMany', parameters)
+  }
+  if (props.countdownCount === 1) {
+    return t('settings.clearData.todosManyOne', parameters)
+  }
+  return t('settings.clearData.todosManyMany', parameters)
+})
+
+const bookmarksDescription = computed(() =>
+  props.bookmarkCount === 1
+    ? t('settings.clearData.bookmarkOne')
+    : t('settings.clearData.bookmarkMany', { count: props.bookmarkCount }),
+)
 
 function requestClear(target: SettingsClearTarget, event: MouseEvent) {
   emit('requestClear', target, event.currentTarget as HTMLElement)
@@ -29,9 +56,11 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
     <div class="divide-y divide-[var(--color-border-soft)]">
       <div class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">Weather</h3>
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ t('settings.common.weather') }}
+          </h3>
           <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-            Remove the selected city and current in-memory forecast.
+            {{ t('settings.clearData.weatherDescription') }}
           </p>
         </div>
         <BaseButton
@@ -39,16 +68,20 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('weather', $event)"
         >
-          Clear Weather
+          {{ t('settings.clearData.clearWeather') }}
         </BaseButton>
-        <span v-else class="text-sm text-[var(--color-text-tertiary)]">Nothing saved</span>
+        <span v-else class="text-sm text-[var(--color-text-tertiary)]">
+          {{ t('settings.clearData.nothingSaved') }}
+        </span>
       </div>
 
       <div class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">Todos</h3>
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ t('settings.common.todos') }}
+          </h3>
           <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-            Remove {{ taskCount }} tasks and {{ countdownCount }} countdowns.
+            {{ todosDescription }}
           </p>
         </div>
         <BaseButton
@@ -56,16 +89,20 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('todos', $event)"
         >
-          Clear Todos
+          {{ t('settings.clearData.clearTodos') }}
         </BaseButton>
-        <span v-else class="text-sm text-[var(--color-text-tertiary)]">Nothing saved</span>
+        <span v-else class="text-sm text-[var(--color-text-tertiary)]">
+          {{ t('settings.clearData.nothingSaved') }}
+        </span>
       </div>
 
       <div class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
-          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">Bookmarks</h3>
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ t('settings.common.bookmarks') }}
+          </h3>
           <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-            Remove {{ bookmarkCount }} saved bookmarks.
+            {{ bookmarksDescription }}
           </p>
         </div>
         <BaseButton
@@ -73,15 +110,19 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('bookmarks', $event)"
         >
-          Clear Bookmarks
+          {{ t('settings.clearData.clearBookmarks') }}
         </BaseButton>
-        <span v-else class="text-sm text-[var(--color-text-tertiary)]">Nothing saved</span>
+        <span v-else class="text-sm text-[var(--color-text-tertiary)]">
+          {{ t('settings.clearData.nothingSaved') }}
+        </span>
       </div>
 
       <div class="p-4 sm:px-5">
-        <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">Tools</h3>
+        <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('settings.common.tools') }}
+        </h3>
         <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-          No saved tool input to clear.
+          {{ t('settings.clearData.toolsDescription') }}
         </p>
       </div>
     </div>
@@ -90,10 +131,10 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
-            Clear all LifeBoard data
+            {{ t('settings.clearData.allTitle') }}
           </h3>
           <p class="mt-1 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">
-            Remove the theme preference, selected city, tasks, countdowns, and bookmarks stored by LifeBoard.
+            {{ t('settings.clearData.allDescription') }}
           </p>
         </div>
         <BaseButton
@@ -101,7 +142,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('all', $event)"
         >
-          Clear all data
+          {{ t('settings.clearData.allAction') }}
         </BaseButton>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import type { AppLocale } from '@/i18n/types'
+
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
 function getDateParts(value: string) {
@@ -47,14 +49,14 @@ export function differenceInCalendarDays(target: string, base: string) {
   return Math.round((targetUtc - baseUtc) / 86_400_000)
 }
 
-export function formatReadableDate(value: string) {
+export function formatReadableDate(value: string, locale: AppLocale) {
   const parts = getDateParts(value)
 
   if (!parts) {
     return value
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(locale, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

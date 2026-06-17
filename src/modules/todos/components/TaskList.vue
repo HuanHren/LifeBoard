@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
+import { useI18n } from '@/i18n/useI18n'
 import TaskItem from '@/modules/todos/components/TaskItem.vue'
 import type { Task, TaskFilter } from '@/modules/todos/types/todos'
 
@@ -10,25 +12,28 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useI18n()
 
-const emptyCopy: Record<TaskFilter, { title: string; description: string }> = {
-  today: {
-    title: 'Today is clear',
-    description: 'Tasks due today and overdue unfinished tasks will appear here.',
-  },
-  upcoming: {
-    title: 'Nothing upcoming',
-    description: 'Future-dated tasks will appear here when you add them.',
-  },
-  completed: {
-    title: 'No completed tasks',
-    description: 'Completed tasks remain available here until you delete them.',
-  },
-  all: {
-    title: 'No tasks yet',
-    description: 'Use the task form above to add your first item.',
-  },
-}
+const emptyCopy = computed<Record<TaskFilter, { title: string; description: string }>>(
+  () => ({
+    today: {
+      title: t('todos.tasks.empty.todayTitle'),
+      description: t('todos.tasks.empty.todayDescription'),
+    },
+    upcoming: {
+      title: t('todos.tasks.empty.upcomingTitle'),
+      description: t('todos.tasks.empty.upcomingDescription'),
+    },
+    completed: {
+      title: t('todos.tasks.empty.completedTitle'),
+      description: t('todos.tasks.empty.completedDescription'),
+    },
+    all: {
+      title: t('todos.tasks.empty.allTitle'),
+      description: t('todos.tasks.empty.allDescription'),
+    },
+  }),
+)
 </script>
 
 <template>

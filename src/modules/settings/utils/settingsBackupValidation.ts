@@ -62,18 +62,18 @@ export function validateLifeBoardBackup(
     'todos',
     'bookmarks',
   ])) {
-    return { ok: false, error: 'This file is not a complete LifeBoard backup.' }
+    return { ok: false, error: 'settings.error.backupIncomplete' }
   }
 
   if (value.version !== SETTINGS_BACKUP_VERSION) {
     return {
       ok: false,
-      error: `Backup version ${String(value.version)} is not supported. LifeBoard currently accepts version 1.`,
+      error: 'settings.error.backupVersionUnsupported',
     }
   }
 
   if (!isIsoTimestamp(value.exportedAt)) {
-    return { ok: false, error: 'The backup export date is missing or invalid.' }
+    return { ok: false, error: 'settings.error.backupDateInvalid' }
   }
 
   if (
@@ -81,7 +81,7 @@ export function validateLifeBoardBackup(
     !hasExactKeys(value.preferences, ['themeMode']) ||
     !isThemeMode(value.preferences.themeMode)
   ) {
-    return { ok: false, error: 'The backup contains an invalid theme preference.' }
+    return { ok: false, error: 'settings.error.backupThemeInvalid' }
   }
 
   if (
@@ -90,15 +90,15 @@ export function validateLifeBoardBackup(
     (value.weather.selectedLocation !== null &&
       !isWeatherLocation(value.weather.selectedLocation))
   ) {
-    return { ok: false, error: 'The backup contains an invalid weather location.' }
+    return { ok: false, error: 'settings.error.backupWeatherInvalid' }
   }
 
   if (!isTodosEnvelope(value.todos)) {
-    return { ok: false, error: 'The backup contains invalid Todos data.' }
+    return { ok: false, error: 'settings.error.backupTodosInvalid' }
   }
 
   if (!isBookmarksEnvelope(value.bookmarks)) {
-    return { ok: false, error: 'The backup contains invalid Bookmarks data.' }
+    return { ok: false, error: 'settings.error.backupBookmarksInvalid' }
   }
 
   return { ok: true, data: value as unknown as LifeBoardBackupV1 }

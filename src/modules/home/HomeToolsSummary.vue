@@ -1,22 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useI18n } from '@/i18n/useI18n'
 import { TOOL_DEFINITIONS } from '@/modules/tools/constants/tools'
-import type { ToolId } from '@/modules/tools/types/tools'
+import { getToolDefinitionCopy } from '@/modules/tools/utils/toolsI18n'
 
-const capabilityLabels = {
-  json: 'JSON',
-  timestamp: 'Timestamp',
-  whitespace: 'Text cleanup',
-  deduplicate: 'Dedupe',
-  case: 'Case',
-  counter: 'Counter',
-} satisfies Record<ToolId, string>
+const { t } = useI18n()
 
-const toolCapabilities = TOOL_DEFINITIONS.map((tool) => ({
-  id: tool.id,
-  label: capabilityLabels[tool.id],
-  description: tool.description,
-}))
+const toolCapabilities = computed(() =>
+  TOOL_DEFINITIONS.map((tool) => ({
+    id: tool.id,
+    ...getToolDefinitionCopy(tool.id, t),
+  })),
+)
 </script>
 
 <template>
@@ -27,17 +23,17 @@ const toolCapabilities = TOOL_DEFINITIONS.map((tool) => ({
           id="home-tools-title"
           class="text-section-title text-balance text-[var(--color-text-primary)]"
         >
-          Everyday tools
+          {{ t('home.tools.title') }}
         </h2>
         <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          Six focused utilities that work locally in this browser.
+          {{ t('home.tools.description') }}
         </p>
       </div>
       <RouterLink
         class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'tools' }"
       >
-        Open Tools
+        {{ t('home.tools.open') }}
         <span class="ml-2" aria-hidden="true">&rarr;</span>
       </RouterLink>
     </div>
@@ -47,20 +43,19 @@ const toolCapabilities = TOOL_DEFINITIONS.map((tool) => ({
     >
       <div class="bg-[var(--color-accent-wash)] p-6 sm:p-8">
         <p class="text-caption font-medium text-[var(--color-accent-text)]">
-          Available now
+          {{ t('home.tools.available') }}
         </p>
         <h3 class="mt-2 text-lg font-semibold text-balance text-[var(--color-text-primary)]">
-          Private utility workbench
+          {{ t('home.tools.privateTitle') }}
         </h3>
         <p class="mt-3 max-w-md text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          Inputs stay inside the active Tools page. Home shows capabilities only, never content or
-          usage history.
+          {{ t('home.tools.privateDescription') }}
         </p>
       </div>
 
       <ul
         class="grid gap-px bg-[var(--color-border-soft)] sm:grid-cols-2 lg:border-l lg:border-[var(--color-border-soft)]"
-        aria-label="Available tool capabilities"
+        :aria-label="t('home.tools.listLabel')"
       >
         <li
           v-for="tool in toolCapabilities"
@@ -68,7 +63,7 @@ const toolCapabilities = TOOL_DEFINITIONS.map((tool) => ({
           class="bg-[var(--color-surface-raised)] px-5 py-4"
         >
           <p class="text-sm font-semibold text-[var(--color-text-primary)]">
-            {{ tool.label }}
+            {{ tool.shortTitle }}
           </p>
           <p class="mt-1 text-caption leading-5 text-pretty text-[var(--color-text-secondary)]">
             {{ tool.description }}

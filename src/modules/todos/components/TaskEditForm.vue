@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import {
   TASK_LABEL_MAX_LENGTH,
   TASK_TITLE_MAX_LENGTH,
@@ -11,6 +12,7 @@ import {
   hasValidationErrors,
   validateTaskDraft,
 } from '@/modules/todos/utils/todoValidation'
+import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
 interface Props {
   task: Task
@@ -23,6 +25,7 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const todosStore = useTodosStore()
 const title = shallowRef(props.task.title)
 const dueDate = shallowRef(props.task.dueDate ?? '')
@@ -51,7 +54,7 @@ function saveTask() {
     <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_10.5rem]">
       <div class="space-y-2">
         <label class="block text-sm font-semibold" :for="`edit-task-title-${task.id}`">
-          Task title
+          {{ t('todos.tasks.titleLabel') }}
         </label>
         <input
           :id="`edit-task-title-${task.id}`"
@@ -68,12 +71,12 @@ function saveTask() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.title }}
+          {{ localizeTodosError(errors.title, t) }}
         </p>
       </div>
       <div class="space-y-2">
         <label class="block text-sm font-semibold" :for="`edit-task-date-${task.id}`">
-          Due date
+          {{ t('todos.tasks.dueDateLabel') }}
         </label>
         <input
           :id="`edit-task-date-${task.id}`"
@@ -87,7 +90,7 @@ function saveTask() {
     </div>
     <div class="space-y-2">
       <label class="block text-sm font-semibold" :for="`edit-task-label-${task.id}`">
-        Label
+        {{ t('todos.tasks.labelLabel') }}
       </label>
       <input
         :id="`edit-task-label-${task.id}`"
@@ -104,7 +107,7 @@ function saveTask() {
         class="text-sm font-medium text-[var(--color-danger)]"
         role="alert"
       >
-        {{ errors.date }}
+        {{ localizeTodosError(errors.date, t) }}
       </p>
       <p
         v-if="errors.label"
@@ -112,12 +115,16 @@ function saveTask() {
         class="text-sm font-medium text-[var(--color-danger)]"
         role="alert"
       >
-        {{ errors.label }}
+        {{ localizeTodosError(errors.label, t) }}
       </p>
     </div>
     <div class="flex flex-wrap justify-end gap-2">
-      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">Cancel</BaseButton>
-      <BaseButton size="sm" type="submit" variant="primary">Save task</BaseButton>
+      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">
+        {{ t('todos.tasks.cancelAction') }}
+      </BaseButton>
+      <BaseButton size="sm" type="submit" variant="primary">
+        {{ t('todos.tasks.saveAction') }}
+      </BaseButton>
     </div>
   </form>
 </template>

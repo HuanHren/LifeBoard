@@ -3,10 +3,13 @@ import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterLink } from 'vue-router'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { useCountdownStatus } from '@/modules/todos/composables/useCountdownStatus'
 import { useTodosStore } from '@/modules/todos/stores/todos'
 import { formatReadableDate } from '@/modules/todos/utils/todoDates'
+import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
+const { locale, t } = useI18n()
 const todosStore = useTodosStore()
 const {
   activeTaskCountForToday,
@@ -30,20 +33,23 @@ const countdownTarget = computed(
 const countdownStatus = useCountdownStatus(countdownTarget, localToday)
 const todayTaskCopy = computed(() => {
   if (!hasTasks.value) {
-    return 'No tasks are saved yet.'
+    return t('home.todos.noTasksSaved')
   }
 
   if (activeTaskCountForToday.value > 0) {
-    return `${activeTaskCountForToday.value} active ${
-      activeTaskCountForToday.value === 1 ? 'task needs' : 'tasks need'
-    } attention today.`
+    return t(
+      activeTaskCountForToday.value === 1
+        ? 'home.todos.activeOne'
+        : 'home.todos.activeMany',
+      { count: activeTaskCountForToday.value },
+    )
   }
 
   if (upcomingTasks.value.length > 0) {
-    return 'Nothing due today. Next up is below.'
+    return `${t('home.todos.noneDue')} ${t('home.todos.nextBelow')}`
   }
 
-  return 'No active tasks need attention today.'
+  return t('home.todos.noActive')
 })
 
 onMounted(() => {
@@ -59,22 +65,22 @@ onMounted(() => {
           id="home-todos-title"
           class="text-section-title text-balance text-[var(--color-text-primary)]"
         >
-          Today and ahead
+          {{ t('home.todos.title') }}
         </h2>
         <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          A concise view of tasks and dates saved in this browser.
+          {{ t('home.todos.description') }}
         </p>
       </div>
       <RouterLink
         class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'todos' }"
       >
-        Open Todos
+        {{ t('home.todos.open') }}
         <span class="ml-2" aria-hidden="true">&rarr;</span>
       </RouterLink>
     </div>
 
-    <BaseSkeleton v-if="!isInitialized" label="Loading your planning summary" />
+    <BaseSkeleton v-if="!isInitialized" :label="t('home.todos.loading')" />
 
     <div
       v-else-if="persistenceError"
@@ -82,16 +88,16 @@ onMounted(() => {
       role="alert"
     >
       <p class="text-sm font-semibold text-[var(--color-text-primary)]">
-        Saved planning data needs attention
+        {{ t('home.todos.errorTitle') }}
       </p>
       <p class="mt-1 max-w-2xl text-sm leading-6 text-pretty text-[var(--color-text-primary)]">
-        {{ persistenceError }}
+        {{ localizeTodosError(persistenceError, t) }}
       </p>
       <RouterLink
         class="interactive-surface mt-3 inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-surface-raised)]"
         :to="{ name: 'todos' }"
       >
-        Review in Todos
+        {{ t('home.todos.review') }}
         <span class="ml-2" aria-hidden="true">&rarr;</span>
       </RouterLink>
     </div>
@@ -101,14 +107,16 @@ onMounted(() => {
       class="grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] lg:grid-cols-[minmax(0,1.35fr)_minmax(17rem,0.65fr)]"
     >
       <div class="p-6 sm:p-8">
-        <p class="text-caption font-medium text-[var(--color-text-secondary)]">Tasks</p>
+        <p class="text-caption font-medium text-[var(--color-text-secondary)]">
+          {{ t('home.todos.tasks') }}
+        </p>
         <p class="mt-2 text-lg font-semibold text-pretty text-[var(--color-text-primary)]">
           <span class="tabular-nums">{{ todayTaskCopy }}</span>
         </p>
 
         <div v-if="nextActiveTask" class="mt-5 border-t border-[var(--color-border-soft)] pt-4">
           <p class="text-caption font-medium text-[var(--color-text-secondary)]">
-            Next active task
+            {{ t('home.todos.nextActiveTask') }}
           </p>
           <p class="mt-1 font-semibold text-pretty text-[var(--color-text-primary)]">
             {{ nextActiveTask.title }}
@@ -118,18 +126,22 @@ onMounted(() => {
             class="mt-1 block text-caption text-[var(--color-text-secondary)]"
             :datetime="nextActiveTask.dueDate"
           >
-            Due {{ formatReadableDate(nextActiveTask.dueDate) }}
+            {{
+              t('home.todos.due', {
+                date: formatReadableDate(nextActiveTask.dueDate, locale),
+              })
+            }}
           </time>
           <p v-else class="mt-1 text-caption text-[var(--color-text-secondary)]">
-            No due date
+            {{ t('home.todos.noDueDate') }}
           </p>
         </div>
 
         <p v-else class="mt-4 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
           {{
             hasTasks
-              ? 'No active tasks are saved right now.'
-              : 'Add a task in Todos when you have something to plan.'
+              ? t('home.todos.noActiveSaved')
+              : t('home.todos.addTaskPrompt')
           }}
         </p>
       </div>
@@ -137,7 +149,9 @@ onMounted(() => {
       <div
         class="border-t border-[var(--color-border-soft)] bg-[var(--color-accent-wash)] p-6 sm:p-8 lg:border-t-0 lg:border-l"
       >
-        <p class="text-caption font-medium text-[var(--color-text-secondary)]">Next countdown</p>
+        <p class="text-caption font-medium text-[var(--color-text-secondary)]">
+          {{ t('home.todos.nextCountdown') }}
+        </p>
         <div v-if="displayCountdown" class="mt-2">
           <p class="font-semibold text-pretty text-[var(--color-text-primary)]">
             {{ displayCountdown.title }}
@@ -149,11 +163,11 @@ onMounted(() => {
             class="mt-1 block text-caption text-[var(--color-text-secondary)]"
             :datetime="displayCountdown.targetDate"
           >
-            {{ formatReadableDate(displayCountdown.targetDate) }}
+            {{ formatReadableDate(displayCountdown.targetDate, locale) }}
           </time>
         </div>
         <p v-else class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          No countdowns are saved yet.
+          {{ t('home.todos.noCountdown') }}
         </p>
       </div>
     </article>
@@ -163,16 +177,16 @@ onMounted(() => {
       class="rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8"
     >
       <h3 class="text-section-title text-balance text-[var(--color-text-primary)]">
-        Connect your planning summary
+        {{ t('home.todos.connectTitle') }}
       </h3>
       <p class="mt-2 max-w-xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        Add a task or countdown in Todos to connect this summary.
+        {{ t('home.todos.emptyDescription') }}
       </p>
       <RouterLink
         class="interactive-surface mt-4 inline-flex min-h-11 items-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
         :to="{ name: 'todos' }"
       >
-        Open Todos
+        {{ t('home.todos.open') }}
       </RouterLink>
     </article>
   </section>

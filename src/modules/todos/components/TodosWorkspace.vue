@@ -2,12 +2,15 @@
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseError from '@/components/base/BaseError.vue'
+import { useI18n } from '@/i18n/useI18n'
 import CountdownSection from '@/modules/todos/components/CountdownSection.vue'
 import TaskComposer from '@/modules/todos/components/TaskComposer.vue'
 import TaskFilterBar from '@/modules/todos/components/TaskFilterBar.vue'
 import TaskList from '@/modules/todos/components/TaskList.vue'
 import { useTodosStore } from '@/modules/todos/stores/todos'
+import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
+const { t } = useI18n()
 const todosStore = useTodosStore()
 const {
   activeFilter,
@@ -29,9 +32,9 @@ onMounted(() => {
 
     <BaseError
       v-if="persistenceError"
-      action-label="Retry saving"
-      :message="persistenceError"
-      title="Planning data could not be saved"
+      :action-label="t('todos.error.persistenceRetry')"
+      :message="localizeTodosError(persistenceError, t) ?? ''"
+      :title="t('todos.error.persistenceTitle')"
       @action="retryPersistence"
     />
 
@@ -40,10 +43,10 @@ onMounted(() => {
         <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 id="task-list-title" class="text-section-title text-[var(--color-text-primary)]">
-              Tasks
+              {{ t('todos.tasks.sectionTitle') }}
             </h2>
             <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-              Today also includes unfinished tasks whose due date has passed.
+              {{ t('todos.tasks.sectionDescription') }}
             </p>
           </div>
           <TaskFilterBar :active-filter="activeFilter" @change="setFilter" />

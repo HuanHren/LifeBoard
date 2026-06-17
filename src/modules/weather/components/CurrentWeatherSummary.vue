@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
 import type {
   CurrentConditions,
   WeatherLocation,
@@ -12,6 +13,7 @@ import {
   formatWind,
   formatWindDirection,
 } from '@/modules/weather/utils/weatherFormatting'
+import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   location: WeatherLocation
@@ -21,6 +23,7 @@ interface Props {
 }
 
 defineProps<Props>()
+const { locale, t } = useI18n()
 </script>
 
 <template>
@@ -33,15 +36,18 @@ defineProps<Props>()
         id="current-weather-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
       >
-        Current conditions
+        {{ t('weather.current.title') }}
       </h2>
       <p class="mt-1.5 text-sm font-medium text-[var(--color-accent-text)]">
         {{ formatLocationName(location) }}
       </p>
       <p class="mt-1 text-caption text-pretty text-[var(--color-text-secondary)]">
-        Updated
-        <time :datetime="current.time">{{ formatFullLocalTime(current.time) }}</time>
-        {{ timezoneAbbreviation }}
+        {{
+          t('weather.current.updated', {
+            time: formatFullLocalTime(current.time, locale),
+            timezone: timezoneAbbreviation,
+          })
+        }}
       </p>
     </header>
 
@@ -51,10 +57,17 @@ defineProps<Props>()
       </p>
       <div class="pb-0.5">
         <p class="text-lg font-semibold text-balance text-[var(--color-text-primary)]">
-          {{ current.condition.label }}
+          {{ localizeWeatherCondition(current.condition, t) }}
         </p>
         <p class="mt-0.5 text-sm text-[var(--color-text-secondary)]">
-          Feels like {{ formatTemperature(current.apparentTemperature, units.temperature) }}
+          {{
+            t('weather.current.feelsLike', {
+              temperature: formatTemperature(
+                current.apparentTemperature,
+                units.temperature,
+              ),
+            })
+          }}
         </p>
       </div>
     </div>
@@ -63,26 +76,34 @@ defineProps<Props>()
       class="mt-6 grid grid-cols-2 gap-x-5 gap-y-4 border-t border-[var(--color-border-soft)] pt-5 sm:grid-cols-4"
     >
       <div>
-        <dt class="text-caption text-[var(--color-text-secondary)]">Humidity</dt>
+        <dt class="text-caption text-[var(--color-text-secondary)]">
+          {{ t('weather.current.humidity') }}
+        </dt>
         <dd class="mt-1 text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">
           {{ formatPercentage(current.relativeHumidity) }}
         </dd>
       </div>
       <div>
-        <dt class="text-caption text-[var(--color-text-secondary)]">Wind</dt>
+        <dt class="text-caption text-[var(--color-text-secondary)]">
+          {{ t('weather.current.wind') }}
+        </dt>
         <dd class="mt-1 text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">
-          {{ formatWindDirection(current.windDirection) }}
+          {{ formatWindDirection(current.windDirection, t) }}
           {{ formatWind(current.windSpeed, units.windSpeed) }}
         </dd>
       </div>
       <div>
-        <dt class="text-caption text-[var(--color-text-secondary)]">Gusts</dt>
+        <dt class="text-caption text-[var(--color-text-secondary)]">
+          {{ t('weather.current.gusts') }}
+        </dt>
         <dd class="mt-1 text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">
           {{ formatWind(current.windGusts, units.windSpeed) }}
         </dd>
       </div>
       <div>
-        <dt class="text-caption text-[var(--color-text-secondary)]">Cloud cover</dt>
+        <dt class="text-caption text-[var(--color-text-secondary)]">
+          {{ t('weather.current.cloudCover') }}
+        </dt>
         <dd class="mt-1 text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">
           {{ formatPercentage(current.cloudCover) }}
         </dd>

@@ -2,13 +2,17 @@
 import { computed, onMounted, ref, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseSection from '@/components/base/BaseSection.vue'
+import type { TranslationKey } from '@/i18n/keys'
+import { useI18n } from '@/i18n/useI18n'
 import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
 import BackupPanel from '@/modules/settings/components/BackupPanel.vue'
 import DataClearPanel from '@/modules/settings/components/DataClearPanel.vue'
 import LocalDataStatus from '@/modules/settings/components/LocalDataStatus.vue'
+import LanguageControl from '@/modules/settings/components/LanguageControl.vue'
 import PrivacyPanel from '@/modules/settings/components/PrivacyPanel.vue'
 import SettingsConfirmationDialog from '@/modules/settings/components/SettingsConfirmationDialog.vue'
 import ThemeModeControl from '@/modules/settings/components/ThemeModeControl.vue'
+import TranslationExportPanel from '@/modules/settings/components/TranslationExportPanel.vue'
 import {
   applyLifeBoardBackup,
   clearLifeBoardData,
@@ -23,6 +27,7 @@ import type {
   SettingsClearTarget,
   SettingsDataSnapshot,
 } from '@/modules/settings/types/settings'
+import { localizeSettingsError } from '@/modules/settings/utils/settingsMessages'
 import { BOOKMARKS_STORAGE_VERSION } from '@/modules/bookmarks/constants/bookmarks'
 import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
 import { TODOS_STORAGE_VERSION } from '@/modules/todos/constants/todos'
@@ -40,6 +45,7 @@ const themeStore = useThemeStore()
 const weatherStore = useWeatherStore()
 const todosStore = useTodosStore()
 const bookmarksStore = useBookmarksStore()
+const { t } = useI18n()
 
 const { mode, persistenceError: themeError } = storeToRefs(themeStore)
 const {
@@ -51,9 +57,9 @@ const { bookmarks } = storeToRefs(bookmarksStore)
 
 const statusError = shallowRef<string | null>(null)
 const backupError = shallowRef<string | null>(null)
-const backupSuccess = shallowRef<string | null>(null)
+const backupSuccess = shallowRef<TranslationKey | null>(null)
 const clearError = shallowRef<string | null>(null)
-const clearSuccess = shallowRef<string | null>(null)
+const clearSuccess = shallowRef<TranslationKey | null>(null)
 const pendingBackup = shallowRef<LifeBoardBackupV1 | null>(null)
 const dialogState = shallowRef<DialogState>(null)
 const isBusy = ref(false)
@@ -62,6 +68,21 @@ const taskCount = computed(() => tasks.value.length)
 const countdownCount = computed(() => countdowns.value.length)
 const bookmarkCount = computed(() => bookmarks.value.length)
 const weatherCity = computed(() => selectedLocation.value?.name ?? null)
+const localizedStatusError = computed(() =>
+  localizeSettingsError(statusError.value, t),
+)
+const localizedBackupError = computed(() =>
+  localizeSettingsError(backupError.value, t),
+)
+const localizedBackupSuccess = computed(() =>
+  backupSuccess.value ? t(backupSuccess.value) : null,
+)
+const localizedClearError = computed(() =>
+  localizeSettingsError(clearError.value, t),
+)
+const localizedClearSuccess = computed(() =>
+  clearSuccess.value ? t(clearSuccess.value) : null,
+)
 const hasAnyData = computed(
   () =>
     mode.value !== 'system' ||
@@ -88,10 +109,9 @@ const importSummary = computed<BackupImportSummaryData | null>(() => {
 const dialogCopy = computed(() => {
   if (dialogState.value?.kind === 'import') {
     return {
-      title: 'Replace local LifeBoard data?',
-      description:
-        'This will replace the current theme preference, selected city, tasks, countdowns, and bookmarks with the reviewed backup.',
-      confirmLabel: 'Import and replace',
+      title: t('settings.dialog.importTitle'),
+      description: t('settings.dialog.importDescription'),
+      confirmLabel: t('settings.dialog.importConfirm'),
       acknowledgementLabel: undefined,
     }
   }
@@ -100,38 +120,36 @@ const dialogCopy = computed(() => {
 
   if (target === 'weather') {
     return {
-      title: 'Clear Weather data?',
-      description: 'This removes the selected city and current in-memory forecast.',
-      confirmLabel: 'Clear Weather',
+      title: t('settings.dialog.weatherTitle'),
+      description: t('settings.dialog.weatherDescription'),
+      confirmLabel: t('settings.clearData.clearWeather'),
       acknowledgementLabel: undefined,
     }
   }
 
   if (target === 'todos') {
     return {
-      title: 'Clear Todos data?',
-      description: 'This removes every saved task and countdown from this browser.',
-      confirmLabel: 'Clear Todos',
+      title: t('settings.dialog.todosTitle'),
+      description: t('settings.dialog.todosDescription'),
+      confirmLabel: t('settings.clearData.clearTodos'),
       acknowledgementLabel: undefined,
     }
   }
 
   if (target === 'bookmarks') {
     return {
-      title: 'Clear Bookmarks data?',
-      description: 'This removes every saved bookmark from this browser.',
-      confirmLabel: 'Clear Bookmarks',
+      title: t('settings.dialog.bookmarksTitle'),
+      description: t('settings.dialog.bookmarksDescription'),
+      confirmLabel: t('settings.clearData.clearBookmarks'),
       acknowledgementLabel: undefined,
     }
   }
 
   return {
-    title: 'Clear all LifeBoard data?',
-    description:
-      'This removes the theme preference, selected city, current forecast, tasks, countdowns, and bookmarks. Tools input is not saved.',
-    confirmLabel: 'Clear all data',
-    acknowledgementLabel:
-      'I understand that this removes all LifeBoard data stored in this browser.',
+    title: t('settings.dialog.allTitle'),
+    description: t('settings.dialog.allDescription'),
+    confirmLabel: t('settings.dialog.allConfirm'),
+    acknowledgementLabel: t('settings.dialog.allAcknowledgement'),
   }
 })
 
@@ -178,9 +196,10 @@ function exportBackup() {
   try {
     const backup = createLifeBoardBackup(currentSnapshot())
     downloadLifeBoardBackup(backup)
-    backupSuccess.value = 'Backup downloaded to this device.'
+    backupSuccess.value = 'settings.message.backupDownloaded'
   } catch {
-    backupError.value = 'The backup could not be created or downloaded.'
+    backupSuccess.value = null
+    backupError.value = 'settings.message.backupDownloadFailed'
   }
 }
 
@@ -245,7 +264,7 @@ function confirmImport() {
   pendingBackup.value = null
   clearError.value = null
   clearSuccess.value = null
-  backupSuccess.value = 'Backup imported. Current local LifeBoard data was replaced.'
+  backupSuccess.value = 'settings.message.backupImported'
   closeDialog()
 }
 
@@ -279,11 +298,11 @@ function confirmClear() {
   backupError.value = null
   backupSuccess.value = null
   pendingBackup.value = null
-  const labels: Record<SettingsClearTarget, string> = {
-    weather: 'Weather data cleared.',
-    todos: 'Todos and countdowns cleared.',
-    bookmarks: 'Bookmarks cleared.',
-    all: 'All LifeBoard local data cleared. Theme mode reset to System.',
+  const labels: Record<SettingsClearTarget, TranslationKey> = {
+    weather: 'settings.message.weatherCleared',
+    todos: 'settings.message.todosCleared',
+    bookmarks: 'settings.message.bookmarksCleared',
+    all: 'settings.message.allCleared',
   }
   clearSuccess.value = labels[target]
   closeDialog()
@@ -309,8 +328,8 @@ onMounted(() => {
 <template>
   <div class="space-y-10">
     <BaseSection
-      title="Appearance"
-      description="A browser-local preference that follows you only on this device."
+      :title="t('settings.section.appearance.title')"
+      :description="t('settings.section.appearance.description')"
     >
       <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
         <ThemeModeControl
@@ -322,26 +341,36 @@ onMounted(() => {
     </BaseSection>
 
     <BaseSection
-      title="Local data"
-      description="A direct view of what LifeBoard currently keeps in this browser."
+      :title="t('settings.section.language.title')"
+      :description="t('settings.section.language.description')"
+    >
+      <div class="space-y-5 rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
+        <LanguageControl />
+        <TranslationExportPanel />
+      </div>
+    </BaseSection>
+
+    <BaseSection
+      :title="t('settings.section.localData.title')"
+      :description="t('settings.section.localData.description')"
     >
       <LocalDataStatus
         :weather-city="weatherCity"
         :task-count="taskCount"
         :countdown-count="countdownCount"
         :bookmark-count="bookmarkCount"
-        :error="statusError"
+        :error="localizedStatusError"
       />
     </BaseSection>
 
     <BaseSection
-      title="Backup and restore"
-      description="Move your local LifeBoard data with a file you control."
+      :title="t('settings.section.backup.title')"
+      :description="t('settings.section.backup.description')"
     >
       <BackupPanel
         :import-summary="importSummary"
-        :error="backupError"
-        :success="backupSuccess"
+        :error="localizedBackupError"
+        :success="localizedBackupSuccess"
         :export-disabled="isBusy || Boolean(statusError)"
         :import-disabled="isBusy"
         @export="exportBackup"
@@ -352,15 +381,15 @@ onMounted(() => {
     </BaseSection>
 
     <BaseSection
-      title="Privacy"
-      description="LifeBoard keeps its local boundary explicit."
+      :title="t('settings.section.privacy.title')"
+      :description="t('settings.section.privacy.description')"
     >
       <PrivacyPanel />
     </BaseSection>
 
     <BaseSection
-      title="Clear local data"
-      description="Remove only the LifeBoard data you choose. Each destructive action asks first."
+      :title="t('settings.section.clearData.title')"
+      :description="t('settings.section.clearData.description')"
     >
       <DataClearPanel
         :has-weather="selectedLocation !== null"
@@ -368,8 +397,8 @@ onMounted(() => {
         :countdown-count="countdownCount"
         :bookmark-count="bookmarkCount"
         :has-any-data="hasAnyData"
-        :error="clearError"
-        :success="clearSuccess"
+        :error="localizedClearError"
+        :success="localizedClearSuccess"
         @request-clear="openClearConfirmation"
       />
     </BaseSection>

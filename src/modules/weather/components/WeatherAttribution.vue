@@ -1,17 +1,23 @@
+<script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
   <p
     class="border-t border-[var(--color-border-soft)] pt-4 text-caption leading-5 text-pretty text-[var(--color-text-secondary)]"
   >
-    Forecast data:
+    {{ t('weather.attribution.prefix') }}
     <a
       class="font-medium text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
       href="https://open-meteo.com/"
       rel="noreferrer"
       target="_blank"
     >
-      Weather data by Open-Meteo.com
+      {{ t('weather.attribution.dataLink') }}
     </a>
-    under
+    {{ t('weather.attribution.under') }}
     <a
       class="font-medium text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
       href="https://creativecommons.org/licenses/by/4.0/"

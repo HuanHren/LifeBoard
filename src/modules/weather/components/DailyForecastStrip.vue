@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
 import type { DailyForecastItem, WeatherUnits } from '@/modules/weather/types/weather'
 import {
   formatDateLabel,
@@ -7,6 +8,7 @@ import {
   formatTemperature,
   formatWind,
 } from '@/modules/weather/utils/weatherFormatting'
+import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   items: DailyForecastItem[]
@@ -14,6 +16,7 @@ interface Props {
 }
 
 defineProps<Props>()
+const { locale, t } = useI18n()
 </script>
 
 <template>
@@ -23,16 +26,16 @@ defineProps<Props>()
         id="daily-forecast-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
       >
-        Next 7 days
+        {{ t('weather.daily.title') }}
       </h2>
       <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        A compact outlook for temperature, rain, and wind.
+        {{ t('weather.daily.description') }}
       </p>
     </div>
 
     <div
       class="forecast-scroll mt-4 overflow-x-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-offset-4"
-      aria-label="Scrollable 7-day weather forecast"
+      :aria-label="t('weather.daily.scrollLabel')"
       tabindex="0"
     >
       <ol class="flex min-w-max snap-x snap-proximity gap-2">
@@ -48,16 +51,16 @@ defineProps<Props>()
         >
           <time :datetime="item.date" class="flex items-baseline justify-between gap-3">
             <span class="block text-sm font-semibold text-[var(--color-text-primary)]">
-              {{ formatDay(item.date, index) }}
+              {{ formatDay(item.date, index, locale, t) }}
             </span>
             <span class="block text-caption text-[var(--color-text-secondary)]">
-              {{ formatDateLabel(item.date) }}
+              {{ formatDateLabel(item.date, locale) }}
             </span>
           </time>
           <p
             class="mt-4 min-h-10 text-sm font-medium leading-5 text-pretty text-[var(--color-text-primary)]"
           >
-            {{ item.condition.shortLabel }}
+            {{ localizeWeatherCondition(item.condition, t, true) }}
           </p>
           <p class="mt-3 flex items-baseline gap-2 tabular-nums text-[var(--color-text-primary)]">
             <span class="text-xl font-semibold">
@@ -71,13 +74,17 @@ defineProps<Props>()
             class="mt-4 grid grid-cols-2 gap-3 border-t border-[var(--color-border-soft)] pt-3"
           >
             <div>
-              <dt class="text-caption text-[var(--color-text-secondary)]">Rain chance</dt>
+              <dt class="text-caption text-[var(--color-text-secondary)]">
+                {{ t('weather.hourly.rainChance') }}
+              </dt>
               <dd class="mt-0.5 text-sm font-medium tabular-nums text-[var(--color-text-primary)]">
                 {{ formatPercentage(item.precipitationProbabilityMax) }}
               </dd>
             </div>
             <div>
-              <dt class="text-caption text-[var(--color-text-secondary)]">Peak gust</dt>
+              <dt class="text-caption text-[var(--color-text-secondary)]">
+                {{ t('weather.daily.peakGust') }}
+              </dt>
               <dd class="mt-0.5 text-sm font-medium tabular-nums text-[var(--color-text-primary)]">
                 {{ formatWind(item.windGustsMax, units.windSpeed) }}
               </dd>

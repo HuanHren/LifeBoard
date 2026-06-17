@@ -20,6 +20,7 @@ Repository: https://github.com/HuanHren/LifeBoard
 - **Tools**: JSON formatting, timestamp conversion, text cleanup, line deduplication, case conversion, and text counting
 - **Bookmarks**: locally save, categorize, search, edit, pin, and remove useful links
 - **Settings**: theme controls, local data status, backup, restore, privacy information, and selective data clearing
+- **Languages**: built-in Simplified Chinese and US English with a local translation-source export
 - **Not Found**: a clear recovery page for unknown routes
 
 ## Tech Stack
@@ -37,6 +38,8 @@ Repository: https://github.com/HuanHren/LifeBoard
 LifeBoard is local-first. It has no accounts, backend, analytics, cloud sync, or mobile application.
 
 Open-Meteo is the only external service. It is used for city geocoding and weather forecasts and does not require an API key.
+
+Interface translation is bundled locally. LifeBoard does not use a machine translation API.
 
 LifeBoard stores these values in the current browser:
 
@@ -112,12 +115,16 @@ src/
 
 Vercel is the configured deployment target.
 
-1. Import `https://github.com/HuanHren/LifeBoard` into Vercel.
-2. Use the Vite framework preset.
-3. Use `npm run build` as the build command.
-4. Use `dist` as the output directory.
+1. Push the repository to GitHub.
+2. Import `https://github.com/HuanHren/LifeBoard` into Vercel.
+3. Use the Vite framework preset.
+4. Use `npm run build` as the build command.
+5. Use `dist` as the output directory.
+6. Leave environment variables empty; LifeBoard does not require deployment secrets.
 
-`vercel.json` rewrites direct requests such as `/weather` and `/settings` to `index.html`, allowing Vue Router to preserve clean history-mode routes.
+`vercel.json` rewrites direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, and `/missing-route`.
+
+A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 
 ### GitHub Pages
 

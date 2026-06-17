@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from '@/i18n/useI18n'
+
 interface Props {
   weatherCity: string | null
   taskCount: number
@@ -7,11 +10,32 @@ interface Props {
   error?: string | null
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const { t } = useI18n()
 
-function countLabel(count: number, singular: string, plural = `${singular}s`) {
-  return `${count} ${count === 1 ? singular : plural}`
-}
+const planningStatus = computed(() => {
+  const parameters = {
+    taskCount: props.taskCount,
+    countdownCount: props.countdownCount,
+  }
+
+  if (props.taskCount === 1 && props.countdownCount === 1) {
+    return t('settings.localData.taskOneCountdownOne')
+  }
+  if (props.taskCount === 1) {
+    return t('settings.localData.taskOneCountdownMany', parameters)
+  }
+  if (props.countdownCount === 1) {
+    return t('settings.localData.taskManyCountdownOne', parameters)
+  }
+  return t('settings.localData.taskManyCountdownMany', parameters)
+})
+
+const bookmarkStatus = computed(() =>
+  props.bookmarkCount === 1
+    ? t('settings.localData.bookmarkOne')
+    : t('settings.localData.bookmarkMany', { count: props.bookmarkCount }),
+)
 </script>
 
 <template>
@@ -26,28 +50,39 @@ function countLabel(count: number, singular: string, plural = `${singular}s`) {
 
     <dl class="divide-y divide-[var(--color-border-soft)] bg-[var(--color-surface-raised)]">
       <div class="grid gap-1 px-4 py-4 sm:grid-cols-[10rem_1fr] sm:items-center sm:px-5">
-        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">Weather</dt>
+        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('settings.common.weather') }}
+        </dt>
         <dd class="text-sm text-[var(--color-text-secondary)]">
-          {{ weatherCity ? `Selected city: ${weatherCity}` : 'No selected city saved.' }}
+          {{
+            weatherCity
+              ? t('settings.localData.selectedCity', { city: weatherCity })
+              : t('settings.localData.noCity')
+          }}
         </dd>
       </div>
       <div class="grid gap-1 px-4 py-4 sm:grid-cols-[10rem_1fr] sm:items-center sm:px-5">
-        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">Todos</dt>
+        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('settings.common.todos') }}
+        </dt>
         <dd class="text-sm text-[var(--color-text-secondary)]">
-          {{ countLabel(taskCount, 'task') }} and
-          {{ countLabel(countdownCount, 'countdown') }} saved.
+          {{ planningStatus }}
         </dd>
       </div>
       <div class="grid gap-1 px-4 py-4 sm:grid-cols-[10rem_1fr] sm:items-center sm:px-5">
-        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">Bookmarks</dt>
+        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('settings.common.bookmarks') }}
+        </dt>
         <dd class="text-sm text-[var(--color-text-secondary)]">
-          {{ countLabel(bookmarkCount, 'bookmark') }} saved.
+          {{ bookmarkStatus }}
         </dd>
       </div>
       <div class="grid gap-1 px-4 py-4 sm:grid-cols-[10rem_1fr] sm:items-center sm:px-5">
-        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">Tools</dt>
+        <dt class="text-sm font-semibold text-[var(--color-text-primary)]">
+          {{ t('settings.common.tools') }}
+        </dt>
         <dd class="text-sm text-[var(--color-text-secondary)]">
-          Tool input is not saved.
+          {{ t('settings.localData.toolsNotSaved') }}
         </dd>
       </div>
     </dl>

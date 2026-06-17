@@ -35,7 +35,7 @@ const OWNED_STORAGE_KEYS = [
 type OwnedStorageKey = (typeof OWNED_STORAGE_KEYS)[number]
 
 function storageErrorMessage() {
-  return 'Browser storage is unavailable. No LifeBoard data was changed.'
+  return 'settings.error.storageUnavailable'
 }
 
 function getStorage(): SettingsResult<Storage> {
@@ -61,7 +61,7 @@ function readThemeMode(storage: Storage): SettingsResult<ThemeMode> {
 
   return {
     ok: false,
-    error: 'The saved theme preference is invalid. It was left unchanged for recovery.',
+    error: 'settings.error.themeInvalid',
   }
 }
 
@@ -77,12 +77,12 @@ function readWeatherLocation(storage: Storage) {
       ? ({ ok: true, data: location } as const)
       : ({
           ok: false,
-          error: 'The saved weather location is invalid. It was left unchanged for recovery.',
+          error: 'settings.error.weatherInvalid',
         } as const)
   } catch {
     return {
       ok: false,
-      error: 'The saved weather location contains invalid JSON. It was left unchanged for recovery.',
+      error: 'settings.error.weatherInvalidJson',
     } as const
   }
 }
@@ -162,7 +162,7 @@ export async function readBackupFile(
   if (file.size > SETTINGS_MAX_IMPORT_BYTES) {
     return {
       ok: false,
-      error: 'This backup is larger than 1MB. Choose a smaller LifeBoard JSON backup.',
+      error: 'settings.error.backupTooLarge',
     }
   }
 
@@ -171,7 +171,7 @@ export async function readBackupFile(
   try {
     text = await file.text()
   } catch {
-    return { ok: false, error: 'The selected file could not be read.' }
+    return { ok: false, error: 'settings.error.fileUnreadable' }
   }
 
   let parsed: unknown
@@ -179,7 +179,7 @@ export async function readBackupFile(
   try {
     parsed = JSON.parse(text) as unknown
   } catch {
-    return { ok: false, error: 'The selected file does not contain valid JSON.' }
+    return { ok: false, error: 'settings.error.fileInvalidJson' }
   }
 
   return validateLifeBoardBackup(parsed)
@@ -223,12 +223,12 @@ function runStorageTransaction(
       restoreStorage(storageResult.data, snapshot)
       return {
         ok: false,
-        error: 'The storage operation failed. Existing LifeBoard data was restored.',
+        error: 'settings.error.storageOperationRestored',
       }
     } catch {
       return {
         ok: false,
-        error: 'The storage operation failed and the browser could not fully restore the previous data.',
+        error: 'settings.error.storageOperationRestoreFailed',
       }
     }
   }

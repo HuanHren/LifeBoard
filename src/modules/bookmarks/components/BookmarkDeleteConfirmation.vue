@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, useTemplateRef, type ComponentPublicInstance } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
   bookmarkTitle: string
@@ -13,6 +14,7 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const keepButton = useTemplateRef<ComponentPublicInstance>('keepButton')
 
 onMounted(() => {
@@ -25,14 +27,14 @@ onMounted(() => {
   <div
     class="flex min-h-11 flex-wrap items-center gap-2 rounded-[var(--radius-sm)] bg-[var(--color-danger-soft)] p-2"
     role="group"
-    :aria-label="`Confirm deletion of ${bookmarkTitle}`"
+    :aria-label="t('bookmarks.delete.aria', { title: bookmarkTitle })"
     @keydown.esc.stop="emit('cancel')"
   >
     <span class="mr-auto text-sm font-medium text-[var(--color-danger)]">
-      Delete {{ bookmarkTitle }}?
+      {{ t('bookmarks.delete.description', { title: bookmarkTitle }) }}
     </span>
     <BaseButton ref="keepButton" size="sm" variant="ghost" @click="emit('cancel')">
-      Keep
+      {{ t('bookmarks.delete.cancel') }}
     </BaseButton>
     <BaseButton
       class="border-[var(--color-danger)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
@@ -40,7 +42,7 @@ onMounted(() => {
       variant="secondary"
       @click="emit('confirm')"
     >
-      Delete
+      {{ t('bookmarks.delete.confirm') }}
     </BaseButton>
   </div>
 </template>

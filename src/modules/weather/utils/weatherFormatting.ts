@@ -1,4 +1,6 @@
 import type { WeatherLocation } from '@/modules/weather/types/weather'
+import type { AppLocale } from '@/i18n/types'
+import type { Translator } from '@/i18n/types'
 
 function parseLocalDateParts(value: string) {
   const datePart = value.slice(0, 10)
@@ -32,33 +34,29 @@ export function formatPrecipitation(value: number, unit = 'mm') {
   return `${value < 1 ? value.toFixed(1) : Math.round(value)} ${unit}`
 }
 
-export function formatHour(value: string) {
+export function formatHour(value: string, locale: AppLocale) {
   const hour = Number(value.slice(11, 13))
 
   if (!Number.isFinite(hour)) {
     return value
   }
 
-  if (hour === 0) {
-    return '12 AM'
-  }
-
-  if (hour === 12) {
-    return '12 PM'
-  }
-
-  return hour > 12 ? `${hour - 12} PM` : `${hour} AM`
+  const date = new Date(Date.UTC(2000, 0, 1, hour))
+  return new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
 }
 
-export function formatFullLocalTime(value: string) {
+export function formatFullLocalTime(value: string, locale: AppLocale) {
   const date = parseLocalDateParts(value)
-  const time = formatHour(value)
+  const time = formatHour(value, locale)
 
   if (!date) {
     return value
   }
 
-  const day = new Intl.DateTimeFormat('en-US', {
+  const day = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -68,9 +66,14 @@ export function formatFullLocalTime(value: string) {
   return `${day}, ${time}`
 }
 
-export function formatDay(value: string, index: number) {
+export function formatDay(
+  value: string,
+  index: number,
+  locale: AppLocale,
+  t: Translator,
+) {
   if (index === 0) {
-    return 'Today'
+    return t('weather.daily.today')
   }
 
   const date = parseLocalDateParts(value)
@@ -79,28 +82,37 @@ export function formatDay(value: string, index: number) {
     return value
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     timeZone: 'UTC',
   }).format(date)
 }
 
-export function formatDateLabel(value: string) {
+export function formatDateLabel(value: string, locale: AppLocale) {
   const date = parseLocalDateParts(value)
 
   if (!date) {
     return value
   }
 
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(locale, {
     month: 'short',
     day: 'numeric',
     timeZone: 'UTC',
   }).format(date)
 }
 
-export function formatWindDirection(degrees: number) {
-  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+export function formatWindDirection(degrees: number, t: Translator) {
+  const directions = [
+    t('weather.wind.n'),
+    t('weather.wind.ne'),
+    t('weather.wind.e'),
+    t('weather.wind.se'),
+    t('weather.wind.s'),
+    t('weather.wind.sw'),
+    t('weather.wind.w'),
+    t('weather.wind.nw'),
+  ]
   const normalized = ((degrees % 360) + 360) % 360
   return directions[Math.round(normalized / 45) % directions.length]
 }

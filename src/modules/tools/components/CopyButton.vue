@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import { useClipboardFeedback } from '@/modules/tools/composables/useClipboardFeedback'
+import { localizeToolsError } from '@/modules/tools/utils/toolsI18n'
 
 interface Props {
   content: string
@@ -9,13 +11,14 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  label: 'Copy output',
+  label: undefined,
 })
+const { t } = useI18n()
 const { copyStatus, copyError, copy } = useClipboardFeedback(() => props.content)
 const buttonLabel = computed(() => {
-  if (copyStatus.value === 'copied') return 'Copied'
-  if (copyStatus.value === 'copying') return 'Copying'
-  return props.label
+  if (copyStatus.value === 'copied') return t('tools.common.copied')
+  if (copyStatus.value === 'copying') return t('tools.common.copying')
+  return props.label ?? t('tools.common.copyOutput')
 })
 </script>
 
@@ -31,14 +34,14 @@ const buttonLabel = computed(() => {
       {{ buttonLabel }}
     </BaseButton>
     <p class="sr-only" aria-live="polite">
-      {{ copyStatus === 'copied' ? 'Output copied to clipboard.' : '' }}
+      {{ copyStatus === 'copied' ? t('tools.common.copyAnnouncement') : '' }}
     </p>
     <p
       v-if="copyError"
       class="mt-2 max-w-sm text-sm leading-6 text-[var(--color-danger)]"
       role="alert"
     >
-      {{ copyError }}
+      {{ localizeToolsError(copyError, t) }}
     </p>
   </div>
 </template>

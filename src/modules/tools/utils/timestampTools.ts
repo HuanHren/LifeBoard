@@ -3,22 +3,27 @@ import type {
   TimestampInputType,
   TimestampResult,
 } from '@/modules/tools/types/tools'
+import type { AppLocale } from '@/i18n/types'
 
 const NUMERIC_PATTERN = /^-?\d+(?:\.\d+)?$/
 const MAX_DATE_MILLISECONDS = 8_640_000_000_000_000
 const MAX_SECONDS_MAGNITUDE = 10_000_000_000
 const MIN_MILLISECONDS_MAGNITUDE = 100_000_000_000
 
-function createConversion(date: Date, interpretedAs: TimestampInputType): TimestampConversion {
+function createConversion(
+  date: Date,
+  interpretedAs: TimestampInputType,
+  locale: AppLocale,
+): TimestampConversion {
   const milliseconds = date.getTime()
 
   return {
     interpretedAs,
-    localDateTime: new Intl.DateTimeFormat(undefined, {
+    localDateTime: new Intl.DateTimeFormat(locale, {
       dateStyle: 'full',
       timeStyle: 'long',
     }).format(date),
-    utcDateTime: new Intl.DateTimeFormat(undefined, {
+    utcDateTime: new Intl.DateTimeFormat(locale, {
       dateStyle: 'full',
       timeStyle: 'long',
       timeZone: 'UTC',
@@ -29,7 +34,7 @@ function createConversion(date: Date, interpretedAs: TimestampInputType): Timest
   }
 }
 
-export function convertTimestamp(input: string): TimestampResult {
+export function convertTimestamp(input: string, locale: AppLocale): TimestampResult {
   const normalized = input.trim()
 
   if (normalized.length === 0) {
@@ -71,7 +76,7 @@ export function convertTimestamp(input: string): TimestampResult {
     const date = new Date(milliseconds)
     return Number.isNaN(date.getTime())
       ? { ok: false, error: 'The timestamp does not produce a valid date.' }
-      : { ok: true, value: createConversion(date, interpretedAs) }
+      : { ok: true, value: createConversion(date, interpretedAs, locale) }
   }
 
   const milliseconds = Date.parse(normalized)
@@ -83,5 +88,8 @@ export function convertTimestamp(input: string): TimestampResult {
     }
   }
 
-  return { ok: true, value: createConversion(new Date(milliseconds), 'Date text') }
+  return {
+    ok: true,
+    value: createConversion(new Date(milliseconds), 'Date text', locale),
+  }
 }

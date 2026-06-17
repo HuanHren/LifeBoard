@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import { useI18n } from '@/i18n/useI18n'
 import {
   BOOKMARK_CATEGORY_MAX_LENGTH,
   BOOKMARK_NOTE_MAX_LENGTH,
@@ -17,6 +18,7 @@ import {
   hasBookmarkValidationErrors,
   prepareBookmarkDraft,
 } from '@/modules/bookmarks/utils/bookmarkValidation'
+import { localizeBookmarkError } from '@/modules/bookmarks/utils/bookmarksI18n'
 
 interface Props {
   bookmark: Bookmark
@@ -29,6 +31,7 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const { t } = useI18n()
 const bookmarksStore = useBookmarksStore()
 const title = shallowRef(props.bookmark.title)
 const url = shallowRef(props.bookmark.url)
@@ -62,16 +65,16 @@ function saveBookmark() {
   errors.value = prepared.validation
 
   if (hasBookmarkValidationErrors(prepared.validation)) {
-    announcement.value = 'Check the bookmark form for errors.'
+    announcement.value = t('bookmarks.composer.announcement.checkForm')
     return
   }
 
   if (!bookmarksStore.updateBookmark(props.bookmark.id, prepared.draft)) {
-    announcement.value = 'The bookmark was not saved.'
+    announcement.value = t('bookmarks.composer.announcement.notSaved')
     return
   }
 
-  announcement.value = 'Bookmark updated.'
+  announcement.value = t('bookmarks.composer.announcement.updated')
   emit('saved')
 }
 </script>
@@ -80,7 +83,9 @@ function saveBookmark() {
   <form class="space-y-4 py-1" novalidate @submit.prevent="saveBookmark">
     <div class="grid gap-4 lg:grid-cols-2">
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" :for="fieldId('title')">Title</label>
+        <label class="block text-sm font-semibold" :for="fieldId('title')">
+          {{ t('bookmarks.form.titleLabel') }}
+        </label>
         <input
           :id="fieldId('title')"
           v-model="title"
@@ -96,11 +101,13 @@ function saveBookmark() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.title }}
+          {{ localizeBookmarkError(errors.title, t) }}
         </p>
       </div>
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" :for="fieldId('url')">URL</label>
+        <label class="block text-sm font-semibold" :for="fieldId('url')">
+          {{ t('bookmarks.form.urlLabel') }}
+        </label>
         <input
           :id="fieldId('url')"
           v-model="url"
@@ -116,7 +123,7 @@ function saveBookmark() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.url }}
+          {{ localizeBookmarkError(errors.url, t) }}
         </p>
       </div>
     </div>
@@ -124,7 +131,7 @@ function saveBookmark() {
     <div class="grid gap-4 lg:grid-cols-[12rem_minmax(0,1fr)]">
       <div class="space-y-2">
         <label class="block text-sm font-semibold" :for="fieldId('category')">
-          Category
+          {{ t('bookmarks.form.categoryLabel') }}
         </label>
         <input
           :id="fieldId('category')"
@@ -141,11 +148,13 @@ function saveBookmark() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.category }}
+          {{ localizeBookmarkError(errors.category, t) }}
         </p>
       </div>
       <div class="space-y-2">
-        <label class="block text-sm font-semibold" :for="fieldId('note')">Note</label>
+        <label class="block text-sm font-semibold" :for="fieldId('note')">
+          {{ t('bookmarks.form.noteLabel') }}
+        </label>
         <textarea
           :id="fieldId('note')"
           v-model="note"
@@ -161,14 +170,18 @@ function saveBookmark() {
           class="text-sm font-medium text-[var(--color-danger)]"
           role="alert"
         >
-          {{ errors.note }}
+          {{ localizeBookmarkError(errors.note, t) }}
         </p>
       </div>
     </div>
 
     <div class="flex flex-wrap justify-end gap-2">
-      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">Cancel</BaseButton>
-      <BaseButton size="sm" type="submit" variant="primary">Save bookmark</BaseButton>
+      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">
+        {{ t('bookmarks.form.cancelAction') }}
+      </BaseButton>
+      <BaseButton size="sm" type="submit" variant="primary">
+        {{ t('bookmarks.form.saveAction') }}
+      </BaseButton>
     </div>
     <p class="sr-only" aria-live="polite">{{ announcement }}</p>
   </form>

@@ -1,5 +1,16 @@
+<script setup lang="ts">
+import { useI18n } from '@/i18n/useI18n'
+
+const { t } = useI18n()
+</script>
+
 <template>
-  <div class="space-y-8" aria-busy="true" aria-label="Loading weather forecast" role="status">
+  <div
+    class="space-y-8"
+    aria-busy="true"
+    :aria-label="t('weather.loading.label')"
+    role="status"
+  >
     <div class="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
       <div
         class="min-h-72 rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-6"
