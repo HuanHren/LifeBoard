@@ -20,6 +20,22 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
   'settings.localData.bookmarkMany': 'Keep the {count} placeholder.',
   'settings.backupSummary.planningCounts':
     'Keep the {tasks} and {countdowns} placeholders. Their values are already localized.',
+  'settings.exports.privacy':
+    'Privacy boundary for portable exports. Do not imply upload, sync, or server processing.',
+  'settings.exports.emptyTodosCsv':
+    'Explains that CSV requires at least one task or countdown while Markdown remains available.',
+  'settings.exports.emptyBookmarksCsv':
+    'Explains that CSV requires at least one bookmark while Markdown remains available.',
+  'settings.exports.markdown.generatedAt':
+    'Markdown label for a generated timestamp.',
+  'settings.exports.markdown.uncategorized':
+    'Markdown grouping label for bookmarks without a user-created category.',
+  'settings.exports.markdown.privacyLocal':
+    'Combined Markdown privacy note. Do not imply data leaves the browser.',
+  'settings.exports.markdown.privacyNoTools':
+    'Combined Markdown privacy note. Tools input must not be included.',
+  'settings.exports.markdown.privacyNoForecast':
+    'Combined Markdown privacy note. Forecast response data must not be included.',
   'settings.clearData.todosOneMany':
     'Keep the {countdownCount} placeholder.',
   'settings.clearData.todosManyOne': 'Keep the {taskCount} placeholder.',

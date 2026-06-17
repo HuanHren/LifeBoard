@@ -9,10 +9,16 @@ import BackupPanel from '@/modules/settings/components/BackupPanel.vue'
 import DataClearPanel from '@/modules/settings/components/DataClearPanel.vue'
 import LocalDataStatus from '@/modules/settings/components/LocalDataStatus.vue'
 import LanguageControl from '@/modules/settings/components/LanguageControl.vue'
+import PortableExportsPanel from '@/modules/settings/components/PortableExportsPanel.vue'
 import PrivacyPanel from '@/modules/settings/components/PrivacyPanel.vue'
 import SettingsConfirmationDialog from '@/modules/settings/components/SettingsConfirmationDialog.vue'
 import ThemeModeControl from '@/modules/settings/components/ThemeModeControl.vue'
 import TranslationExportPanel from '@/modules/settings/components/TranslationExportPanel.vue'
+import {
+  createPortableExport,
+  downloadPortableExport,
+} from '@/modules/settings/services/settingsPortableExports'
+import type { PortableExportKind } from '@/modules/settings/types/settingsExports'
 import {
   applyLifeBoardBackup,
   clearLifeBoardData,
@@ -45,7 +51,7 @@ const themeStore = useThemeStore()
 const weatherStore = useWeatherStore()
 const todosStore = useTodosStore()
 const bookmarksStore = useBookmarksStore()
-const { t } = useI18n()
+const { locale, t } = useI18n()
 
 const { mode, persistenceError: themeError } = storeToRefs(themeStore)
 const {
@@ -58,6 +64,8 @@ const { bookmarks } = storeToRefs(bookmarksStore)
 const statusError = shallowRef<string | null>(null)
 const backupError = shallowRef<string | null>(null)
 const backupSuccess = shallowRef<TranslationKey | null>(null)
+const portableExportError = shallowRef<TranslationKey | null>(null)
+const portableExportSuccess = shallowRef<TranslationKey | null>(null)
 const clearError = shallowRef<string | null>(null)
 const clearSuccess = shallowRef<TranslationKey | null>(null)
 const pendingBackup = shallowRef<LifeBoardBackupV1 | null>(null)
@@ -68,6 +76,8 @@ const taskCount = computed(() => tasks.value.length)
 const countdownCount = computed(() => countdowns.value.length)
 const bookmarkCount = computed(() => bookmarks.value.length)
 const weatherCity = computed(() => selectedLocation.value?.name ?? null)
+const hasTodosRows = computed(() => taskCount.value + countdownCount.value > 0)
+const hasBookmarkRows = computed(() => bookmarkCount.value > 0)
 const localizedStatusError = computed(() =>
   localizeSettingsError(statusError.value, t),
 )
@@ -76,6 +86,12 @@ const localizedBackupError = computed(() =>
 )
 const localizedBackupSuccess = computed(() =>
   backupSuccess.value ? t(backupSuccess.value) : null,
+)
+const localizedPortableExportError = computed(() =>
+  portableExportError.value ? t(portableExportError.value) : null,
+)
+const localizedPortableExportSuccess = computed(() =>
+  portableExportSuccess.value ? t(portableExportSuccess.value) : null,
 )
 const localizedClearError = computed(() =>
   localizeSettingsError(clearError.value, t),
@@ -200,6 +216,28 @@ function exportBackup() {
   } catch {
     backupSuccess.value = null
     backupError.value = 'settings.message.backupDownloadFailed'
+  }
+}
+
+function exportPortableData(kind: PortableExportKind) {
+  portableExportError.value = null
+  portableExportSuccess.value = null
+
+  try {
+    const exportResult = createPortableExport(kind, {
+      tasks: [...tasks.value],
+      countdowns: [...countdowns.value],
+      bookmarks: [...bookmarks.value],
+      weatherLocation: selectedLocation.value,
+      locale: locale.value,
+      generatedAt: new Date(),
+    })
+
+    downloadPortableExport(exportResult)
+    portableExportSuccess.value = 'settings.exports.success'
+  } catch {
+    portableExportSuccess.value = null
+    portableExportError.value = 'settings.exports.error'
   }
 }
 
@@ -377,6 +415,19 @@ onMounted(() => {
         @file-selected="selectBackupFile"
         @confirm-import="openImportConfirmation"
         @discard-import="discardImport"
+      />
+    </BaseSection>
+
+    <BaseSection
+      :title="t('settings.section.exports.title')"
+      :description="t('settings.section.exports.description')"
+    >
+      <PortableExportsPanel
+        :has-todos-rows="hasTodosRows"
+        :has-bookmark-rows="hasBookmarkRows"
+        :error="localizedPortableExportError"
+        :success="localizedPortableExportSuccess"
+        @export-requested="exportPortableData"
       />
     </BaseSection>
 

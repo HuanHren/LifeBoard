@@ -38,7 +38,9 @@ export const zhCN = {
     '直接查看 LifeBoard 当前保存在此浏览器中的数据。',
   'settings.section.backup.title': '备份与恢复',
   'settings.section.backup.description': '使用由你保管的文件迁移本地 LifeBoard 数据。',
-  'settings.section.privacy.title': '隐私',
+  'settings.section.exports.title': '便携导出',
+  'settings.section.exports.description':
+    '创建便于归档、打印、粘贴到笔记、表格查看和手动迁移的本地文件。',  'settings.section.privacy.title': '隐私',
   'settings.section.privacy.description': 'LifeBoard 清楚说明本地数据边界。',
   'settings.section.clearData.title': '清除本地数据',
   'settings.section.clearData.description':
@@ -104,7 +106,56 @@ export const zhCN = {
   'settings.backupSummary.countdownOne': '1 个倒计时',
   'settings.backupSummary.countdownMany': '{count} 个倒计时',
   'settings.backupSummary.planningCounts': '{tasks}，{countdowns}',
-  'settings.privacy.weatherTitle': '天气请求',
+  'settings.exports.description':
+    '将选定的 LifeBoard 数据导出为 Markdown 或 CSV，不改变现有备份文件格式。',
+  'settings.exports.privacy':
+    '文件会在你选择导出后于此浏览器中生成。不会包含工具输入或天气预报响应数据。',
+  'settings.exports.todosTitle': '待办与倒计时',
+  'settings.exports.todosDescription':
+    '将任务和重要日期归档为易读的 Markdown，或适合表格查看的 CSV。',
+  'settings.exports.bookmarksTitle': '书签',
+  'settings.exports.bookmarksDescription':
+    '导出已保存链接为 Markdown 或 CSV，并保留标题、URL、备注和分类。',
+  'settings.exports.summaryTitle': 'LifeBoard 摘要',
+  'settings.exports.summaryDescription':
+    '创建简洁的 Markdown 概览，包含已选城市、进行中的任务、即将到来的倒计时和置顶书签。',
+  'settings.exports.markdownAction': '导出 Markdown',
+  'settings.exports.csvAction': '导出 CSV',
+  'settings.exports.emptyTodosCsv':
+    '保存至少一个任务或倒计时后可导出 CSV。Markdown 仍会包含如实的空状态。',
+  'settings.exports.emptyBookmarksCsv':
+    '保存至少一个书签后可导出 CSV。Markdown 仍会包含如实的空状态。',
+  'settings.exports.success': '导出文件已准备好，浏览器应会开始下载。',
+  'settings.exports.error': '无法在此浏览器中创建或下载导出文件。',
+  'settings.exports.markdown.todosTitle': '待办与倒计时',
+  'settings.exports.markdown.bookmarksTitle': '书签',
+  'settings.exports.markdown.summaryTitle': 'LifeBoard 摘要',
+  'settings.exports.markdown.generatedAt': '生成时间',
+  'settings.exports.markdown.activeTasks': '进行中的任务',
+  'settings.exports.markdown.completedTasks': '已完成任务',
+  'settings.exports.markdown.countdowns': '倒计时',
+  'settings.exports.markdown.upcomingCountdowns': '即将到来的倒计时',
+  'settings.exports.markdown.pinnedBookmarks': '置顶书签',
+  'settings.exports.markdown.bookmarksByCategory': '按分类整理的书签',
+  'settings.exports.markdown.uncategorized': '未分类',
+  'settings.exports.markdown.emptyActiveTasks': '没有已保存的进行中任务。',
+  'settings.exports.markdown.emptyCompletedTasks': '没有已保存的已完成任务。',
+  'settings.exports.markdown.emptyCountdowns': '没有已保存的倒计时。',
+  'settings.exports.markdown.emptyPinnedBookmarks': '没有已保存的置顶书签。',
+  'settings.exports.markdown.emptyBookmarks': '没有已保存的书签。',
+  'settings.exports.markdown.noDate': '无日期',
+  'settings.exports.markdown.due': '截止',
+  'settings.exports.markdown.target': '目标日期',
+  'settings.exports.markdown.label': '标签',
+  'settings.exports.markdown.pinned': '置顶',
+  'settings.exports.markdown.weatherCity': '已选天气城市',
+  'settings.exports.markdown.noWeatherCity': '没有保存已选天气城市。',
+  'settings.exports.markdown.privacyTitle': '隐私说明',
+  'settings.exports.markdown.privacyLocal':
+    '此文件由当前浏览器中的 LifeBoard 数据在本地生成。',
+  'settings.exports.markdown.privacyNoTools':
+    '不会包含工具输入，因为 LifeBoard 不会保存这些内容。',
+  'settings.exports.markdown.privacyNoForecast': '不会包含天气预报响应数据。',  'settings.privacy.weatherTitle': '天气请求',
   'settings.privacy.weatherDescription':
     '天气预报和城市搜索请求会直接发送到 Open-Meteo。',
   'settings.privacy.localTitle': '本地计划',

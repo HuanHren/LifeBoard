@@ -40,6 +40,9 @@ export const enUS = {
   'settings.section.backup.title': 'Backup and restore',
   'settings.section.backup.description':
     'Move your local LifeBoard data with a file you control.',
+  'settings.section.exports.title': 'Portable exports',
+  'settings.section.exports.description':
+    'Create readable local files for archiving, printing, notes, spreadsheets, and manual moves.',
   'settings.section.privacy.title': 'Privacy',
   'settings.section.privacy.description':
     'LifeBoard keeps its local boundary explicit.',
@@ -111,6 +114,58 @@ export const enUS = {
   'settings.backupSummary.countdownOne': '1 countdown',
   'settings.backupSummary.countdownMany': '{count} countdowns',
   'settings.backupSummary.planningCounts': '{tasks}, {countdowns}',
+  'settings.exports.description':
+    'Export selected LifeBoard data as Markdown or CSV without changing your backup file format.',
+  'settings.exports.privacy':
+    'Files are generated in this browser after you choose an export. Tools input and weather forecast responses are not included.',
+  'settings.exports.todosTitle': 'Todos and Countdowns',
+  'settings.exports.todosDescription':
+    'Archive tasks and important dates as readable Markdown or spreadsheet-friendly CSV.',
+  'settings.exports.bookmarksTitle': 'Bookmarks',
+  'settings.exports.bookmarksDescription':
+    'Export saved links as Markdown or CSV while preserving titles, URLs, notes, and categories.',
+  'settings.exports.summaryTitle': 'LifeBoard Summary',
+  'settings.exports.summaryDescription':
+    'Create a compact Markdown overview with selected city, active tasks, upcoming countdowns, and pinned bookmarks.',
+  'settings.exports.markdownAction': 'Export Markdown',
+  'settings.exports.csvAction': 'Export CSV',
+  'settings.exports.emptyTodosCsv':
+    'CSV export is available after at least one task or countdown is saved. Markdown still includes honest empty sections.',
+  'settings.exports.emptyBookmarksCsv':
+    'CSV export is available after at least one bookmark is saved. Markdown still includes honest empty sections.',
+  'settings.exports.success': 'Export file prepared. Your browser should start the download.',
+  'settings.exports.error':
+    'The export file could not be created or downloaded in this browser.',
+  'settings.exports.markdown.todosTitle': 'Todos and Countdowns',
+  'settings.exports.markdown.bookmarksTitle': 'Bookmarks',
+  'settings.exports.markdown.summaryTitle': 'LifeBoard Summary',
+  'settings.exports.markdown.generatedAt': 'Generated at',
+  'settings.exports.markdown.activeTasks': 'Active tasks',
+  'settings.exports.markdown.completedTasks': 'Completed tasks',
+  'settings.exports.markdown.countdowns': 'Countdowns',
+  'settings.exports.markdown.upcomingCountdowns': 'Upcoming countdowns',
+  'settings.exports.markdown.pinnedBookmarks': 'Pinned bookmarks',
+  'settings.exports.markdown.bookmarksByCategory': 'Bookmarks by category',
+  'settings.exports.markdown.uncategorized': 'Uncategorized',
+  'settings.exports.markdown.emptyActiveTasks': 'No active tasks saved.',
+  'settings.exports.markdown.emptyCompletedTasks': 'No completed tasks saved.',
+  'settings.exports.markdown.emptyCountdowns': 'No countdowns saved.',
+  'settings.exports.markdown.emptyPinnedBookmarks': 'No pinned bookmarks saved.',
+  'settings.exports.markdown.emptyBookmarks': 'No bookmarks saved.',
+  'settings.exports.markdown.noDate': 'No date',
+  'settings.exports.markdown.due': 'Due',
+  'settings.exports.markdown.target': 'Target',
+  'settings.exports.markdown.label': 'Label',
+  'settings.exports.markdown.pinned': 'Pinned',
+  'settings.exports.markdown.weatherCity': 'Selected weather city',
+  'settings.exports.markdown.noWeatherCity': 'No selected weather city saved.',
+  'settings.exports.markdown.privacyTitle': 'Privacy note',
+  'settings.exports.markdown.privacyLocal':
+    'This file was generated locally from LifeBoard data in this browser.',
+  'settings.exports.markdown.privacyNoTools':
+    'Tools input is not included because LifeBoard does not save it.',
+  'settings.exports.markdown.privacyNoForecast':
+    'Weather forecast response data is not included.',
   'settings.privacy.weatherTitle': 'Weather requests',
   'settings.privacy.weatherDescription':
     'Forecast and city search requests go directly to Open-Meteo.',
