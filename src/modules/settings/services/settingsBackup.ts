@@ -9,7 +9,8 @@ import {
   SETTINGS_MAX_IMPORT_BYTES,
 } from '@/modules/settings/constants/settings'
 import type {
-  LifeBoardBackupV1,
+  LifeBoardBackup,
+  LifeBoardBackupV2,
   SettingsClearTarget,
   SettingsDataSnapshot,
   SettingsResult,
@@ -20,7 +21,12 @@ import {
   TODOS_STORAGE_VERSION,
 } from '@/modules/todos/constants/todos'
 import { loadTodosStorage } from '@/modules/todos/services/todosStorage'
-import { WEATHER_STORAGE_KEY } from '@/modules/weather/constants/weather'
+import {
+  WEATHER_FAVORITES_STORAGE_KEY,
+  WEATHER_FAVORITES_STORAGE_VERSION,
+  WEATHER_STORAGE_KEY,
+} from '@/modules/weather/constants/weather'
+import { loadWeatherFavoritesStorage } from '@/modules/weather/services/weatherFavoritesStorage'
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 import type { ThemeMode } from '@/shared/types/theme'
 import { THEME_STORAGE_KEY } from '@/stores/theme'
@@ -28,6 +34,7 @@ import { THEME_STORAGE_KEY } from '@/stores/theme'
 const OWNED_STORAGE_KEYS = [
   THEME_STORAGE_KEY,
   WEATHER_STORAGE_KEY,
+  WEATHER_FAVORITES_STORAGE_KEY,
   TODOS_STORAGE_KEY,
   BOOKMARKS_STORAGE_KEY,
 ] as const
@@ -87,6 +94,19 @@ function readWeatherLocation(storage: Storage) {
   }
 }
 
+function readWeatherFavorites() {
+  const result = loadWeatherFavoritesStorage()
+
+  if (result.ok) {
+    return { ok: true, data: result.data?.favoriteCities ?? [] } as const
+  }
+
+  return {
+    ok: false,
+    error: 'settings.error.weatherFavoritesInvalid',
+  } as const
+}
+
 export function loadSettingsSnapshot(): SettingsResult<SettingsDataSnapshot> {
   const storageResult = getStorage()
   if (!storageResult.ok) return storageResult
@@ -97,6 +117,9 @@ export function loadSettingsSnapshot(): SettingsResult<SettingsDataSnapshot> {
 
     const weatherResult = readWeatherLocation(storageResult.data)
     if (!weatherResult.ok) return weatherResult
+
+    const weatherFavoritesResult = readWeatherFavorites()
+    if (!weatherFavoritesResult.ok) return weatherFavoritesResult
 
     const todosResult = loadTodosStorage()
     if (!todosResult.ok) return { ok: false, error: todosResult.error }
@@ -109,6 +132,7 @@ export function loadSettingsSnapshot(): SettingsResult<SettingsDataSnapshot> {
       data: {
         themeMode: themeResult.data,
         weatherLocation: weatherResult.data,
+        weatherFavoriteCities: weatherFavoritesResult.data,
         todos: todosResult.data ?? {
           version: TODOS_STORAGE_VERSION,
           tasks: [],
@@ -127,7 +151,7 @@ export function loadSettingsSnapshot(): SettingsResult<SettingsDataSnapshot> {
 
 export function createLifeBoardBackup(
   snapshot: SettingsDataSnapshot,
-): LifeBoardBackupV1 {
+): LifeBoardBackupV2 {
   return {
     version: SETTINGS_BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
@@ -136,13 +160,14 @@ export function createLifeBoardBackup(
     },
     weather: {
       selectedLocation: snapshot.weatherLocation,
+      favoriteCities: snapshot.weatherFavoriteCities,
     },
     todos: snapshot.todos,
     bookmarks: snapshot.bookmarks,
   }
 }
 
-export function downloadLifeBoardBackup(backup: LifeBoardBackupV1) {
+export function downloadLifeBoardBackup(backup: LifeBoardBackup) {
   const blob = new Blob([JSON.stringify(backup, null, 2)], {
     type: 'application/json',
   })
@@ -158,7 +183,7 @@ export function downloadLifeBoardBackup(backup: LifeBoardBackupV1) {
 
 export async function readBackupFile(
   file: File,
-): Promise<SettingsResult<LifeBoardBackupV1>> {
+): Promise<SettingsResult<LifeBoardBackup>> {
   if (file.size > SETTINGS_MAX_IMPORT_BYTES) {
     return {
       ok: false,
@@ -234,7 +259,7 @@ function runStorageTransaction(
   }
 }
 
-export function applyLifeBoardBackup(backup: LifeBoardBackupV1): SettingsResult {
+export function applyLifeBoardBackup(backup: LifeBoardBackup): SettingsResult {
   return runStorageTransaction((storage) => {
     storage.setItem(THEME_STORAGE_KEY, backup.preferences.themeMode)
 
@@ -247,6 +272,13 @@ export function applyLifeBoardBackup(backup: LifeBoardBackupV1): SettingsResult 
       )
     }
 
+    storage.setItem(
+      WEATHER_FAVORITES_STORAGE_KEY,
+      JSON.stringify({
+        version: WEATHER_FAVORITES_STORAGE_VERSION,
+        favoriteCities: backup.version === 2 ? backup.weather.favoriteCities : [],
+      }),
+    )
     storage.setItem(TODOS_STORAGE_KEY, JSON.stringify(backup.todos))
     storage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(backup.bookmarks))
   })
@@ -256,6 +288,7 @@ export function clearLifeBoardData(target: SettingsClearTarget): SettingsResult 
   return runStorageTransaction((storage) => {
     if (target === 'weather' || target === 'all') {
       storage.removeItem(WEATHER_STORAGE_KEY)
+      storage.removeItem(WEATHER_FAVORITES_STORAGE_KEY)
     }
 
     if (target === 'todos' || target === 'all') {

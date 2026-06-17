@@ -9,6 +9,7 @@ import DailyForecastStrip from '@/modules/weather/components/DailyForecastStrip.
 import HourlyForecastStrip from '@/modules/weather/components/HourlyForecastStrip.vue'
 import WeatherAdvicePanel from '@/modules/weather/components/WeatherAdvicePanel.vue'
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
+import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
 import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
@@ -27,8 +28,20 @@ const {
   forecastStatus,
   searchError,
   forecastError,
+  favoriteCities,
+  favoriteMessage,
+  hasSelectedFavorite,
 } = storeToRefs(weatherStore)
-const { initializeWeather, searchCities, selectLocation, loadForecast } = weatherStore
+const {
+  initializeWeather,
+  searchCities,
+  selectLocation,
+  loadForecast,
+  addSelectedLocationToFavorites,
+  removeFavoriteCity,
+  selectFavoriteCity,
+  clearFavoriteMessage,
+} = weatherStore
 
 function handleSelectLocation(location: WeatherLocation) {
   void selectLocation(location)
@@ -50,6 +63,17 @@ onMounted(() => {
       :service-error="searchError"
       :status="searchStatus"
       @search="searchCities"
+    />
+
+    <WeatherFavoritesBar
+      :favorite-cities="favoriteCities"
+      :has-selected-favorite="hasSelectedFavorite"
+      :message="favoriteMessage"
+      :selected-location="selectedLocation"
+      @add-selected="addSelectedLocationToFavorites"
+      @clear-message="clearFavoriteMessage"
+      @remove="removeFavoriteCity"
+      @select="selectFavoriteCity"
     />
 
     <WeatherSearchResults

@@ -11,6 +11,14 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Privacy boundary for the translation export. Do not imply that personal data is included.',
   'settings.localData.selectedCity':
     'The {city} placeholder is an Open-Meteo city name and must remain verbatim.',
+  'weather.favorites.description':
+    'Privacy boundary for Weather favorites. Do not imply automatic refresh or another weather provider.',
+  'weather.favorites.removeAria':
+    'Accessible label for removing a favorite weather city. Keep the {city} placeholder verbatim.',
+  'weather.favorites.message.storageError':
+    'Shown when favorite city storage cannot be written in this browser.',
+  'weather.favorites.message.invalidStorage':
+    'Shown when saved favorite city storage is malformed. Do not imply that data was deleted.',
   'settings.localData.taskOneCountdownMany':
     'Keep the {countdownCount} placeholder.',
   'settings.localData.taskManyCountdownOne':

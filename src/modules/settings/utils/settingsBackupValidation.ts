@@ -1,14 +1,14 @@
 import { BOOKMARKS_STORAGE_VERSION } from '@/modules/bookmarks/constants/bookmarks'
 import type { BookmarksStorageEnvelope } from '@/modules/bookmarks/types/bookmarks'
 import { isBookmark } from '@/modules/bookmarks/utils/bookmarkValidation'
-import { SETTINGS_BACKUP_VERSION } from '@/modules/settings/constants/settings'
 import type {
-  LifeBoardBackupV1,
+  LifeBoardBackup,
   SettingsResult,
 } from '@/modules/settings/types/settings'
 import { TODOS_STORAGE_VERSION } from '@/modules/todos/constants/todos'
 import type { TodosStorageEnvelope } from '@/modules/todos/types/todos'
 import { isCountdown, isTask } from '@/modules/todos/utils/todoValidation'
+import { isWeatherFavoriteCity } from '@/modules/weather/services/weatherFavoritesStorage'
 import { isWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 import type { ThemeMode } from '@/shared/types/theme'
 
@@ -53,7 +53,7 @@ function isBookmarksEnvelope(value: unknown): value is BookmarksStorageEnvelope 
 
 export function validateLifeBoardBackup(
   value: unknown,
-): SettingsResult<LifeBoardBackupV1> {
+): SettingsResult<LifeBoardBackup> {
   if (!isRecord(value) || !hasExactKeys(value, [
     'version',
     'exportedAt',
@@ -65,7 +65,7 @@ export function validateLifeBoardBackup(
     return { ok: false, error: 'settings.error.backupIncomplete' }
   }
 
-  if (value.version !== SETTINGS_BACKUP_VERSION) {
+  if (value.version !== 1 && value.version !== 2) {
     return {
       ok: false,
       error: 'settings.error.backupVersionUnsupported',
@@ -84,12 +84,25 @@ export function validateLifeBoardBackup(
     return { ok: false, error: 'settings.error.backupThemeInvalid' }
   }
 
-  if (
-    !isRecord(value.weather) ||
-    !hasExactKeys(value.weather, ['selectedLocation']) ||
-    (value.weather.selectedLocation !== null &&
-      !isWeatherLocation(value.weather.selectedLocation))
-  ) {
+  if (!isRecord(value.weather)) {
+    return { ok: false, error: 'settings.error.backupWeatherInvalid' }
+  }
+
+  const hasValidV1Weather =
+    value.version === 1 &&
+    hasExactKeys(value.weather, ['selectedLocation']) &&
+    (value.weather.selectedLocation === null ||
+      isWeatherLocation(value.weather.selectedLocation))
+
+  const hasValidV2Weather =
+    value.version === 2 &&
+    hasExactKeys(value.weather, ['selectedLocation', 'favoriteCities']) &&
+    (value.weather.selectedLocation === null ||
+      isWeatherLocation(value.weather.selectedLocation)) &&
+    Array.isArray(value.weather.favoriteCities) &&
+    value.weather.favoriteCities.every(isWeatherFavoriteCity)
+
+  if (!hasValidV1Weather && !hasValidV2Weather) {
     return { ok: false, error: 'settings.error.backupWeatherInvalid' }
   }
 
@@ -101,5 +114,5 @@ export function validateLifeBoardBackup(
     return { ok: false, error: 'settings.error.backupBookmarksInvalid' }
   }
 
-  return { ok: true, data: value as unknown as LifeBoardBackupV1 }
+  return { ok: true, data: value as unknown as LifeBoardBackup }
 }

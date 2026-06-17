@@ -86,7 +86,7 @@ export const zhCN = {
   'settings.localData.toolsNotSaved': '工具输入不会被保存。',
   'settings.backup.exportTitle': '导出备份',
   'settings.backup.exportDescription':
-    '将主题、已选城市、任务、倒计时和书签下载为 JSON 文件。',
+    '将主题、已选城市、常用城市、任务、倒计时和书签下载为 JSON 文件。',
   'settings.backup.exportAction': '导出 LifeBoard 数据',
   'settings.backup.importTitle': '导入备份',
   'settings.backup.importDescription':
@@ -160,7 +160,7 @@ export const zhCN = {
     '天气预报和城市搜索请求会直接发送到 Open-Meteo。',
   'settings.privacy.localTitle': '本地计划',
   'settings.privacy.localDescription':
-    '已选择城市、待办、倒计时和书签保存在此浏览器中。',
+    '已选择城市、常用城市、待办、倒计时和书签保存在此浏览器中。',
   'settings.privacy.toolsTitle': '工具输入',
   'settings.privacy.toolsDescription':
     '输入到工具中的文本只会在本地处理，不会保存。',
@@ -168,7 +168,7 @@ export const zhCN = {
   'settings.privacy.backupDescription':
     '导出的文件保存在本地。导入文件只会在你选择后读取，不会上传。',
   'settings.clearData.weatherDescription':
-    '移除已选择城市和当前内存中的天气预报。',
+    '移除已选择城市、常用城市和当前内存中的天气预报。',
   'settings.clearData.todosOneOne': '移除 1 个任务和 1 个倒计时。',
   'settings.clearData.todosOneMany':
     '移除 1 个任务和 {countdownCount} 个倒计时。',
@@ -185,15 +185,15 @@ export const zhCN = {
   'settings.clearData.nothingSaved': '没有已保存内容',
   'settings.clearData.allTitle': '清除全部 LifeBoard 数据',
   'settings.clearData.allDescription':
-    '移除 LifeBoard 保存的主题偏好、已选城市、任务、倒计时和书签。',
+    '移除 LifeBoard 保存的主题偏好、已选城市、常用城市、任务、倒计时和书签。',
   'settings.clearData.allAction': '清除全部数据',
   'settings.dialog.importTitle': '替换本地 LifeBoard 数据？',
   'settings.dialog.importDescription':
-    '这会使用已检查的备份替换当前主题偏好、已选城市、任务、倒计时和书签。',
+    '这会使用已检查的备份替换当前主题偏好、已选城市、常用城市、任务、倒计时和书签。',
   'settings.dialog.importConfirm': '导入并替换',
   'settings.dialog.weatherTitle': '清除天气数据？',
   'settings.dialog.weatherDescription':
-    '这会移除已选择城市和当前内存中的天气预报。',
+    '这会移除已选择城市、常用城市和当前内存中的天气预报。',
   'settings.dialog.todosTitle': '清除待办数据？',
   'settings.dialog.todosDescription':
     '这会移除此浏览器中保存的所有任务和倒计时。',
@@ -202,7 +202,7 @@ export const zhCN = {
     '这会移除此浏览器中保存的所有书签。',
   'settings.dialog.allTitle': '清除全部 LifeBoard 数据？',
   'settings.dialog.allDescription':
-    '这会移除主题偏好、已选城市、当前天气预报、任务、倒计时和书签。工具输入不会被保存。',
+    '这会移除主题偏好、已选城市、常用城市、当前天气预报、任务、倒计时和书签。工具输入不会被保存。',
   'settings.dialog.allConfirm': '清除全部数据',
   'settings.dialog.allAcknowledgement':
     '我了解此操作会移除此浏览器中保存的全部 LifeBoard 数据。',
@@ -222,6 +222,8 @@ export const zhCN = {
     '已保存的天气位置无效。为便于恢复，数据保持不变。',
   'settings.error.weatherInvalidJson':
     '已保存的天气位置包含无效 JSON。为便于恢复，数据保持不变。',
+  'settings.error.weatherFavoritesInvalid':
+    '已保存的常用天气城市无法读取。为便于恢复，数据保持不变。',
   'settings.error.backupTooLarge':
     '此备份超过 1MB。请选择较小的 LifeBoard JSON 备份。',
   'settings.error.fileUnreadable': '无法读取所选文件。',
@@ -232,7 +234,7 @@ export const zhCN = {
     '存储操作失败，浏览器也无法完整恢复之前的数据。',
   'settings.error.backupIncomplete': '此文件不是完整的 LifeBoard 备份。',
   'settings.error.backupVersionUnsupported':
-    '不支持此备份版本。LifeBoard 当前接受版本 1。',
+    '不支持此备份版本。LifeBoard 当前接受版本 1 和 2。',
   'settings.error.backupDateInvalid': '备份导出日期缺失或无效。',
   'settings.error.backupThemeInvalid': '备份中的主题偏好无效。',
   'settings.error.backupWeatherInvalid': '备份中的天气位置无效。',

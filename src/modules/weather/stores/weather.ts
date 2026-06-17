@@ -2,16 +2,29 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, shallowRef } from 'vue'
 import { WEATHER_STORAGE_KEY } from '@/modules/weather/constants/weather'
 import {
+  loadWeatherFavoritesStorage,
+  saveWeatherFavoritesStorage,
+} from '@/modules/weather/services/weatherFavoritesStorage'
+import {
   fetchOpenMeteoForecast,
   searchOpenMeteoLocations,
   WeatherServiceError,
 } from '@/modules/weather/services/openMeteoService'
+import type {
+  WeatherFavoriteCity,
+  WeatherFavoriteMessage,
+} from '@/modules/weather/types/weatherFavorites'
 import type { OpenMeteoGeocodingResult } from '@/modules/weather/types/openMeteo'
 import type {
   WeatherLocation,
   WeatherRequestStatus,
   WeatherSnapshot,
 } from '@/modules/weather/types/weather'
+import {
+  createWeatherFavoriteCity,
+  favoriteCityToWeatherLocation,
+  getWeatherFavoriteIdentity,
+} from '@/modules/weather/utils/weatherFavoriteIdentity'
 import {
   normalizeLocation,
   normalizeWeatherForecast,
@@ -35,6 +48,8 @@ export const useWeatherStore = defineStore('weather', () => {
   const forecastStatus = shallowRef<WeatherRequestStatus>('idle')
   const searchError = shallowRef<string | null>(null)
   const forecastError = shallowRef<string | null>(null)
+  const favoriteCities = shallowRef<WeatherFavoriteCity[]>([])
+  const favoriteMessage = shallowRef<WeatherFavoriteMessage | null>(null)
   const lastUpdatedAt = shallowRef<string | null>(null)
   const isInitialized = shallowRef(false)
 
@@ -43,6 +58,14 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const hasLocation = computed(() => selectedLocation.value !== null)
   const hasWeather = computed(() => weather.value !== null)
+  const hasSelectedFavorite = computed(() => {
+    if (!selectedLocation.value) return false
+
+    const selectedIdentity = getWeatherFavoriteIdentity(selectedLocation.value)
+    return favoriteCities.value.some(
+      (favorite) => getWeatherFavoriteIdentity(favorite) === selectedIdentity,
+    )
+  })
   const isInitialLoading = computed(
     () => forecastStatus.value === 'loading' && weather.value === null,
   )
@@ -114,6 +137,32 @@ export const useWeatherStore = defineStore('weather', () => {
     return null
   }
 
+  function initializeFavorites() {
+    const result = loadWeatherFavoritesStorage()
+
+    if (result.ok) {
+      favoriteCities.value = result.data?.favoriteCities ?? []
+      favoriteMessage.value = null
+      return
+    }
+
+    favoriteCities.value = []
+    favoriteMessage.value =
+      result.error === 'storageUnavailable' ? 'storageError' : 'invalidStorage'
+  }
+
+  function commitFavoriteCities(nextFavorites: WeatherFavoriteCity[]) {
+    const result = saveWeatherFavoritesStorage(nextFavorites)
+
+    if (!result.ok) {
+      favoriteMessage.value = 'storageError'
+      return false
+    }
+
+    favoriteCities.value = nextFavorites
+    return true
+  }
+
   async function loadForecast(location = selectedLocation.value) {
     if (!location) {
       return
@@ -150,6 +199,7 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     isInitialized.value = true
+    initializeFavorites()
     const storedLocation = readStoredLocation()
 
     if (!storedLocation) {
@@ -202,6 +252,57 @@ export const useWeatherStore = defineStore('weather', () => {
     return selectLocation(normalizeLocation(result))
   }
 
+  function addSelectedLocationToFavorites() {
+    if (!selectedLocation.value) {
+      return false
+    }
+
+    const selectedIdentity = getWeatherFavoriteIdentity(selectedLocation.value)
+    const alreadySaved = favoriteCities.value.some(
+      (favorite) => getWeatherFavoriteIdentity(favorite) === selectedIdentity,
+    )
+
+    if (alreadySaved) {
+      favoriteMessage.value = 'duplicate'
+      return false
+    }
+
+    const nextFavorite = createWeatherFavoriteCity(selectedLocation.value)
+    const saved = commitFavoriteCities([...favoriteCities.value, nextFavorite])
+
+    if (saved) {
+      favoriteMessage.value = 'saved'
+    }
+
+    return saved
+  }
+
+  function removeFavoriteCity(favoriteId: string) {
+    const nextFavorites = favoriteCities.value.filter(
+      (favorite) => favorite.id !== favoriteId,
+    )
+
+    if (nextFavorites.length === favoriteCities.value.length) {
+      return false
+    }
+
+    const saved = commitFavoriteCities(nextFavorites)
+
+    if (saved) {
+      favoriteMessage.value = 'removed'
+    }
+
+    return saved
+  }
+
+  async function selectFavoriteCity(favorite: WeatherFavoriteCity) {
+    return selectLocation(favoriteCityToWeatherLocation(favorite))
+  }
+
+  function clearFavoriteMessage() {
+    favoriteMessage.value = null
+  }
+
   function clearSearchResults() {
     searchController?.abort()
     searchResults.value = []
@@ -231,6 +332,12 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastStatus.value = 'idle'
     forecastError.value = null
     lastUpdatedAt.value = null
+    favoriteMessage.value = null
+  }
+
+  function synchronizeFavoriteCities(nextFavorites: WeatherFavoriteCity[]) {
+    favoriteCities.value = [...nextFavorites]
+    favoriteMessage.value = null
   }
 
   return {
@@ -242,19 +349,27 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastStatus,
     searchError,
     forecastError,
+    favoriteCities,
+    favoriteMessage,
     lastUpdatedAt,
     isInitialized,
     hasLocation,
     hasWeather,
+    hasSelectedFavorite,
     isInitialLoading,
     initializeWeather,
     searchCities,
     selectLocation,
     selectSearchResult,
+    addSelectedLocationToFavorites,
+    removeFavoriteCity,
+    selectFavoriteCity,
+    clearFavoriteMessage,
     loadForecast,
     clearSearchResults,
     resetLocation,
     synchronizeLocation,
+    synchronizeFavoriteCities,
   }
 })
 

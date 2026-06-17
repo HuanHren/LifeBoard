@@ -182,6 +182,7 @@ export const translationKeys = [
   'settings.error.themeInvalid',
   'settings.error.weatherInvalid',
   'settings.error.weatherInvalidJson',
+  'settings.error.weatherFavoritesInvalid',
   'settings.error.backupTooLarge',
   'settings.error.fileUnreadable',
   'settings.error.fileInvalidJson',

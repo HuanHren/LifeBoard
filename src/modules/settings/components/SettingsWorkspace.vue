@@ -29,7 +29,7 @@ import {
 } from '@/modules/settings/services/settingsBackup'
 import type {
   BackupImportSummaryData,
-  LifeBoardBackupV1,
+  LifeBoardBackup,
   SettingsClearTarget,
   SettingsDataSnapshot,
 } from '@/modules/settings/types/settings'
@@ -56,6 +56,7 @@ const { locale, t } = useI18n()
 const { mode, persistenceError: themeError } = storeToRefs(themeStore)
 const {
   selectedLocation,
+  favoriteCities,
   isInitialized: weatherInitialized,
 } = storeToRefs(weatherStore)
 const { tasks, countdowns } = storeToRefs(todosStore)
@@ -68,13 +69,14 @@ const portableExportError = shallowRef<TranslationKey | null>(null)
 const portableExportSuccess = shallowRef<TranslationKey | null>(null)
 const clearError = shallowRef<string | null>(null)
 const clearSuccess = shallowRef<TranslationKey | null>(null)
-const pendingBackup = shallowRef<LifeBoardBackupV1 | null>(null)
+const pendingBackup = shallowRef<LifeBoardBackup | null>(null)
 const dialogState = shallowRef<DialogState>(null)
 const isBusy = ref(false)
 
 const taskCount = computed(() => tasks.value.length)
 const countdownCount = computed(() => countdowns.value.length)
 const bookmarkCount = computed(() => bookmarks.value.length)
+const weatherFavoriteCount = computed(() => favoriteCities.value.length)
 const weatherCity = computed(() => selectedLocation.value?.name ?? null)
 const hasTodosRows = computed(() => taskCount.value + countdownCount.value > 0)
 const hasBookmarkRows = computed(() => bookmarkCount.value > 0)
@@ -103,6 +105,7 @@ const hasAnyData = computed(
   () =>
     mode.value !== 'system' ||
     selectedLocation.value !== null ||
+    weatherFavoriteCount.value > 0 ||
     taskCount.value > 0 ||
     countdownCount.value > 0 ||
     bookmarkCount.value > 0 ||
@@ -176,6 +179,8 @@ function applySnapshotToStores(snapshot: SettingsDataSnapshot, replaceWeather = 
     weatherStore.synchronizeLocation(snapshot.weatherLocation)
   }
 
+  weatherStore.synchronizeFavoriteCities(snapshot.weatherFavoriteCities)
+
   todosStore.synchronizeFromSettings(
     snapshot.todos.tasks,
     snapshot.todos.countdowns,
@@ -187,6 +192,7 @@ function currentSnapshot(): SettingsDataSnapshot {
   return {
     themeMode: mode.value,
     weatherLocation: selectedLocation.value,
+    weatherFavoriteCities: [...favoriteCities.value],
     todos: {
       version: TODOS_STORAGE_VERSION,
       tasks: [...tasks.value],
@@ -294,6 +300,10 @@ function confirmImport() {
     {
       themeMode: pendingBackup.value.preferences.themeMode,
       weatherLocation: pendingBackup.value.weather.selectedLocation,
+      weatherFavoriteCities:
+        pendingBackup.value.version === 2
+          ? pendingBackup.value.weather.favoriteCities
+          : [],
       todos: pendingBackup.value.todos,
       bookmarks: pendingBackup.value.bookmarks,
     },
@@ -319,6 +329,7 @@ function confirmClear() {
 
   if (target === 'weather' || target === 'all') {
     weatherStore.synchronizeLocation(null)
+    weatherStore.synchronizeFavoriteCities([])
   }
 
   if (target === 'todos' || target === 'all') {
@@ -443,7 +454,7 @@ onMounted(() => {
       :description="t('settings.section.clearData.description')"
     >
       <DataClearPanel
-        :has-weather="selectedLocation !== null"
+        :has-weather="selectedLocation !== null || weatherFavoriteCount > 0"
         :task-count="taskCount"
         :countdown-count="countdownCount"
         :bookmark-count="bookmarkCount"

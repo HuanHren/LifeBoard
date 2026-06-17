@@ -94,7 +94,7 @@ export const enUS = {
   'settings.localData.toolsNotSaved': 'Tool input is not saved.',
   'settings.backup.exportTitle': 'Export backup',
   'settings.backup.exportDescription':
-    'Download theme, selected city, tasks, countdowns, and bookmarks as JSON.',
+    'Download theme, selected city, favorite cities, tasks, countdowns, and bookmarks as JSON.',
   'settings.backup.exportAction': 'Export LifeBoard data',
   'settings.backup.importTitle': 'Import backup',
   'settings.backup.importDescription':
@@ -171,7 +171,7 @@ export const enUS = {
     'Forecast and city search requests go directly to Open-Meteo.',
   'settings.privacy.localTitle': 'Local planning',
   'settings.privacy.localDescription':
-    'The selected city, todos, countdowns, and bookmarks stay in this browser.',
+    'The selected city, favorite cities, todos, countdowns, and bookmarks stay in this browser.',
   'settings.privacy.toolsTitle': 'Tools input',
   'settings.privacy.toolsDescription':
     'Text entered in Tools is processed locally and is not saved.',
@@ -179,7 +179,7 @@ export const enUS = {
   'settings.privacy.backupDescription':
     'Exports are downloaded locally. Imports are read only after selection and are never uploaded.',
   'settings.clearData.weatherDescription':
-    'Remove the selected city and current in-memory forecast.',
+    'Remove the selected city, favorite cities, and current in-memory forecast.',
   'settings.clearData.todosOneOne': 'Remove 1 task and 1 countdown.',
   'settings.clearData.todosOneMany':
     'Remove 1 task and {countdownCount} countdowns.',
@@ -196,15 +196,15 @@ export const enUS = {
   'settings.clearData.nothingSaved': 'Nothing saved',
   'settings.clearData.allTitle': 'Clear all LifeBoard data',
   'settings.clearData.allDescription':
-    'Remove the theme preference, selected city, tasks, countdowns, and bookmarks stored by LifeBoard.',
+    'Remove the theme preference, selected city, favorite cities, tasks, countdowns, and bookmarks stored by LifeBoard.',
   'settings.clearData.allAction': 'Clear all data',
   'settings.dialog.importTitle': 'Replace local LifeBoard data?',
   'settings.dialog.importDescription':
-    'This will replace the current theme preference, selected city, tasks, countdowns, and bookmarks with the reviewed backup.',
+    'This will replace the current theme preference, selected city, favorite cities, tasks, countdowns, and bookmarks with the reviewed backup.',
   'settings.dialog.importConfirm': 'Import and replace',
   'settings.dialog.weatherTitle': 'Clear Weather data?',
   'settings.dialog.weatherDescription':
-    'This removes the selected city and current in-memory forecast.',
+    'This removes the selected city, favorite cities, and current in-memory forecast.',
   'settings.dialog.todosTitle': 'Clear Todos data?',
   'settings.dialog.todosDescription':
     'This removes every saved task and countdown from this browser.',
@@ -213,7 +213,7 @@ export const enUS = {
     'This removes every saved bookmark from this browser.',
   'settings.dialog.allTitle': 'Clear all LifeBoard data?',
   'settings.dialog.allDescription':
-    'This removes the theme preference, selected city, current forecast, tasks, countdowns, and bookmarks. Tools input is not saved.',
+    'This removes the theme preference, selected city, favorite cities, current forecast, tasks, countdowns, and bookmarks. Tools input is not saved.',
   'settings.dialog.allConfirm': 'Clear all data',
   'settings.dialog.allAcknowledgement':
     'I understand that this removes all LifeBoard data stored in this browser.',
@@ -235,6 +235,8 @@ export const enUS = {
     'The saved weather location is invalid. It was left unchanged for recovery.',
   'settings.error.weatherInvalidJson':
     'The saved weather location contains invalid JSON. It was left unchanged for recovery.',
+  'settings.error.weatherFavoritesInvalid':
+    'Saved favorite weather cities could not be read. They were left unchanged for recovery.',
   'settings.error.backupTooLarge':
     'This backup is larger than 1MB. Choose a smaller LifeBoard JSON backup.',
   'settings.error.fileUnreadable': 'The selected file could not be read.',
@@ -247,7 +249,7 @@ export const enUS = {
   'settings.error.backupIncomplete':
     'This file is not a complete LifeBoard backup.',
   'settings.error.backupVersionUnsupported':
-    'This backup version is not supported. LifeBoard currently accepts version 1.',
+    'This backup version is not supported. LifeBoard currently accepts versions 1 and 2.',
   'settings.error.backupDateInvalid':
     'The backup export date is missing or invalid.',
   'settings.error.backupThemeInvalid':
