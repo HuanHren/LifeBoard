@@ -106,6 +106,19 @@ onMounted(() => {
       />
     </section>
 
+    <section
+      v-else-if="selectedLocation && provider === 'caiyun' && !hasCaiyunToken && forecastStatus === 'idle'"
+      aria-labelledby="weather-provider-setup-title"
+    >
+      <h2 id="weather-provider-setup-title" class="sr-only">
+        {{ t('weather.state.providerSetupTitle') }}
+      </h2>
+      <BaseEmpty
+        :description="t('weather.state.caiyunTokenMissingDescription')"
+        :title="t('weather.state.caiyunTokenMissingHeading')"
+      />
+    </section>
+
     <section v-else-if="forecastStatus === 'loading'" aria-labelledby="weather-loading-title">
       <h2 id="weather-loading-title" class="sr-only">
         {{ t('weather.state.loadingTitle') }}
@@ -144,7 +157,7 @@ onMounted(() => {
 
       <HourlyForecastStrip :items="weather.hourly" :units="weather.units" />
       <DailyForecastStrip :items="weather.daily" :units="weather.units" />
-      <WeatherAttribution />
+      <WeatherAttribution :provider="weather.provider" />
     </div>
   </div>
 </template>

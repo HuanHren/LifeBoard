@@ -1,4 +1,5 @@
 export type WeatherRequestStatus = 'idle' | 'loading' | 'success' | 'error'
+export type WeatherDataProvider = 'openMeteo' | 'caiyun'
 export type AdviceLevel = 'clear' | 'consider' | 'caution'
 export type AdviceKind = 'umbrella' | 'clothing' | 'outdoor'
 export type WeatherLocationKind =
@@ -49,7 +50,7 @@ export interface CurrentConditions {
   cloudCover: number
   windSpeed: number
   windDirection: number
-  windGusts: number
+  windGusts: number | null
   isDay: boolean
   condition: WeatherCondition
 }
@@ -61,8 +62,8 @@ export interface HourlyForecastItem {
   precipitationProbability: number
   precipitation: number
   windSpeed: number
-  windGusts: number
-  uvIndex: number
+  windGusts: number | null
+  uvIndex: number | null
   isDay: boolean
   condition: WeatherCondition
 }
@@ -76,8 +77,8 @@ export interface DailyForecastItem {
   precipitationSum: number
   precipitationProbabilityMax: number
   windSpeedMax: number
-  windGustsMax: number
-  uvIndexMax: number
+  windGustsMax: number | null
+  uvIndexMax: number | null
   sunrise: string
   sunset: string
   condition: WeatherCondition
@@ -97,6 +98,7 @@ export interface WeatherAdvice {
 }
 
 export interface WeatherSnapshot {
+  provider: WeatherDataProvider
   location: WeatherLocation
   timezone: string
   timezoneAbbreviation: string

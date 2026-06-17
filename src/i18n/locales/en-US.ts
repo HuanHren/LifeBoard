@@ -80,13 +80,13 @@ export const enUS = {
     'The translation source could not be created or downloaded.',
   'settings.weatherProvider.legend': 'Forecast provider preference',
   'settings.weatherProvider.helper':
-    'Open-Meteo still powers forecasts in this stage. Caiyun Weather can be selected now so the next stage has a local preference ready.',
+    'Choose whether Weather loads forecasts from Open-Meteo or Caiyun Weather on this browser.',
   'settings.weatherProvider.openMeteoLabel': 'Open-Meteo',
   'settings.weatherProvider.openMeteoDescription':
-    'No token required. Current city search and forecasts continue to use Open-Meteo.',
+    'No token required. City search and forecasts can use Open-Meteo.',
   'settings.weatherProvider.caiyunLabel': 'Caiyun Weather',
   'settings.weatherProvider.caiyunDescription':
-    'Requires a token you provide. Forecast requests are not connected to Caiyun yet.',
+    'Requires a token you provide. Forecast requests use the selected city coordinates.',
   'settings.weatherProvider.tokenLabel': 'Caiyun token',
   'settings.weatherProvider.tokenHelper':
     'Enter a token only if you already have one. It is saved only in this browser and is never shown in full.',
@@ -95,7 +95,7 @@ export const enUS = {
   'settings.weatherProvider.tokenSavedState': 'A Caiyun token is saved in this browser.',
   'settings.weatherProvider.tokenMissingState': 'No Caiyun token is saved.',
   'settings.weatherProvider.privacy':
-    'The token is excluded from LifeBoard backup files, portable exports, and translation source exports. LifeBoard is frontend-only, so once Caiyun requests are implemented, a browser-used token can be visible to this browser user through DevTools Network.',
+    'The token is excluded from LifeBoard backup files, portable exports, and translation source exports. LifeBoard is frontend-only, so a browser-used token can be visible to this browser user through DevTools Network.',
   'settings.weatherProvider.dismiss': 'Dismiss',
   'settings.weatherProvider.message.providerSaved': 'Weather provider preference saved.',
   'settings.weatherProvider.message.tokenSaved': 'Caiyun token saved in this browser.',

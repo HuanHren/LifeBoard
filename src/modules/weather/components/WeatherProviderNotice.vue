@@ -20,7 +20,9 @@ const { t } = useI18n()
       {{
         provider === 'caiyun' && !hasCaiyunToken
           ? t('weather.providerNotice.caiyunMissingToken')
-          : t('weather.providerNotice.openMeteoActive')
+          : provider === 'caiyun'
+            ? t('weather.providerNotice.caiyunActive')
+            : t('weather.providerNotice.openMeteoActive')
       }}
     </p>
   </aside>

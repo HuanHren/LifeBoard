@@ -10,7 +10,7 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
   'settings.translationExport.privacy':
     'Privacy boundary for the translation export. Do not imply that personal data is included.',
   'settings.weatherProvider.helper':
-    'Stage 16.2 boundary. Open-Meteo still powers forecasts; Caiyun is a stored preference only.',
+    'Weather provider preference explanation. Do not imply cloud sync or accounts.',
   'settings.weatherProvider.tokenHelper':
     'Do not include or request a real token in translations. This is generic UI guidance.',
   'settings.weatherProvider.privacy':
@@ -20,9 +20,27 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
   'settings.weatherProvider.error.emptyToken':
     'Validation message for an empty password-style token field.',
   'weather.providerNotice.openMeteoActive':
-    'Weather page status. Must say Open-Meteo still powers forecasts in this stage.',
+    'Weather page status for Open-Meteo. No token is required.',
   'weather.providerNotice.caiyunMissingToken':
-    'Weather page status for Caiyun selected without a saved token. Must not block Open-Meteo loading.',
+    'Weather page status for Caiyun selected without a saved token. Must say no Caiyun forecast can load until a token is saved.',
+  'weather.providerNotice.caiyunActive':
+    'Weather page status for active Caiyun provider. Keep city search boundary clear.',
+  'weather.state.caiyunTokenMissingDescription':
+    'Shown when Caiyun is selected without a saved token. Must state no Caiyun request was sent.',
+  'weather.error.caiyunMissingToken':
+    'Do not include or request a real token. Direct the user to Settings.',
+  'weather.error.caiyunAuth':
+    'Provider error. Do not include token, partial token, request URL, or raw provider error body.',
+  'weather.error.caiyunNetwork':
+    'Provider network error. Do not include token-bearing request URL.',
+  'weather.error.caiyunProxyUnavailable':
+    'Shown when the same-origin Caiyun proxy cannot be reached. Do not include token, request body, or upstream URL.',
+  'weather.error.caiyunProxyRequest':
+    'Shown when LifeBoard cannot prepare a Caiyun proxy request. Do not include token or request body.',
+  'weather.error.caiyunProxyStatus':
+    'Shown for unexpected same-origin proxy status. Keep the {status} placeholder and never include token or request URL.',
+  'weather.attribution.caiyunLink':
+    'Provider name. Keep Caiyun Weather untranslated.',
   'settings.localData.selectedCity':
     'The {city} placeholder is an Open-Meteo city name and must remain verbatim.',
   'weather.favorites.description':

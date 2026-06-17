@@ -30,6 +30,10 @@ function sum(values: number[]) {
   return values.reduce((total, value) => total + value, 0)
 }
 
+function availableNumbers(values: Array<number | null>) {
+  return values.filter((value): value is number => value !== null)
+}
+
 function createUmbrellaAdvice(context: AdviceContext): AdviceItem {
   const next6 = context.hourly.slice(0, 6)
   const next12 = context.hourly.slice(0, 12)
@@ -100,7 +104,10 @@ function createClothingAdvice(context: AdviceContext): AdviceItem {
 
   const modifiers: string[] = []
 
-  if (context.current.windGusts >= ADVICE_THRESHOLDS.strongGusts) {
+  if (
+    context.current.windGusts !== null &&
+    context.current.windGusts >= ADVICE_THRESHOLDS.strongGusts
+  ) {
     modifiers.push('A wind-resistant layer may help.')
   }
 
@@ -131,7 +138,7 @@ function createOutdoorAdvice(context: AdviceContext): AdviceItem {
     next6.some((item) => isHeavyPrecipitationCode(item.condition.code)) ||
     maximum(next6.map((item) => item.precipitation)) >=
       ADVICE_THRESHOLDS.outdoorHeavyHourlyPrecipitation
-  const maximumGust = maximum(next6.map((item) => item.windGusts))
+  const maximumGust = maximum(availableNumbers(next6.map((item) => item.windGusts)))
   const minimumApparent = minimum(next6.map((item) => item.apparentTemperature))
   const maximumApparent = maximum(next6.map((item) => item.apparentTemperature))
 
@@ -155,7 +162,9 @@ function createOutdoorAdvice(context: AdviceContext): AdviceItem {
   const hasModerateRainRisk = maximum(
     next6.map((item) => item.precipitationProbability),
   ) >= ADVICE_THRESHOLDS.umbrellaConsiderProbability
-  const hasElevatedUv = maximum(next6.map((item) => item.uvIndex)) >= ADVICE_THRESHOLDS.elevatedUv
+  const hasElevatedUv =
+    maximum(availableNumbers(next6.map((item) => item.uvIndex))) >=
+    ADVICE_THRESHOLDS.elevatedUv
   const hasNotableWind = maximumGust >= ADVICE_THRESHOLDS.strongGusts
 
   if (hasModerateRainRisk || hasElevatedUv || hasNotableWind) {
@@ -186,7 +195,7 @@ function createOutdoorAdvice(context: AdviceContext): AdviceItem {
 function createWeatherNotes(context: AdviceContext) {
   const next12 = context.hourly.slice(0, 12)
   const notes: string[] = []
-  const maximumGust = maximum(next12.map((item) => item.windGusts))
+  const maximumGust = maximum(availableNumbers(next12.map((item) => item.windGusts)))
   const temperatureValues = next12.map((item) => item.temperature)
   const temperatureRange = maximum(temperatureValues) - minimum(temperatureValues)
   const apparentDifference = Math.abs(

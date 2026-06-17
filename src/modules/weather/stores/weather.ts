@@ -12,10 +12,10 @@ import {
   saveWeatherProviderPreference,
 } from '@/modules/weather/services/weatherProviderStorage'
 import {
-  fetchOpenMeteoForecast,
   searchOpenMeteoLocations,
   WeatherServiceError,
 } from '@/modules/weather/services/openMeteoService'
+import { fetchWeatherForecastForProvider } from '@/modules/weather/services/weatherForecastProvider'
 import type {
   WeatherFavoriteCity,
   WeatherFavoriteMessage,
@@ -38,7 +38,6 @@ import {
 } from '@/modules/weather/utils/weatherFavoriteIdentity'
 import {
   normalizeLocation,
-  normalizeWeatherForecast,
 } from '@/modules/weather/utils/weatherNormalizer'
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 
@@ -83,6 +82,9 @@ export const useWeatherStore = defineStore('weather', () => {
   })
   const isInitialLoading = computed(
     () => forecastStatus.value === 'loading' && weather.value === null,
+  )
+  const needsCaiyunToken = computed(
+    () => provider.value === 'caiyun' && !hasCaiyunToken.value,
   )
 
   function persistLocation(location: WeatherLocation) {
@@ -199,14 +201,26 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     forecastController?.abort()
+
+    if (needsCaiyunToken.value) {
+      weather.value = null
+      forecastStatus.value = 'idle'
+      forecastError.value = null
+      lastUpdatedAt.value = null
+      return
+    }
+
     forecastController = new AbortController()
     forecastStatus.value = 'loading'
     forecastError.value = null
     weather.value = null
 
     try {
-      const response = await fetchOpenMeteoForecast(location, forecastController.signal)
-      const snapshot = normalizeWeatherForecast(response, location)
+      const snapshot = await fetchWeatherForecastForProvider({
+        provider: provider.value,
+        location,
+        signal: forecastController.signal,
+      })
       weather.value = snapshot
       lastUpdatedAt.value = snapshot.fetchedAt
       forecastStatus.value = 'success'
@@ -346,6 +360,11 @@ export const useWeatherStore = defineStore('weather', () => {
     provider.value = nextProvider
     providerPersistenceError.value = null
     providerMessage.value = 'providerSaved'
+
+    if (selectedLocation.value) {
+      void loadForecast(selectedLocation.value)
+    }
+
     return true
   }
 
@@ -361,6 +380,11 @@ export const useWeatherStore = defineStore('weather', () => {
     hasCaiyunToken.value = true
     providerPersistenceError.value = null
     providerMessage.value = 'tokenSaved'
+
+    if (provider.value === 'caiyun' && selectedLocation.value) {
+      void loadForecast(selectedLocation.value)
+    }
+
     return true
   }
 
@@ -376,6 +400,15 @@ export const useWeatherStore = defineStore('weather', () => {
     hasCaiyunToken.value = false
     providerPersistenceError.value = null
     providerMessage.value = 'tokenCleared'
+
+    if (provider.value === 'caiyun') {
+      forecastController?.abort()
+      weather.value = null
+      forecastStatus.value = 'idle'
+      forecastError.value = null
+      lastUpdatedAt.value = null
+    }
+
     return true
   }
 
@@ -449,6 +482,7 @@ export const useWeatherStore = defineStore('weather', () => {
     hasWeather,
     hasSelectedFavorite,
     isInitialLoading,
+    needsCaiyunToken,
     initializeWeather,
     initializeProviderPreferences,
     searchCities,

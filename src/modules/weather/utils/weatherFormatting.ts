@@ -30,6 +30,14 @@ export function formatWind(value: number, unit = 'km/h') {
   return `${Math.round(value)} ${unit}`
 }
 
+export function formatOptionalWind(
+  value: number | null,
+  unit: string,
+  unavailableLabel: string,
+) {
+  return value === null ? unavailableLabel : formatWind(value, unit)
+}
+
 export function formatPrecipitation(value: number, unit = 'mm') {
   return `${value < 1 ? value.toFixed(1) : Math.round(value)} ${unit}`
 }

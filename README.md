@@ -17,7 +17,7 @@ Live demo: https://life-board-two.vercel.app/
 ## Features
 
 - **Home**: calm summaries and direct entry points for connected modules
-- **Weather**: city search, current conditions, 24-hour forecast, 7-day outlook, and practical daily advice
+- **Weather**: city search, current conditions, 24-hour forecast, 7-day outlook, practical daily advice, and optional Caiyun Weather provider support
 - **Todos and Countdowns**: create, edit, complete, filter, and locally persist tasks and important dates
 - **Tools**: JSON formatting, timestamp conversion, text cleanup, line deduplication, case conversion, and text counting
 - **Bookmarks**: locally save, categorize, search, edit, pin, and remove useful links
@@ -36,13 +36,16 @@ Live demo: https://life-board-two.vercel.app/
 - Pinia
 - Tailwind CSS v4
 - Open-Meteo
+- Caiyun Weather
 - CSS variables and OKLCH design tokens
 
 ## Privacy And External Services
 
-LifeBoard is local-first. It has no account system, backend, analytics, cloud sync, or mobile application.
+LifeBoard is local-first. It has no account system, analytics, cloud sync, or mobile application.
 
-Open-Meteo is the only external service. Weather and geocoding requests are sent directly to Open-Meteo and do not require an API key.
+Open-Meteo is the default weather service. City search and Open-Meteo forecasts are requested directly from Open-Meteo.
+
+Caiyun Weather can be selected as an optional forecast provider. Its token is entered locally in Settings, stored only in this browser, and sent only in a same-origin POST request to LifeBoard's Vercel API proxy. The token is not stored on the server, not included in URLs, not included in backups, and not included in portable exports.
 
 Interface translation is bundled locally. LifeBoard does not use a machine translation API.
 
@@ -105,7 +108,7 @@ src/
     layout/            App shell, sidebar, topbar, and mobile navigation
   modules/
     home/              Daily overview
-    weather/           Open-Meteo service, store, advice, and forecast UI
+    weather/           Weather providers, store, advice, and forecast UI
     todos/             Tasks, countdowns, and local persistence
     tools/             Isolated browser utility workspaces
     bookmarks/         Saved-link management and local persistence
@@ -129,7 +132,7 @@ LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 5. Use `dist` as the output directory.
 6. Leave environment variables empty; LifeBoard does not require deployment secrets.
 
-`vercel.json` rewrites direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, and `/missing-route`.
+`vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather` route.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 

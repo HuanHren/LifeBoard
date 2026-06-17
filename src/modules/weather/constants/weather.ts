@@ -11,6 +11,7 @@ export const DAILY_FORECAST_LENGTH = 7
 export const WEATHER_ENDPOINTS = {
   geocoding: 'https://geocoding-api.open-meteo.com/v1/search',
   forecast: 'https://api.open-meteo.com/v1/forecast',
+  caiyunForecast: '/api/caiyun-weather',
 } as const
 
 export const CURRENT_VARIABLES = [

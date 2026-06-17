@@ -8,6 +8,7 @@ import type {
 import {
   formatFullLocalTime,
   formatLocationName,
+  formatOptionalWind,
   formatPercentage,
   formatTemperature,
   formatWind,
@@ -97,7 +98,13 @@ const { locale, t } = useI18n()
           {{ t('weather.current.gusts') }}
         </dt>
         <dd class="mt-1 text-sm font-semibold tabular-nums text-[var(--color-text-primary)]">
-          {{ formatWind(current.windGusts, units.windSpeed) }}
+          {{
+            formatOptionalWind(
+              current.windGusts,
+              units.windSpeed,
+              t('weather.value.unavailable'),
+            )
+          }}
         </dd>
       </div>
       <div>

@@ -79,6 +79,22 @@ const weatherErrorKeys: Record<string, TranslationKey> = {
     'weather.error.searchFallback',
   'Unable to reach Open-Meteo. The browser received no response; check your connection or network policy.':
     'weather.error.network',
+  'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.':
+    'weather.error.caiyunMissingToken',
+  'Unable to reach Caiyun Weather. Check your connection, browser policy, or switch back to Open-Meteo.':
+    'weather.error.caiyunNetwork',
+  'Caiyun Weather rejected the request. Check the saved token or switch back to Open-Meteo.':
+    'weather.error.caiyunAuth',
+  'Caiyun Weather could not use the selected city coordinates.':
+    'weather.error.caiyunCoordinates',
+  'Caiyun Weather returned an unreadable response.':
+    'weather.error.caiyunUnreadableResponse',
+  'Caiyun Weather returned an incomplete forecast.':
+    'weather.error.caiyunIncompleteForecast',
+  'LifeBoard could not reach the Caiyun Weather proxy. Check the deployment or switch back to Open-Meteo.':
+    'weather.error.caiyunProxyUnavailable',
+  'LifeBoard could not prepare the Caiyun Weather request.':
+    'weather.error.caiyunProxyRequest',
   'The weather service returned an unreadable response.':
     'weather.error.unreadableResponse',
   'The weather service returned an incomplete forecast.':
@@ -194,6 +210,24 @@ export function localizeWeatherError(value: string | null, t: Translator) {
   const statusMatch = value.match(/^The weather service returned status (\d+)\.$/)
   if (statusMatch) {
     return t('weather.error.status', { status: statusMatch[1] ?? '' })
+  }
+
+  const caiyunStatusMatch = value.match(/^Caiyun Weather returned status (\d+)\.$/)
+  if (caiyunStatusMatch) {
+    return t('weather.error.caiyunStatus', { status: caiyunStatusMatch[1] ?? '' })
+  }
+
+  const caiyunProxyStatusMatch = value.match(
+    /^LifeBoard's Caiyun Weather proxy returned status (\d+)\.$/,
+  )
+  if (caiyunProxyStatusMatch) {
+    return t('weather.error.caiyunProxyStatus', {
+      status: caiyunProxyStatusMatch[1] ?? '',
+    })
+  }
+
+  if (value.startsWith('Caiyun Weather returned an incomplete forecast for ')) {
+    return t('weather.error.caiyunIncompleteForecast')
   }
 
   return t('weather.error.serviceRejected')

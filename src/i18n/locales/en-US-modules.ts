@@ -89,7 +89,7 @@ export const enUSModules = {
   'weather.results.noMatches': 'Check the spelling of {query}, or include a region.',
   'weather.favorites.title': 'Favorite cities',
   'weather.favorites.description':
-    'Save a few cities for quick local switching. Forecasts still load from Open-Meteo only after you choose a city.',
+    'Save a few cities for quick local switching. Forecasts load from your selected weather provider after you choose a city.',
   'weather.favorites.saveAction': 'Save current city',
   'weather.favorites.savedAction': 'Current city saved',
   'weather.favorites.empty': 'Saved favorite cities will appear here.',
@@ -106,9 +106,11 @@ export const enUSModules = {
   'weather.favorites.message.invalidStorage':
     'Saved favorite cities could not be read. Existing data was left unchanged for recovery.',
   'weather.providerNotice.openMeteoActive':
-    'Forecasts are still powered by Open-Meteo. Caiyun Weather will be connected in the next stage.',
+    'Forecasts are powered by Open-Meteo. No token is required.',
   'weather.providerNotice.caiyunMissingToken':
-    'Caiyun Weather is selected, but no token is saved. Add one in Settings. Forecasts still load from Open-Meteo in this stage.',
+    'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.',
+  'weather.providerNotice.caiyunActive':
+    'Forecasts are powered by Caiyun Weather for the selected city. City search still uses Open-Meteo.',
   'weather.location.capitalCity': 'Capital city',
   'weather.location.regionalCapital': 'Regional capital',
   'weather.location.country': 'Country',
@@ -122,6 +124,7 @@ export const enUSModules = {
   'weather.current.wind': 'Wind',
   'weather.current.gusts': 'Gusts',
   'weather.current.cloudCover': 'Cloud cover',
+  'weather.value.unavailable': 'Unavailable',
   'weather.wind.n': 'N',
   'weather.wind.ne': 'NE',
   'weather.wind.e': 'E',
@@ -201,12 +204,19 @@ export const enUSModules = {
   'weather.attribution.prefix': 'Forecast data:',
   'weather.attribution.dataLink': 'Weather data by Open-Meteo.com',
   'weather.attribution.under': 'under',
+  'weather.attribution.caiyunPrefix': 'Forecast data:',
+  'weather.attribution.caiyunLink': 'Caiyun Weather',
+  'weather.attribution.caiyunSuffix': 'for this selected location.',
   'weather.loading.label': 'Loading weather forecast',
   'weather.state.setupTitle': 'Weather setup',
   'weather.state.setupAction': 'Focus city search',
   'weather.state.setupDescription':
     'Choose a city to load real conditions, practical guidance, and forecast details.',
   'weather.state.setupHeading': 'Start with your city',
+  'weather.state.providerSetupTitle': 'Weather provider setup',
+  'weather.state.caiyunTokenMissingHeading': 'Caiyun token needed',
+  'weather.state.caiyunTokenMissingDescription':
+    'This city is saved, but Caiyun Weather cannot load until a token is saved in Settings. No Caiyun request was sent.',
   'weather.state.loadingTitle': 'Loading weather',
   'weather.state.errorTitle': 'Weather loading error',
   'weather.state.errorHeading': 'Weather unavailable',
@@ -223,6 +233,25 @@ export const enUSModules = {
   'weather.error.searchFallback': 'City search is unavailable. Please try again.',
   'weather.error.network':
     'Unable to reach Open-Meteo. The browser received no response; check your connection or network policy.',
+  'weather.error.caiyunMissingToken':
+    'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.',
+  'weather.error.caiyunNetwork':
+    'Unable to reach Caiyun Weather. Check your connection, browser policy, or switch back to Open-Meteo.',
+  'weather.error.caiyunAuth':
+    'Caiyun Weather rejected the request. Check the saved token or switch back to Open-Meteo.',
+  'weather.error.caiyunCoordinates':
+    'Caiyun Weather could not use the selected city coordinates.',
+  'weather.error.caiyunUnreadableResponse':
+    'Caiyun Weather returned an unreadable response.',
+  'weather.error.caiyunIncompleteForecast':
+    'Caiyun Weather returned an incomplete forecast.',
+  'weather.error.caiyunProxyUnavailable':
+    'LifeBoard could not reach the Caiyun Weather proxy. Check the deployment or switch back to Open-Meteo.',
+  'weather.error.caiyunProxyRequest':
+    'LifeBoard could not prepare the Caiyun Weather request.',
+  'weather.error.caiyunProxyStatus':
+    "LifeBoard's Caiyun Weather proxy returned status {status}.",
+  'weather.error.caiyunStatus': 'Caiyun Weather returned status {status}.',
   'weather.error.unreadableResponse': 'The weather service returned an unreadable response.',
   'weather.error.status': 'The weather service returned status {status}.',
   'weather.error.incompleteForecast': 'The weather service returned an incomplete forecast.',

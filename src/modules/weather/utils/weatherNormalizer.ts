@@ -165,6 +165,7 @@ export function normalizeWeatherForecast(
   }
 
   return {
+    provider: 'openMeteo',
     location,
     timezone: response.timezone,
     timezoneAbbreviation: response.timezone_abbreviation,

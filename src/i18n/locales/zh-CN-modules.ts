@@ -85,7 +85,7 @@ export const zhCNModules = {
   'weather.results.noMatches': '请检查“{query}”的拼写，或补充地区名称。',
   'weather.favorites.title': '常用城市',
   'weather.favorites.description':
-    '保存几个常用城市，方便在本地快速切换。只有在你选择城市后，才会从 Open-Meteo 加载天气预报。',
+    '保存几个常用城市，方便在本地快速切换。选择城市后，会使用你当前选择的天气数据源加载预报。',
   'weather.favorites.saveAction': '保存当前城市',
   'weather.favorites.savedAction': '当前城市已保存',
   'weather.favorites.empty': '保存的常用城市会显示在这里。',
@@ -102,9 +102,11 @@ export const zhCNModules = {
   'weather.favorites.message.invalidStorage':
     '无法读取已保存的常用城市。现有数据已保持不变，便于恢复。',
   'weather.providerNotice.openMeteoActive':
-    '当前预报仍由 Open-Meteo 提供。彩云天气数据源将在下一阶段接入。',
+    '当前预报由 Open-Meteo 提供，不需要 Token。',
   'weather.providerNotice.caiyunMissingToken':
-    '已选择彩云天气，但还没有保存 Token。请在设置中填写。本阶段天气预报仍会从 Open-Meteo 加载。',
+    '已选择 Caiyun Weather，但还没有保存 Token。请先在设置中添加 Token，再加载 Caiyun Weather 预报。',
+  'weather.providerNotice.caiyunActive':
+    '当前所选城市的预报由 Caiyun Weather 提供。城市搜索仍使用 Open-Meteo。',
   'weather.location.capitalCity': '首都',
   'weather.location.regionalCapital': '地区首府',
   'weather.location.country': '国家',
@@ -118,6 +120,7 @@ export const zhCNModules = {
   'weather.current.wind': '风速',
   'weather.current.gusts': '阵风',
   'weather.current.cloudCover': '云量',
+  'weather.value.unavailable': '不可用',
   'weather.wind.n': '北',
   'weather.wind.ne': '东北',
   'weather.wind.e': '东',
@@ -179,11 +182,18 @@ export const zhCNModules = {
   'weather.attribution.prefix': '天气数据：',
   'weather.attribution.dataLink': '由 Open-Meteo.com 提供',
   'weather.attribution.under': '采用',
+  'weather.attribution.caiyunPrefix': '天气数据：',
+  'weather.attribution.caiyunLink': 'Caiyun Weather',
+  'weather.attribution.caiyunSuffix': '提供当前所选位置的预报。',
   'weather.loading.label': '正在加载天气预报',
   'weather.state.setupTitle': '天气设置',
   'weather.state.setupAction': '定位到城市搜索',
   'weather.state.setupDescription': '选择城市以加载真实天气、实用建议和预报详情。',
   'weather.state.setupHeading': '先选择你的城市',
+  'weather.state.providerSetupTitle': '天气数据源设置',
+  'weather.state.caiyunTokenMissingHeading': '需要 Caiyun Weather Token',
+  'weather.state.caiyunTokenMissingDescription':
+    '这个城市已经保存，但在设置中保存 Token 之前，Caiyun Weather 无法加载预报。当前没有发送 Caiyun Weather 请求。',
   'weather.state.loadingTitle': '正在加载天气',
   'weather.state.errorTitle': '天气加载错误',
   'weather.state.errorHeading': '天气暂不可用',
@@ -197,6 +207,25 @@ export const zhCNModules = {
   'weather.error.searchFallback': '城市搜索暂不可用，请重试。',
   'weather.error.network':
     '无法连接 Open-Meteo。浏览器未收到响应，请检查网络连接或网络策略。',
+  'weather.error.caiyunMissingToken':
+    '已选择 Caiyun Weather，但还没有保存 Token。请先在设置中添加 Token，再加载 Caiyun Weather 预报。',
+  'weather.error.caiyunNetwork':
+    '无法连接 Caiyun Weather。请检查网络连接、浏览器策略，或切回 Open-Meteo。',
+  'weather.error.caiyunAuth':
+    'Caiyun Weather 拒绝了请求。请检查已保存的 Token，或切回 Open-Meteo。',
+  'weather.error.caiyunCoordinates':
+    'Caiyun Weather 无法使用当前所选城市坐标。',
+  'weather.error.caiyunUnreadableResponse':
+    'Caiyun Weather 返回了无法读取的响应。',
+  'weather.error.caiyunIncompleteForecast':
+    'Caiyun Weather 返回的预报数据不完整。',
+  'weather.error.caiyunProxyUnavailable':
+    'LifeBoard 无法连接 Caiyun Weather 代理。请检查部署，或切回 Open-Meteo。',
+  'weather.error.caiyunProxyRequest':
+    'LifeBoard 无法准备 Caiyun Weather 请求。',
+  'weather.error.caiyunProxyStatus':
+    'LifeBoard 的 Caiyun Weather 代理返回状态码 {status}。',
+  'weather.error.caiyunStatus': 'Caiyun Weather 返回状态码 {status}。',
   'weather.error.unreadableResponse': '天气服务返回了无法读取的响应。',
   'weather.error.status': '天气服务返回状态码 {status}。',
   'weather.error.incompleteForecast': '天气服务返回的预报数据不完整。',

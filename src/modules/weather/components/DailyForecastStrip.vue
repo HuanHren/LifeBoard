@@ -4,9 +4,9 @@ import type { DailyForecastItem, WeatherUnits } from '@/modules/weather/types/we
 import {
   formatDateLabel,
   formatDay,
+  formatOptionalWind,
   formatPercentage,
   formatTemperature,
-  formatWind,
 } from '@/modules/weather/utils/weatherFormatting'
 import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
 
@@ -86,7 +86,13 @@ const { locale, t } = useI18n()
                 {{ t('weather.daily.peakGust') }}
               </dt>
               <dd class="mt-0.5 text-sm font-medium tabular-nums text-[var(--color-text-primary)]">
-                {{ formatWind(item.windGustsMax, units.windSpeed) }}
+                {{
+                  formatOptionalWind(
+                    item.windGustsMax,
+                    units.windSpeed,
+                    t('weather.value.unavailable'),
+                  )
+                }}
               </dd>
             </div>
           </dl>

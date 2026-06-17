@@ -109,3 +109,23 @@ export function clearCaiyunToken(): WeatherProviderStorageResult {
     return { ok: false, error: 'storageUnavailable' }
   }
 }
+
+export function readCaiyunTokenForRequest(): WeatherProviderStorageResult<string> {
+  const storageResult = getStorage()
+
+  if (!storageResult.ok) {
+    return storageResult
+  }
+
+  try {
+    const token = storageResult.data.getItem(WEATHER_CAIYUN_TOKEN_STORAGE_KEY)
+
+    if (!token) {
+      return { ok: false, error: 'emptyToken' }
+    }
+
+    return { ok: true, data: token }
+  } catch {
+    return { ok: false, error: 'storageUnavailable' }
+  }
+}
