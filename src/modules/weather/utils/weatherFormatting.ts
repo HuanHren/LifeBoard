@@ -64,6 +64,26 @@ export function formatHour(value: string, locale: AppLocale) {
   }).format(date)
 }
 
+export function formatLocalClockTime(value: string, locale: AppLocale) {
+  const hour = Number(value.slice(11, 13))
+  const minute = Number(value.slice(14, 16))
+
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
+    return value
+  }
+
+  if (locale === 'zh-CN') {
+    return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+  }
+
+  const date = new Date(Date.UTC(2000, 0, 1, hour, minute))
+  return new Intl.DateTimeFormat(locale, {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'UTC',
+  }).format(date)
+}
+
 export function formatFullLocalTime(value: string, locale: AppLocale) {
   const date = parseLocalDateParts(value)
   const time = formatHour(value, locale)

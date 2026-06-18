@@ -63,7 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-8 pb-[var(--mobile-nav-clearance)] lg:pb-0">
     <WeatherSearchForm
       :compact="Boolean(weather)"
       :service-error="searchError"

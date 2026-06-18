@@ -49,45 +49,46 @@ function barWidth(item: HourlyForecastItem) {
         {{ summary }}
       </p>
 
-      <ol
+      <div
         v-if="hasUsableData"
-        class="mt-4 grid gap-2"
+        class="mt-4 scroll-mb-[var(--mobile-nav-clearance)] overflow-x-auto rounded-[var(--radius-md)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
         :aria-label="t('weather.precipitation.listLabel')"
+        role="region"
+        tabindex="0"
       >
-        <li
-          v-for="(item, index) in firstDayItems"
-          :key="item.time"
-          class="grid gap-3 rounded-[var(--radius-md)] bg-[var(--color-surface-inset)] px-3 py-3 sm:grid-cols-[5rem_minmax(0,1fr)_9rem] sm:items-center"
-        >
-          <time
-            :datetime="item.time"
-            class="text-sm font-semibold tabular-nums text-[var(--color-text-primary)]"
+        <ol class="flex w-max gap-2">
+          <li
+            v-for="(item, index) in firstDayItems"
+            :key="item.time"
+            class="w-24 shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-3 py-3 sm:w-28"
           >
-            {{ index === 0 ? t('weather.hourly.now') : formatHour(item.time, locale) }}
-          </time>
-
-          <div
-            class="h-2 overflow-hidden rounded-[var(--radius-pill)] bg-[var(--color-border-soft)]"
-            aria-hidden="true"
-          >
+            <time
+              :datetime="item.time"
+              class="block text-sm font-semibold tabular-nums text-[var(--color-text-primary)]"
+            >
+              {{ index === 0 ? t('weather.hourly.now') : formatHour(item.time, locale) }}
+            </time>
             <div
-              class="h-full rounded-[var(--radius-pill)] bg-[var(--color-accent)]"
-              :style="{ width: barWidth(item) }"
-            />
-          </div>
+              class="mt-3 h-2 overflow-hidden rounded-[var(--radius-pill)] bg-[var(--color-border-soft)]"
+              aria-hidden="true"
+            >
+              <div
+                class="h-full rounded-[var(--radius-pill)] bg-[var(--color-accent)]"
+                :style="{ width: barWidth(item) }"
+              />
+            </div>
 
-          <p
-            class="text-sm leading-5 tabular-nums text-[var(--color-text-secondary)] sm:text-right"
-          >
-            {{
-              t('weather.precipitation.itemLabel', {
-                chance: formatPercentage(item.precipitationProbability),
-                amount: formatPrecipitation(item.precipitation, units.precipitation),
-              })
-            }}
-          </p>
-        </li>
-      </ol>
+            <p class="mt-2 text-xs leading-4 tabular-nums text-[var(--color-text-secondary)]">
+              {{
+                t('weather.precipitation.itemLabel', {
+                  chance: formatPercentage(item.precipitationProbability),
+                  amount: formatPrecipitation(item.precipitation, units.precipitation),
+                })
+              }}
+            </p>
+          </li>
+        </ol>
+      </div>
 
       <p
         v-else

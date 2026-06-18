@@ -12,7 +12,7 @@ import {
   type WeatherDetailItem,
 } from '@/modules/weather/utils/weatherDetails'
 import {
-  formatFullLocalTime,
+  formatLocalClockTime,
   formatPercentage,
   formatPressure,
   formatTemperature,
@@ -34,10 +34,10 @@ const details = computed<WeatherDetailItem[]>(() => {
   const { current, daily, units } = props.weather
   const today = daily[0]
   const sunrise = today?.sunrise
-    ? formatFullLocalTime(today.sunrise, locale.value)
+    ? formatLocalClockTime(today.sunrise, locale.value)
     : unavailableLabel.value
   const sunset = today?.sunset
-    ? formatFullLocalTime(today.sunset, locale.value)
+    ? formatLocalClockTime(today.sunset, locale.value)
     : unavailableLabel.value
 
   return [
@@ -110,7 +110,7 @@ const details = computed<WeatherDetailItem[]>(() => {
       </p>
     </div>
 
-    <dl class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <dl class="mt-4 grid grid-cols-3 gap-2 sm:gap-3 xl:grid-cols-3">
       <WeatherDetailCard
         v-for="item in details"
         :key="item.id"
