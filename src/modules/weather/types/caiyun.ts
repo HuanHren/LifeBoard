@@ -16,6 +16,7 @@ export interface CaiyunWeatherResponse {
   location: [number, number]
   result: {
     realtime: CaiyunRealtime
+    minutely?: CaiyunMinutely
     hourly: CaiyunHourly
     daily: CaiyunDaily
     primary?: number
@@ -34,6 +35,7 @@ export interface CaiyunRealtime {
   temperature: number
   apparent_temperature?: number
   humidity: number
+  pressure?: number
   cloudrate?: number
   skycon: CaiyunSkycon
   wind?: CaiyunWind
@@ -47,6 +49,15 @@ export interface CaiyunRealtime {
       index?: number
     }
   }
+}
+
+export interface CaiyunMinutely {
+  status?: string
+  description?: string
+  precipitation_2h?: number[]
+  precipitation?: number[]
+  probability?: number[]
+  datasource?: string
 }
 
 export interface CaiyunHourly {

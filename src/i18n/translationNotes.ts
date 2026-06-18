@@ -41,6 +41,16 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Shown for unexpected same-origin proxy status. Keep the {status} placeholder and never include token or request URL.',
   'weather.attribution.caiyunLink':
     'Provider name. Keep Caiyun Weather untranslated.',
+  'weather.details.sun.value':
+    'Weather detail value. Keep {sunrise} and {sunset} placeholders.',
+  'weather.shortTerm.openMeteoLimitation':
+    'Provider limitation. Do not imply Open-Meteo minute nowcast exists.',
+  'weather.shortTerm.caiyunUnavailable':
+    'Shown only when Caiyun Weather did not return minutely data. Keep Caiyun Weather untranslated.',
+  'weather.shortTerm.expected':
+    'Keep the {count} placeholder for minute count. This is generated from provider data only.',
+  'weather.precipitation.itemLabel':
+    'Hourly precipitation label. Keep {chance} and {amount} placeholders.',
   'settings.localData.selectedCity':
     'The {city} placeholder is an Open-Meteo city name and must remain verbatim.',
   'weather.favorites.description':

@@ -7,8 +7,11 @@ import { useI18n } from '@/i18n/useI18n'
 import CurrentWeatherSummary from '@/modules/weather/components/CurrentWeatherSummary.vue'
 import DailyForecastStrip from '@/modules/weather/components/DailyForecastStrip.vue'
 import HourlyForecastStrip from '@/modules/weather/components/HourlyForecastStrip.vue'
+import PrecipitationTimeline from '@/modules/weather/components/PrecipitationTimeline.vue'
+import ShortTermPrecipitationPanel from '@/modules/weather/components/ShortTermPrecipitationPanel.vue'
 import WeatherAdvicePanel from '@/modules/weather/components/WeatherAdvicePanel.vue'
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
+import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.vue'
 import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
@@ -155,6 +158,13 @@ onMounted(() => {
         <WeatherAdvicePanel :advice="weather.advice" />
       </div>
 
+      <WeatherDetailsGrid :weather="weather" />
+      <ShortTermPrecipitationPanel
+        :provider="weather.provider"
+        :short-term="weather.shortTermPrecipitation"
+        :units="weather.units"
+      />
+      <PrecipitationTimeline :items="weather.hourly" :units="weather.units" />
       <HourlyForecastStrip :items="weather.hourly" :units="weather.units" />
       <DailyForecastStrip :items="weather.daily" :units="weather.units" />
       <WeatherAttribution :provider="weather.provider" />

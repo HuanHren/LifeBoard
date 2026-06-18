@@ -36,6 +36,7 @@ export interface WeatherUnits {
   windSpeed: string
   humidity: string
   uvIndex: string
+  pressure: string
 }
 
 export interface CurrentConditions {
@@ -51,6 +52,8 @@ export interface CurrentConditions {
   windSpeed: number
   windDirection: number
   windGusts: number | null
+  uvIndex: number | null
+  pressure: number | null
   isDay: boolean
   condition: WeatherCondition
 }
@@ -97,6 +100,17 @@ export interface WeatherAdvice {
   notes: string[]
 }
 
+export interface ShortTermPrecipitationItem {
+  time: string
+  precipitation: number
+}
+
+export interface ShortTermPrecipitation {
+  provider: WeatherDataProvider
+  summary: string | null
+  items: ShortTermPrecipitationItem[]
+}
+
 export interface WeatherSnapshot {
   provider: WeatherDataProvider
   location: WeatherLocation
@@ -106,6 +120,7 @@ export interface WeatherSnapshot {
   current: CurrentConditions
   hourly: HourlyForecastItem[]
   daily: DailyForecastItem[]
+  shortTermPrecipitation: ShortTermPrecipitation | null
   units: WeatherUnits
   advice: WeatherAdvice
 }

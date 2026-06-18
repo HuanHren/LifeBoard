@@ -42,6 +42,14 @@ export function formatPrecipitation(value: number, unit = 'mm') {
   return `${value < 1 ? value.toFixed(1) : Math.round(value)} ${unit}`
 }
 
+export function formatUvIndex(value: number) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1)
+}
+
+export function formatPressure(value: number, unit = 'hPa') {
+  return `${Math.round(value)} ${unit}`
+}
+
 export function formatHour(value: string, locale: AppLocale) {
   const hour = Number(value.slice(11, 13))
 

@@ -27,6 +27,7 @@ export const CURRENT_VARIABLES = [
   'wind_speed_10m',
   'wind_direction_10m',
   'wind_gusts_10m',
+  'surface_pressure',
   'is_day',
 ] as const
 

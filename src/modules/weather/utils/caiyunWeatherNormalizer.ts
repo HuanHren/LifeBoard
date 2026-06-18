@@ -13,6 +13,7 @@ import type {
 import type {
   DailyForecastItem,
   HourlyForecastItem,
+  ShortTermPrecipitation,
   WeatherLocation,
   WeatherSnapshot,
 } from '@/modules/weather/types/weather'
@@ -67,6 +68,49 @@ function combineLocalTime(dateTime: string, time?: string) {
 
 function probability(value?: number) {
   return typeof value === 'number' ? value : 0
+}
+
+function normalizePressure(value: number | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null
+  }
+
+  return value > 2000 ? Math.round(value / 100) : Math.round(value)
+}
+
+function realtimeUv(response: CaiyunWeatherResponse) {
+  const value = response.result.realtime.life_index?.ultraviolet?.index
+  return typeof value === 'number' && Number.isFinite(value) ? value : null
+}
+
+function normalizeShortTermPrecipitation(
+  response: CaiyunWeatherResponse,
+): ShortTermPrecipitation | null {
+  const minutely = response.result.minutely
+  const precipitationValues = minutely?.precipitation_2h ?? minutely?.precipitation
+
+  if (!Array.isArray(precipitationValues) || precipitationValues.length === 0) {
+    return null
+  }
+
+  const startTime = response.server_time * 1000
+  const items = precipitationValues
+    .slice(0, 120)
+    .map((precipitation, index) => ({
+      time: new Date(startTime + index * 60 * 1000).toISOString(),
+      precipitation,
+    }))
+    .filter((item) => Number.isFinite(item.precipitation))
+
+  if (items.length === 0) {
+    return null
+  }
+
+  return {
+    provider: 'caiyun',
+    summary: minutely?.description ?? null,
+    items,
+  }
 }
 
 function skyconToWeatherCode(skycon: CaiyunSkycon) {
@@ -224,6 +268,8 @@ export function normalizeCaiyunWeatherForecast(
     windSpeed: currentWind.speed,
     windDirection: currentWind.direction,
     windGusts: null,
+    uvIndex: realtimeUv(response),
+    pressure: normalizePressure(realtime.pressure),
     isDay: isDayFromSkycon(currentSkycon),
     condition: getWeatherCondition(skyconToWeatherCode(currentSkycon)),
   }
@@ -241,6 +287,7 @@ export function normalizeCaiyunWeatherForecast(
     current,
     hourly,
     daily,
+    shortTermPrecipitation: normalizeShortTermPrecipitation(response),
     units: {
       temperature: '°C',
       precipitation: 'mm',
@@ -248,6 +295,7 @@ export function normalizeCaiyunWeatherForecast(
       windSpeed: 'km/h',
       humidity: '%',
       uvIndex: '',
+      pressure: 'hPa',
     },
     advice: createWeatherAdvice({ current, hourly, daily }),
   }

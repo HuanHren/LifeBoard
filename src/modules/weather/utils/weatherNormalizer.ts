@@ -156,6 +156,8 @@ export function normalizeWeatherForecast(
     windSpeed: response.current.wind_speed_10m,
     windDirection: response.current.wind_direction_10m,
     windGusts: response.current.wind_gusts_10m,
+    uvIndex: hourly[0]?.uvIndex ?? null,
+    pressure: response.current.surface_pressure,
     isDay: response.current.is_day === 1,
     condition: getWeatherCondition(response.current.weather_code),
   }
@@ -173,6 +175,7 @@ export function normalizeWeatherForecast(
     current,
     hourly,
     daily,
+    shortTermPrecipitation: null,
     units: {
       temperature: response.current_units.temperature_2m,
       precipitation: response.current_units.precipitation,
@@ -180,6 +183,7 @@ export function normalizeWeatherForecast(
       windSpeed: response.current_units.wind_speed_10m,
       humidity: response.current_units.relative_humidity_2m,
       uvIndex: response.hourly_units.uv_index,
+      pressure: response.current_units.surface_pressure,
     },
     advice: createWeatherAdvice({ current, hourly, daily }),
   }

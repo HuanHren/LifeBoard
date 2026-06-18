@@ -37,6 +37,7 @@ export interface OpenMeteoCurrentUnits {
   wind_speed_10m: string
   wind_direction_10m: string
   wind_gusts_10m: string
+  surface_pressure: string
   is_day: string
 }
 
@@ -55,6 +56,7 @@ export interface OpenMeteoCurrent {
   wind_speed_10m: number
   wind_direction_10m: number
   wind_gusts_10m: number
+  surface_pressure: number
   is_day: number
 }
 
