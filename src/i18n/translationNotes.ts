@@ -45,8 +45,10 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Shown when LifeBoard cannot prepare a Caiyun proxy request. Do not include token or request body.',
   'weather.error.caiyunProxyStatus':
     'Shown for unexpected same-origin proxy status. Keep the {status} placeholder and never include token or request URL.',
-  'weather.attribution.caiyunLink':
-    'Provider name. Keep Caiyun Weather untranslated.',
+  'weather.attribution.sourceLinkLabel':
+    'Accessible label for the active forecast source link. Keep the {provider} placeholder and do not translate provider names inserted at runtime.',
+  'weather.attribution.licenceLinkLabel':
+    'Accessible label for source licence links. Keep the {licence} placeholder.',
   'weather.details.sun.value':
     'Weather detail value. Keep {sunrise} and {sunset} placeholders.',
   'weather.shortTerm.openMeteoLimitation':

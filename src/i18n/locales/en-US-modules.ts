@@ -312,12 +312,12 @@ export const enUSModules = {
     'It currently feels about {difference} different from the measured temperature.',
   'weather.advice.note.temperatureRange':
     'Temperature may vary by about {range} over the next 12 hours.',
-  'weather.attribution.prefix': 'Forecast data:',
-  'weather.attribution.dataLink': 'Weather data by Open-Meteo.com',
-  'weather.attribution.under': 'under',
-  'weather.attribution.caiyunPrefix': 'Forecast data:',
-  'weather.attribution.caiyunLink': 'Caiyun Weather',
-  'weather.attribution.caiyunSuffix': 'for this selected location.',
+  'weather.attribution.forecastPrefix': 'Forecast source:',
+  'weather.attribution.licencePrefix': 'Licence:',
+  'weather.attribution.sourceLinkLabel':
+    'Open {provider} official source in a new tab',
+  'weather.attribution.licenceLinkLabel':
+    'Open {licence} licence details in a new tab',
   'weather.loading.label': 'Loading weather forecast',
   'weather.state.setupTitle': 'Weather setup',
   'weather.state.setupAction': 'Manage cities',
