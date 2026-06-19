@@ -7,7 +7,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
     <PageHeader
       :title="t('weather.page.title')"
       :description="t('weather.page.description')"

@@ -100,6 +100,10 @@
     padding-bottom: calc(var(--mobile-nav-clearance) + env(safe-area-inset-bottom));
   }
 
+  .app-main:focus {
+    outline: none;
+  }
+
   .text-page-title {
     font-size: var(--font-size-page-title);
     line-height: var(--line-height-tight);
