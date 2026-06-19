@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
@@ -33,10 +33,23 @@ const {
   initializeWeather,
   loadForecast,
 } = weatherStore
+const hasShownWeatherHero = ref(false)
+const heroMotionMode = computed(() =>
+  hasShownWeatherHero.value ? 'snapshot' : 'initial',
+)
 
 function openCityManagement() {
   void router.push({ name: 'weather-cities' })
 }
+
+watch(weather, async (nextWeather) => {
+  if (nextWeather && !hasShownWeatherHero.value) {
+    await nextTick()
+    window.setTimeout(() => {
+      hasShownWeatherHero.value = true
+    }, 420)
+  }
+})
 
 onMounted(() => {
   void initializeWeather()
@@ -118,7 +131,7 @@ onMounted(() => {
       </p>
 
       <div class="space-y-4">
-        <WeatherHero :weather="weather" />
+        <WeatherHero :motion-mode="heroMotionMode" :weather="weather" />
         <WeatherProviderNotice
           :has-caiyun-token="hasCaiyunToken"
           :provider="weather.provider"
