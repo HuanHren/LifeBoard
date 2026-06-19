@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import { useI18n } from '@/i18n/useI18n'
@@ -11,63 +12,30 @@ import ShortTermPrecipitationPanel from '@/modules/weather/components/ShortTermP
 import WeatherAdvicePanel from '@/modules/weather/components/WeatherAdvicePanel.vue'
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
 import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.vue'
-import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherHero from '@/modules/weather/components/WeatherHero.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
-import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
-import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
-import type { WeatherLocation } from '@/modules/weather/types/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 const weatherStore = useWeatherStore()
-const { locale, t } = useI18n()
-const cityManagementSection = ref<HTMLElement | null>(null)
+const router = useRouter()
+const { t } = useI18n()
 const {
   selectedLocation,
-  searchQuery,
-  searchResults,
   weather,
-  searchStatus,
   forecastStatus,
-  searchError,
-  searchNotice,
   forecastError,
-  favoriteCities,
-  favoriteMessage,
   provider,
   hasCaiyunToken,
-  hasSelectedFavorite,
 } = storeToRefs(weatherStore)
 const {
   initializeWeather,
-  searchCities,
-  selectLocation,
   loadForecast,
-  addSelectedLocationToFavorites,
-  removeFavoriteCity,
-  selectFavoriteCity,
-  clearFavoriteMessage,
 } = weatherStore
 
-function handleSelectLocation(location: WeatherLocation) {
-  void selectLocation(location)
-}
-
-function focusCitySearch() {
-  document.getElementById('weather-city-search')?.focus()
-}
-
-async function handleManageCities() {
-  await nextTick()
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  cityManagementSection.value?.scrollIntoView({
-    behavior: reduceMotion ? 'auto' : 'smooth',
-    block: 'start',
-  })
-  cityManagementSection.value?.focus({ preventScroll: true })
-  document.getElementById('weather-city-search')?.focus({ preventScroll: true })
+function openCityManagement() {
+  void router.push({ name: 'weather-cities' })
 }
 
 onMounted(() => {
@@ -77,46 +45,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-6 pb-[var(--mobile-nav-clearance)] lg:pb-0">
-    <section
-      ref="cityManagementSection"
-      :class="weather ? 'order-3' : 'order-1'"
-      aria-labelledby="weather-city-management-title"
-      tabindex="-1"
-    >
-      <h2 id="weather-city-management-title" class="sr-only">
-        {{ t('weather.hero.cityManagementTitle') }}
-      </h2>
-
-      <div class="space-y-8">
-        <WeatherSearchForm
-          :compact="Boolean(weather)"
-          :notice="searchNotice"
-          :service-error="searchError"
-          :status="searchStatus"
-          @search="(query) => searchCities(query, locale)"
-        />
-
-        <WeatherFavoritesBar
-          :favorite-cities="favoriteCities"
-          :has-selected-favorite="hasSelectedFavorite"
-          :message="favoriteMessage"
-          :selected-location="selectedLocation"
-          @add-selected="addSelectedLocationToFavorites"
-          @clear-message="clearFavoriteMessage"
-          @remove="removeFavoriteCity"
-          @select="selectFavoriteCity"
-        />
-
-        <WeatherSearchResults
-          v-if="searchStatus === 'success'"
-          :query="searchQuery"
-          :results="searchResults"
-          @select="handleSelectLocation"
-        />
-      </div>
-    </section>
-
-    <div v-if="!weather" class="order-2">
+    <div v-if="!weather" class="order-1">
       <WeatherProviderNotice
         :has-caiyun-token="hasCaiyunToken"
         :provider="provider"
@@ -124,7 +53,7 @@ onMounted(() => {
     </div>
 
     <section
-      v-if="!selectedLocation && forecastStatus === 'idle' && searchStatus !== 'success'"
+      v-if="!selectedLocation && forecastStatus === 'idle'"
       :class="weather ? 'order-2' : 'order-3'"
       aria-labelledby="weather-setup-title"
     >
@@ -135,7 +64,7 @@ onMounted(() => {
         :action-label="t('weather.state.setupAction')"
         :description="t('weather.state.setupDescription')"
         :title="t('weather.state.setupHeading')"
-        @action="focusCitySearch"
+        @action="openCityManagement"
       />
     </section>
 
@@ -189,10 +118,10 @@ onMounted(() => {
       </p>
 
       <div class="space-y-4">
-        <WeatherHero :weather="weather" @manage-cities="handleManageCities" />
+        <WeatherHero :weather="weather" />
         <WeatherProviderNotice
           :has-caiyun-token="hasCaiyunToken"
-          :provider="provider"
+          :provider="weather.provider"
         />
       </div>
     </div>

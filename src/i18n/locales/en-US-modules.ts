@@ -146,6 +146,39 @@ export const enUSModules = {
   'weather.hero.provider.caiyun': 'Caiyun Weather forecast',
   'weather.hero.summary':
     '{location}: {temperature}, {condition}. High {high}, low {low}.',
+  'weather.cities.title': 'Manage cities',
+  'weather.cities.description':
+    'Search, choose, save, and switch weather cities without adding a new data trail.',
+  'weather.cities.backToWeather': 'Back to Weather',
+  'weather.cities.currentLocationTitle': 'Current location',
+  'weather.cities.currentLocationDescription':
+    'Use browser location once to select nearby weather. LifeBoard does not track location in the background.',
+  'weather.cities.useCurrentLocation': 'Use current location',
+  'weather.cities.currentLocationLoading': 'Finding location',
+  'weather.cities.currentLocationDenied':
+    'Location permission was denied. City search remains available.',
+  'weather.cities.currentLocationUnavailable':
+    'Current location is unavailable right now. Try again or search manually.',
+  'weather.cities.currentLocationUnsupported':
+    'This browser does not support current-location weather.',
+  'weather.cities.currentLocationSecureContext':
+    'Current location requires HTTPS or localhost.',
+  'weather.cities.currentResolved': 'Current resolved location: {city}',
+  'weather.cities.selectedCityTitle': 'Selected city',
+  'weather.cities.selectedCityDescription':
+    'This city powers the Weather page and Home weather summary.',
+  'weather.cities.selectedStatus': 'Selected for Weather',
+  'weather.cities.noSelectedTitle': 'No selected city',
+  'weather.cities.noSelectedDescription':
+    'Search for a city or use current location to connect Weather.',
+  'weather.cities.searchTitle': 'Search cities',
+  'weather.cities.searchDescription':
+    'AMap is tried first when configured, then Open-Meteo search is used as fallback.',
+  'weather.cities.saveSelected': 'Save selected city',
+  'weather.cities.alreadySaved': 'City already saved',
+  'weather.cities.savedSelected': 'Selected city saved.',
+  'weather.cities.selectionFailed':
+    'LifeBoard could not select this city. Check local storage and try again.',
   'weather.current.title': 'Current conditions',
   'weather.current.updated': 'Updated {time} {timezone}',
   'weather.current.feelsLike': 'Feels like {temperature}',
@@ -287,7 +320,7 @@ export const enUSModules = {
   'weather.attribution.caiyunSuffix': 'for this selected location.',
   'weather.loading.label': 'Loading weather forecast',
   'weather.state.setupTitle': 'Weather setup',
-  'weather.state.setupAction': 'Focus city search',
+  'weather.state.setupAction': 'Manage cities',
   'weather.state.setupDescription':
     'Choose a city to load real conditions, practical guidance, and forecast details.',
   'weather.state.setupHeading': 'Start with your city',

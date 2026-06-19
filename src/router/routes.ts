@@ -18,6 +18,14 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/weather/cities',
+    name: 'weather-cities',
+    component: () => import('@/modules/weather/pages/WeatherCityManagementPage.vue'),
+    meta: {
+      titleKey: 'weather.cities.title',
+    },
+  },
+  {
     path: '/todos',
     name: 'todos',
     component: () => import('@/modules/todos/TodosPage.vue'),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseButton from '@/components/base/BaseButton.vue'
+import { RouterLink } from 'vue-router'
 import { useI18n } from '@/i18n/useI18n'
 import type { WeatherSnapshot } from '@/modules/weather/types/weather'
 import {
@@ -14,12 +14,7 @@ interface Props {
   weather: WeatherSnapshot
 }
 
-interface Emits {
-  manageCities: []
-}
-
 const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
 const { locale, t } = useI18n()
 
 function isConciseLabel(value: string) {
@@ -158,17 +153,15 @@ const screenReaderSummary = computed(() =>
         </h2>
       </div>
 
-      <BaseButton
-        class="shrink-0"
-        type="button"
-        variant="secondary"
-        @click="emit('manageCities')"
+      <RouterLink
+        class="interactive-surface inline-flex min-h-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
+        :to="{ name: 'weather-cities' }"
       >
         <span aria-hidden="true" class="text-lg leading-none">+</span>
         <span class="sr-only sm:not-sr-only sm:ml-2">
           {{ t('weather.hero.manageCities') }}
         </span>
-      </BaseButton>
+      </RouterLink>
     </div>
 
     <div class="weather-hero__item weather-hero__item--temperature mt-7 sm:mt-8">
