@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterLink } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
@@ -25,9 +25,14 @@ const {
   weather,
   forecastStatus,
   forecastError,
+  autoLocationOnHome,
   isInitialized,
 } = storeToRefs(weatherStore)
-const { initializeWeather, loadForecast } = weatherStore
+const { initializeWeather, loadForecast, selectCurrentCoordinates } = weatherStore
+
+const currentLocationStatus = shallowRef<'idle' | 'loading'>('idle')
+const currentLocationMessage = shallowRef<string | null>(null)
+const hasAttemptedAutoLocation = shallowRef(false)
 
 const isPreparing = computed(
   () => !isInitialized.value || forecastStatus.value === 'loading',
@@ -59,8 +64,80 @@ function refreshWeather() {
   void loadForecast()
 }
 
+function isLocationSecureContext() {
+  return (
+    window.isSecureContext ||
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1'
+  )
+}
+
+function geolocationPosition() {
+  return new Promise<GeolocationPosition>((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: false,
+      maximumAge: 300000,
+      timeout: 10000,
+    })
+  })
+}
+
+async function useCurrentLocationWeather() {
+  currentLocationMessage.value = null
+
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    currentLocationMessage.value = t('home.weather.locationUnsupported')
+    return
+  }
+
+  if (!isLocationSecureContext()) {
+    currentLocationMessage.value = t('home.weather.locationSecureContext')
+    return
+  }
+
+  if (typeof navigator.geolocation?.getCurrentPosition !== 'function') {
+    currentLocationMessage.value = t('home.weather.locationUnsupported')
+    return
+  }
+
+  currentLocationStatus.value = 'loading'
+
+  try {
+    const position = await geolocationPosition()
+    await selectCurrentCoordinates({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      locale: locale.value,
+      fallbackName: t('home.weather.currentLocationLabel'),
+    })
+    currentLocationMessage.value = t('home.weather.locationLoaded')
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      error.code === 1
+    ) {
+      currentLocationMessage.value = t('home.weather.locationDenied')
+    } else {
+      currentLocationMessage.value = t('home.weather.locationUnavailable')
+    }
+  } finally {
+    currentLocationStatus.value = 'idle'
+  }
+}
+
 onMounted(() => {
-  void initializeWeather()
+  void initializeWeather().then(() => {
+    if (
+      autoLocationOnHome.value &&
+      !hasAttemptedAutoLocation.value &&
+      !selectedLocation.value
+    ) {
+      hasAttemptedAutoLocation.value = true
+      void useCurrentLocationWeather()
+    }
+  })
 })
 </script>
 
@@ -78,15 +155,38 @@ onMounted(() => {
           {{ t('home.weather.description') }}
         </p>
       </div>
-      <RouterLink
-        v-if="selectedLocation"
-        class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
-        :to="{ name: 'weather' }"
-      >
-        {{ t('home.weather.open') }}
-        <span class="ml-2" aria-hidden="true">&rarr;</span>
-      </RouterLink>
+      <div class="flex flex-wrap gap-2">
+        <BaseButton
+          :aria-busy="currentLocationStatus === 'loading'"
+          :disabled="currentLocationStatus === 'loading'"
+          size="sm"
+          variant="secondary"
+          @click="useCurrentLocationWeather"
+        >
+          {{
+            currentLocationStatus === 'loading'
+              ? t('home.weather.currentLocationLoading')
+              : t('home.weather.useCurrentLocation')
+          }}
+        </BaseButton>
+        <RouterLink
+          v-if="selectedLocation"
+          class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
+          :to="{ name: 'weather' }"
+        >
+          {{ t('home.weather.open') }}
+          <span class="ml-2" aria-hidden="true">&rarr;</span>
+        </RouterLink>
+      </div>
     </div>
+
+    <p
+      v-if="currentLocationMessage"
+      class="mb-4 rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+      aria-live="polite"
+    >
+      {{ currentLocationMessage }}
+    </p>
 
     <BaseSkeleton v-if="isPreparing" :label="t('home.weather.loading')" />
 
@@ -196,6 +296,9 @@ onMounted(() => {
       >
         {{ t('home.weather.chooseCity') }}
       </RouterLink>
+      <p class="mt-3 text-caption text-[var(--color-text-secondary)]">
+        {{ t('home.weather.currentLocationHelper') }}
+      </p>
     </article>
   </section>
 </template>

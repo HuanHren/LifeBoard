@@ -17,6 +17,16 @@ export const zhCNModules = {
   'home.weather.connectTitle': '连接本地天气',
   'home.weather.connectDescription': '在天气中选择城市，即可连接此摘要。',
   'home.weather.chooseCity': '选择城市',
+  'home.weather.useCurrentLocation': '使用当前位置天气',
+  'home.weather.currentLocationLoading': '正在定位',
+  'home.weather.currentLocationHelper':
+    '也可以单次使用当前位置。LifeBoard 不会在后台追踪位置。',
+  'home.weather.currentLocationLabel': '当前位置',
+  'home.weather.locationLoaded': '已加载当前位置天气。',
+  'home.weather.locationDenied': '位置权限已被拒绝。你仍可手动搜索城市。',
+  'home.weather.locationUnavailable': '当前暂时无法获取位置。请重试或手动选择城市。',
+  'home.weather.locationUnsupported': '此浏览器不支持当前位置天气。',
+  'home.weather.locationSecureContext': '当前位置需要 HTTPS 或 localhost。',
   'home.todos.title': '今天与下一项',
   'home.todos.description': '简洁查看任务和最近的重要日期。',
   'home.todos.open': '打开待办',
@@ -76,9 +86,14 @@ export const zhCNModules = {
   'weather.search.placeholder': '城市或邮政编码',
   'weather.search.action': '搜索',
   'weather.search.searching': '搜索中',
-  'weather.search.helper': '只有按下搜索按钮后才会提交查询。',
+  'weather.search.helper':
+    '支持中文和英文城市名。保存 AMap Key 后会优先使用 AMap 搜索。',
   'weather.search.validation': '请至少输入 {count} 个字符。',
   'weather.search.loadingAnnouncement': '正在搜索匹配的城市。',
+  'weather.search.amapMissing':
+    '尚未保存 AMap Key，LifeBoard 正在使用 Open-Meteo 城市搜索。',
+  'weather.search.amapUnavailable':
+    'AMap 地理编码不可用或未返回匹配结果，LifeBoard 正在尝试 Open-Meteo。',
   'weather.results.chooseTitle': '选择地点',
   'weather.results.emptyTitle': '未找到匹配城市',
   'weather.results.matches': '找到 {count} 个与“{query}”匹配的地点。',

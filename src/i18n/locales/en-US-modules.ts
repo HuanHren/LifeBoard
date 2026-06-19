@@ -18,6 +18,20 @@ export const enUSModules = {
   'home.weather.connectTitle': 'Connect your local weather',
   'home.weather.connectDescription': 'Choose a city in Weather to connect this summary.',
   'home.weather.chooseCity': 'Choose a city',
+  'home.weather.useCurrentLocation': 'Use current location for weather',
+  'home.weather.currentLocationLoading': 'Finding location',
+  'home.weather.currentLocationHelper':
+    'You can also use your current location once. LifeBoard does not track location in the background.',
+  'home.weather.currentLocationLabel': 'Current location',
+  'home.weather.locationLoaded': 'Current location weather loaded.',
+  'home.weather.locationDenied':
+    'Location permission was denied. Manual city search remains available.',
+  'home.weather.locationUnavailable':
+    'Current location is unavailable right now. Try again or choose a city manually.',
+  'home.weather.locationUnsupported':
+    'This browser does not support current-location weather.',
+  'home.weather.locationSecureContext':
+    'Current location requires HTTPS or localhost.',
   'home.todos.title': 'Today and next up',
   'home.todos.description': 'A calm summary of tasks and the nearest saved date.',
   'home.todos.open': 'Open Todos',
@@ -80,9 +94,14 @@ export const enUSModules = {
   'weather.search.placeholder': 'City or postal code',
   'weather.search.action': 'Search',
   'weather.search.searching': 'Searching',
-  'weather.search.helper': 'Search is submitted only when you press the button.',
+  'weather.search.helper':
+    'Search supports Chinese and English city names. AMap is used first when its key is saved.',
   'weather.search.validation': 'Enter at least {count} characters.',
   'weather.search.loadingAnnouncement': 'Searching for matching cities.',
+  'weather.search.amapMissing':
+    'AMap key is not saved, so LifeBoard is using Open-Meteo city search.',
+  'weather.search.amapUnavailable':
+    'AMap geocoding is unavailable or returned no match, so LifeBoard is trying Open-Meteo.',
   'weather.results.chooseTitle': 'Choose a location',
   'weather.results.emptyTitle': 'No matching cities found',
   'weather.results.matches': '{count} matches for {query}.',

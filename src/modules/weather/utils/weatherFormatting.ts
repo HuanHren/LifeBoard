@@ -14,6 +14,10 @@ function parseLocalDateParts(value: string) {
 }
 
 export function formatLocationName(location: WeatherLocation) {
+  if (location.displayLabel) {
+    return location.displayLabel
+  }
+
   const region = location.admin1 && location.admin1 !== location.name ? location.admin1 : null
   return [location.name, region, location.country].filter(Boolean).join(', ')
 }

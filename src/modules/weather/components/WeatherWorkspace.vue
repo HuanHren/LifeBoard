@@ -22,7 +22,7 @@ import { useWeatherStore } from '@/modules/weather/stores/weather'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 const weatherStore = useWeatherStore()
-const { t } = useI18n()
+const { locale, t } = useI18n()
 const {
   selectedLocation,
   searchQuery,
@@ -31,6 +31,7 @@ const {
   searchStatus,
   forecastStatus,
   searchError,
+  searchNotice,
   forecastError,
   favoriteCities,
   favoriteMessage,
@@ -66,9 +67,10 @@ onMounted(() => {
   <div class="space-y-8 pb-[var(--mobile-nav-clearance)] lg:pb-0">
     <WeatherSearchForm
       :compact="Boolean(weather)"
+      :notice="searchNotice"
       :service-error="searchError"
       :status="searchStatus"
-      @search="searchCities"
+      @search="(query) => searchCities(query, locale)"
     />
 
     <WeatherFavoritesBar

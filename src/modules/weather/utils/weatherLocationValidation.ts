@@ -20,8 +20,8 @@ export function isWeatherLocation(value: unknown): value is WeatherLocation {
   if (!isRecord(value)) return false
 
   return (
-    typeof value.id === 'number' &&
-    Number.isFinite(value.id) &&
+    ((typeof value.id === 'number' && Number.isFinite(value.id)) ||
+      (typeof value.id === 'string' && value.id.trim().length > 0)) &&
     typeof value.name === 'string' &&
     value.name.trim().length > 0 &&
     locationKinds.includes(value.kind as WeatherLocationKind) &&
@@ -33,7 +33,12 @@ export function isWeatherLocation(value: unknown): value is WeatherLocation {
     typeof value.longitude === 'number' &&
     Number.isFinite(value.longitude) &&
     (typeof value.elevation === 'number' || value.elevation === null) &&
-    typeof value.timezone === 'string'
+    typeof value.timezone === 'string' &&
+    (!('displayLabel' in value) || typeof value.displayLabel === 'string') &&
+    (!('source' in value) ||
+      value.source === 'openMeteo' ||
+      value.source === 'amap' ||
+      value.source === 'amap-geolocation')
   )
 }
 

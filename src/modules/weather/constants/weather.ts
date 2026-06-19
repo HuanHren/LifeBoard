@@ -3,6 +3,9 @@ export const WEATHER_FAVORITES_STORAGE_KEY = 'lifeboard-weather-favorite-cities'
 export const WEATHER_FAVORITES_STORAGE_VERSION = 1
 export const WEATHER_PROVIDER_STORAGE_KEY = 'lifeboard.weather.provider'
 export const WEATHER_CAIYUN_TOKEN_STORAGE_KEY = 'lifeboard.weather.caiyunToken'
+export const WEATHER_AMAP_KEY_STORAGE_KEY = 'lifeboard.weather.amapKey'
+export const WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY =
+  'lifeboard.weather.autoLocationOnHome'
 export const MIN_SEARCH_LENGTH = 2
 export const SEARCH_RESULT_LIMIT = 8
 export const HOURLY_FORECAST_LENGTH = 24
@@ -12,6 +15,8 @@ export const WEATHER_ENDPOINTS = {
   geocoding: 'https://geocoding-api.open-meteo.com/v1/search',
   forecast: 'https://api.open-meteo.com/v1/forecast',
   caiyunForecast: '/api/caiyun-weather',
+  amapGeocode: '/api/amap-geocode',
+  amapReverseGeocode: '/api/amap-reverse-geocode',
 } as const
 
 export const CURRENT_VARIABLES = [

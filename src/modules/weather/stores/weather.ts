@@ -1,6 +1,19 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { computed, shallowRef } from 'vue'
 import { WEATHER_STORAGE_KEY } from '@/modules/weather/constants/weather'
+import type { AppLocale } from '@/i18n/types'
+import {
+  reverseGeocodeAmapLocation,
+  searchAmapLocations,
+} from '@/modules/weather/services/amapGeocodingService'
+import {
+  clearAmapKey as clearStoredAmapKey,
+  loadWeatherAmapPreferences,
+  saveAmapKey as saveStoredAmapKey,
+  saveAutoLocationOnHome,
+  type WeatherAmapMessage,
+  type WeatherAmapStorageError,
+} from '@/modules/weather/services/weatherAmapStorage'
 import {
   loadWeatherFavoritesStorage,
   saveWeatherFavoritesStorage,
@@ -49,6 +62,31 @@ function getErrorMessage(error: unknown, fallback: string) {
   return fallback
 }
 
+function createCurrentLocation({
+  latitude,
+  longitude,
+  fallbackName,
+}: {
+  latitude: number
+  longitude: number
+  fallbackName: string
+}): WeatherLocation {
+  return {
+    id: `current-location-${longitude.toFixed(5)}-${latitude.toFixed(5)}`,
+    name: fallbackName,
+    kind: 'Location',
+    admin1: null,
+    country: '',
+    countryCode: '',
+    latitude,
+    longitude,
+    elevation: null,
+    timezone: 'auto',
+    displayLabel: fallbackName,
+    source: 'amap-geolocation',
+  }
+}
+
 export const useWeatherStore = defineStore('weather', () => {
   const selectedLocation = shallowRef<WeatherLocation | null>(null)
   const searchQuery = shallowRef('')
@@ -64,6 +102,11 @@ export const useWeatherStore = defineStore('weather', () => {
   const hasCaiyunToken = shallowRef(false)
   const providerMessage = shallowRef<WeatherProviderMessage | null>(null)
   const providerPersistenceError = shallowRef<WeatherProviderStorageError | null>(null)
+  const hasAmapKey = shallowRef(false)
+  const autoLocationOnHome = shallowRef(false)
+  const amapMessage = shallowRef<WeatherAmapMessage | null>(null)
+  const amapPersistenceError = shallowRef<WeatherAmapStorageError | null>(null)
+  const searchNotice = shallowRef<'amapMissing' | 'amapUnavailable' | null>(null)
   const lastUpdatedAt = shallowRef<string | null>(null)
   const isInitialized = shallowRef(false)
 
@@ -183,6 +226,21 @@ export const useWeatherStore = defineStore('weather', () => {
     providerPersistenceError.value = result.error
   }
 
+  function initializeAmapPreferences() {
+    const result = loadWeatherAmapPreferences()
+
+    if (result.ok) {
+      hasAmapKey.value = result.data.hasAmapKey
+      autoLocationOnHome.value = result.data.autoLocationOnHome
+      amapPersistenceError.value = null
+      return
+    }
+
+    hasAmapKey.value = false
+    autoLocationOnHome.value = false
+    amapPersistenceError.value = result.error
+  }
+
   function commitFavoriteCities(nextFavorites: WeatherFavoriteCity[]) {
     const result = saveWeatherFavoritesStorage(nextFavorites)
 
@@ -245,6 +303,7 @@ export const useWeatherStore = defineStore('weather', () => {
     isInitialized.value = true
     initializeFavorites()
     initializeProviderPreferences()
+    initializeAmapPreferences()
     const storedLocation = readStoredLocation()
 
     if (!storedLocation) {
@@ -255,15 +314,42 @@ export const useWeatherStore = defineStore('weather', () => {
     await loadForecast(storedLocation)
   }
 
-  async function searchCities(query: string) {
+  async function searchCities(query: string, locale: AppLocale = 'en-US') {
     searchController?.abort()
     searchController = new AbortController()
     searchQuery.value = query.trim()
     searchStatus.value = 'loading'
     searchError.value = null
+    searchNotice.value = null
     searchResults.value = []
 
     try {
+      if (hasAmapKey.value) {
+        try {
+          const amapResults = await searchAmapLocations(
+            searchQuery.value,
+            locale,
+            searchController.signal,
+          )
+
+          if (amapResults.length > 0) {
+            searchResults.value = amapResults
+            searchStatus.value = 'success'
+            return
+          }
+
+          searchNotice.value = 'amapUnavailable'
+        } catch (error) {
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            return
+          }
+
+          searchNotice.value = 'amapUnavailable'
+        }
+      } else {
+        searchNotice.value = 'amapMissing'
+      }
+
       const results = await searchOpenMeteoLocations(searchQuery.value, searchController.signal)
       searchResults.value = results.map(normalizeLocation)
       searchStatus.value = 'success'
@@ -417,11 +503,87 @@ export const useWeatherStore = defineStore('weather', () => {
     providerPersistenceError.value = null
   }
 
+  function saveAmapKey(keyInput: string) {
+    const result = saveStoredAmapKey(keyInput)
+
+    if (!result.ok) {
+      amapPersistenceError.value = result.error
+      amapMessage.value = null
+      return false
+    }
+
+    hasAmapKey.value = true
+    amapPersistenceError.value = null
+    amapMessage.value = 'amapKeySaved'
+    return true
+  }
+
+  function clearAmapKey() {
+    const result = clearStoredAmapKey()
+
+    if (!result.ok) {
+      amapPersistenceError.value = result.error
+      amapMessage.value = null
+      return false
+    }
+
+    hasAmapKey.value = false
+    amapPersistenceError.value = null
+    amapMessage.value = 'amapKeyCleared'
+    return true
+  }
+
+  function setAutoLocationOnHome(enabled: boolean) {
+    const result = saveAutoLocationOnHome(enabled)
+
+    if (!result.ok) {
+      amapPersistenceError.value = result.error
+      amapMessage.value = null
+      return false
+    }
+
+    autoLocationOnHome.value = enabled
+    amapPersistenceError.value = null
+    amapMessage.value = 'autoLocationSaved'
+    return true
+  }
+
+  function clearAmapMessage() {
+    amapMessage.value = null
+    amapPersistenceError.value = null
+  }
+
+  async function selectCurrentCoordinates({
+    latitude,
+    longitude,
+    locale,
+    fallbackName,
+  }: {
+    latitude: number
+    longitude: number
+    locale: AppLocale
+    fallbackName: string
+  }) {
+    let location = createCurrentLocation({ latitude, longitude, fallbackName })
+
+    if (hasAmapKey.value) {
+      try {
+        location = await reverseGeocodeAmapLocation(longitude, latitude, locale)
+      } catch {
+        amapMessage.value = null
+        amapPersistenceError.value = null
+      }
+    }
+
+    return selectLocation(location)
+  }
+
   function clearSearchResults() {
     searchController?.abort()
     searchResults.value = []
     searchStatus.value = 'idle'
     searchError.value = null
+    searchNotice.value = null
   }
 
   function resetLocation() {
@@ -447,6 +609,7 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastError.value = null
     lastUpdatedAt.value = null
     favoriteMessage.value = null
+    searchNotice.value = null
   }
 
   function synchronizeFavoriteCities(nextFavorites: WeatherFavoriteCity[]) {
@@ -459,6 +622,8 @@ export const useWeatherStore = defineStore('weather', () => {
     hasCaiyunToken.value = false
     providerMessage.value = null
     providerPersistenceError.value = null
+    amapMessage.value = null
+    amapPersistenceError.value = null
   }
 
   return {
@@ -476,6 +641,11 @@ export const useWeatherStore = defineStore('weather', () => {
     hasCaiyunToken,
     providerMessage,
     providerPersistenceError,
+    hasAmapKey,
+    autoLocationOnHome,
+    amapMessage,
+    amapPersistenceError,
+    searchNotice,
     lastUpdatedAt,
     isInitialized,
     hasLocation,
@@ -485,6 +655,7 @@ export const useWeatherStore = defineStore('weather', () => {
     needsCaiyunToken,
     initializeWeather,
     initializeProviderPreferences,
+    initializeAmapPreferences,
     searchCities,
     selectLocation,
     selectSearchResult,
@@ -496,6 +667,11 @@ export const useWeatherStore = defineStore('weather', () => {
     saveCaiyunToken,
     clearCaiyunToken,
     clearProviderMessage,
+    saveAmapKey,
+    clearAmapKey,
+    setAutoLocationOnHome,
+    clearAmapMessage,
+    selectCurrentCoordinates,
     loadForecast,
     clearSearchResults,
     resetLocation,

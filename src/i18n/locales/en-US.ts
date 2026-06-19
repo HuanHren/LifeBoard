@@ -37,6 +37,9 @@ export const enUS = {
   'settings.section.weatherProvider.title': 'Weather preferences',
   'settings.section.weatherProvider.description':
     'Choose a preferred weather source and manage browser-local Caiyun token storage.',
+  'settings.section.locationServices.title': 'Weather location services',
+  'settings.section.locationServices.description':
+    'Manage optional AMap geocoding and current-location behavior for Weather.',
   'settings.section.localData.title': 'Local data',
   'settings.section.localData.description':
     'A direct view of what LifeBoard currently keeps in this browser.',
@@ -105,6 +108,25 @@ export const enUS = {
   'settings.weatherProvider.error.emptyToken': 'Enter a Caiyun token before saving.',
   'settings.weatherProvider.error.invalidProvider':
     'The saved weather provider preference is invalid. Open-Meteo is being used.',
+  'settings.locationServices.amapKeyLabel': 'AMap Web Service Key',
+  'settings.locationServices.amapKeyHelper':
+    'Enter an AMap Web Service Key only if you already have one. It is saved only in this browser and is never displayed in full.',
+  'settings.locationServices.saveAmapKey': 'Save AMap key',
+  'settings.locationServices.clearAmapKey': 'Clear AMap key',
+  'settings.locationServices.amapKeySavedState': 'An AMap key is saved in this browser.',
+  'settings.locationServices.amapKeyMissingState': 'No AMap key is saved.',
+  'settings.locationServices.autoLocationLabel': 'Use current location on Home',
+  'settings.locationServices.autoLocationHelper':
+    'When enabled, Home may ask once for browser location permission to load local weather. LifeBoard does not use background tracking.',
+  'settings.locationServices.privacy':
+    'The AMap key stays in this browser and is sent only to LifeBoard same-origin API routes when geocoding or reverse geocoding is used. It is excluded from backups, Markdown/CSV exports, and translation source exports.',
+  'settings.locationServices.message.amapKeySaved': 'AMap key saved in this browser.',
+  'settings.locationServices.message.amapKeyCleared': 'AMap key cleared from this browser.',
+  'settings.locationServices.message.autoLocationSaved':
+    'Home current-location preference saved.',
+  'settings.locationServices.error.storage':
+    'Weather location service preferences could not be saved in this browser.',
+  'settings.locationServices.error.emptyAmapKey': 'Enter an AMap key before saving.',
   'settings.common.weather': 'Weather',
   'settings.common.todos': 'Todos',
   'settings.common.bookmarks': 'Bookmarks',

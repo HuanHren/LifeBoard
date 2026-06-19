@@ -62,6 +62,7 @@ export function normalizeLocation(result: OpenMeteoGeocodingResult): WeatherLoca
     longitude: result.longitude,
     elevation: result.elevation ?? null,
     timezone: result.timezone,
+    source: 'openMeteo',
   }
 }
 

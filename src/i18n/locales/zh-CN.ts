@@ -36,6 +36,9 @@ export const zhCN = {
   'settings.section.weatherProvider.title': '天气偏好',
   'settings.section.weatherProvider.description':
     '选择偏好的天气数据源，并管理仅保存在此浏览器中的彩云天气 Token。',
+  'settings.section.locationServices.title': '天气位置服务',
+  'settings.section.locationServices.description':
+    '管理可选的 AMap 地理编码和首页当前位置天气行为。',
   'settings.section.localData.title': '本地数据',
   'settings.section.localData.description':
     '直接查看 LifeBoard 当前保存在此浏览器中的数据。',
@@ -97,6 +100,24 @@ export const zhCN = {
   'settings.weatherProvider.error.emptyToken': '请先输入彩云天气 Token 再保存。',
   'settings.weatherProvider.error.invalidProvider':
     '已保存的天气数据源偏好无效，当前将使用 Open-Meteo。',
+  'settings.locationServices.amapKeyLabel': 'AMap Web Service Key',
+  'settings.locationServices.amapKeyHelper':
+    '仅在你已经拥有 AMap Web Service Key 时填写。它只保存在此浏览器中，并且不会完整显示。',
+  'settings.locationServices.saveAmapKey': '保存 AMap Key',
+  'settings.locationServices.clearAmapKey': '清除 AMap Key',
+  'settings.locationServices.amapKeySavedState': '此浏览器中已保存 AMap Key。',
+  'settings.locationServices.amapKeyMissingState': '尚未保存 AMap Key。',
+  'settings.locationServices.autoLocationLabel': '首页使用当前位置',
+  'settings.locationServices.autoLocationHelper':
+    '启用后，首页可以单次请求浏览器位置权限来加载本地天气。LifeBoard 不会进行后台追踪。',
+  'settings.locationServices.privacy':
+    'AMap Key 会保存在此浏览器中，并且只会在使用地理编码或逆地理编码时发送到 LifeBoard 同源 API 路由。它不会包含在备份、Markdown/CSV 导出或翻译源导出中。',
+  'settings.locationServices.message.amapKeySaved': 'AMap Key 已保存在此浏览器中。',
+  'settings.locationServices.message.amapKeyCleared': 'AMap Key 已从此浏览器中清除。',
+  'settings.locationServices.message.autoLocationSaved': '首页当前位置偏好已保存。',
+  'settings.locationServices.error.storage':
+    '无法在此浏览器中保存天气位置服务偏好。',
+  'settings.locationServices.error.emptyAmapKey': '请先输入 AMap Key 再保存。',
   'settings.common.weather': '天气',
   'settings.common.todos': '待办',
   'settings.common.bookmarks': '书签',

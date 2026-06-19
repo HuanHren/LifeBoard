@@ -36,6 +36,7 @@ Live demo: https://life-board-two.vercel.app/
 - Pinia
 - Tailwind CSS v4
 - Open-Meteo
+- AMap Web Service
 - Caiyun Weather
 - CSS variables and OKLCH design tokens
 
@@ -45,6 +46,8 @@ LifeBoard is local-first. It has no account system, analytics, cloud sync, or mo
 
 Open-Meteo is the default weather service. City search and Open-Meteo forecasts are requested directly from Open-Meteo.
 
+AMap Web Service can be used for Chinese city geocoding and current-location reverse geocoding when you save your own AMap Web Service Key in Settings. The key is stored only in this browser and sent only in same-origin POST requests to LifeBoard's Vercel API routes. Do not paste real keys into source files, README content, screenshots, commits, or issue comments.
+
 Caiyun Weather can be selected as an optional forecast provider. Its token is entered locally in Settings, stored only in this browser, and sent only in a same-origin POST request to LifeBoard's Vercel API proxy. The token is not stored on the server, not included in URLs, not included in backups, and not included in portable exports.
 
 Interface translation is bundled locally. LifeBoard does not use a machine translation API.
@@ -53,6 +56,7 @@ LifeBoard stores these values in this browser's `localStorage`:
 
 - Theme preference
 - Selected weather city
+- Optional AMap Web Service Key and Home auto-location preference
 - Todos and countdowns
 - Bookmarks
 
@@ -84,6 +88,16 @@ Start the development server:
 ```bash
 npm run dev
 ```
+
+`npm run dev` runs the Vite frontend only. It does not serve Vercel API routes such as `/api/caiyun-weather`, `/api/amap-geocode`, or `/api/amap-reverse-geocode`.
+
+To test same-origin API routes locally, use Vercel's local runtime:
+
+```bash
+vercel dev
+```
+
+Browser geolocation requires HTTPS or localhost and always requires user permission. LifeBoard uses `getCurrentPosition` only; it does not use background tracking or `watchPosition`.
 
 Create a production build:
 
@@ -132,7 +146,7 @@ LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 5. Use `dist` as the output directory.
 6. Leave environment variables empty; LifeBoard does not require deployment secrets.
 
-`vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather` route.
+`vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather`, `/api/amap-geocode`, and `/api/amap-reverse-geocode` routes.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 

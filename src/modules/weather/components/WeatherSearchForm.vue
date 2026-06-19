@@ -9,6 +9,7 @@ import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 interface Props {
   status: WeatherRequestStatus
   serviceError?: string | null
+  notice?: 'amapMissing' | 'amapUnavailable' | null
   compact?: boolean
 }
 
@@ -18,6 +19,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   serviceError: null,
+  notice: null,
   compact: false,
 })
 const emit = defineEmits<Emits>()
@@ -35,6 +37,10 @@ const describedBy = computed(() => {
 
   if (props.serviceError) {
     ids.push('weather-search-service-error')
+  }
+
+  if (props.notice) {
+    ids.push('weather-search-notice')
   }
 
   return ids.join(' ')
@@ -135,6 +141,17 @@ function handleInput() {
       role="alert"
     >
       {{ localizeWeatherError(serviceError, t) }}
+    </p>
+    <p
+      v-if="notice"
+      id="weather-search-notice"
+      class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]"
+    >
+      {{
+        notice === 'amapMissing'
+          ? t('weather.search.amapMissing')
+          : t('weather.search.amapUnavailable')
+      }}
     </p>
     <p class="sr-only" aria-live="polite">
       {{ isLoading ? t('weather.search.loadingAnnouncement') : '' }}

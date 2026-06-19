@@ -47,7 +47,7 @@ export function favoriteCityToWeatherLocation(
   favorite: WeatherFavoriteCity,
 ): WeatherLocation {
   return {
-    id: Number.parseInt(favorite.id.replace(/\D/g, '').slice(0, 9), 10) || 0,
+    id: favorite.id,
     name: favorite.name,
     kind: 'Location',
     admin1: favorite.region,

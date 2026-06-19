@@ -25,6 +25,12 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Weather page status for Caiyun selected without a saved token. Must say no Caiyun forecast can load until a token is saved.',
   'weather.providerNotice.caiyunActive':
     'Weather page status for active Caiyun provider. Keep city search boundary clear.',
+  'settings.locationServices.privacy':
+    'Privacy copy for AMap key handling. Must state same-origin route usage and export exclusion.',
+  'home.weather.useCurrentLocation':
+    'Home action label for one-time browser geolocation. Do not imply background tracking.',
+  'weather.search.amapMissing':
+    'Search notice shown when no AMap key is saved and Open-Meteo fallback is used.',
   'weather.state.caiyunTokenMissingDescription':
     'Shown when Caiyun is selected without a saved token. Must state no Caiyun request was sent.',
   'weather.error.caiyunMissingToken':

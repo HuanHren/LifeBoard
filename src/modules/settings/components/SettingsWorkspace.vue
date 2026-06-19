@@ -15,6 +15,7 @@ import SettingsConfirmationDialog from '@/modules/settings/components/SettingsCo
 import ThemeModeControl from '@/modules/settings/components/ThemeModeControl.vue'
 import TranslationExportPanel from '@/modules/settings/components/TranslationExportPanel.vue'
 import WeatherProviderPreferences from '@/modules/settings/components/WeatherProviderPreferences.vue'
+import WeatherLocationServices from '@/modules/settings/components/WeatherLocationServices.vue'
 import {
   createPortableExport,
   downloadPortableExport,
@@ -62,6 +63,10 @@ const {
   hasCaiyunToken,
   providerMessage,
   providerPersistenceError,
+  hasAmapKey,
+  autoLocationOnHome,
+  amapMessage,
+  amapPersistenceError,
   isInitialized: weatherInitialized,
 } = storeToRefs(weatherStore)
 const { tasks, countdowns } = storeToRefs(todosStore)
@@ -111,6 +116,8 @@ const hasAnyData = computed(
     mode.value !== 'system' ||
     provider.value !== 'openMeteo' ||
     hasCaiyunToken.value ||
+    hasAmapKey.value ||
+    autoLocationOnHome.value ||
     selectedLocation.value !== null ||
     weatherFavoriteCount.value > 0 ||
     taskCount.value > 0 ||
@@ -356,6 +363,7 @@ function confirmClear() {
   if (target === 'all') {
     themeStore.synchronizeMode('system')
     weatherStore.synchronizeProviderPreferences('openMeteo')
+    weatherStore.initializeAmapPreferences()
   }
 
   backupError.value = null
@@ -427,6 +435,22 @@ onMounted(() => {
         @clear-token="weatherStore.clearCaiyunToken"
         @save-token="weatherStore.saveCaiyunToken"
         @update-provider="changeWeatherProvider"
+      />
+    </BaseSection>
+
+    <BaseSection
+      :title="t('settings.section.locationServices.title')"
+      :description="t('settings.section.locationServices.description')"
+    >
+      <WeatherLocationServices
+        :auto-location-on-home="autoLocationOnHome"
+        :error="amapPersistenceError"
+        :has-amap-key="hasAmapKey"
+        :message="amapMessage"
+        @clear-amap-key="weatherStore.clearAmapKey"
+        @clear-message="weatherStore.clearAmapMessage"
+        @save-amap-key="weatherStore.saveAmapKey"
+        @update-auto-location="weatherStore.setAutoLocationOnHome"
       />
     </BaseSection>
 

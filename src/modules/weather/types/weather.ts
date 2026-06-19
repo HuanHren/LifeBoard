@@ -1,5 +1,6 @@
 export type WeatherRequestStatus = 'idle' | 'loading' | 'success' | 'error'
 export type WeatherDataProvider = 'openMeteo' | 'caiyun'
+export type WeatherLocationSource = 'openMeteo' | 'amap' | 'amap-geolocation'
 export type AdviceLevel = 'clear' | 'consider' | 'caution'
 export type AdviceKind = 'umbrella' | 'clothing' | 'outdoor'
 export type WeatherLocationKind =
@@ -11,7 +12,7 @@ export type WeatherLocationKind =
   | 'Location'
 
 export interface WeatherLocation {
-  id: number
+  id: number | string
   name: string
   kind: WeatherLocationKind
   admin1: string | null
@@ -21,6 +22,8 @@ export interface WeatherLocation {
   longitude: number
   elevation: number | null
   timezone: string
+  displayLabel?: string
+  source?: WeatherLocationSource
 }
 
 export interface WeatherCondition {
