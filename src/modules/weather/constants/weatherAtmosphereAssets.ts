@@ -1,8 +1,11 @@
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
+import clearDayBaseDesktopPng from '@/assets/weather/atmosphere/clear-day/desktop/clear-day-base-desktop.png'
+import clearDayBaseMobilePng from '@/assets/weather/atmosphere/clear-day/mobile/clear-day-base-mobile.png'
 
 export interface WeatherAtmosphereAssetSource {
   avif?: string
   webp?: string
+  png?: string
 }
 
 export interface WeatherAtmosphereResponsiveSource {
@@ -31,13 +34,20 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'clear-day': {
     state: 'clear-day',
     fallbackClass: 'weather-atmosphere--clear-day',
+    base: {
+      desktop: {
+        png: clearDayBaseDesktopPng,
+      },
+      mobile: {
+        png: clearDayBaseMobilePng,
+      },
+    },
     objectPosition: {
       desktop: 'center center',
       mobile: '58% center',
       depth: 'center center',
       foreground: 'center bottom',
     },
-    shouldDriftDepth: true,
   },
   'clear-night': {
     state: 'clear-night',

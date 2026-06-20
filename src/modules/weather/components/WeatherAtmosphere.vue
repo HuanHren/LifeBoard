@@ -22,8 +22,10 @@ const baseFallbackSource = computed(
   () =>
     baseDesktopSource.value?.webp ??
     baseDesktopSource.value?.avif ??
+    baseDesktopSource.value?.png ??
     baseMobileSource.value?.webp ??
     baseMobileSource.value?.avif ??
+    baseMobileSource.value?.png ??
     null,
 )
 const depthSource = computed(() => assetSet.value.depth)
@@ -58,7 +60,7 @@ const atmosphereStyle = computed(() => ({
 }))
 
 function hasLayerSource(source: WeatherAtmosphereAssetSource | undefined) {
-  return Boolean(source?.webp || source?.avif)
+  return Boolean(source?.webp || source?.avif || source?.png)
 }
 
 function markLayerFailed(layer: AtmosphereLayer) {
@@ -100,6 +102,12 @@ function markLayerFailed(layer: AtmosphereLayer) {
         type="image/webp"
       >
       <source
+        v-if="baseMobileSource?.png"
+        :srcset="baseMobileSource.png"
+        media="(max-width: 639px)"
+        type="image/png"
+      >
+      <source
         v-if="baseDesktopSource?.avif"
         :srcset="baseDesktopSource.avif"
         type="image/avif"
@@ -108,6 +116,11 @@ function markLayerFailed(layer: AtmosphereLayer) {
         v-if="baseDesktopSource?.webp"
         :srcset="baseDesktopSource.webp"
         type="image/webp"
+      >
+      <source
+        v-if="baseDesktopSource?.png"
+        :srcset="baseDesktopSource.png"
+        type="image/png"
       >
       <img
         alt=""
@@ -133,12 +146,17 @@ function markLayerFailed(layer: AtmosphereLayer) {
         :srcset="depthSource.webp"
         type="image/webp"
       >
+      <source
+        v-if="depthSource?.png"
+        :srcset="depthSource.png"
+        type="image/png"
+      >
       <img
         alt=""
         class="weather-atmosphere__image weather-atmosphere__image--depth"
         decoding="async"
         loading="lazy"
-        :src="depthSource?.webp ?? depthSource?.avif ?? ''"
+        :src="depthSource?.webp ?? depthSource?.avif ?? depthSource?.png ?? ''"
         @error="markLayerFailed('depth')"
       >
     </picture>
@@ -157,12 +175,19 @@ function markLayerFailed(layer: AtmosphereLayer) {
         :srcset="foregroundSource.webp"
         type="image/webp"
       >
+      <source
+        v-if="foregroundSource?.png"
+        :srcset="foregroundSource.png"
+        type="image/png"
+      >
       <img
         alt=""
         class="weather-atmosphere__image weather-atmosphere__image--foreground"
         decoding="async"
         loading="lazy"
-        :src="foregroundSource?.webp ?? foregroundSource?.avif ?? ''"
+        :src="
+          foregroundSource?.webp ?? foregroundSource?.avif ?? foregroundSource?.png ?? ''
+        "
         @error="markLayerFailed('foreground')"
       >
     </picture>
