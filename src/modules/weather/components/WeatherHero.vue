@@ -2,7 +2,9 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from '@/i18n/useI18n'
+import AirQualityBadge from '@/modules/weather/components/AirQualityBadge.vue'
 import WeatherAtmosphere from '@/modules/weather/components/WeatherAtmosphere.vue'
+import type { AirQualitySnapshot } from '@/modules/weather/types/airQuality'
 import type { WeatherSnapshot } from '@/modules/weather/types/weather'
 import {
   getWeatherAtmosphere,
@@ -17,6 +19,7 @@ import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   weather: WeatherSnapshot
+  airQuality?: AirQualitySnapshot | null
   motionMode?: 'initial' | 'snapshot'
 }
 
@@ -208,6 +211,8 @@ const screenReaderSummary = computed(() =>
           </span>
         </p>
       </div>
+
+      <AirQualityBadge :air-quality="airQuality ?? null" />
 
       <div
         class="weather-hero__item weather-hero__item--conditions mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-base font-medium text-[var(--weather-hero-text)]"

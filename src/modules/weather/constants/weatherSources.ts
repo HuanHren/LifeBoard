@@ -4,13 +4,13 @@ import type {
   WeatherSourceMetadata,
 } from '@/modules/weather/types/weatherSources'
 
-type ActiveWeatherSourceKey = 'openMeteo' | 'caiyun' | 'amap'
+type ActiveWeatherSourceKey = 'openMeteo' | 'caiyun' | 'amap' | 'cams'
 
 export const WEATHER_SOURCE_METADATA = {
   openMeteo: {
     id: 'open-meteo',
     displayName: 'Open-Meteo',
-    domains: ['forecast', 'current', 'location'],
+    domains: ['forecast', 'current', 'location', 'air-quality'],
     officialUrl: 'https://open-meteo.com/',
     licenceLabel: 'CC BY 4.0',
     licenceUrl: 'https://creativecommons.org/licenses/by/4.0/',
@@ -30,6 +30,13 @@ export const WEATHER_SOURCE_METADATA = {
     officialUrl: 'https://lbs.amap.com/',
     requiresUserCredential: true,
   },
+  cams: {
+    id: 'cams',
+    displayName: 'CAMS',
+    domains: ['air-quality'],
+    officialUrl: 'https://atmosphere.copernicus.eu/',
+    requiresUserCredential: false,
+  },
 } as const satisfies Record<ActiveWeatherSourceKey, WeatherSourceMetadata>
 
 export function getForecastSourceForProvider(
@@ -48,4 +55,12 @@ export function getWeatherSourceMetadata(
   )
 
   return source ?? null
+}
+
+export function getAirQualityApiSource() {
+  return WEATHER_SOURCE_METADATA.openMeteo
+}
+
+export function getAirQualityModelSource() {
+  return WEATHER_SOURCE_METADATA.cams
 }

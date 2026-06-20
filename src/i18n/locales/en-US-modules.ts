@@ -212,6 +212,81 @@ export const enUSModules = {
   'weather.details.sun.helper': 'Daylight window for planning.',
   'weather.details.pressure.label': 'Pressure',
   'weather.details.pressure.helper': 'Shown in hPa when the provider supplies it.',
+  'weather.airQuality.title': 'Air quality',
+  'weather.airQuality.description':
+    'A compact current view of outdoor air quality for the selected location.',
+  'weather.airQuality.scale.us': 'US AQI',
+  'weather.airQuality.scale.european': 'European AQI',
+  'weather.airQuality.badgeSummary':
+    '{scale} is {value}, categorized as {category}.',
+  'weather.airQuality.observedAt': 'Observed {time} {timezone}',
+  'weather.airQuality.loading': 'Loading current air quality',
+  'weather.airQuality.unavailable': 'Unavailable',
+  'weather.airQuality.unavailableTitle': 'Air quality unavailable',
+  'weather.airQuality.retry': 'Retry air quality',
+  'weather.airQuality.europeanSummary': 'European AQI {value} · {category}',
+  'weather.airQuality.pollutant.pm25': 'PM2.5',
+  'weather.airQuality.pollutant.pm10': 'PM10',
+  'weather.airQuality.pollutant.ozone': 'Ozone (O3)',
+  'weather.airQuality.pollutant.nitrogenDioxide': 'Nitrogen dioxide (NO2)',
+  'weather.airQuality.pollutant.sulphurDioxide': 'Sulphur dioxide (SO2)',
+  'weather.airQuality.pollutant.carbonMonoxide': 'Carbon monoxide (CO)',
+  'weather.airQuality.pollutantUnavailable': 'Not returned',
+  'weather.airQuality.category.us-aqi.good': 'Good',
+  'weather.airQuality.category.us-aqi.moderate': 'Moderate',
+  'weather.airQuality.category.us-aqi.sensitive':
+    'Unhealthy for sensitive groups',
+  'weather.airQuality.category.us-aqi.unhealthy': 'Unhealthy',
+  'weather.airQuality.category.us-aqi.veryUnhealthy': 'Very unhealthy',
+  'weather.airQuality.category.us-aqi.hazardous': 'Hazardous',
+  'weather.airQuality.category.european-aqi.good': 'Good',
+  'weather.airQuality.category.european-aqi.fair': 'Fair',
+  'weather.airQuality.category.european-aqi.moderate': 'Moderate',
+  'weather.airQuality.category.european-aqi.poor': 'Poor',
+  'weather.airQuality.category.european-aqi.veryPoor': 'Very poor',
+  'weather.airQuality.category.european-aqi.extremelyPoor': 'Extremely poor',
+  'weather.airQuality.guidance.us-aqi.good':
+    'Air quality is generally suitable for usual outdoor plans.',
+  'weather.airQuality.guidance.us-aqi.moderate':
+    'Air quality is acceptable for most people; unusually sensitive people may prefer lighter outdoor effort.',
+  'weather.airQuality.guidance.us-aqi.sensitive':
+    'Sensitive groups may want to reduce prolonged outdoor exertion.',
+  'weather.airQuality.guidance.us-aqi.unhealthy':
+    'Consider reducing longer or harder outdoor activity, especially for sensitive groups.',
+  'weather.airQuality.guidance.us-aqi.veryUnhealthy':
+    'Outdoor exertion is best kept limited when practical.',
+  'weather.airQuality.guidance.us-aqi.hazardous':
+    'Avoid extended outdoor activity where possible.',
+  'weather.airQuality.guidance.european-aqi.good':
+    'Air quality is generally suitable for usual outdoor plans.',
+  'weather.airQuality.guidance.european-aqi.fair':
+    'Most daily plans should be comfortable, with some sensitivity possible.',
+  'weather.airQuality.guidance.european-aqi.moderate':
+    'Sensitive people may prefer lighter outdoor effort.',
+  'weather.airQuality.guidance.european-aqi.poor':
+    'Consider reducing longer outdoor exertion.',
+  'weather.airQuality.guidance.european-aqi.veryPoor':
+    'Keep outdoor exertion limited when practical.',
+  'weather.airQuality.guidance.european-aqi.extremelyPoor':
+    'Avoid extended outdoor activity where possible.',
+  'weather.airQuality.guidance.unavailable':
+    'Current air quality guidance is unavailable for this location.',
+  'weather.airQuality.sourcePrefix': 'Air quality source:',
+  'weather.airQuality.modelPrefix': 'Underlying model:',
+  'weather.airQuality.sourceLinkLabel':
+    'Open {provider} air quality source in a new tab',
+  'weather.airQuality.modelLinkLabel':
+    'Open {provider} air quality model provider in a new tab',
+  'weather.airQuality.error.network':
+    'Open-Meteo Air Quality could not be reached. Forecast weather remains available.',
+  'weather.airQuality.error.unreadable':
+    'Open-Meteo Air Quality returned a response LifeBoard could not read.',
+  'weather.airQuality.error.status':
+    'Open-Meteo Air Quality returned an unsuccessful status.',
+  'weather.airQuality.error.serviceRejected':
+    'Open-Meteo Air Quality could not complete this request.',
+  'weather.airQuality.error.incomplete':
+    'Open-Meteo Air Quality did not return a usable current air-quality snapshot.',
   'weather.shortTerm.title': 'Short-term precipitation',
   'weather.shortTerm.unavailable':
     'Minute-level precipitation nowcast is not available from this provider.',

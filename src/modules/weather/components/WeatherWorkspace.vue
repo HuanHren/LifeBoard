@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import { useI18n } from '@/i18n/useI18n'
+import AirQualityPanel from '@/modules/weather/components/AirQualityPanel.vue'
 import DailyForecastStrip from '@/modules/weather/components/DailyForecastStrip.vue'
 import HourlyForecastStrip from '@/modules/weather/components/HourlyForecastStrip.vue'
 import PrecipitationTimeline from '@/modules/weather/components/PrecipitationTimeline.vue'
@@ -26,12 +27,16 @@ const {
   weather,
   forecastStatus,
   forecastError,
+  airQuality,
+  airQualityStatus,
+  airQualityError,
   provider,
   hasCaiyunToken,
 } = storeToRefs(weatherStore)
 const {
   initializeWeather,
   loadForecast,
+  retryAirQuality,
 } = weatherStore
 const hasShownWeatherHero = ref(false)
 const heroMotionMode = computed(() =>
@@ -131,7 +136,11 @@ onMounted(() => {
       </p>
 
       <div class="space-y-4">
-        <WeatherHero :motion-mode="heroMotionMode" :weather="weather" />
+        <WeatherHero
+          :air-quality="airQuality"
+          :motion-mode="heroMotionMode"
+          :weather="weather"
+        />
         <WeatherProviderNotice
           :has-caiyun-token="hasCaiyunToken"
           :provider="weather.provider"
@@ -144,6 +153,13 @@ onMounted(() => {
         <WeatherAdvicePanel :advice="weather.advice" />
         <WeatherDetailsGrid :weather="weather" />
       </div>
+
+      <AirQualityPanel
+        :air-quality="airQuality"
+        :error="airQualityError"
+        :status="airQualityStatus"
+        @retry="retryAirQuality"
+      />
 
       <ShortTermPrecipitationPanel
         :provider="weather.provider"

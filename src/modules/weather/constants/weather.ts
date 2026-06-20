@@ -14,6 +14,7 @@ export const DAILY_FORECAST_LENGTH = 7
 export const WEATHER_ENDPOINTS = {
   geocoding: 'https://geocoding-api.open-meteo.com/v1/search',
   forecast: 'https://api.open-meteo.com/v1/forecast',
+  airQuality: 'https://air-quality-api.open-meteo.com/v1/air-quality',
   caiyunForecast: '/api/caiyun-weather',
   amapGeocode: '/api/amap-geocode',
   amapReverseGeocode: '/api/amap-reverse-geocode',

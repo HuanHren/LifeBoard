@@ -49,6 +49,24 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Accessible label for the active forecast source link. Keep the {provider} placeholder and do not translate provider names inserted at runtime.',
   'weather.attribution.licenceLinkLabel':
     'Accessible label for source licence links. Keep the {licence} placeholder.',
+  'weather.airQuality.scale.us':
+    'Keep US AQI in English. Do not call this Chinese national AQI.',
+  'weather.airQuality.scale.european':
+    'Keep European AQI explicit. Do not merge this with US AQI.',
+  'weather.airQuality.badgeSummary':
+    'Accessible name for the hero AQI badge. Keep {scale}, {value}, and {category}.',
+  'weather.airQuality.pollutant.pm25': 'Keep PM2.5 untranslated.',
+  'weather.airQuality.pollutant.pm10': 'Keep PM10 untranslated.',
+  'weather.airQuality.sourcePrefix':
+    'Attribution label for Open-Meteo Air Quality. Do not imply CAMS is called directly.',
+  'weather.airQuality.modelPrefix':
+    'Attribution label for the underlying CAMS model provider.',
+  'weather.airQuality.sourceLinkLabel':
+    'Accessible label. Keep the {provider} placeholder and provider names untranslated.',
+  'weather.airQuality.modelLinkLabel':
+    'Accessible label. Keep the {provider} placeholder and provider names untranslated.',
+  'weather.airQuality.error.network':
+    'Sanitized air-quality error. Do not include request URLs or raw provider responses.',
   'weather.details.sun.value':
     'Weather detail value. Keep {sunrise} and {sunset} placeholders.',
   'weather.shortTerm.openMeteoLimitation':

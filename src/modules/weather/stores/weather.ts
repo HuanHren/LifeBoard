@@ -28,7 +28,15 @@ import {
   searchOpenMeteoLocations,
   WeatherServiceError,
 } from '@/modules/weather/services/openMeteoService'
+import {
+  fetchOpenMeteoAirQuality,
+  OpenMeteoAirQualityServiceError,
+} from '@/modules/weather/services/openMeteoAirQualityService'
 import { fetchWeatherForecastForProvider } from '@/modules/weather/services/weatherForecastProvider'
+import type {
+  AirQualityErrorKind,
+  AirQualitySnapshot,
+} from '@/modules/weather/types/airQuality'
 import type {
   WeatherFavoriteCity,
   WeatherFavoriteMessage,
@@ -50,9 +58,15 @@ import {
   getWeatherFavoriteIdentity,
 } from '@/modules/weather/utils/weatherFavoriteIdentity'
 import {
+  createAirQualityLocationId,
+  normalizeOpenMeteoAirQuality,
+} from '@/modules/weather/utils/airQualityNormalizer'
+import {
   normalizeLocation,
 } from '@/modules/weather/utils/weatherNormalizer'
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
+
+const AIR_QUALITY_FRESHNESS_MS = 30 * 60 * 1000
 
 function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof WeatherServiceError || error instanceof Error) {
@@ -60,6 +74,14 @@ function getErrorMessage(error: unknown, fallback: string) {
   }
 
   return fallback
+}
+
+function getAirQualityErrorKind(error: unknown): AirQualityErrorKind {
+  if (error instanceof OpenMeteoAirQualityServiceError) {
+    return error.kind
+  }
+
+  return 'network'
 }
 
 function createCurrentLocation({
@@ -96,6 +118,11 @@ export const useWeatherStore = defineStore('weather', () => {
   const forecastStatus = shallowRef<WeatherRequestStatus>('idle')
   const searchError = shallowRef<string | null>(null)
   const forecastError = shallowRef<string | null>(null)
+  const airQuality = shallowRef<AirQualitySnapshot | null>(null)
+  const airQualityStatus = shallowRef<WeatherRequestStatus>('idle')
+  const airQualityError = shallowRef<AirQualityErrorKind | null>(null)
+  const airQualityLocationId = shallowRef<string | null>(null)
+  const airQualityFetchedAt = shallowRef<string | null>(null)
   const favoriteCities = shallowRef<WeatherFavoriteCity[]>([])
   const favoriteMessage = shallowRef<WeatherFavoriteMessage | null>(null)
   const provider = shallowRef<WeatherProviderId>('openMeteo')
@@ -112,6 +139,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   let searchController: AbortController | null = null
   let forecastController: AbortController | null = null
+  let airQualityController: AbortController | null = null
 
   const hasLocation = computed(() => selectedLocation.value !== null)
   const hasWeather = computed(() => weather.value !== null)
@@ -129,6 +157,22 @@ export const useWeatherStore = defineStore('weather', () => {
   const needsCaiyunToken = computed(
     () => provider.value === 'caiyun' && !hasCaiyunToken.value,
   )
+
+  function hasFreshAirQuality(location: WeatherLocation) {
+    const locationId = createAirQualityLocationId(location)
+
+    if (
+      !airQuality.value ||
+      airQualityStatus.value !== 'success' ||
+      airQualityLocationId.value !== locationId ||
+      !airQualityFetchedAt.value
+    ) {
+      return false
+    }
+
+    const fetchedTime = Date.parse(airQualityFetchedAt.value)
+    return Number.isFinite(fetchedTime) && Date.now() - fetchedTime < AIR_QUALITY_FRESHNESS_MS
+  }
 
   function persistLocation(location: WeatherLocation) {
     if (typeof window === 'undefined') {
@@ -295,6 +339,78 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
+  async function loadAirQuality(
+    location = selectedLocation.value,
+    options: { force?: boolean } = {},
+  ) {
+    if (!location) {
+      return
+    }
+
+    const requestLocationId = createAirQualityLocationId(location)
+
+    if (!options.force && hasFreshAirQuality(location)) {
+      return
+    }
+
+    airQualityController?.abort()
+    airQualityController = new AbortController()
+    airQualityStatus.value = 'loading'
+    airQualityError.value = null
+
+    if (airQualityLocationId.value !== requestLocationId) {
+      airQuality.value = null
+      airQualityFetchedAt.value = null
+    }
+
+    try {
+      const response = await fetchOpenMeteoAirQuality(
+        location,
+        airQualityController.signal,
+      )
+      const snapshot = normalizeOpenMeteoAirQuality(response, location)
+
+      if (
+        !selectedLocation.value ||
+        createAirQualityLocationId(selectedLocation.value) !== requestLocationId
+      ) {
+        return
+      }
+
+      airQuality.value = snapshot
+      airQualityLocationId.value = requestLocationId
+      airQualityFetchedAt.value = snapshot.fetchedAt
+      airQualityStatus.value = 'success'
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return
+      }
+
+      if (
+        selectedLocation.value &&
+        createAirQualityLocationId(selectedLocation.value) !== requestLocationId
+      ) {
+        return
+      }
+
+      airQualityError.value = getAirQualityErrorKind(error)
+      airQualityStatus.value = 'error'
+    }
+  }
+
+  function retryAirQuality() {
+    return loadAirQuality(selectedLocation.value, { force: true })
+  }
+
+  function clearAirQuality() {
+    airQualityController?.abort()
+    airQuality.value = null
+    airQualityStatus.value = 'idle'
+    airQualityError.value = null
+    airQualityLocationId.value = null
+    airQualityFetchedAt.value = null
+  }
+
   async function initializeWeather() {
     if (isInitialized.value) {
       return
@@ -311,6 +427,7 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     selectedLocation.value = storedLocation
+    void loadAirQuality(storedLocation)
     await loadForecast(storedLocation)
   }
 
@@ -375,6 +492,7 @@ export const useWeatherStore = defineStore('weather', () => {
     searchResults.value = []
     searchStatus.value = 'idle'
     searchError.value = null
+    void loadAirQuality(location)
     await loadForecast(location)
     return true
   }
@@ -592,6 +710,7 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     forecastController?.abort()
+    clearAirQuality()
     selectedLocation.value = null
     weather.value = null
     forecastStatus.value = 'idle'
@@ -603,6 +722,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   function synchronizeLocation(location: WeatherLocation | null) {
     forecastController?.abort()
+    clearAirQuality()
     selectedLocation.value = location
     weather.value = null
     forecastStatus.value = 'idle'
@@ -635,6 +755,11 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastStatus,
     searchError,
     forecastError,
+    airQuality,
+    airQualityStatus,
+    airQualityError,
+    airQualityLocationId,
+    airQualityFetchedAt,
     favoriteCities,
     favoriteMessage,
     provider,
@@ -673,6 +798,9 @@ export const useWeatherStore = defineStore('weather', () => {
     clearAmapMessage,
     selectCurrentCoordinates,
     loadForecast,
+    loadAirQuality,
+    retryAirQuality,
+    clearAirQuality,
     clearSearchResults,
     resetLocation,
     synchronizeLocation,
