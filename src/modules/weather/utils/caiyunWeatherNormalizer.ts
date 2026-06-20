@@ -236,6 +236,7 @@ function normalizeDaily(response: CaiyunWeatherResponse) {
         precipitationSum: precipitation.avg,
         precipitationProbabilityMax: probability(precipitation.probability),
         windSpeedMax: wind.max.speed,
+        windDirectionDominant: wind.avg.direction,
         windGustsMax: null,
         uvIndexMax: dailyUv(response, index),
         sunrise: combineLocalTime(temperature.date, astro?.sunrise?.time),
@@ -274,7 +275,7 @@ export function normalizeCaiyunWeatherForecast(
     condition: getWeatherCondition(skyconToWeatherCode(currentSkycon)),
   }
 
-  if (hourly.length === 0 || daily.length === 0) {
+  if (hourly.length < HOURLY_FORECAST_LENGTH || daily.length === 0) {
     throw new Error('Caiyun Weather returned an incomplete forecast.')
   }
 

@@ -128,6 +128,11 @@ function normalizeDaily(response: OpenMeteoForecastResponse) {
       'daily precipitation probability',
     ),
     windSpeedMax: valueAt(response.daily.wind_speed_10m_max, index, 'daily wind speed'),
+    windDirectionDominant: valueAt(
+      response.daily.wind_direction_10m_dominant,
+      index,
+      'daily wind direction',
+    ),
     windGustsMax: valueAt(response.daily.wind_gusts_10m_max, index, 'daily wind gusts'),
     uvIndexMax: valueAt(response.daily.uv_index_max, index, 'daily UV index'),
     sunrise: valueAt(response.daily.sunrise, index, 'daily sunrise'),
@@ -163,7 +168,7 @@ export function normalizeWeatherForecast(
     condition: getWeatherCondition(response.current.weather_code),
   }
 
-  if (hourly.length < HOURLY_FORECAST_LENGTH || daily.length < DAILY_FORECAST_LENGTH) {
+  if (hourly.length < HOURLY_FORECAST_LENGTH || daily.length === 0) {
     throw new Error('The weather service returned an incomplete forecast.')
   }
 

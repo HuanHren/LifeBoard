@@ -330,6 +330,43 @@ export const enUSModules = {
   'weather.daily.scrollLabel': 'Scrollable 7-day weather forecast',
   'weather.daily.today': 'Today',
   'weather.daily.peakGust': 'Peak gust',
+  'weather.longRange.title': '15-day forecast',
+  'weather.longRange.description':
+    'A longer daily outlook from the forecast provider that successfully loaded for this location.',
+  'weather.longRange.viewAction': 'View 15-day forecast',
+  'weather.longRange.backToWeather': 'Back to Weather',
+  'weather.longRange.today': 'Today',
+  'weather.longRange.maxTemperature': 'Maximum temperature',
+  'weather.longRange.minTemperature': 'Minimum temperature',
+  'weather.longRange.maxTemperatureShort': 'High',
+  'weather.longRange.minTemperatureShort': 'Low',
+  'weather.longRange.trendTitle': 'Temperature trend',
+  'weather.longRange.dailyTitle': 'Daily forecast',
+  'weather.longRange.precipitationProbability': 'Precipitation chance',
+  'weather.longRange.precipitationAmount': 'Amount',
+  'weather.longRange.wind': 'Wind',
+  'weather.longRange.availableDays': '{count} forecast days are available.',
+  'weather.longRange.fewerDays':
+    'The provider returned {count} of {target} requested forecast days.',
+  'weather.longRange.unavailableTitle': 'Long-range forecast unavailable',
+  'weather.longRange.unavailableDescription':
+    'The loaded forecast does not include usable daily data right now.',
+  'weather.longRange.noLocationDescription':
+    'Choose a city in Weather before opening the long-range forecast.',
+  'weather.longRange.loadingTitle': 'Loading long-range forecast',
+  'weather.longRange.loadingDescription':
+    'LifeBoard is loading the selected location forecast without showing placeholder days.',
+  'weather.longRange.retry': 'Retry forecast',
+  'weather.longRange.sourceLength':
+    'Forecast data source returned {count} usable daily entries for this view.',
+  'weather.longRange.trendSummary':
+    '{count} days shown. Highest high {high}; lowest low {low}.',
+  'weather.longRange.daySummary':
+    '{day}, {date}: {condition}. High {high}, low {low}.',
+  'weather.longRange.scrollHint':
+    'Scroll horizontally to compare daily columns and the aligned temperature trend.',
+  'weather.longRange.scrollLabel': 'Scrollable 15-day forecast surface',
+  'weather.longRange.dailyListLabel': 'Long-range daily forecast entries',
   'weather.advice.title': 'Plan your day',
   'weather.advice.description':
     'Practical guidance based on the current conditions and near-term forecast.',

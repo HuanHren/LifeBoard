@@ -83,6 +83,7 @@ export interface DailyForecastItem {
   precipitationSum: number
   precipitationProbabilityMax: number
   windSpeedMax: number
+  windDirectionDominant: number | null
   windGustsMax: number | null
   uvIndexMax: number | null
   sunrise: string

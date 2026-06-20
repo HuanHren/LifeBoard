@@ -16,6 +16,7 @@ import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.
 import WeatherHero from '@/modules/weather/components/WeatherHero.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
+import { COMPACT_DAILY_FORECAST_LENGTH } from '@/modules/weather/constants/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
@@ -41,6 +42,9 @@ const {
 const hasShownWeatherHero = ref(false)
 const heroMotionMode = computed(() =>
   hasShownWeatherHero.value ? 'snapshot' : 'initial',
+)
+const compactDailyForecast = computed(() =>
+  weather.value?.daily.slice(0, COMPACT_DAILY_FORECAST_LENGTH) ?? [],
 )
 
 function openCityManagement() {
@@ -168,7 +172,16 @@ onMounted(() => {
       />
       <PrecipitationTimeline :items="weather.hourly" :units="weather.units" />
       <HourlyForecastStrip :items="weather.hourly" :units="weather.units" />
-      <DailyForecastStrip :items="weather.daily" :units="weather.units" />
+      <div class="space-y-4">
+        <DailyForecastStrip :items="compactDailyForecast" :units="weather.units" />
+        <RouterLink
+          v-if="weather.daily.length > 0"
+          class="inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-accent-text)] transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent-wash)] focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--color-focus)]"
+          :to="{ name: 'weather-15-day' }"
+        >
+          {{ t('weather.longRange.viewAction') }}
+        </RouterLink>
+      </div>
       <WeatherAttribution :provider="weather.provider" />
     </div>
   </div>

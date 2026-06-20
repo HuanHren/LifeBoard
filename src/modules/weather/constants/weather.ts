@@ -9,7 +9,8 @@ export const WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY =
 export const MIN_SEARCH_LENGTH = 2
 export const SEARCH_RESULT_LIMIT = 8
 export const HOURLY_FORECAST_LENGTH = 24
-export const DAILY_FORECAST_LENGTH = 7
+export const COMPACT_DAILY_FORECAST_LENGTH = 7
+export const DAILY_FORECAST_LENGTH = 15
 
 export const WEATHER_ENDPOINTS = {
   geocoding: 'https://geocoding-api.open-meteo.com/v1/search',
@@ -58,6 +59,7 @@ export const DAILY_VARIABLES = [
   'precipitation_sum',
   'precipitation_probability_max',
   'wind_speed_10m_max',
+  'wind_direction_10m_dominant',
   'wind_gusts_10m_max',
   'uv_index_max',
   'sunrise',

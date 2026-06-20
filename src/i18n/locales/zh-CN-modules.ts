@@ -292,6 +292,43 @@ export const zhCNModules = {
   'weather.daily.scrollLabel': '可横向滚动的 7 天天气预报',
   'weather.daily.today': '今天',
   'weather.daily.peakGust': '最大阵风',
+  'weather.longRange.title': '15 日天气预报',
+  'weather.longRange.description':
+    '查看当前成功加载的数据源为此位置返回的更长天级预报。',
+  'weather.longRange.viewAction': '查看未来 15 日',
+  'weather.longRange.backToWeather': '返回天气',
+  'weather.longRange.today': '今天',
+  'weather.longRange.maxTemperature': '最高气温',
+  'weather.longRange.minTemperature': '最低气温',
+  'weather.longRange.maxTemperatureShort': '最高',
+  'weather.longRange.minTemperatureShort': '最低',
+  'weather.longRange.trendTitle': '气温趋势',
+  'weather.longRange.dailyTitle': '每日预报',
+  'weather.longRange.precipitationProbability': '降水概率',
+  'weather.longRange.precipitationAmount': '降水量',
+  'weather.longRange.wind': '风',
+  'weather.longRange.availableDays': '当前可查看 {count} 天预报。',
+  'weather.longRange.fewerDays':
+    '数据源返回了 {count} 天预报，少于请求的 {target} 天。',
+  'weather.longRange.unavailableTitle': '暂时没有长期预报',
+  'weather.longRange.unavailableDescription':
+    '当前加载的预报暂时没有可用的每日数据。',
+  'weather.longRange.noLocationDescription':
+    '请先在天气中选择城市，再查看长期预报。',
+  'weather.longRange.loadingTitle': '正在加载长期预报',
+  'weather.longRange.loadingDescription':
+    'LifeBoard 正在加载所选位置的预报，不会显示占位日期。',
+  'weather.longRange.retry': '重试预报',
+  'weather.longRange.sourceLength':
+    '此视图使用的数据源返回了 {count} 条可用每日预报。',
+  'weather.longRange.trendSummary':
+    '当前显示 {count} 天。最高气温峰值 {high}，最低气温低点 {low}。',
+  'weather.longRange.daySummary':
+    '{day}，{date}：{condition}。最高 {high}，最低 {low}。',
+  'weather.longRange.scrollHint':
+    '横向滚动可比较每日列和对齐的气温趋势。',
+  'weather.longRange.scrollLabel': '可横向滚动的 15 日天气预报区域',
+  'weather.longRange.dailyListLabel': '长期每日天气预报列表',
   'weather.advice.title': '安排今天',
   'weather.advice.description': '根据当前天气和短期预报提供实用建议。',
   'weather.advice.level.clear': '基本适宜',

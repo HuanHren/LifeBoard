@@ -26,6 +26,14 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/weather/15-day',
+    name: 'weather-15-day',
+    component: () => import('@/modules/weather/pages/LongRangeForecastPage.vue'),
+    meta: {
+      titleKey: 'weather.longRange.title',
+    },
+  },
+  {
     path: '/todos',
     name: 'todos',
     component: () => import('@/modules/todos/TodosPage.vue'),

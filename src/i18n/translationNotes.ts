@@ -77,6 +77,18 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Keep the {count} placeholder for minute count. This is generated from provider data only.',
   'weather.precipitation.itemLabel':
     'Hourly precipitation label. Keep {chance} and {amount} placeholders.',
+  'weather.longRange.title':
+    'Route title for the long-range weather page. Do not imply more than the returned provider data.',
+  'weather.longRange.availableDays':
+    'Keep the {count} placeholder. Count is the real number of usable returned days.',
+  'weather.longRange.fewerDays':
+    'Keep {count} and {target}. This must honestly state partial provider data.',
+  'weather.longRange.sourceLength':
+    'Keep {count}. Do not mention inactive providers or provider credentials.',
+  'weather.longRange.trendSummary':
+    'Accessible chart summary. Keep {count}, {high}, and {low}.',
+  'weather.longRange.daySummary':
+    'Accessible daily column summary. Keep {day}, {date}, {condition}, {high}, and {low}. Provider-returned city names are not translated here.',
   'settings.localData.selectedCity':
     'The {city} placeholder is an Open-Meteo city name and must remain verbatim.',
   'weather.favorites.description':

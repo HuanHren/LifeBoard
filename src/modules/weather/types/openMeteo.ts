@@ -96,6 +96,7 @@ export interface OpenMeteoDailyUnits {
   precipitation_sum: string
   precipitation_probability_max: string
   wind_speed_10m_max: string
+  wind_direction_10m_dominant: string
   wind_gusts_10m_max: string
   uv_index_max: string
   sunrise: string
@@ -112,6 +113,7 @@ export interface OpenMeteoDaily {
   precipitation_sum: number[]
   precipitation_probability_max: number[]
   wind_speed_10m_max: number[]
+  wind_direction_10m_dominant: number[]
   wind_gusts_10m_max: number[]
   uv_index_max: number[]
   sunrise: string[]

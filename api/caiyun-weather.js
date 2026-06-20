@@ -1,4 +1,4 @@
-const DAILY_FORECAST_LENGTH = 7
+const DAILY_FORECAST_LENGTH = 15
 const HOURLY_FORECAST_LENGTH = 24
 const CAIYUN_API_ORIGIN = 'https://api.caiyunapp.com'
 
