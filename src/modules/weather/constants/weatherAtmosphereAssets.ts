@@ -1,0 +1,153 @@
+import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
+
+export interface WeatherAtmosphereAssetSource {
+  avif?: string
+  webp?: string
+}
+
+export interface WeatherAtmosphereResponsiveSource {
+  desktop?: WeatherAtmosphereAssetSource
+  mobile?: WeatherAtmosphereAssetSource
+}
+
+export interface WeatherAtmosphereObjectPosition {
+  desktop: string
+  mobile: string
+  depth?: string
+  foreground?: string
+}
+
+export interface WeatherAtmosphereAssetSet {
+  state: WeatherAtmosphere
+  fallbackClass: string
+  base?: WeatherAtmosphereResponsiveSource
+  depth?: WeatherAtmosphereAssetSource
+  foreground?: WeatherAtmosphereAssetSource
+  objectPosition: WeatherAtmosphereObjectPosition
+  shouldDriftDepth?: boolean
+}
+
+export const WEATHER_ATMOSPHERE_ASSETS = {
+  'clear-day': {
+    state: 'clear-day',
+    fallbackClass: 'weather-atmosphere--clear-day',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '58% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  'clear-night': {
+    state: 'clear-night',
+    fallbackClass: 'weather-atmosphere--clear-night',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '54% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  'partly-cloudy-day': {
+    state: 'partly-cloudy-day',
+    fallbackClass: 'weather-atmosphere--partly-cloudy-day',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '56% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  'partly-cloudy-night': {
+    state: 'partly-cloudy-night',
+    fallbackClass: 'weather-atmosphere--partly-cloudy-night',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '56% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  overcast: {
+    state: 'overcast',
+    fallbackClass: 'weather-atmosphere--overcast',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '52% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+  },
+  'rain-day': {
+    state: 'rain-day',
+    fallbackClass: 'weather-atmosphere--rain-day',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '54% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  'rain-night': {
+    state: 'rain-night',
+    fallbackClass: 'weather-atmosphere--rain-night',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '54% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+    shouldDriftDepth: true,
+  },
+  thunderstorm: {
+    state: 'thunderstorm',
+    fallbackClass: 'weather-atmosphere--thunderstorm',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '52% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+  },
+  'fog-haze': {
+    state: 'fog-haze',
+    fallbackClass: 'weather-atmosphere--fog-haze',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '50% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+  },
+  snow: {
+    state: 'snow',
+    fallbackClass: 'weather-atmosphere--snow',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: '52% center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+  },
+  neutral: {
+    state: 'neutral',
+    fallbackClass: 'weather-atmosphere--neutral',
+    objectPosition: {
+      desktop: 'center center',
+      mobile: 'center center',
+      depth: 'center center',
+      foreground: 'center bottom',
+    },
+  },
+} satisfies Record<WeatherAtmosphere, WeatherAtmosphereAssetSet>
+
+export function getWeatherAtmosphereAssets(
+  state: WeatherAtmosphere,
+): WeatherAtmosphereAssetSet {
+  return WEATHER_ATMOSPHERE_ASSETS[state] ?? WEATHER_ATMOSPHERE_ASSETS.neutral
+}

@@ -283,7 +283,8 @@ const screenReaderSummary = computed(() =>
 
 .weather-hero[data-atmosphere='clear-night'],
 .weather-hero[data-atmosphere='partly-cloudy-night'],
-.weather-hero[data-atmosphere='rain'],
+.weather-hero[data-atmosphere='rain-day'],
+.weather-hero[data-atmosphere='rain-night'],
 .weather-hero[data-atmosphere='thunderstorm'] {
   --weather-hero-text: oklch(97% 0.006 95);
   --weather-hero-muted: oklch(88% 0.015 100);

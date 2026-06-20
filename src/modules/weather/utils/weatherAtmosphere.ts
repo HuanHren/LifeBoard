@@ -6,10 +6,11 @@ export type WeatherAtmosphere =
   | 'partly-cloudy-day'
   | 'partly-cloudy-night'
   | 'overcast'
-  | 'fog-haze'
-  | 'rain'
-  | 'snow'
+  | 'rain-day'
+  | 'rain-night'
   | 'thunderstorm'
+  | 'fog-haze'
+  | 'snow'
   | 'neutral'
 
 function isRainCode(code: number) {
@@ -21,6 +22,23 @@ function isRainCode(code: number) {
 
 function isSnowCode(code: number) {
   return code >= 71 && code <= 77 || code === 85 || code === 86
+}
+
+function dayNightState<TDay extends WeatherAtmosphere, TNight extends WeatherAtmosphere>(
+  isDay: boolean | null | undefined,
+  dayState: TDay,
+  nightState: TNight,
+  fallbackState: TDay | 'neutral' = dayState,
+) {
+  if (isDay === true) {
+    return dayState
+  }
+
+  if (isDay === false) {
+    return nightState
+  }
+
+  return fallbackState
 }
 
 export function getWeatherAtmosphere(weather: WeatherSnapshot): WeatherAtmosphere {
@@ -35,7 +53,7 @@ export function getWeatherAtmosphere(weather: WeatherSnapshot): WeatherAtmospher
   }
 
   if (isRainCode(code)) {
-    return 'rain'
+    return dayNightState(weather.current.isDay, 'rain-day', 'rain-night')
   }
 
   if (code === 45 || code === 48) {
@@ -47,11 +65,16 @@ export function getWeatherAtmosphere(weather: WeatherSnapshot): WeatherAtmospher
   }
 
   if (code === 2) {
-    return weather.current.isDay ? 'partly-cloudy-day' : 'partly-cloudy-night'
+    return dayNightState(
+      weather.current.isDay,
+      'partly-cloudy-day',
+      'partly-cloudy-night',
+      'neutral',
+    )
   }
 
   if (code === 0 || code === 1) {
-    return weather.current.isDay ? 'clear-day' : 'clear-night'
+    return dayNightState(weather.current.isDay, 'clear-day', 'clear-night', 'neutral')
   }
 
   return 'neutral'
