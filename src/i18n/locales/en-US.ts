@@ -40,6 +40,9 @@ export const enUS = {
   'settings.section.locationServices.title': 'Weather location services',
   'settings.section.locationServices.description':
     'Manage optional AMap geocoding and current-location behavior for Weather.',
+  'settings.section.dataSources.title': 'Weather data sources',
+  'settings.section.dataSources.description':
+    'Review which services LifeBoard uses for weather, location lookup, air quality, and attribution.',
   'settings.section.localData.title': 'Local data',
   'settings.section.localData.description':
     'A direct view of what LifeBoard currently keeps in this browser.',
@@ -127,6 +130,106 @@ export const enUS = {
   'settings.locationServices.error.storage':
     'Weather location service preferences could not be saved in this browser.',
   'settings.locationServices.error.emptyAmapKey': 'Enter an AMap key before saving.',
+  'settings.dataSources.pageTitle': 'Weather data sources',
+  'settings.dataSources.pageDescription':
+    'See the weather services LifeBoard currently uses, what each one provides, and which optional credentials are configured.',
+  'settings.dataSources.backToSettings': 'Back to Settings',
+  'settings.dataSources.entryTitle': 'Weather source details',
+  'settings.dataSources.entryDescription':
+    'Open a source and status view for forecast providers, air quality, location lookup, alert capability, and attribution.',
+  'settings.dataSources.entryAction': 'View data sources',
+  'settings.dataSources.weatherAttributionPrefix': ' Source details:',
+  'settings.dataSources.weatherAttributionLink': 'Data sources',
+  'settings.dataSources.privacyTitle': 'Local-first source status',
+  'settings.dataSources.privacyDescription':
+    'This page reads the current Settings and Weather state only. It does not ping providers, store credentials, expose tokens or keys, or add backup and export fields.',
+  'settings.dataSources.section.active': 'Active configuration',
+  'settings.dataSources.section.activeDescription':
+    'Preferred provider and loaded provider are shown separately because fallback can happen.',
+  'settings.dataSources.section.forecast': 'Weather and forecast',
+  'settings.dataSources.section.forecastDescription':
+    'Only implemented forecast sources are listed here. Returned daily length comes from the currently loaded snapshot.',
+  'settings.dataSources.section.airQuality': 'Air quality',
+  'settings.dataSources.section.airQualityDescription':
+    'LifeBoard uses Open-Meteo as the Air Quality API surface and shows CAMS as the underlying model provider.',
+  'settings.dataSources.section.location': 'Location services',
+  'settings.dataSources.section.locationDescription':
+    'AMap is used only for geocoding, reverse geocoding, and current-location display-name resolution when configured.',
+  'settings.dataSources.section.alerts': 'Alert availability',
+  'settings.dataSources.section.alertsDescription':
+    'Alert status is shown only from current in-memory state. This page does not verify alert entitlement.',
+  'settings.dataSources.section.licences': 'Licences and attribution',
+  'settings.dataSources.summary.preferredForecastProvider': 'Preferred forecast provider',
+  'settings.dataSources.summary.loadedForecastProvider': 'Loaded forecast provider',
+  'settings.dataSources.summary.selectedLocation': 'Selected weather location',
+  'settings.dataSources.summary.caiyunConfiguration': 'Caiyun configuration',
+  'settings.dataSources.summary.amapConfiguration': 'AMap configuration',
+  'settings.dataSources.summary.airQualitySource': 'Air-quality source',
+  'settings.dataSources.summary.alertCapability': 'Alert capability',
+  'settings.dataSources.summary.longRangeLength': 'Long-range forecast length',
+  'settings.dataSources.status.active': 'Active',
+  'settings.dataSources.status.available': 'Available',
+  'settings.dataSources.status.configured': 'Configured',
+  'settings.dataSources.status.notConfigured': 'Not configured',
+  'settings.dataSources.status.currentlyLoaded': 'Currently loaded',
+  'settings.dataSources.status.fallbackActive': 'Fallback active',
+  'settings.dataSources.status.notChecked': 'Not checked',
+  'settings.dataSources.status.permissionUnavailable': 'Permission unavailable',
+  'settings.dataSources.status.noActiveAlert': 'No active alert',
+  'settings.dataSources.status.dataUnavailable': 'Data unavailable',
+  'settings.dataSources.status.caiyunNotConfigured': 'Caiyun not configured',
+  'settings.dataSources.status.currentResponseDays':
+    'Current response returned {count} days',
+  'settings.dataSources.status.observedAt': 'Observed {time} {timezone}',
+  'settings.dataSources.domain.forecast': 'Forecast',
+  'settings.dataSources.domain.current': 'Current weather',
+  'settings.dataSources.domain.precipitationNowcast': 'Short-term precipitation',
+  'settings.dataSources.domain.airQuality': 'Air-quality API surface',
+  'settings.dataSources.domain.alerts': 'Weather alerts',
+  'settings.dataSources.domain.longRange': 'Long-range forecast',
+  'settings.dataSources.domain.temperatureNormal': 'Temperature normals',
+  'settings.dataSources.domain.location': 'Location lookup',
+  'settings.dataSources.detail.role': 'Role',
+  'settings.dataSources.detail.domains': 'Provided data',
+  'settings.dataSources.detail.forecastStatus': 'Forecast status',
+  'settings.dataSources.detail.longRange': 'Long-range data',
+  'settings.dataSources.detail.credential': 'Credential state',
+  'settings.dataSources.detail.apiSurface': 'API surface',
+  'settings.dataSources.detail.underlyingModel': 'Underlying model provider',
+  'settings.dataSources.detail.status': 'Status',
+  'settings.dataSources.detail.currentScale': 'Current scale',
+  'settings.dataSources.detail.availableScales': 'Available scales',
+  'settings.dataSources.detail.observedAt': 'Last observation',
+  'settings.dataSources.detail.source': 'Source',
+  'settings.dataSources.detail.note': 'Note',
+  'settings.dataSources.openMeteo.description':
+    'No token is required. LifeBoard uses Open-Meteo for fallback or active forecasts, city search fallback, long-range daily entries, and the air-quality API surface.',
+  'settings.dataSources.openMeteo.role':
+    'Forecast fallback or active provider, city-search fallback, long-range daily forecast, and air-quality API surface.',
+  'settings.dataSources.caiyun.description':
+    'Used for forecasts when selected and configured. The current loaded response may return fewer long-range days than Open-Meteo.',
+  'settings.dataSources.caiyun.role':
+    'Forecast provider when selected and configured, including current weather, hourly and daily forecasts, and short-term precipitation.',
+  'settings.dataSources.airQuality.description':
+    'AQI values are requested through Open-Meteo Air Quality. CAMS is shown as the underlying model provider; LifeBoard does not call CAMS directly.',
+  'settings.dataSources.amap.description':
+    'Used only for city-name geocoding, reverse geocoding, and current-location display-name resolution when an AMap key is saved.',
+  'settings.dataSources.amap.role':
+    'Location lookup only. AMap is not a forecast, AQI, or alert provider in LifeBoard.',
+  'settings.dataSources.alert.title': 'Caiyun Weather alerts',
+  'settings.dataSources.alert.description':
+    'Caiyun alert availability depends on the saved token and the current provider response.',
+  'settings.dataSources.alert.note':
+    'No alert entitlement result is stored in the current Weather store, so this page does not claim alert availability.',
+  'settings.dataSources.officialSource': 'Official source',
+  'settings.dataSources.openMeteoAirQualitySource': 'Open-Meteo Air Quality',
+  'settings.dataSources.camsOfficialSource': 'CAMS official source',
+  'settings.dataSources.licenceDescription':
+    'Open-Meteo attribution includes CC BY 4.0 where required. Provider names and licence labels are shown as source names, not translated.',
+  'settings.dataSources.configureService': 'Configure service',
+  'settings.dataSources.viewLongRange': 'View long-range forecast',
+  'settings.dataSources.externalLabel': 'Open {provider} official source in a new tab',
+  'settings.dataSources.licenceLinkLabel': 'Open {licence} licence in a new tab',
   'settings.common.weather': 'Weather',
   'settings.common.todos': 'Todos',
   'settings.common.bookmarks': 'Bookmarks',

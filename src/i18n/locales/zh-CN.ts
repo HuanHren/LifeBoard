@@ -39,6 +39,9 @@ export const zhCN = {
   'settings.section.locationServices.title': '天气位置服务',
   'settings.section.locationServices.description':
     '管理可选的 AMap 地理编码和首页当前位置天气行为。',
+  'settings.section.dataSources.title': '天气数据来源',
+  'settings.section.dataSources.description':
+    '查看 LifeBoard 用于天气、位置查询、空气质量和归属说明的服务。',
   'settings.section.localData.title': '本地数据',
   'settings.section.localData.description':
     '直接查看 LifeBoard 当前保存在此浏览器中的数据。',
@@ -118,6 +121,105 @@ export const zhCN = {
   'settings.locationServices.error.storage':
     '无法在此浏览器中保存天气位置服务偏好。',
   'settings.locationServices.error.emptyAmapKey': '请先输入 AMap Key 再保存。',
+  'settings.dataSources.pageTitle': '天气数据来源',
+  'settings.dataSources.pageDescription':
+    '查看 LifeBoard 当前使用哪些天气服务、各自提供什么数据，以及哪些可选凭据已配置。',
+  'settings.dataSources.backToSettings': '返回设置',
+  'settings.dataSources.entryTitle': '天气来源详情',
+  'settings.dataSources.entryDescription':
+    '打开来源与状态视图，查看预报提供方、空气质量、位置查询、预警能力和归属说明。',
+  'settings.dataSources.entryAction': '查看数据来源',
+  'settings.dataSources.weatherAttributionPrefix': ' 来源详情：',
+  'settings.dataSources.weatherAttributionLink': '数据来源',
+  'settings.dataSources.privacyTitle': '本地优先的来源状态',
+  'settings.dataSources.privacyDescription':
+    '此页面只读取当前设置和天气状态。它不会主动检测服务、保存凭据、显示 Token 或 Key，也不会新增备份和导出字段。',
+  'settings.dataSources.section.active': '当前配置',
+  'settings.dataSources.section.activeDescription':
+    '偏好提供方和已加载提供方会分开显示，因为可能发生备用切换。',
+  'settings.dataSources.section.forecast': '天气与预报',
+  'settings.dataSources.section.forecastDescription':
+    '这里仅列出已经实现的预报来源。每日条目数量来自当前已加载的快照。',
+  'settings.dataSources.section.airQuality': '空气质量',
+  'settings.dataSources.section.airQualityDescription':
+    'LifeBoard 使用 Open-Meteo 作为空气质量 API 入口，并将 CAMS 显示为底层模型提供方。',
+  'settings.dataSources.section.location': '位置服务',
+  'settings.dataSources.section.locationDescription':
+    '配置后，AMap 只用于地理编码、逆地理编码和当前位置显示名称解析。',
+  'settings.dataSources.section.alerts': '预警可用性',
+  'settings.dataSources.section.alertsDescription':
+    '预警状态只来自当前内存状态。此页面不会验证预警权限。',
+  'settings.dataSources.section.licences': '许可与归属',
+  'settings.dataSources.summary.preferredForecastProvider': '偏好预报提供方',
+  'settings.dataSources.summary.loadedForecastProvider': '已加载预报提供方',
+  'settings.dataSources.summary.selectedLocation': '已选天气位置',
+  'settings.dataSources.summary.caiyunConfiguration': 'Caiyun 配置',
+  'settings.dataSources.summary.amapConfiguration': 'AMap 配置',
+  'settings.dataSources.summary.airQualitySource': '空气质量来源',
+  'settings.dataSources.summary.alertCapability': '预警能力',
+  'settings.dataSources.summary.longRangeLength': '长期预报长度',
+  'settings.dataSources.status.active': '已启用',
+  'settings.dataSources.status.available': '可用',
+  'settings.dataSources.status.configured': '已配置',
+  'settings.dataSources.status.notConfigured': '未配置',
+  'settings.dataSources.status.currentlyLoaded': '当前已加载',
+  'settings.dataSources.status.fallbackActive': '正在使用备用来源',
+  'settings.dataSources.status.notChecked': '未检查',
+  'settings.dataSources.status.permissionUnavailable': '权限不可用',
+  'settings.dataSources.status.noActiveAlert': '无活动预警',
+  'settings.dataSources.status.dataUnavailable': '数据不可用',
+  'settings.dataSources.status.caiyunNotConfigured': 'Caiyun 未配置',
+  'settings.dataSources.status.currentResponseDays': '当前响应返回 {count} 天',
+  'settings.dataSources.status.observedAt': '观测于 {time} {timezone}',
+  'settings.dataSources.domain.forecast': '预报',
+  'settings.dataSources.domain.current': '当前天气',
+  'settings.dataSources.domain.precipitationNowcast': '短时降水',
+  'settings.dataSources.domain.airQuality': '空气质量 API 入口',
+  'settings.dataSources.domain.alerts': '天气预警',
+  'settings.dataSources.domain.longRange': '长期预报',
+  'settings.dataSources.domain.temperatureNormal': '气温常年值',
+  'settings.dataSources.domain.location': '位置查询',
+  'settings.dataSources.detail.role': '作用',
+  'settings.dataSources.detail.domains': '提供的数据',
+  'settings.dataSources.detail.forecastStatus': '预报状态',
+  'settings.dataSources.detail.longRange': '长期预报数据',
+  'settings.dataSources.detail.credential': '凭据状态',
+  'settings.dataSources.detail.apiSurface': 'API 入口',
+  'settings.dataSources.detail.underlyingModel': '底层模型提供方',
+  'settings.dataSources.detail.status': '状态',
+  'settings.dataSources.detail.currentScale': '当前量表',
+  'settings.dataSources.detail.availableScales': '可用量表',
+  'settings.dataSources.detail.observedAt': '最近观测',
+  'settings.dataSources.detail.source': '来源',
+  'settings.dataSources.detail.note': '说明',
+  'settings.dataSources.openMeteo.description':
+    '无需 Token。LifeBoard 使用 Open-Meteo 作为备用或当前预报来源、城市搜索备用来源、长期每日预报来源和空气质量 API 入口。',
+  'settings.dataSources.openMeteo.role':
+    '备用或当前预报提供方、城市搜索备用来源、长期每日预报和空气质量 API 入口。',
+  'settings.dataSources.caiyun.description':
+    '选择并配置后用于天气预报。当前已加载响应返回的长期预报天数可能少于 Open-Meteo。',
+  'settings.dataSources.caiyun.role':
+    '选择并配置后的预报提供方，包括当前天气、逐小时预报、每日预报和短时降水。',
+  'settings.dataSources.airQuality.description':
+    'AQI 数据通过 Open-Meteo Air Quality 请求。CAMS 显示为底层模型提供方；LifeBoard 不会直接调用 CAMS。',
+  'settings.dataSources.amap.description':
+    '保存 AMap Key 后，仅用于城市名称地理编码、逆地理编码和当前位置显示名称解析。',
+  'settings.dataSources.amap.role':
+    '仅用于位置查询。AMap 在 LifeBoard 中不是天气预报、AQI 或预警提供方。',
+  'settings.dataSources.alert.title': 'Caiyun Weather 预警',
+  'settings.dataSources.alert.description':
+    'Caiyun 预警可用性取决于已保存的 Token 和当前提供方响应。',
+  'settings.dataSources.alert.note':
+    '当前 Weather store 中未保存预警权限结果，因此此页面不会声称预警可用。',
+  'settings.dataSources.officialSource': '官方来源',
+  'settings.dataSources.openMeteoAirQualitySource': 'Open-Meteo Air Quality',
+  'settings.dataSources.camsOfficialSource': 'CAMS 官方来源',
+  'settings.dataSources.licenceDescription':
+    '需要时，Open-Meteo 归属说明包含 CC BY 4.0。提供方名称和许可名称作为来源名称显示，不翻译。',
+  'settings.dataSources.configureService': '配置服务',
+  'settings.dataSources.viewLongRange': '查看长期预报',
+  'settings.dataSources.externalLabel': '在新标签页打开 {provider} 官方来源',
+  'settings.dataSources.licenceLinkLabel': '在新标签页打开 {licence} 许可',
   'settings.common.weather': '天气',
   'settings.common.todos': '待办',
   'settings.common.bookmarks': '书签',

@@ -10,7 +10,7 @@ export const WEATHER_SOURCE_METADATA = {
   openMeteo: {
     id: 'open-meteo',
     displayName: 'Open-Meteo',
-    domains: ['forecast', 'current', 'location', 'air-quality'],
+    domains: ['forecast', 'current', 'location', 'air-quality', 'long-range'],
     officialUrl: 'https://open-meteo.com/',
     licenceLabel: 'CC BY 4.0',
     licenceUrl: 'https://creativecommons.org/licenses/by/4.0/',
@@ -19,7 +19,7 @@ export const WEATHER_SOURCE_METADATA = {
   caiyun: {
     id: 'caiyun',
     displayName: 'Caiyun Weather',
-    domains: ['forecast', 'current', 'precipitation-nowcast'],
+    domains: ['forecast', 'current', 'precipitation-nowcast', 'long-range'],
     officialUrl: 'https://www.caiyunapp.com/',
     requiresUserCredential: true,
   },

@@ -27,6 +27,28 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Weather page status for active Caiyun provider. Keep city search boundary clear.',
   'settings.locationServices.privacy':
     'Privacy copy for AMap key handling. Must state same-origin route usage and export exclusion.',
+  'settings.dataSources.pageDescription':
+    'Weather source status page. Do not imply provider pings, cloud monitoring, or new API requests.',
+  'settings.dataSources.privacyDescription':
+    'Must preserve local-first boundary. Do not imply credentials are displayed or exported.',
+  'settings.dataSources.summary.selectedLocation':
+    'The location value may be provider-returned or user-selected and must remain verbatim.',
+  'settings.dataSources.status.currentResponseDays':
+    'Keep {count}. Count is derived only from the currently loaded normalized forecast snapshot.',
+  'settings.dataSources.openMeteo.description':
+    'Keep Open-Meteo untranslated and do not imply credentials are required.',
+  'settings.dataSources.caiyun.description':
+    'Keep Caiyun Weather untranslated. Do not claim a permanent provider day limit.',
+  'settings.dataSources.airQuality.description':
+    'Do not call this Chinese national AQI. CAMS is underlying model only, not a direct LifeBoard API call.',
+  'settings.dataSources.amap.role':
+    'AMap is location lookup only. Do not describe it as forecast, AQI, or alert provider.',
+  'settings.dataSources.alert.note':
+    'Do not claim alerts are verified unless an in-memory capability result exists.',
+  'settings.dataSources.externalLabel':
+    'Accessible external link label. Keep {provider}; provider names are inserted and not translated.',
+  'settings.dataSources.licenceLinkLabel':
+    'Accessible licence link label. Keep {licence}; licence labels are inserted and not translated.',
   'home.weather.useCurrentLocation':
     'Home action label for one-time browser geolocation. Do not imply background tracking.',
   'weather.search.amapMissing':

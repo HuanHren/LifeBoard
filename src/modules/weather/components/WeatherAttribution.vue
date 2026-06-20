@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useI18n } from '@/i18n/useI18n'
 import { getForecastSourceForProvider } from '@/modules/weather/constants/weatherSources'
 import type { WeatherDataProvider } from '@/modules/weather/types/weather'
@@ -54,5 +55,12 @@ const licenceLinkLabel = computed(() =>
         {{ source.licenceLabel }}
       </a>
     </template>
+    {{ t('settings.dataSources.weatherAttributionPrefix') }}
+    <RouterLink
+      class="font-medium text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
+      :to="{ name: 'settings-data-sources' }"
+    >
+      {{ t('settings.dataSources.weatherAttributionLink') }}
+    </RouterLink>
   </p>
 </template>

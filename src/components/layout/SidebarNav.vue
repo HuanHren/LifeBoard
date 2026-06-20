@@ -11,6 +11,10 @@ function isNavigationItemActive(item: NavigationItem) {
     return route.path === '/weather' || route.path.startsWith('/weather/')
   }
 
+  if (typeof item.to === 'object' && 'name' in item.to && item.to.name === 'settings') {
+    return route.path === '/settings' || route.path.startsWith('/settings/')
+  }
+
   return typeof item.to === 'object' && 'name' in item.to
     ? route.name === item.to.name
     : false

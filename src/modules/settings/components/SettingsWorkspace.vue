@@ -455,6 +455,28 @@ onMounted(() => {
     </BaseSection>
 
     <BaseSection
+      :title="t('settings.section.dataSources.title')"
+      :description="t('settings.section.dataSources.description')"
+    >
+      <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
+        <div class="max-w-2xl">
+          <h3 class="text-base font-semibold text-balance text-[var(--color-text-primary)]">
+            {{ t('settings.dataSources.entryTitle') }}
+          </h3>
+          <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+            {{ t('settings.dataSources.entryDescription') }}
+          </p>
+        </div>
+        <RouterLink
+          class="interactive-surface mt-4 inline-flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
+          :to="{ name: 'settings-data-sources' }"
+        >
+          {{ t('settings.dataSources.entryAction') }}
+        </RouterLink>
+      </div>
+    </BaseSection>
+
+    <BaseSection
       :title="t('settings.section.localData.title')"
       :description="t('settings.section.localData.description')"
     >

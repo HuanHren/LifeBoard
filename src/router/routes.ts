@@ -66,6 +66,14 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/settings/data-sources',
+    name: 'settings-data-sources',
+    component: () => import('@/modules/settings/pages/DataSourcesPage.vue'),
+    meta: {
+      titleKey: 'settings.dataSources.pageTitle',
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/modules/not-found/NotFoundPage.vue'),
