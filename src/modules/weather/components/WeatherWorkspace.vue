@@ -75,7 +75,7 @@ onMounted(() => {
     </div>
 
     <section
-      v-if="!selectedLocation && forecastStatus === 'idle'"
+      v-if="!weather && !selectedLocation && forecastStatus === 'idle'"
       :class="weather ? 'order-2' : 'order-3'"
       aria-labelledby="weather-setup-title"
     >
@@ -91,7 +91,7 @@ onMounted(() => {
     </section>
 
     <section
-      v-else-if="selectedLocation && provider === 'caiyun' && !hasCaiyunToken && forecastStatus === 'idle'"
+      v-else-if="!weather && selectedLocation && provider === 'caiyun' && !hasCaiyunToken && forecastStatus === 'idle'"
       :class="weather ? 'order-2' : 'order-3'"
       aria-labelledby="weather-provider-setup-title"
     >
@@ -105,7 +105,7 @@ onMounted(() => {
     </section>
 
     <section
-      v-else-if="forecastStatus === 'loading'"
+      v-else-if="!weather && forecastStatus === 'loading'"
       :class="weather ? 'order-2' : 'order-3'"
       aria-labelledby="weather-loading-title"
     >
@@ -116,7 +116,7 @@ onMounted(() => {
     </section>
 
     <section
-      v-else-if="forecastStatus === 'error'"
+      v-else-if="!weather && forecastStatus === 'error'"
       :class="weather ? 'order-2' : 'order-3'"
       aria-labelledby="weather-error-title"
     >

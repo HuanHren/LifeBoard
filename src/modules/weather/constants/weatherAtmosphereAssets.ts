@@ -8,6 +8,16 @@ export interface WeatherAtmosphereAssetSource {
   png?: string
 }
 
+export type WeatherAtmosphereMotionPreset =
+  | 'static'
+  | 'clear-glow'
+  | 'cloud-drift'
+  | 'overcast-drift'
+  | 'rain'
+  | 'snow'
+  | 'fog'
+  | 'storm-shadow'
+
 export interface WeatherAtmosphereResponsiveSource {
   desktop?: WeatherAtmosphereAssetSource
   mobile?: WeatherAtmosphereAssetSource
@@ -23,6 +33,7 @@ export interface WeatherAtmosphereObjectPosition {
 export interface WeatherAtmosphereAssetSet {
   state: WeatherAtmosphere
   fallbackClass: string
+  motionPreset?: WeatherAtmosphereMotionPreset
   base?: WeatherAtmosphereResponsiveSource
   depth?: WeatherAtmosphereAssetSource
   foreground?: WeatherAtmosphereAssetSource
@@ -34,6 +45,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'clear-day': {
     state: 'clear-day',
     fallbackClass: 'weather-atmosphere--clear-day',
+    motionPreset: 'clear-glow',
     base: {
       desktop: {
         png: clearDayBaseDesktopPng,
@@ -52,6 +64,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'clear-night': {
     state: 'clear-night',
     fallbackClass: 'weather-atmosphere--clear-night',
+    motionPreset: 'static',
     objectPosition: {
       desktop: 'center center',
       mobile: '54% center',
@@ -63,6 +76,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'partly-cloudy-day': {
     state: 'partly-cloudy-day',
     fallbackClass: 'weather-atmosphere--partly-cloudy-day',
+    motionPreset: 'cloud-drift',
     objectPosition: {
       desktop: 'center center',
       mobile: '56% center',
@@ -74,6 +88,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'partly-cloudy-night': {
     state: 'partly-cloudy-night',
     fallbackClass: 'weather-atmosphere--partly-cloudy-night',
+    motionPreset: 'cloud-drift',
     objectPosition: {
       desktop: 'center center',
       mobile: '56% center',
@@ -85,6 +100,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   overcast: {
     state: 'overcast',
     fallbackClass: 'weather-atmosphere--overcast',
+    motionPreset: 'overcast-drift',
     objectPosition: {
       desktop: 'center center',
       mobile: '52% center',
@@ -95,6 +111,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'rain-day': {
     state: 'rain-day',
     fallbackClass: 'weather-atmosphere--rain-day',
+    motionPreset: 'rain',
     objectPosition: {
       desktop: 'center center',
       mobile: '54% center',
@@ -106,6 +123,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'rain-night': {
     state: 'rain-night',
     fallbackClass: 'weather-atmosphere--rain-night',
+    motionPreset: 'rain',
     objectPosition: {
       desktop: 'center center',
       mobile: '54% center',
@@ -117,6 +135,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   thunderstorm: {
     state: 'thunderstorm',
     fallbackClass: 'weather-atmosphere--thunderstorm',
+    motionPreset: 'storm-shadow',
     objectPosition: {
       desktop: 'center center',
       mobile: '52% center',
@@ -127,6 +146,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   'fog-haze': {
     state: 'fog-haze',
     fallbackClass: 'weather-atmosphere--fog-haze',
+    motionPreset: 'fog',
     objectPosition: {
       desktop: 'center center',
       mobile: '50% center',
@@ -137,6 +157,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   snow: {
     state: 'snow',
     fallbackClass: 'weather-atmosphere--snow',
+    motionPreset: 'snow',
     objectPosition: {
       desktop: 'center center',
       mobile: '52% center',
@@ -147,6 +168,7 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
   neutral: {
     state: 'neutral',
     fallbackClass: 'weather-atmosphere--neutral',
+    motionPreset: 'static',
     objectPosition: {
       desktop: 'center center',
       mobile: 'center center',

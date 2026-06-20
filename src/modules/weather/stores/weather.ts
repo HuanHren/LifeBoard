@@ -315,7 +315,6 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastController = new AbortController()
     forecastStatus.value = 'loading'
     forecastError.value = null
-    weather.value = null
 
     try {
       const snapshot = await fetchWeatherForecastForProvider({

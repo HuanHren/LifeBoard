@@ -137,6 +137,26 @@ Do not use:
 
 Depth drift is optional and disabled by `prefers-reduced-motion: reduce`. Do not add asset motion that cannot be disabled by the existing media query.
 
+## Motion Presets
+
+Weather atmosphere motion is scoped to `WeatherAtmosphere.vue` and is resolved from the normalized atmosphere state, not from provider-specific condition codes. The base artwork must remain static. CSS fallback motion uses transform and opacity only, with decorative layers hidden in forced-colors mode and stopped under `prefers-reduced-motion: reduce`.
+
+| Atmosphere | Motion preset | Active animated layers | Behavior |
+| --- | --- | ---: | --- |
+| `clear-day` | `clear-glow` | 1 | Subtle detail glow movement; base artwork stays static. |
+| `clear-night` | `static` | 0 | Static until dedicated artwork or a real decorative layer is approved. |
+| `partly-cloudy-day` | `cloud-drift` | 0 without depth asset, 1 with depth asset | Only a real depth asset may drift. |
+| `partly-cloudy-night` | `cloud-drift` | 0 without depth asset, 1 with depth asset | Only a real depth asset may drift. |
+| `overcast` | `overcast-drift` | 1 | Slow CSS haze shift. |
+| `rain-day` | `rain` | 2 | Low-opacity CSS rain texture layers. |
+| `rain-night` | `rain` | 2 | Lower-contrast CSS rain texture layers. |
+| `thunderstorm` | `storm-shadow` | 1 | Slow shadow-density movement with no lightning flash. |
+| `fog-haze` | `fog` | 1 | Slow low-distance haze movement. |
+| `snow` | `snow` | 2 | Sparse low-opacity CSS snow texture layers. |
+| `neutral` | `static` | 0 | No decorative motion. |
+
+Do not add JavaScript animation controllers, canvas, WebGL, video, remote artwork, or per-particle DOM nodes for atmosphere motion.
+
 ## Verification Checklist
 
 - Weather hero renders with no assets.

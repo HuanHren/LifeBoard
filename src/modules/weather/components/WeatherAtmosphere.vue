@@ -47,6 +47,7 @@ const hasAnyAsset = computed(
 const canDriftDepth = computed(
   () => Boolean(assetSet.value.shouldDriftDepth) && hasDepthAsset.value,
 )
+const motionPreset = computed(() => assetSet.value.motionPreset ?? 'static')
 const atmosphereStyle = computed(() => ({
   '--weather-atmosphere-object-position-desktop':
     assetSet.value.objectPosition.desktop,
@@ -78,6 +79,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
         'weather-atmosphere--has-assets': hasAnyAsset,
         'weather-atmosphere--drift-depth': canDriftDepth,
       },
+      `weather-atmosphere--motion-${motionPreset}`,
     ]"
     :data-atmosphere="atmosphere"
     :style="atmosphereStyle"
@@ -217,6 +219,26 @@ function markLayerFailed(layer: AtmosphereLayer) {
     color-mix(in oklch, var(--weather-sky-start) 74%, transparent),
     transparent 58%
   );
+  --weather-rain-layer: color-mix(
+    in oklch,
+    var(--color-text-inverse) 30%,
+    transparent
+  );
+  --weather-rain-layer-soft: color-mix(
+    in oklch,
+    var(--color-text-inverse) 18%,
+    transparent
+  );
+  --weather-snow-layer: color-mix(
+    in oklch,
+    var(--color-text-inverse) 58%,
+    transparent
+  );
+  --weather-snow-layer-soft: color-mix(
+    in oklch,
+    var(--color-text-inverse) 34%,
+    transparent
+  );
 
   position: absolute;
   inset: 0;
@@ -266,6 +288,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
 }
 
 .weather-atmosphere__asset--depth {
+  inset: -1.5%;
   z-index: 3;
 }
 
@@ -310,15 +333,31 @@ function markLayerFailed(layer: AtmosphereLayer) {
 }
 
 .weather-atmosphere__precipitation {
-  inset: -18%;
+  inset: -22%;
   z-index: 6;
   background:
     repeating-linear-gradient(
       var(--weather-precipitation-angle),
       transparent 0 0.72rem,
-      color-mix(in oklch, var(--color-text-inverse) 38%, transparent) 0.72rem 0.78rem
+      var(--weather-rain-layer) 0.72rem 0.78rem
     );
   opacity: var(--weather-precipitation-opacity);
+  transform: translate3d(0, 0, 0);
+}
+
+.weather-atmosphere__precipitation::before {
+  position: absolute;
+  inset: 0;
+  display: block;
+  content: "";
+  background:
+    repeating-linear-gradient(
+      calc(var(--weather-precipitation-angle) + 4deg),
+      transparent 0 1.08rem,
+      var(--weather-rain-layer-soft) 1.08rem 1.12rem
+    );
+  opacity: 0;
+  pointer-events: none;
   transform: translate3d(0, 0, 0);
 }
 
@@ -329,7 +368,61 @@ function markLayerFailed(layer: AtmosphereLayer) {
 }
 
 .weather-atmosphere--drift-depth .weather-atmosphere__image--depth {
-  animation: weather-atmosphere-depth-drift 16s var(--motion-ease) infinite alternate;
+  animation: weather-atmosphere-depth-drift 42s linear infinite;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-clear-glow .weather-atmosphere__detail {
+  animation: weather-atmosphere-soft-glow 18s var(--motion-ease) infinite alternate;
+  will-change: opacity, transform;
+}
+
+.weather-atmosphere--motion-overcast-drift .weather-atmosphere__wash {
+  animation: weather-atmosphere-haze-drift 42s linear infinite;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-fog .weather-atmosphere__detail {
+  animation: weather-atmosphere-fog-drift 46s linear infinite;
+  will-change: opacity, transform;
+}
+
+.weather-atmosphere--motion-storm-shadow .weather-atmosphere__horizon {
+  animation: weather-atmosphere-storm-drift 28s var(--motion-ease) infinite alternate;
+  will-change: opacity, transform;
+}
+
+.weather-atmosphere--motion-rain .weather-atmosphere__precipitation {
+  animation: weather-atmosphere-rain-fall 1.28s linear infinite;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-rain .weather-atmosphere__precipitation::before {
+  animation: weather-atmosphere-rain-fall-soft 1.9s linear infinite;
+  opacity: 0.62;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-snow .weather-atmosphere__precipitation {
+  background:
+    radial-gradient(circle at 12% 20%, var(--weather-snow-layer) 0 0.08rem, transparent 0.1rem),
+    radial-gradient(circle at 42% 64%, var(--weather-snow-layer-soft) 0 0.06rem, transparent 0.08rem),
+    radial-gradient(circle at 74% 34%, var(--weather-snow-layer) 0 0.07rem, transparent 0.09rem),
+    radial-gradient(circle at 88% 78%, var(--weather-snow-layer-soft) 0 0.06rem, transparent 0.08rem);
+  background-size: 11rem 13rem;
+  animation: weather-atmosphere-snow-fall 14s linear infinite;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-snow .weather-atmosphere__precipitation::before {
+  background:
+    radial-gradient(circle at 22% 72%, var(--weather-snow-layer-soft) 0 0.06rem, transparent 0.08rem),
+    radial-gradient(circle at 56% 18%, var(--weather-snow-layer) 0 0.07rem, transparent 0.09rem),
+    radial-gradient(circle at 83% 52%, var(--weather-snow-layer-soft) 0 0.06rem, transparent 0.08rem);
+  background-size: 14rem 15rem;
+  opacity: 0.46;
+  animation: weather-atmosphere-snow-fall-soft 18s linear infinite;
+  will-change: transform;
 }
 
 .weather-atmosphere--clear-day {
@@ -338,6 +431,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-horizon: oklch(78% 0.052 132 / 42%);
   --weather-detail: oklch(88% 0.054 98 / 48%);
   --weather-detail-size: 12rem;
+  --weather-detail-opacity: 0.48;
 }
 
 .weather-atmosphere--clear-night {
@@ -397,6 +491,8 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-detail: oklch(90% 0.014 180 / 24%);
   --weather-detail-size: 17rem;
   --weather-precipitation-opacity: 0.16;
+  --weather-rain-layer: oklch(96% 0.006 180 / 22%);
+  --weather-rain-layer-soft: oklch(96% 0.006 180 / 13%);
 }
 
 .weather-atmosphere--rain-night {
@@ -406,6 +502,8 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-detail: oklch(86% 0.016 166 / 16%);
   --weather-detail-size: 17rem;
   --weather-precipitation-opacity: 0.13;
+  --weather-rain-layer: oklch(96% 0.006 180 / 18%);
+  --weather-rain-layer-soft: oklch(96% 0.006 180 / 10%);
   --weather-atmosphere-contrast: linear-gradient(
     90deg,
     oklch(22% 0.02 232 / 52%),
@@ -419,8 +517,10 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-horizon: oklch(72% 0.028 143 / 32%);
   --weather-detail: oklch(99% 0.004 106 / 74%);
   --weather-detail-size: 19rem;
-  --weather-precipitation-opacity: 0.12;
+  --weather-precipitation-opacity: 0.18;
   --weather-precipitation-angle: 180deg;
+  --weather-snow-layer: oklch(100% 0 0 / 50%);
+  --weather-snow-layer-soft: oklch(100% 0 0 / 30%);
 }
 
 .weather-atmosphere--thunderstorm {
@@ -446,11 +546,97 @@ function markLayerFailed(layer: AtmosphereLayer) {
 
 @keyframes weather-atmosphere-depth-drift {
   from {
-    transform: translate3d(-0.4rem, 0, 0) scale(1.01);
+    transform: translate3d(-0.35rem, 0, 0);
   }
 
   to {
-    transform: translate3d(0.45rem, -0.2rem, 0) scale(1.015);
+    transform: translate3d(0.45rem, -0.16rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-soft-glow {
+  from {
+    opacity: 0.58;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0.68;
+    transform: translate3d(0.32rem, -0.18rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-haze-drift {
+  from {
+    transform: translate3d(-0.5rem, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0.65rem, 0.12rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-fog-drift {
+  from {
+    opacity: 0.62;
+    transform: translate3d(-0.45rem, 0, 0);
+  }
+
+  to {
+    opacity: 0.72;
+    transform: translate3d(0.55rem, 0.08rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-storm-drift {
+  from {
+    opacity: 0.82;
+    transform: translate3d(-0.28rem, 0.08rem, 0);
+  }
+
+  to {
+    opacity: 0.68;
+    transform: translate3d(0.34rem, -0.08rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-rain-fall {
+  from {
+    transform: translate3d(0, -0.85rem, 0);
+  }
+
+  to {
+    transform: translate3d(-0.2rem, 0.85rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-rain-fall-soft {
+  from {
+    transform: translate3d(0.15rem, -1rem, 0);
+  }
+
+  to {
+    transform: translate3d(-0.22rem, 1rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-snow-fall {
+  from {
+    transform: translate3d(0, -1.2rem, 0);
+  }
+
+  to {
+    transform: translate3d(0.45rem, 1.2rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-snow-fall-soft {
+  from {
+    transform: translate3d(0.32rem, -1rem, 0);
+  }
+
+  to {
+    transform: translate3d(-0.28rem, 1rem, 0);
   }
 }
 
@@ -478,6 +664,13 @@ function markLayerFailed(layer: AtmosphereLayer) {
   .weather-atmosphere__image {
     animation: none !important;
     transition: none !important;
+    will-change: auto !important;
+  }
+
+  .weather-atmosphere__precipitation::before {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -490,6 +683,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
   .weather-atmosphere__horizon,
   .weather-atmosphere__detail,
   .weather-atmosphere__precipitation,
+  .weather-atmosphere__precipitation::before,
   .weather-atmosphere__asset {
     display: none;
   }
