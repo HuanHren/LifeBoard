@@ -146,6 +146,7 @@ export const enUSModules = {
   'weather.hero.provider.caiyun': 'Caiyun Weather forecast',
   'weather.hero.summary':
     '{location}: {temperature}, {condition}. High {high}, low {low}.',
+  'weather.hero.updatedForCity': 'Weather updated for {city}.',
   'weather.alert.title': 'Weather alerts',
   'weather.alert.description':
     'Active alerts returned by Caiyun Weather for the loaded location.',

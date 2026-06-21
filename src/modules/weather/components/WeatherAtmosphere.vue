@@ -1,18 +1,24 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   getWeatherAtmosphereAssets,
   type WeatherAtmosphereAssetSource,
 } from '@/modules/weather/constants/weatherAtmosphereAssets'
+import type { WeatherLighting } from '@/modules/weather/types/weatherLighting'
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
 
 interface Props {
   atmosphere: WeatherAtmosphere
+  lighting?: WeatherLighting
 }
 
 type AtmosphereLayer = 'base' | 'depth' | 'foreground'
+type BaseArtworkReadiness = 'loaded' | 'failed' | 'absent'
 
 const props = defineProps<Props>()
+const emit = defineEmits<{
+  baseReady: [readiness: BaseArtworkReadiness]
+}>()
 const failedLayers = ref<Set<AtmosphereLayer>>(new Set())
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
@@ -48,6 +54,22 @@ const canDriftDepth = computed(
   () => Boolean(assetSet.value.shouldDriftDepth) && hasDepthAsset.value,
 )
 const motionPreset = computed(() => assetSet.value.motionPreset ?? 'static')
+const safeLighting = computed<WeatherLighting>(() => props.lighting ?? {
+  lightLevel: 0.62,
+  lightWarmth: 0.48,
+  lightX: 78,
+  lightY: 28,
+  ambientOpacity: 0.3,
+  highlightOpacity: 0.24,
+  hazeOpacity: 0.2,
+  cloudShadowOpacity: 0.18,
+  contrastStrength: 0.38,
+  nightDepth: 0,
+  precipitationOpacity: 0,
+  snowLightOpacity: 0,
+  stormShadowOpacity: 0,
+  foregroundMode: 'dark',
+})
 const atmosphereStyle = computed(() => ({
   '--weather-atmosphere-object-position-desktop':
     assetSet.value.objectPosition.desktop,
@@ -58,6 +80,21 @@ const atmosphereStyle = computed(() => ({
   '--weather-atmosphere-foreground-position':
     assetSet.value.objectPosition.foreground ??
     assetSet.value.objectPosition.desktop,
+  '--weather-light-level': String(safeLighting.value.lightLevel),
+  '--weather-light-warmth': String(safeLighting.value.lightWarmth),
+  '--weather-light-x': `${safeLighting.value.lightX}%`,
+  '--weather-light-y': `${safeLighting.value.lightY}%`,
+  '--weather-ambient-opacity': String(safeLighting.value.ambientOpacity),
+  '--weather-highlight-opacity': String(safeLighting.value.highlightOpacity),
+  '--weather-haze-opacity': String(safeLighting.value.hazeOpacity),
+  '--weather-cloud-shadow-opacity': String(safeLighting.value.cloudShadowOpacity),
+  '--weather-contrast-strength': String(safeLighting.value.contrastStrength),
+  '--weather-night-depth': String(safeLighting.value.nightDepth),
+  '--weather-lighting-precipitation-opacity': String(
+    safeLighting.value.precipitationOpacity,
+  ),
+  '--weather-snow-light-opacity': String(safeLighting.value.snowLightOpacity),
+  '--weather-storm-shadow-opacity': String(safeLighting.value.stormShadowOpacity),
 }))
 
 function hasLayerSource(source: WeatherAtmosphereAssetSource | undefined) {
@@ -66,7 +103,32 @@ function hasLayerSource(source: WeatherAtmosphereAssetSource | undefined) {
 
 function markLayerFailed(layer: AtmosphereLayer) {
   failedLayers.value = new Set(failedLayers.value).add(layer)
+
+  if (layer === 'base') {
+    emit('baseReady', 'failed')
+  }
 }
+
+function markBaseLoaded() {
+  emit('baseReady', 'loaded')
+}
+
+watch(
+  () => props.atmosphere,
+  () => {
+    failedLayers.value = new Set()
+  },
+)
+
+watch(
+  baseFallbackSource,
+  (source) => {
+    if (!source) {
+      emit('baseReady', 'absent')
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -86,6 +148,8 @@ function markLayerFailed(layer: AtmosphereLayer) {
   >
     <span class="weather-atmosphere__wash" />
     <span class="weather-atmosphere__horizon" />
+    <span class="weather-atmosphere__ambient" />
+    <span class="weather-atmosphere__highlight" />
 
     <picture
       v-if="hasBaseAsset"
@@ -131,6 +195,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
         fetchpriority="high"
         :src="baseFallbackSource ?? ''"
         @error="markLayerFailed('base')"
+        @load="markBaseLoaded"
       >
     </picture>
 
@@ -209,6 +274,19 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-detail-size: 14rem;
   --weather-detail-opacity: 0.55;
   --weather-precipitation-opacity: 0;
+  --weather-light-level: 0.62;
+  --weather-light-warmth: 0.48;
+  --weather-light-x: 78%;
+  --weather-light-y: 28%;
+  --weather-ambient-opacity: 0.3;
+  --weather-highlight-opacity: 0.24;
+  --weather-haze-opacity: 0.2;
+  --weather-cloud-shadow-opacity: 0.18;
+  --weather-contrast-strength: 0.38;
+  --weather-night-depth: 0;
+  --weather-lighting-precipitation-opacity: 0;
+  --weather-snow-light-opacity: 0;
+  --weather-storm-shadow-opacity: 0;
   --weather-precipitation-angle: 168deg;
   --weather-atmosphere-object-position-desktop: center center;
   --weather-atmosphere-object-position-mobile: center center;
@@ -216,7 +294,11 @@ function markLayerFailed(layer: AtmosphereLayer) {
   --weather-atmosphere-foreground-position: center bottom;
   --weather-atmosphere-contrast: linear-gradient(
     90deg,
-    color-mix(in oklch, var(--weather-sky-start) 74%, transparent),
+    color-mix(
+      in oklch,
+      var(--weather-sky-start) calc((0.42 + var(--weather-contrast-strength) * 0.48) * 100%),
+      transparent
+    ),
     transparent 58%
   );
   --weather-rain-layer: color-mix(
@@ -246,11 +328,25 @@ function markLayerFailed(layer: AtmosphereLayer) {
   overflow: hidden;
   pointer-events: none;
   background:
-    linear-gradient(140deg, var(--weather-sky-start), var(--weather-sky-end));
+    linear-gradient(
+      140deg,
+      color-mix(
+        in oklch,
+        var(--weather-sky-start) calc((0.72 + var(--weather-light-level) * 0.18) * 100%),
+        var(--color-surface-raised)
+      ),
+      color-mix(
+        in oklch,
+        var(--weather-sky-end) calc((0.74 + var(--weather-light-level) * 0.16) * 100%),
+        var(--color-surface)
+      )
+    );
 }
 
 .weather-atmosphere__wash,
 .weather-atmosphere__horizon,
+.weather-atmosphere__ambient,
+.weather-atmosphere__highlight,
 .weather-atmosphere__detail,
 .weather-atmosphere__precipitation,
 .weather-atmosphere__contrast,
@@ -265,11 +361,11 @@ function markLayerFailed(layer: AtmosphereLayer) {
   z-index: 1;
   background:
     radial-gradient(
-      circle at 14% 18%,
+      circle at 18% 20%,
       color-mix(in oklch, var(--weather-detail) 64%, transparent),
       transparent 36%
     );
-  opacity: var(--weather-detail-opacity);
+  opacity: calc(var(--weather-detail-opacity) + var(--weather-haze-opacity) * 0.22);
 }
 
 .weather-atmosphere__horizon {
@@ -280,6 +376,54 @@ function markLayerFailed(layer: AtmosphereLayer) {
   aspect-ratio: 1;
   border-radius: 999rem;
   background: radial-gradient(circle, var(--weather-horizon), transparent 68%);
+  opacity: calc(0.78 + var(--weather-ambient-opacity) * 0.18);
+}
+
+.weather-atmosphere__ambient {
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(
+      circle at var(--weather-light-x) var(--weather-light-y),
+      color-mix(
+        in oklch,
+        oklch(91% 0.046 118) calc((0.62 - var(--weather-light-warmth) * 0.18) * 100%),
+        oklch(88% 0.058 76)
+      ),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(
+        in oklch,
+        oklch(88% 0.028 132) calc((0.28 + var(--weather-light-level) * 0.18) * 100%),
+        transparent
+      ),
+      transparent 70%
+    );
+  opacity: var(--weather-ambient-opacity);
+  transition: opacity 260ms var(--motion-ease);
+}
+
+.weather-atmosphere__highlight {
+  top: calc(var(--weather-light-y) - 8rem);
+  left: calc(var(--weather-light-x) - 9rem);
+  z-index: 5;
+  width: min(18rem, 46vw);
+  aspect-ratio: 1;
+  border-radius: 999rem;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(
+        in oklch,
+        oklch(95% 0.05 105) calc((0.56 - var(--weather-light-warmth) * 0.16) * 100%),
+        oklch(90% 0.07 72)
+      ),
+      transparent 68%
+    );
+  opacity: var(--weather-highlight-opacity);
+  transition: opacity 260ms var(--motion-ease);
 }
 
 .weather-atmosphere__asset {
@@ -329,7 +473,7 @@ function markLayerFailed(layer: AtmosphereLayer) {
       color-mix(in oklch, var(--weather-detail) 86%, transparent),
       transparent 68%
     );
-  opacity: 0.72;
+  opacity: calc(0.28 + var(--weather-haze-opacity) * 0.7);
 }
 
 .weather-atmosphere__precipitation {
@@ -341,7 +485,10 @@ function markLayerFailed(layer: AtmosphereLayer) {
       transparent 0 0.72rem,
       var(--weather-rain-layer) 0.72rem 0.78rem
     );
-  opacity: var(--weather-precipitation-opacity);
+  opacity: max(
+    var(--weather-precipitation-opacity),
+    var(--weather-lighting-precipitation-opacity)
+  );
   transform: translate3d(0, 0, 0);
 }
 
@@ -364,7 +511,35 @@ function markLayerFailed(layer: AtmosphereLayer) {
 .weather-atmosphere__contrast {
   inset: 0;
   z-index: 7;
-  background: var(--weather-atmosphere-contrast);
+  background:
+    var(--weather-atmosphere-contrast),
+    linear-gradient(
+      90deg,
+      color-mix(
+        in oklch,
+        oklch(19% 0.025 132) calc((var(--weather-night-depth) * 0.42 + var(--weather-cloud-shadow-opacity) * 0.24) * 100%),
+        transparent
+      ),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 76% 82%,
+      color-mix(
+        in oklch,
+        oklch(100% 0 0) calc(var(--weather-snow-light-opacity) * 26%),
+        transparent
+      ),
+      transparent 58%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(
+        in oklch,
+        oklch(20% 0.02 244) calc(var(--weather-storm-shadow-opacity) * 42%),
+        transparent
+      ),
+      transparent 76%
+    );
 }
 
 .weather-atmosphere--drift-depth .weather-atmosphere__image--depth {
@@ -660,6 +835,8 @@ function markLayerFailed(layer: AtmosphereLayer) {
   .weather-atmosphere__wash,
   .weather-atmosphere__horizon,
   .weather-atmosphere__detail,
+  .weather-atmosphere__ambient,
+  .weather-atmosphere__highlight,
   .weather-atmosphere__precipitation,
   .weather-atmosphere__image {
     animation: none !important;
@@ -681,6 +858,8 @@ function markLayerFailed(layer: AtmosphereLayer) {
 
   .weather-atmosphere__wash,
   .weather-atmosphere__horizon,
+  .weather-atmosphere__ambient,
+  .weather-atmosphere__highlight,
   .weather-atmosphere__detail,
   .weather-atmosphere__precipitation,
   .weather-atmosphere__precipitation::before,

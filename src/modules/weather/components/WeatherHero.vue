@@ -1,261 +1,124 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, shallowRef, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from '@/i18n/useI18n'
-import AirQualityBadge from '@/modules/weather/components/AirQualityBadge.vue'
-import WeatherAtmosphere from '@/modules/weather/components/WeatherAtmosphere.vue'
+import WeatherSnapshotLayer from '@/modules/weather/components/WeatherSnapshotLayer.vue'
+import { useWeatherSolarPhase } from '@/modules/weather/composables/useWeatherSolarPhase'
+import { useWeatherSnapshotTransition } from '@/modules/weather/composables/useWeatherSnapshotTransition'
 import type { AirQualitySnapshot } from '@/modules/weather/types/airQuality'
 import type { WeatherSnapshot } from '@/modules/weather/types/weather'
-import {
-  getWeatherAtmosphere,
-  type WeatherAtmosphere as WeatherAtmosphereName,
-} from '@/modules/weather/utils/weatherAtmosphere'
-import {
-  formatFullLocalTime,
-  formatLocationName,
-  formatTemperature,
-} from '@/modules/weather/utils/weatherFormatting'
-import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
+import { deriveWeatherLighting } from '@/modules/weather/utils/weatherLighting'
+import { createWeatherVisualSnapshot } from '@/modules/weather/utils/weatherVisualSnapshot'
 
 interface Props {
   weather: WeatherSnapshot
   airQuality?: AirQualitySnapshot | null
-  motionMode?: 'initial' | 'snapshot'
 }
 
 const props = defineProps<Props>()
-const { locale, t } = useI18n()
-
-function isConciseLabel(value: string) {
-  return value.trim().length > 0 && value.trim().length <= 28
-}
-
-function firstUsefulAddressParts(value: string) {
-  return value
-    .split(',')
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .filter((part) => !['China', 'CN'].includes(part))
-}
-
-function compactChineseAddress(value: string, cityName: string) {
-  const cityIndex = value.indexOf(cityName)
-
-  if (cityIndex === -1) {
-    return null
-  }
-
-  const afterCity = value.slice(cityIndex + cityName.length)
-  const district = afterCity.match(/[^省市区县]+[区县市]/)?.[0] ?? null
-
-  return district && district !== cityName ? `${district} · ${cityName}` : cityName
-}
-
-function compactLocationName() {
-  const { displayLabel, name, admin1, country, source } = props.weather.location
-  const fallbackCurrentLocation = t('home.weather.currentLocationLabel')
-  const fallbackLabel = name.trim() || fallbackCurrentLocation
-  const label = displayLabel?.trim() ?? ''
-
-  if (
-    source === 'amap-geolocation' &&
-    label.length > 0 &&
-    label !== fallbackCurrentLocation
-  ) {
-    const compactChinese = compactChineseAddress(label, fallbackLabel)
-
-    if (compactChinese) {
-      return compactChinese
-    }
-
-    const addressParts = firstUsefulAddressParts(label)
-
-    if (addressParts.length >= 2) {
-      return `${addressParts[0]} · ${addressParts[1]}`
-    }
-
-    if (isConciseLabel(label)) {
-      return label
-    }
-  }
-
-  if (label.length > 0 && label !== fallbackCurrentLocation && isConciseLabel(label)) {
-    return label
-  }
-
-  if (admin1 && admin1 !== fallbackLabel) {
-    return `${fallbackLabel}, ${admin1}`
-  }
-
-  if (country && country !== fallbackLabel) {
-    return `${fallbackLabel}, ${country}`
-  }
-
-  return fallbackLabel
-}
-
-const today = computed(() => props.weather.daily[0] ?? null)
-const atmosphere = computed<WeatherAtmosphereName>(() => getWeatherAtmosphere(props.weather))
-const currentCondition = computed(() =>
-  localizeWeatherCondition(props.weather.current.condition, t),
+const { t } = useI18n()
+const liveMessage = shallowRef('')
+const visualSnapshot = computed(() =>
+  createWeatherVisualSnapshot(props.weather, props.airQuality ?? null),
 )
-const locationName = computed(() => compactLocationName())
-const fullLocationName = computed(() => formatLocationName(props.weather.location))
-const currentTemperatureValue = computed(() =>
-  String(Math.round(props.weather.current.temperature)),
-)
-const currentTemperatureUnit = computed(() => props.weather.units.temperature)
-const currentTemperature = computed(
-  () => `${currentTemperatureValue.value}${currentTemperatureUnit.value}`,
-)
-const highTemperature = computed(() =>
-  today.value
-    ? formatTemperature(today.value.temperatureMax, props.weather.units.temperature)
-    : null,
-)
-const lowTemperature = computed(() =>
-  today.value
-    ? formatTemperature(today.value.temperatureMin, props.weather.units.temperature)
-    : null,
-)
-const updatedTime = computed(() =>
-  t('weather.hero.updated', {
-    time: formatFullLocalTime(props.weather.current.time, locale.value),
-    timezone: props.weather.timezoneAbbreviation,
+const {
+  activeSnapshot,
+  currentSnapshot,
+  outgoingSnapshot,
+  incomingSnapshot,
+  phase,
+  committedAnnouncementSnapshot,
+  announcementSerial,
+  shouldSwapImmediately,
+  isTransitioning,
+  markIncomingArtworkReady,
+} = useWeatherSnapshotTransition(visualSnapshot)
+const { phaseResult: solarPhaseResult } = useWeatherSolarPhase(activeSnapshot)
+
+const heroAtmosphere = computed(() => activeSnapshot.value.atmosphere)
+const activeLighting = computed(() =>
+  deriveWeatherLighting({
+    atmosphere: activeSnapshot.value.atmosphere,
+    current: activeSnapshot.value.weather.current,
+    solarPhase: solarPhaseResult.value.phase,
   }),
 )
-const providerLabel = computed(() =>
-  props.weather.provider === 'caiyun'
-    ? t('weather.hero.provider.caiyun')
-    : t('weather.hero.provider.openMeteo'),
+const showCurrentLayer = computed(
+  () => currentSnapshot.value && !outgoingSnapshot.value && !incomingSnapshot.value,
 )
-const heroSnapshotKey = computed(() =>
-  [
-    props.weather.provider,
-    props.weather.location.id,
-    props.weather.location.latitude,
-    props.weather.location.longitude,
-    props.weather.current.time,
-    props.weather.current.condition.code,
-    props.weather.current.isDay ? 'day' : 'night',
-  ].join('|'),
-)
-const screenReaderSummary = computed(() =>
-  t('weather.hero.summary', {
-    location: locationName.value,
-    temperature: currentTemperature.value,
-    condition: currentCondition.value,
-    high: highTemperature.value ?? t('weather.value.unavailable'),
-    low: lowTemperature.value ?? t('weather.value.unavailable'),
-  }),
-)
+
+watch(announcementSerial, () => {
+  if (!committedAnnouncementSnapshot.value) {
+    return
+  }
+
+  liveMessage.value = t('weather.hero.updatedForCity', {
+    city: committedAnnouncementSnapshot.value.weather.location.name,
+  })
+})
 </script>
 
 <template>
   <section
-    class="weather-hero relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-[var(--weather-hero-border)] p-5 shadow-[var(--shadow-sm)] sm:p-6"
+    class="weather-hero relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-[var(--weather-hero-border)] shadow-[var(--shadow-sm)]"
     aria-labelledby="weather-hero-title"
-    :data-atmosphere="atmosphere"
-    :data-motion="motionMode ?? 'initial'"
+    :data-atmosphere="heroAtmosphere"
+    :data-phase="phase"
+    :data-reduced-motion="shouldSwapImmediately ? 'true' : 'false'"
+    :data-solar-phase="solarPhaseResult.phase"
+    :data-solar-phase-source="solarPhaseResult.source"
+    :data-transitioning="isTransitioning ? 'true' : 'false'"
   >
-    <WeatherAtmosphere :atmosphere="atmosphere" />
-
-    <p class="sr-only">
-      {{ screenReaderSummary }}
-    </p>
-
-    <div
-      :key="heroSnapshotKey"
-      class="weather-hero__content relative z-10"
+    <RouterLink
+      class="weather-hero__cities-control interactive-surface absolute right-5 top-5 z-30 inline-flex min-h-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--weather-hero-control-border)] bg-[var(--weather-hero-control-bg)] px-4 text-sm font-medium text-[var(--weather-hero-text)] hover:border-[var(--weather-hero-control-hover)] hover:bg-[var(--weather-hero-control-hover-bg)] focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--color-focus)] sm:right-6 sm:top-6"
+      :to="{ name: 'weather-cities' }"
     >
-      <div class="weather-hero__item flex items-start justify-between gap-4">
-        <div class="min-w-0">
-          <p class="text-caption text-[var(--weather-hero-muted)]">
-            {{ t('weather.hero.locationLabel') }}
-          </p>
-          <h2
-            id="weather-hero-title"
-            class="mt-1 max-w-[18rem] truncate text-xl font-semibold text-[var(--weather-hero-text)] sm:max-w-none sm:text-2xl"
-            :title="fullLocationName"
-          >
-            {{ locationName }}
-          </h2>
-        </div>
+      <span aria-hidden="true" class="text-lg leading-none">+</span>
+      <span class="sr-only sm:not-sr-only sm:ml-2">
+        {{ t('weather.hero.manageCities') }}
+      </span>
+    </RouterLink>
 
-        <RouterLink
-          class="interactive-surface inline-flex min-h-11 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--weather-hero-control-border)] bg-[var(--weather-hero-control-bg)] px-4 text-sm font-medium text-[var(--weather-hero-text)] hover:border-[var(--weather-hero-control-hover)] hover:bg-[var(--weather-hero-control-hover-bg)]"
-          :to="{ name: 'weather-cities' }"
-        >
-          <span aria-hidden="true" class="text-lg leading-none">+</span>
-          <span class="sr-only sm:not-sr-only sm:ml-2">
-            {{ t('weather.hero.manageCities') }}
-          </span>
-        </RouterLink>
-      </div>
+    <div class="weather-hero__viewport">
+      <WeatherSnapshotLayer
+        v-if="showCurrentLayer && currentSnapshot"
+        :key="`stable-${currentSnapshot.identity}`"
+        active
+        :lighting-result="activeLighting"
+        :snapshot="currentSnapshot"
+        :solar-phase-result="solarPhaseResult"
+        visual-state="stable"
+      />
 
-      <div class="weather-hero__item weather-hero__item--temperature mt-7 sm:mt-8">
-        <p
-          class="flex items-start text-[var(--weather-hero-text)]"
-          :aria-label="currentTemperature"
-        >
-          <span
-            class="text-[clamp(4.25rem,14vw,7rem)] font-semibold leading-[0.88] tracking-normal tabular-nums"
-          >
-            {{ currentTemperatureValue }}
-          </span>
-          <span
-            class="mt-1.5 text-[clamp(1.5rem,4vw,2.35rem)] font-semibold leading-none tracking-normal sm:mt-2"
-            aria-hidden="true"
-          >
-            {{ currentTemperatureUnit }}
-          </span>
-        </p>
-      </div>
+      <WeatherSnapshotLayer
+        v-if="outgoingSnapshot"
+        :key="`outgoing-${outgoingSnapshot.identity}`"
+        active
+        class="weather-hero__layer weather-hero__layer--outgoing"
+        :snapshot="outgoingSnapshot"
+        visual-state="outgoing"
+      />
 
-      <AirQualityBadge :air-quality="airQuality ?? null" />
-
-      <div
-        class="weather-hero__item weather-hero__item--conditions mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-base font-medium text-[var(--weather-hero-text)]"
-      >
-        <span>{{ currentCondition }}</span>
-        <span
-          v-if="highTemperature"
-          aria-hidden="true"
-          class="text-[var(--weather-hero-subtle)]"
-        >
-          ·
-        </span>
-        <span v-if="highTemperature">
-          {{ t('weather.hero.high', { temperature: highTemperature }) }}
-        </span>
-        <span
-          v-if="lowTemperature"
-          aria-hidden="true"
-          class="text-[var(--weather-hero-subtle)]"
-        >
-          ·
-        </span>
-        <span v-if="lowTemperature">
-          {{ t('weather.hero.low', { temperature: lowTemperature }) }}
-        </span>
-      </div>
-
-      <div
-        class="weather-hero__item weather-hero__item--meta mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-[var(--weather-hero-muted)]"
-      >
-        <span>{{ updatedTime }}</span>
-        <span aria-hidden="true" class="text-[var(--weather-hero-subtle)]">·</span>
-        <span>{{ providerLabel }}</span>
-      </div>
+      <WeatherSnapshotLayer
+        v-if="incomingSnapshot"
+        :key="`incoming-${incomingSnapshot.identity}`"
+        :active="false"
+        class="weather-hero__layer weather-hero__layer--incoming"
+        :snapshot="incomingSnapshot"
+        visual-state="incoming"
+        @base-artwork-ready="markIncomingArtworkReady"
+      />
     </div>
+
+    <p class="sr-only" aria-live="polite" aria-atomic="true">
+      {{ liveMessage }}
+    </p>
   </section>
 </template>
 
 <style scoped>
 .weather-hero {
   --weather-hero-text: var(--color-text-primary);
-  --weather-hero-muted: var(--color-text-secondary);
-  --weather-hero-subtle: var(--color-text-tertiary);
   --weather-hero-border: var(--color-border-soft);
   --weather-hero-control-bg: color-mix(
     in oklch,
@@ -287,8 +150,6 @@ const screenReaderSummary = computed(() =>
 .weather-hero[data-atmosphere='rain-night'],
 .weather-hero[data-atmosphere='thunderstorm'] {
   --weather-hero-text: oklch(97% 0.006 95);
-  --weather-hero-muted: oklch(88% 0.015 100);
-  --weather-hero-subtle: oklch(78% 0.02 112);
   --weather-hero-border: oklch(72% 0.04 140 / 26%);
   --weather-hero-control-bg: oklch(100% 0 0 / 12%);
   --weather-hero-control-border: oklch(100% 0 0 / 22%);
@@ -299,74 +160,84 @@ const screenReaderSummary = computed(() =>
 .weather-hero[data-atmosphere='overcast'],
 .weather-hero[data-atmosphere='fog-haze'] {
   --weather-hero-text: oklch(23% 0.025 118);
-  --weather-hero-muted: oklch(38% 0.024 118);
-  --weather-hero-subtle: oklch(51% 0.023 118);
   --weather-hero-control-bg: oklch(100% 0 0 / 42%);
   --weather-hero-control-border: oklch(47% 0.035 126 / 28%);
 }
 
 .weather-hero[data-atmosphere='snow'] {
   --weather-hero-text: oklch(24% 0.024 136);
-  --weather-hero-muted: oklch(39% 0.023 136);
-  --weather-hero-subtle: oklch(52% 0.024 136);
   --weather-hero-control-bg: oklch(100% 0 0 / 48%);
   --weather-hero-control-border: oklch(47% 0.036 138 / 26%);
 }
 
-.weather-hero__item {
-  animation: none;
+.weather-hero__viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
-.weather-hero[data-motion='initial'] .weather-hero__item {
-  animation: weather-hero-enter 360ms var(--motion-ease) both;
+.weather-hero__layer--incoming {
+  opacity: 0;
 }
 
-.weather-hero[data-motion='initial'] .weather-hero__item--temperature {
-  animation-delay: 45ms;
+.weather-hero[data-phase='crossfading'] .weather-hero__layer--outgoing {
+  animation: weather-hero-outgoing 220ms ease-in both;
+  will-change: opacity;
 }
 
-.weather-hero[data-motion='initial'] .weather-hero__item--conditions {
-  animation-delay: 80ms;
+.weather-hero[data-phase='crossfading'] .weather-hero__layer--incoming {
+  animation: weather-hero-incoming 280ms ease-out both;
+  will-change: opacity;
 }
 
-.weather-hero[data-motion='initial'] .weather-hero__item--meta {
-  animation-delay: 110ms;
+.weather-hero[data-reduced-motion='true'] .weather-hero__layer--outgoing {
+  animation: weather-hero-outgoing 80ms ease-in both;
 }
 
-.weather-hero[data-motion='snapshot'] .weather-hero__content {
-  animation: weather-hero-snapshot 220ms var(--motion-ease) both;
+.weather-hero[data-reduced-motion='true'] .weather-hero__layer--incoming {
+  animation: weather-hero-incoming 80ms ease-out both;
 }
 
-@keyframes weather-hero-enter {
+@keyframes weather-hero-outgoing {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes weather-hero-incoming {
   from {
     opacity: 0;
-    transform: translateY(0.28rem);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes weather-hero-snapshot {
-  from {
-    opacity: 0.82;
-    transform: scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .weather-hero,
-  .weather-hero__content,
-  .weather-hero__item {
-    animation: none !important;
+  .weather-hero__layer--outgoing,
+  .weather-hero__layer--incoming {
     transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .weather-hero {
+    --weather-hero-text: ButtonText;
+    --weather-hero-border: ButtonText;
+    --weather-hero-control-bg: ButtonFace;
+    --weather-hero-control-border: ButtonText;
+    --weather-hero-control-hover: Highlight;
+    --weather-hero-control-hover-bg: ButtonFace;
+  }
+
+  .weather-hero__layer--outgoing {
+    display: none;
   }
 }
 </style>

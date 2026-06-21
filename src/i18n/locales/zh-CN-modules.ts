@@ -138,6 +138,7 @@ export const zhCNModules = {
   'weather.hero.provider.caiyun': 'Caiyun Weather 预报',
   'weather.hero.summary':
     '{location}：{temperature}，{condition}。最高 {high}，最低 {low}。',
+  'weather.hero.updatedForCity': '{city} 的天气已更新。',
   'weather.alert.title': '天气预警',
   'weather.alert.description': 'Caiyun Weather 为当前已加载位置返回的活动预警。',
   'weather.alert.listLabel': '活动天气预警',

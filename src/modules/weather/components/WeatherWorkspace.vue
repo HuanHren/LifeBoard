@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
@@ -40,10 +40,6 @@ const {
   loadForecast,
   retryAirQuality,
 } = weatherStore
-const hasShownWeatherHero = ref(false)
-const heroMotionMode = computed(() =>
-  hasShownWeatherHero.value ? 'snapshot' : 'initial',
-)
 const compactDailyForecast = computed(() =>
   weather.value?.provider === 'caiyun'
     ? weather.value.daily.slice(0, Math.min(3, COMPACT_DAILY_FORECAST_LENGTH))
@@ -56,15 +52,6 @@ const showPreviousForecastError = computed(
 function openCityManagement() {
   void router.push({ name: 'weather-cities' })
 }
-
-watch(weather, async (nextWeather) => {
-  if (nextWeather && !hasShownWeatherHero.value) {
-    await nextTick()
-    window.setTimeout(() => {
-      hasShownWeatherHero.value = true
-    }, 420)
-  }
-})
 
 onMounted(() => {
   void initializeWeather()
@@ -148,7 +135,6 @@ onMounted(() => {
       <div class="space-y-4">
         <WeatherHero
           :air-quality="displayAirQuality"
-          :motion-mode="heroMotionMode"
           :weather="weather"
         />
         <WeatherAlertSection :alerts="weather.alerts" />

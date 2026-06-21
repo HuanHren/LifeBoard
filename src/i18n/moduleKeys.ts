@@ -126,6 +126,7 @@ export const weatherTranslationKeys = [
   'weather.hero.provider.openMeteo',
   'weather.hero.provider.caiyun',
   'weather.hero.summary',
+  'weather.hero.updatedForCity',
   'weather.alert.title',
   'weather.alert.description',
   'weather.alert.listLabel',

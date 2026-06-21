@@ -77,6 +77,8 @@ const explicitNotes: Partial<Record<TranslationKey, string>> = {
     'Keep European AQI explicit. Do not merge this with US AQI.',
   'weather.airQuality.badgeSummary':
     'Accessible name for the hero AQI badge. Keep {scale}, {value}, and {category}.',
+  'weather.hero.updatedForCity':
+    'Polite live-region message after a committed weather snapshot change. Keep {city}; do not mention animation internals.',
   'weather.airQuality.pollutant.pm25': 'Keep PM2.5 untranslated.',
   'weather.airQuality.pollutant.pm10': 'Keep PM10 untranslated.',
   'weather.airQuality.sourcePrefix':
