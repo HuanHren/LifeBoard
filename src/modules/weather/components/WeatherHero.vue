@@ -171,13 +171,21 @@ watch(announcementSerial, () => {
 }
 
 .weather-hero__viewport {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  min-height: inherit;
   overflow: hidden;
 }
 
 .weather-hero__layer--incoming {
+  position: relative;
+  z-index: 2;
   opacity: 0;
+}
+
+.weather-hero__viewport > .weather-hero__layer--outgoing {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
 }
 
 .weather-hero[data-phase='crossfading'] .weather-hero__layer--outgoing {

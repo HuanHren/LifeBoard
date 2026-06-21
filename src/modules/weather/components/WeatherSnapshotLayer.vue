@@ -256,8 +256,8 @@ const effectiveLighting = computed(
     transparent
   );
 
-  position: absolute;
-  inset: 0;
+  position: relative;
+  min-height: inherit;
   overflow: hidden;
   pointer-events: none;
 }
