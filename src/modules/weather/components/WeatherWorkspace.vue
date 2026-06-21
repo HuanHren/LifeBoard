@@ -11,6 +11,7 @@ import HourlyForecastStrip from '@/modules/weather/components/HourlyForecastStri
 import PrecipitationTimeline from '@/modules/weather/components/PrecipitationTimeline.vue'
 import ShortTermPrecipitationPanel from '@/modules/weather/components/ShortTermPrecipitationPanel.vue'
 import WeatherAdvicePanel from '@/modules/weather/components/WeatherAdvicePanel.vue'
+import WeatherAlertSection from '@/modules/weather/components/WeatherAlertSection.vue'
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
 import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.vue'
 import WeatherHero from '@/modules/weather/components/WeatherHero.vue'
@@ -28,9 +29,9 @@ const {
   weather,
   forecastStatus,
   forecastError,
-  airQuality,
-  airQualityStatus,
-  airQualityError,
+  displayAirQuality,
+  displayAirQualityStatus,
+  displayAirQualityError,
   provider,
   hasCaiyunToken,
 } = storeToRefs(weatherStore)
@@ -44,7 +45,12 @@ const heroMotionMode = computed(() =>
   hasShownWeatherHero.value ? 'snapshot' : 'initial',
 )
 const compactDailyForecast = computed(() =>
-  weather.value?.daily.slice(0, COMPACT_DAILY_FORECAST_LENGTH) ?? [],
+  weather.value?.provider === 'caiyun'
+    ? weather.value.daily.slice(0, Math.min(3, COMPACT_DAILY_FORECAST_LENGTH))
+    : [],
+)
+const showPreviousForecastError = computed(
+  () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
 )
 
 function openCityManagement() {
@@ -141,10 +147,33 @@ onMounted(() => {
 
       <div class="space-y-4">
         <WeatherHero
-          :air-quality="airQuality"
+          :air-quality="displayAirQuality"
           :motion-mode="heroMotionMode"
           :weather="weather"
         />
+        <WeatherAlertSection :alerts="weather.alerts" />
+        <DailyForecastStrip
+          v-if="compactDailyForecast.length > 0"
+          :description="t('weather.daily.caiyunDescription')"
+          :items="compactDailyForecast"
+          :scroll-label="t('weather.daily.caiyunScrollLabel')"
+          :title="t('weather.daily.caiyunTitle')"
+          :units="weather.units"
+        />
+        <p
+          v-else
+          class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+        >
+          {{ t('weather.daily.caiyunUnavailable') }}
+        </p>
+        <p
+          v-if="showPreviousForecastError"
+          class="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+          role="status"
+        >
+          {{ t('weather.state.updateFailed') }}
+          {{ localizeWeatherError(forecastError, t) ?? t('weather.state.errorFallback') }}
+        </p>
         <WeatherProviderNotice
           :has-caiyun-token="hasCaiyunToken"
           :provider="weather.provider"
@@ -159,9 +188,9 @@ onMounted(() => {
       </div>
 
       <AirQualityPanel
-        :air-quality="airQuality"
-        :error="airQualityError"
-        :status="airQualityStatus"
+        :air-quality="displayAirQuality"
+        :error="displayAirQualityError"
+        :status="displayAirQualityStatus"
         @retry="retryAirQuality"
       />
 
@@ -172,16 +201,13 @@ onMounted(() => {
       />
       <PrecipitationTimeline :items="weather.hourly" :units="weather.units" />
       <HourlyForecastStrip :items="weather.hourly" :units="weather.units" />
-      <div class="space-y-4">
-        <DailyForecastStrip :items="compactDailyForecast" :units="weather.units" />
-        <RouterLink
-          v-if="weather.daily.length > 0"
-          class="inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-accent-text)] transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent-wash)] focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--color-focus)]"
-          :to="{ name: 'weather-15-day' }"
-        >
-          {{ t('weather.longRange.viewAction') }}
-        </RouterLink>
-      </div>
+      <RouterLink
+        v-if="weather.daily.length > 0"
+        class="inline-flex w-fit items-center rounded-[var(--radius-pill)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-accent-text)] transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent-wash)] focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--color-focus)]"
+        :to="{ name: 'weather-15-day' }"
+      >
+        {{ t('weather.longRange.viewAction') }}
+      </RouterLink>
       <WeatherAttribution :provider="weather.provider" />
     </div>
   </div>

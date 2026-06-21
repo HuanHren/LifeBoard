@@ -1,3 +1,5 @@
+import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
+
 export type WeatherRequestStatus = 'idle' | 'loading' | 'success' | 'error'
 export type WeatherDataProvider = 'openMeteo' | 'caiyun'
 export type WeatherLocationSource = 'openMeteo' | 'amap' | 'amap-geolocation'
@@ -125,6 +127,7 @@ export interface WeatherSnapshot {
   hourly: HourlyForecastItem[]
   daily: DailyForecastItem[]
   shortTermPrecipitation: ShortTermPrecipitation | null
+  alerts: WeatherAlert[]
   units: WeatherUnits
   advice: WeatherAdvice
 }

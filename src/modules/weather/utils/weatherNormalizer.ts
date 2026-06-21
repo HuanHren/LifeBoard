@@ -182,6 +182,7 @@ export function normalizeWeatherForecast(
     hourly,
     daily,
     shortTermPrecipitation: null,
+    alerts: [],
     units: {
       temperature: response.current_units.temperature_2m,
       precipitation: response.current_units.precipitation,

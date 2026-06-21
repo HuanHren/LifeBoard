@@ -111,6 +111,7 @@ function createCurrentLocation({
 
 export const useWeatherStore = defineStore('weather', () => {
   const selectedLocation = shallowRef<WeatherLocation | null>(null)
+  const pendingForecastLocation = shallowRef<WeatherLocation | null>(null)
   const searchQuery = shallowRef('')
   const searchResults = shallowRef<WeatherLocation[]>([])
   const weather = shallowRef<WeatherSnapshot | null>(null)
@@ -122,6 +123,7 @@ export const useWeatherStore = defineStore('weather', () => {
   const airQualityStatus = shallowRef<WeatherRequestStatus>('idle')
   const airQualityError = shallowRef<AirQualityErrorKind | null>(null)
   const airQualityLocationId = shallowRef<string | null>(null)
+  const airQualityRequestLocationId = shallowRef<string | null>(null)
   const airQualityFetchedAt = shallowRef<string | null>(null)
   const favoriteCities = shallowRef<WeatherFavoriteCity[]>([])
   const favoriteMessage = shallowRef<WeatherFavoriteMessage | null>(null)
@@ -140,6 +142,8 @@ export const useWeatherStore = defineStore('weather', () => {
   let searchController: AbortController | null = null
   let forecastController: AbortController | null = null
   let airQualityController: AbortController | null = null
+  let forecastRequestId = 0
+  let airQualityRequestId = 0
 
   const hasLocation = computed(() => selectedLocation.value !== null)
   const hasWeather = computed(() => weather.value !== null)
@@ -156,6 +160,46 @@ export const useWeatherStore = defineStore('weather', () => {
   )
   const needsCaiyunToken = computed(
     () => provider.value === 'caiyun' && !hasCaiyunToken.value,
+  )
+  const displayWeatherLocationId = computed(() =>
+    weather.value ? createAirQualityLocationId(weather.value.location) : null,
+  )
+  const displayAirQuality = computed(() => {
+    if (!displayWeatherLocationId.value || !airQuality.value) {
+      return null
+    }
+
+    return airQuality.value.locationId === displayWeatherLocationId.value
+      ? airQuality.value
+      : null
+  })
+  const displayAirQualityStatus = computed<WeatherRequestStatus>(() => {
+    if (!displayWeatherLocationId.value) {
+      return 'idle'
+    }
+
+    if (displayAirQuality.value) {
+      return 'success'
+    }
+
+    if (
+      airQualityStatus.value === 'loading' &&
+      airQualityRequestLocationId.value === displayWeatherLocationId.value
+    ) {
+      return 'loading'
+    }
+
+    if (
+      airQualityStatus.value === 'error' &&
+      airQualityRequestLocationId.value === displayWeatherLocationId.value
+    ) {
+      return 'error'
+    }
+
+    return 'idle'
+  })
+  const displayAirQualityError = computed(() =>
+    displayAirQualityStatus.value === 'error' ? airQualityError.value : null,
   )
 
   function hasFreshAirQuality(location: WeatherLocation) {
@@ -297,37 +341,75 @@ export const useWeatherStore = defineStore('weather', () => {
     return true
   }
 
-  async function loadForecast(location = selectedLocation.value) {
-    if (!location) {
-      return
+  async function loadForecast(
+    location: WeatherLocation | null = null,
+    options: {
+      commitSelectedLocation?: boolean
+      persistLocationOnSuccess?: boolean
+    } = {},
+  ) {
+    const targetLocation =
+      location ?? selectedLocation.value ?? pendingForecastLocation.value
+
+    if (!targetLocation) {
+      return false
     }
 
+    const requestId = ++forecastRequestId
+    const commitSelectedLocation = options.commitSelectedLocation ?? true
+    pendingForecastLocation.value = targetLocation
     forecastController?.abort()
 
     if (needsCaiyunToken.value) {
-      weather.value = null
-      forecastStatus.value = 'idle'
-      forecastError.value = null
-      lastUpdatedAt.value = null
-      return
+      forecastStatus.value = weather.value ? 'error' : 'idle'
+      forecastError.value = weather.value
+        ? 'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.'
+        : null
+
+      if (!weather.value && commitSelectedLocation) {
+        selectedLocation.value = targetLocation
+      }
+
+      return false
     }
 
     forecastController = new AbortController()
+    const signal = forecastController.signal
     forecastStatus.value = 'loading'
     forecastError.value = null
 
     try {
       const snapshot = await fetchWeatherForecastForProvider({
         provider: provider.value,
-        location,
-        signal: forecastController.signal,
+        location: targetLocation,
+        signal,
       })
+
+      if (requestId !== forecastRequestId) {
+        return false
+      }
+
+      if (options.persistLocationOnSuccess && !persistLocation(snapshot.location)) {
+        forecastStatus.value = 'error'
+        return false
+      }
+
+      if (commitSelectedLocation) {
+        selectedLocation.value = snapshot.location
+      }
+
       weather.value = snapshot
       lastUpdatedAt.value = snapshot.fetchedAt
       forecastStatus.value = 'success'
+      pendingForecastLocation.value = null
+      return true
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') {
-        return
+        return false
+      }
+
+      if (requestId !== forecastRequestId) {
+        return false
       }
 
       forecastError.value = getErrorMessage(
@@ -335,6 +417,7 @@ export const useWeatherStore = defineStore('weather', () => {
         'The forecast could not be loaded. Please try again.',
       )
       forecastStatus.value = 'error'
+      return false
     }
   }
 
@@ -352,26 +435,25 @@ export const useWeatherStore = defineStore('weather', () => {
       return
     }
 
+    const requestId = ++airQualityRequestId
     airQualityController?.abort()
     airQualityController = new AbortController()
+    const signal = airQualityController.signal
+    airQualityRequestLocationId.value = requestLocationId
     airQualityStatus.value = 'loading'
     airQualityError.value = null
-
-    if (airQualityLocationId.value !== requestLocationId) {
-      airQuality.value = null
-      airQualityFetchedAt.value = null
-    }
 
     try {
       const response = await fetchOpenMeteoAirQuality(
         location,
-        airQualityController.signal,
+        signal,
       )
       const snapshot = normalizeOpenMeteoAirQuality(response, location)
 
       if (
-        !selectedLocation.value ||
-        createAirQualityLocationId(selectedLocation.value) !== requestLocationId
+        requestId !== airQualityRequestId ||
+        !weather.value ||
+        createAirQualityLocationId(weather.value.location) !== requestLocationId
       ) {
         return
       }
@@ -386,8 +468,9 @@ export const useWeatherStore = defineStore('weather', () => {
       }
 
       if (
-        selectedLocation.value &&
-        createAirQualityLocationId(selectedLocation.value) !== requestLocationId
+        requestId !== airQualityRequestId ||
+        !weather.value ||
+        createAirQualityLocationId(weather.value.location) !== requestLocationId
       ) {
         return
       }
@@ -398,7 +481,7 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   function retryAirQuality() {
-    return loadAirQuality(selectedLocation.value, { force: true })
+    return loadAirQuality(weather.value?.location ?? selectedLocation.value, { force: true })
   }
 
   function clearAirQuality() {
@@ -407,6 +490,7 @@ export const useWeatherStore = defineStore('weather', () => {
     airQualityStatus.value = 'idle'
     airQualityError.value = null
     airQualityLocationId.value = null
+    airQualityRequestLocationId.value = null
     airQualityFetchedAt.value = null
   }
 
@@ -425,9 +509,13 @@ export const useWeatherStore = defineStore('weather', () => {
       return
     }
 
-    selectedLocation.value = storedLocation
-    void loadAirQuality(storedLocation)
-    await loadForecast(storedLocation)
+    const loaded = await loadForecast(storedLocation, {
+      commitSelectedLocation: true,
+    })
+
+    if (loaded) {
+      void loadAirQuality(weather.value?.location ?? storedLocation)
+    }
   }
 
   async function searchCities(query: string, locale: AppLocale = 'en-US') {
@@ -483,17 +571,19 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   async function selectLocation(location: WeatherLocation) {
-    if (!persistLocation(location)) {
-      return false
-    }
-
-    selectedLocation.value = location
     searchResults.value = []
     searchStatus.value = 'idle'
     searchError.value = null
-    void loadAirQuality(location)
-    await loadForecast(location)
-    return true
+    const loaded = await loadForecast(location, {
+      commitSelectedLocation: true,
+      persistLocationOnSuccess: true,
+    })
+
+    if (loaded) {
+      void loadAirQuality(weather.value?.location ?? location)
+    }
+
+    return loaded
   }
 
   function selectSearchResult(result: OpenMeteoGeocodingResult) {
@@ -606,10 +696,12 @@ export const useWeatherStore = defineStore('weather', () => {
 
     if (provider.value === 'caiyun') {
       forecastController?.abort()
-      weather.value = null
-      forecastStatus.value = 'idle'
-      forecastError.value = null
-      lastUpdatedAt.value = null
+      forecastRequestId += 1
+      pendingForecastLocation.value = null
+      forecastStatus.value = weather.value ? 'error' : 'idle'
+      forecastError.value = weather.value
+        ? 'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.'
+        : null
     }
 
     return true
@@ -716,6 +808,7 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastError.value = null
     lastUpdatedAt.value = null
     searchError.value = null
+    pendingForecastLocation.value = null
     return true
   }
 
@@ -727,6 +820,7 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastStatus.value = 'idle'
     forecastError.value = null
     lastUpdatedAt.value = null
+    pendingForecastLocation.value = null
     favoriteMessage.value = null
     searchNotice.value = null
   }
@@ -758,7 +852,11 @@ export const useWeatherStore = defineStore('weather', () => {
     airQualityStatus,
     airQualityError,
     airQualityLocationId,
+    airQualityRequestLocationId,
     airQualityFetchedAt,
+    displayAirQuality,
+    displayAirQualityStatus,
+    displayAirQualityError,
     favoriteCities,
     favoriteMessage,
     provider,

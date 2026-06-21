@@ -19,9 +19,26 @@ export interface CaiyunWeatherResponse {
     minutely?: CaiyunMinutely
     hourly: CaiyunHourly
     daily: CaiyunDaily
+    alert?: CaiyunAlert
     primary?: number
     forecast_keypoint?: string
   }
+}
+
+export interface CaiyunAlert {
+  status?: string
+  content?: CaiyunAlertContent[]
+}
+
+export interface CaiyunAlertContent {
+  title?: string
+  description?: string
+  status?: string
+  code?: string
+  source?: string
+  pubtimestamp?: number
+  alertId?: string
+  location?: string
 }
 
 export type CaiyunSeries<T> =

@@ -138,6 +138,14 @@ export const zhCNModules = {
   'weather.hero.provider.caiyun': 'Caiyun Weather 预报',
   'weather.hero.summary':
     '{location}：{temperature}，{condition}。最高 {high}，最低 {low}。',
+  'weather.alert.title': '天气预警',
+  'weather.alert.description': 'Caiyun Weather 为当前已加载位置返回的活动预警。',
+  'weather.alert.listLabel': '活动天气预警',
+  'weather.alert.authority': '发布机构',
+  'weather.alert.issuedAt': '发布于 {time}',
+  'weather.alert.issuedTime': '发布时间',
+  'weather.alert.transportSource': '传输来源',
+  'weather.alert.source': 'Caiyun Weather',
   'weather.cities.title': '城市管理',
   'weather.cities.description':
     '搜索、选择、保存和切换天气城市，不额外增加数据痕迹。',
@@ -290,11 +298,17 @@ export const zhCNModules = {
   'weather.daily.title': '未来 7 天',
   'weather.daily.description': '简洁查看气温、降雨和风况趋势。',
   'weather.daily.scrollLabel': '可横向滚动的 7 天天气预报',
+  'weather.daily.caiyunTitle': 'Caiyun Weather 3 日预报',
+  'weather.daily.caiyunDescription':
+    '使用 Caiyun Weather 为当前已加载位置返回的真实每日预报。',
+  'weather.daily.caiyunScrollLabel': '可横向滚动的 Caiyun Weather 3 日预报',
+  'weather.daily.caiyunUnavailable':
+    '紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。',
   'weather.daily.today': '今天',
   'weather.daily.peakGust': '最大阵风',
   'weather.longRange.title': '15 日天气预报',
   'weather.longRange.description':
-    '查看当前成功加载的数据源为此位置返回的更长天级预报。',
+    '查看 Open-Meteo 为当前所选位置返回的更长天级预报。',
   'weather.longRange.viewAction': '查看未来 15 日',
   'weather.longRange.backToWeather': '返回天气',
   'weather.longRange.today': '今天',
@@ -387,6 +401,7 @@ export const zhCNModules = {
   'weather.state.errorFallback': '无法加载天气预报。',
   'weather.state.retry': '重试天气预报',
   'weather.state.loaded': '已加载 {city} 的天气。',
+  'weather.state.updateFailed': '未能更新天气。正在显示上一份预报。',
   'weather.error.saveCity': '无法在此浏览器中保存所选城市。请检查本地存储权限后重试。',
   'weather.error.clearCity': '无法从此浏览器清除所选城市。请检查本地存储权限后重试。',
   'weather.error.readCity': '无法从此浏览器读取已保存城市。请检查本地存储权限并重新加载。',

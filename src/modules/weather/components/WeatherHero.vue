@@ -334,7 +334,7 @@ const screenReaderSummary = computed(() =>
 }
 
 .weather-hero[data-motion='snapshot'] .weather-hero__content {
-  animation: weather-hero-snapshot var(--motion-base) var(--motion-ease) both;
+  animation: weather-hero-snapshot 220ms var(--motion-ease) both;
 }
 
 @keyframes weather-hero-enter {
@@ -351,13 +351,13 @@ const screenReaderSummary = computed(() =>
 
 @keyframes weather-hero-snapshot {
   from {
-    opacity: 0.78;
-    transform: translateY(0.12rem);
+    opacity: 0.82;
+    transform: scale(0.995);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
 

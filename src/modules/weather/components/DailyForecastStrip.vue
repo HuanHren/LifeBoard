@@ -12,10 +12,13 @@ import { localizeWeatherCondition } from '@/modules/weather/utils/weatherI18n'
 
 interface Props {
   items: DailyForecastItem[]
+  title?: string
+  description?: string
+  scrollLabel?: string
   units: WeatherUnits
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const { locale, t } = useI18n()
 </script>
 
@@ -26,16 +29,16 @@ const { locale, t } = useI18n()
         id="daily-forecast-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
       >
-        {{ t('weather.daily.title') }}
+        {{ props.title ?? t('weather.daily.title') }}
       </h2>
       <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        {{ t('weather.daily.description') }}
+        {{ props.description ?? t('weather.daily.description') }}
       </p>
     </div>
 
     <div
       class="forecast-scroll mt-4 overflow-x-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-offset-4"
-      :aria-label="t('weather.daily.scrollLabel')"
+      :aria-label="props.scrollLabel ?? t('weather.daily.scrollLabel')"
       tabindex="0"
     >
       <ol class="flex min-w-max snap-x snap-proximity gap-2">

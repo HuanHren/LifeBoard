@@ -9,6 +9,7 @@ import type {
   CaiyunHourlyValue,
   CaiyunWeatherResponse,
   CaiyunSkycon,
+  CaiyunAlertContent,
 } from '@/modules/weather/types/caiyun'
 import type {
   DailyForecastItem,
@@ -17,8 +18,10 @@ import type {
   WeatherLocation,
   WeatherSnapshot,
 } from '@/modules/weather/types/weather'
+import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
 import { createWeatherAdvice } from '@/modules/weather/utils/weatherAdvice'
 import { getWeatherCondition } from '@/modules/weather/utils/weatherCodes'
+import { createAirQualityLocationId } from '@/modules/weather/utils/airQualityNormalizer'
 
 function requireValue<T>(value: T | undefined | null, field: string): T {
   if (value === undefined || value === null) {
@@ -111,6 +114,57 @@ function normalizeShortTermPrecipitation(
     summary: minutely?.description ?? null,
     items,
   }
+}
+
+function stringOrNull(value: unknown) {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null
+}
+
+function alertIssuedAt(value: number | undefined) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? new Date(value * 1000).toISOString()
+    : null
+}
+
+function normalizeAlert(
+  alert: CaiyunAlertContent,
+  location: WeatherLocation,
+  index: number,
+): WeatherAlert | null {
+  const title = stringOrNull(alert.title)
+  const description = stringOrNull(alert.description)
+
+  if (!title || !description) {
+    return null
+  }
+
+  return {
+    id: stringOrNull(alert.alertId) ?? `${createAirQualityLocationId(location)}-${index}`,
+    provider: 'caiyun',
+    title,
+    description,
+    severityLabel: stringOrNull(alert.code),
+    status: stringOrNull(alert.status),
+    issuingAuthority: stringOrNull(alert.source),
+    issuedAt: alertIssuedAt(alert.pubtimestamp),
+    locationLabel: stringOrNull(alert.location),
+    locationId: createAirQualityLocationId(location),
+  }
+}
+
+function normalizeAlerts(
+  response: CaiyunWeatherResponse,
+  location: WeatherLocation,
+): WeatherAlert[] {
+  const content = response.result.alert?.content
+
+  if (!Array.isArray(content)) {
+    return []
+  }
+
+  return content
+    .map((alert, index) => normalizeAlert(alert, location, index))
+    .filter((alert): alert is WeatherAlert => alert !== null)
 }
 
 function skyconToWeatherCode(skycon: CaiyunSkycon) {
@@ -289,6 +343,7 @@ export function normalizeCaiyunWeatherForecast(
     hourly,
     daily,
     shortTermPrecipitation: normalizeShortTermPrecipitation(response),
+    alerts: normalizeAlerts(response, location),
     units: {
       temperature: '°C',
       precipitation: 'mm',

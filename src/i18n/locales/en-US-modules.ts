@@ -146,6 +146,15 @@ export const enUSModules = {
   'weather.hero.provider.caiyun': 'Caiyun Weather forecast',
   'weather.hero.summary':
     '{location}: {temperature}, {condition}. High {high}, low {low}.',
+  'weather.alert.title': 'Weather alerts',
+  'weather.alert.description':
+    'Active alerts returned by Caiyun Weather for the loaded location.',
+  'weather.alert.listLabel': 'Active weather alerts',
+  'weather.alert.authority': 'Issuing authority',
+  'weather.alert.issuedAt': 'Issued {time}',
+  'weather.alert.issuedTime': 'Issue time',
+  'weather.alert.transportSource': 'Transport source',
+  'weather.alert.source': 'Caiyun Weather',
   'weather.cities.title': 'Manage cities',
   'weather.cities.description':
     'Search, choose, save, and switch weather cities without adding a new data trail.',
@@ -328,11 +337,17 @@ export const enUSModules = {
   'weather.daily.title': 'Next 7 days',
   'weather.daily.description': 'A compact outlook for temperature, rain, and wind.',
   'weather.daily.scrollLabel': 'Scrollable 7-day weather forecast',
+  'weather.daily.caiyunTitle': 'Caiyun 3-day outlook',
+  'weather.daily.caiyunDescription':
+    'Actual daily entries returned by Caiyun Weather for the loaded location.',
+  'weather.daily.caiyunScrollLabel': 'Scrollable Caiyun 3-day weather forecast',
+  'weather.daily.caiyunUnavailable':
+    'The compact 3-day panel uses Caiyun Weather only. It appears after a Caiyun forecast loads for this location.',
   'weather.daily.today': 'Today',
   'weather.daily.peakGust': 'Peak gust',
   'weather.longRange.title': '15-day forecast',
   'weather.longRange.description':
-    'A longer daily outlook from the forecast provider that successfully loaded for this location.',
+    'A longer daily outlook from Open-Meteo for the selected location.',
   'weather.longRange.viewAction': 'View 15-day forecast',
   'weather.longRange.backToWeather': 'Back to Weather',
   'weather.longRange.today': 'Today',
@@ -446,6 +461,7 @@ export const enUSModules = {
   'weather.state.errorFallback': 'The forecast could not be loaded.',
   'weather.state.retry': 'Retry forecast',
   'weather.state.loaded': 'Weather loaded for {city}.',
+  'weather.state.updateFailed': 'Could not update weather. Showing the previous forecast.',
   'weather.error.saveCity':
     'The selected city could not be saved in this browser. Check local storage access and try again.',
   'weather.error.clearCity':
