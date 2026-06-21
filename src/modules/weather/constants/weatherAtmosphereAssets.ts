@@ -1,6 +1,12 @@
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
-import clearDayBaseDesktopPng from '@/assets/weather/atmosphere/clear-day/desktop/clear-day-base-desktop.png'
-import clearDayBaseMobilePng from '@/assets/weather/atmosphere/clear-day/mobile/clear-day-base-mobile.png'
+import clearDayBaseDesktopAvif from '@/assets/weather/atmosphere/clear-day/desktop/clear-day-base-desktop.avif'
+import clearDayBaseDesktopWebp from '@/assets/weather/atmosphere/clear-day/desktop/clear-day-base-desktop.webp'
+import clearDayBaseMobileAvif from '@/assets/weather/atmosphere/clear-day/mobile/clear-day-base-mobile.avif'
+import clearDayBaseMobileWebp from '@/assets/weather/atmosphere/clear-day/mobile/clear-day-base-mobile.webp'
+import clearNightBaseDesktopAvif from '@/assets/weather/atmosphere/clear-night/desktop/clear-night-base-desktop.avif'
+import clearNightBaseDesktopWebp from '@/assets/weather/atmosphere/clear-night/desktop/clear-night-base-desktop.webp'
+import clearNightBaseMobileAvif from '@/assets/weather/atmosphere/clear-night/mobile/clear-night-base-mobile.avif'
+import clearNightBaseMobileWebp from '@/assets/weather/atmosphere/clear-night/mobile/clear-night-base-mobile.webp'
 
 export interface WeatherAtmosphereAssetSource {
   avif?: string
@@ -48,10 +54,12 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
     motionPreset: 'clear-glow',
     base: {
       desktop: {
-        png: clearDayBaseDesktopPng,
+        avif: clearDayBaseDesktopAvif,
+        webp: clearDayBaseDesktopWebp,
       },
       mobile: {
-        png: clearDayBaseMobilePng,
+        avif: clearDayBaseMobileAvif,
+        webp: clearDayBaseMobileWebp,
       },
     },
     objectPosition: {
@@ -65,6 +73,16 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
     state: 'clear-night',
     fallbackClass: 'weather-atmosphere--clear-night',
     motionPreset: 'static',
+    base: {
+      desktop: {
+        avif: clearNightBaseDesktopAvif,
+        webp: clearNightBaseDesktopWebp,
+      },
+      mobile: {
+        avif: clearNightBaseMobileAvif,
+        webp: clearNightBaseMobileWebp,
+      },
+    },
     objectPosition: {
       desktop: 'center center',
       mobile: '54% center',
