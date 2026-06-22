@@ -5,6 +5,7 @@ import { createAirQualityLocationId } from '@/modules/weather/utils/airQualityNo
 import { getWeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
 import { deriveWeatherLighting } from '@/modules/weather/utils/weatherLighting'
 import { deriveWeatherSolarPhase } from '@/modules/weather/utils/weatherSolarPhase'
+import { resolveWeatherVisual } from '@/modules/weather/visual/resolve-weather-visual'
 
 export function createWeatherVisualSnapshot(
   weather: WeatherSnapshot,
@@ -16,6 +17,14 @@ export function createWeatherVisualSnapshot(
   const matchingAirQuality =
     airQuality?.locationId === locationId ? airQuality : null
   const solarPhase = deriveWeatherSolarPhase(weather, nowMs)
+  const today = weather.daily[0] ?? null
+  const visual = resolveWeatherVisual({
+    weatherCode: weather.current.condition.code,
+    isDay: weather.current.isDay,
+    sunrise: today?.sunrise ?? null,
+    sunset: today?.sunset ?? null,
+    currentTime: weather.current.time,
+  })
   const lighting = deriveWeatherLighting({
     atmosphere,
     current: weather.current,
@@ -32,11 +41,15 @@ export function createWeatherVisualSnapshot(
       weather.current.condition.code,
       weather.current.isDay ? 'day' : 'night',
       atmosphere,
+      visual.condition,
+      visual.effectGroup,
+      visual.timeline,
       weather.fetchedAt,
     ].join('|'),
     weather,
     locationId,
     atmosphere,
+    visual,
     solarPhase,
     lighting,
     airQuality: matchingAirQuality,

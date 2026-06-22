@@ -1,0 +1,74 @@
+[
+  {
+    "label": "request",
+    "t": 222,
+    "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "state": {
+      "innerWidth": 1440,
+      "outerWidth": 1440,
+      "devicePixelRatio": 1,
+      "mobileMatch": false,
+      "reduced": true,
+      "picture": [
+        "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>"
+      ],
+      "imgs": [
+        {
+          "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+          "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+          "nw": 1600,
+          "complete": true
+        }
+      ],
+      "phase": "stable"
+    }
+  },
+  {
+    "label": "response 200",
+    "t": 222,
+    "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "state": {
+      "innerWidth": 1440,
+      "outerWidth": 1440,
+      "devicePixelRatio": 1,
+      "mobileMatch": false,
+      "reduced": true,
+      "picture": [
+        "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>"
+      ],
+      "imgs": [
+        {
+          "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+          "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+          "nw": 1600,
+          "complete": true
+        }
+      ],
+      "phase": "stable"
+    }
+  },
+  {
+    "label": "final",
+    "t": 2963,
+    "url": "",
+    "state": {
+      "innerWidth": 1440,
+      "outerWidth": 1440,
+      "devicePixelRatio": 1,
+      "mobileMatch": false,
+      "reduced": true,
+      "picture": [
+        "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>"
+      ],
+      "imgs": [
+        {
+          "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+          "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+          "nw": 1600,
+          "complete": true
+        }
+      ],
+      "phase": "stable"
+    }
+  }
+]

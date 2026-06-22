@@ -1,4 +1,6 @@
 import type { WeatherSnapshot } from '@/modules/weather/types/weather'
+import { getLifeBoardConditionFromWmo } from '@/modules/weather/visual/weather-condition'
+import { getWeatherEffectGroup } from '@/modules/weather/visual/weather-effect-group'
 
 export type WeatherAtmosphere =
   | 'clear-day'
@@ -12,17 +14,6 @@ export type WeatherAtmosphere =
   | 'fog-haze'
   | 'snow'
   | 'neutral'
-
-function isRainCode(code: number) {
-  return (
-    (code >= 51 && code <= 67) ||
-    (code >= 80 && code <= 82)
-  )
-}
-
-function isSnowCode(code: number) {
-  return code >= 71 && code <= 77 || code === 85 || code === 86
-}
 
 function dayNightState<TDay extends WeatherAtmosphere, TNight extends WeatherAtmosphere>(
   isDay: boolean | null | undefined,
@@ -42,29 +33,39 @@ function dayNightState<TDay extends WeatherAtmosphere, TNight extends WeatherAtm
 }
 
 export function getWeatherAtmosphere(weather: WeatherSnapshot): WeatherAtmosphere {
-  const { code } = weather.current.condition
+  const condition = getLifeBoardConditionFromWmo(weather.current.condition.code)
+  const effectGroup = getWeatherEffectGroup(condition)
 
-  if (code === 95 || code === 96 || code === 99) {
+  if (effectGroup === 'thunderstorm') {
     return 'thunderstorm'
   }
 
-  if (isSnowCode(code)) {
+  if (
+    effectGroup === 'light-snow' ||
+    effectGroup === 'moderate-snow' ||
+    effectGroup === 'heavy-snow'
+  ) {
     return 'snow'
   }
 
-  if (isRainCode(code)) {
+  if (
+    effectGroup === 'light-rain' ||
+    effectGroup === 'moderate-rain' ||
+    effectGroup === 'heavy-rain' ||
+    effectGroup === 'sleet-freezing'
+  ) {
     return dayNightState(weather.current.isDay, 'rain-day', 'rain-night')
   }
 
-  if (code === 45 || code === 48) {
+  if (effectGroup === 'fog' || effectGroup === 'haze') {
     return 'fog-haze'
   }
 
-  if (code === 3) {
+  if (effectGroup === 'overcast' || effectGroup === 'cloudy') {
     return 'overcast'
   }
 
-  if (code === 2) {
+  if (effectGroup === 'partly-cloudy') {
     return dayNightState(
       weather.current.isDay,
       'partly-cloudy-day',
@@ -73,7 +74,7 @@ export function getWeatherAtmosphere(weather: WeatherSnapshot): WeatherAtmospher
     )
   }
 
-  if (code === 0 || code === 1) {
+  if (effectGroup === 'clear') {
     return dayNightState(weather.current.isDay, 'clear-day', 'clear-night', 'neutral')
   }
 

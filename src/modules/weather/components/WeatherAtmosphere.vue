@@ -6,10 +6,12 @@ import {
 } from '@/modules/weather/constants/weatherAtmosphereAssets'
 import type { WeatherLighting } from '@/modules/weather/types/weatherLighting'
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
+import type { ResolvedWeatherVisual } from '@/modules/weather/visual/types'
 
 interface Props {
   atmosphere: WeatherAtmosphere
   lighting?: WeatherLighting
+  visual?: ResolvedWeatherVisual
 }
 
 type AtmosphereLayer = 'base' | 'depth' | 'foreground'
@@ -22,8 +24,26 @@ const emit = defineEmits<{
 const failedLayers = ref<Set<AtmosphereLayer>>(new Set())
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
-const baseDesktopSource = computed(() => assetSet.value.base?.desktop)
-const baseMobileSource = computed(() => assetSet.value.base?.mobile)
+const resolvedBase = computed(() => {
+  if (!props.visual?.hasRegisteredVisual) {
+    return null
+  }
+
+  if (!props.visual.desktopAsset && !props.visual.mobileAsset) {
+    return null
+  }
+
+  return {
+    desktop: props.visual.desktopAsset,
+    mobile: props.visual.mobileAsset,
+  }
+})
+const baseDesktopSource = computed(
+  () => resolvedBase.value?.desktop ?? assetSet.value.base?.desktop,
+)
+const baseMobileSource = computed(
+  () => resolvedBase.value?.mobile ?? assetSet.value.base?.mobile,
+)
 const baseFallbackSource = computed(
   () =>
     baseDesktopSource.value?.webp ??
@@ -53,7 +73,9 @@ const hasAnyAsset = computed(
 const canDriftDepth = computed(
   () => Boolean(assetSet.value.shouldDriftDepth) && hasDepthAsset.value,
 )
-const motionPreset = computed(() => assetSet.value.motionPreset ?? 'static')
+const motionPreset = computed(
+  () => props.visual?.motionPreset ?? assetSet.value.motionPreset ?? 'static',
+)
 const safeLighting = computed<WeatherLighting>(() => props.lighting ?? {
   lightLevel: 0.62,
   lightWarmth: 0.48,
@@ -144,6 +166,10 @@ watch(
       `weather-atmosphere--motion-${motionPreset}`,
     ]"
     :data-atmosphere="atmosphere"
+    :data-effect-group="visual?.effectGroup ?? 'legacy'"
+    :data-fallback-reason="visual?.fallbackReason ?? 'registered'"
+    :data-life-board-condition="visual?.condition ?? 'unknown'"
+    :data-timeline="visual?.timeline ?? 'day'"
     :style="atmosphereStyle"
   >
     <span class="weather-atmosphere__wash" />
@@ -157,20 +183,20 @@ watch(
     >
       <source
         v-if="baseMobileSource?.avif"
+        media="(max-width: 39.9375rem)"
         :srcset="baseMobileSource.avif"
-        media="(max-width: 639px)"
         type="image/avif"
       >
       <source
         v-if="baseMobileSource?.webp"
+        media="(max-width: 39.9375rem)"
         :srcset="baseMobileSource.webp"
-        media="(max-width: 639px)"
         type="image/webp"
       >
       <source
         v-if="baseMobileSource?.png"
+        media="(max-width: 39.9375rem)"
         :srcset="baseMobileSource.png"
-        media="(max-width: 639px)"
         type="image/png"
       >
       <source
@@ -548,6 +574,16 @@ watch(
 }
 
 .weather-atmosphere--motion-clear-glow .weather-atmosphere__detail {
+  animation: weather-atmosphere-soft-glow 18s var(--motion-ease) infinite alternate;
+  will-change: opacity, transform;
+}
+
+.weather-atmosphere--motion-partly-cloudy-gentle .weather-atmosphere__wash {
+  animation: weather-atmosphere-haze-drift 42s linear infinite;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-partly-cloudy-gentle .weather-atmosphere__highlight {
   animation: weather-atmosphere-soft-glow 18s var(--motion-ease) infinite alternate;
   will-change: opacity, transform;
 }

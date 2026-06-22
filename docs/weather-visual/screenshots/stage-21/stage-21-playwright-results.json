@@ -1,0 +1,256 @@
+[
+  {
+    "file": "weather-1440x1000-light-motion-20260622.png",
+    "width": 1440,
+    "height": 1000,
+    "theme": "light",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-1440x1000-light-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif",
+      "imgNaturalWidth": 1600,
+      "imgNaturalHeight": 700,
+      "bodyScrollWidth": 1440,
+      "viewportWidth": 1440,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-1600x900-light-motion-20260622.png",
+    "width": 1600,
+    "height": 900,
+    "theme": "light",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-1600x900-light-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif",
+      "imgNaturalWidth": 1600,
+      "imgNaturalHeight": 700,
+      "bodyScrollWidth": 1600,
+      "viewportWidth": 1600,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-390x844-light-motion-20260622.png",
+    "width": 390,
+    "height": 844,
+    "theme": "light",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-390x844-light-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif",
+      "imgNaturalWidth": 900,
+      "imgNaturalHeight": 900,
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-430x932-light-motion-20260622.png",
+    "width": 430,
+    "height": 932,
+    "theme": "light",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-430x932-light-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif",
+      "imgNaturalWidth": 900,
+      "imgNaturalHeight": 900,
+      "bodyScrollWidth": 430,
+      "viewportWidth": 430,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-360x800-light-motion-20260622.png",
+    "width": 360,
+    "height": 800,
+    "theme": "light",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-360x800-light-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif",
+      "imgNaturalWidth": 900,
+      "imgNaturalHeight": 900,
+      "bodyScrollWidth": 360,
+      "viewportWidth": 360,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-1440x1000-light-reduced-motion-20260622.png",
+    "width": 1440,
+    "height": 1000,
+    "theme": "light",
+    "reducedMotion": true,
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-1440x1000-light-reduced-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif",
+      "imgNaturalWidth": 1600,
+      "imgNaturalHeight": 700,
+      "bodyScrollWidth": 1440,
+      "viewportWidth": 1440,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "none,none"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif"
+    ],
+    "consoleMessages": []
+  },
+  {
+    "file": "weather-1440x1000-light-fallback-20260622.png",
+    "width": 1440,
+    "height": 1000,
+    "theme": "light",
+    "failImages": true,
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-1440x1000-light-fallback-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": null,
+      "imgNaturalWidth": 0,
+      "imgNaturalHeight": 0,
+      "bodyScrollWidth": 1440,
+      "viewportWidth": 1440,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif"
+    ],
+    "consoleMessages": [
+      "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ]
+  },
+  {
+    "file": "weather-1440x1000-dark-motion-20260622.png",
+    "width": 1440,
+    "height": 1000,
+    "theme": "dark",
+    "screenshotPath": "D:\\LifeBoard\\docs\\weather-visual\\screenshots\\stage-21\\weather-1440x1000-dark-motion-20260622.png",
+    "result": {
+      "heroAtmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "motionClass": "weather-atmosphere--motion-partly-cloudy-gentle",
+      "imgCurrentSrc": "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif",
+      "imgNaturalWidth": 1600,
+      "imgNaturalHeight": 700,
+      "bodyScrollWidth": 1440,
+      "viewportWidth": 1440,
+      "title": "Stage City, Verification",
+      "temperature": "25?C",
+      "animationNames": "weather-atmosphere-haze-drift-aae9d126,weather-atmosphere-soft-glow-aae9d126"
+    },
+    "assetRequests": [
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp?import",
+      "http://127.0.0.1:5173/src/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif"
+    ],
+    "consoleMessages": []
+  }
+]

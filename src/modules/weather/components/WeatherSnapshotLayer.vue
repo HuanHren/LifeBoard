@@ -159,6 +159,7 @@ const effectiveLighting = computed(
     <WeatherAtmosphere
       :atmosphere="snapshot.atmosphere"
       :lighting="effectiveLighting"
+      :visual="snapshot.visual"
       @base-ready="emit('baseArtworkReady', $event)"
     />
 
