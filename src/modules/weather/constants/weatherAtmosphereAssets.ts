@@ -7,6 +7,10 @@ import clearNightBaseDesktopAvif from '@/assets/weather/atmosphere/clear-night/d
 import clearNightBaseDesktopWebp from '@/assets/weather/atmosphere/clear-night/desktop/clear-night-base-desktop.webp'
 import clearNightBaseMobileAvif from '@/assets/weather/atmosphere/clear-night/mobile/clear-night-base-mobile.avif'
 import clearNightBaseMobileWebp from '@/assets/weather/atmosphere/clear-night/mobile/clear-night-base-mobile.webp'
+import partlyCloudyDayBaseDesktopAvif from '@/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.avif'
+import partlyCloudyDayBaseDesktopWebp from '@/assets/weather/atmosphere/partly-cloudy-day/desktop/partly-cloudy-day-base-desktop.webp'
+import partlyCloudyDayBaseMobileAvif from '@/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.avif'
+import partlyCloudyDayBaseMobileWebp from '@/assets/weather/atmosphere/partly-cloudy-day/mobile/partly-cloudy-day-base-mobile.webp'
 
 export interface WeatherAtmosphereAssetSource {
   avif?: string
@@ -95,6 +99,16 @@ export const WEATHER_ATMOSPHERE_ASSETS = {
     state: 'partly-cloudy-day',
     fallbackClass: 'weather-atmosphere--partly-cloudy-day',
     motionPreset: 'cloud-drift',
+    base: {
+      desktop: {
+        avif: partlyCloudyDayBaseDesktopAvif,
+        webp: partlyCloudyDayBaseDesktopWebp,
+      },
+      mobile: {
+        avif: partlyCloudyDayBaseMobileAvif,
+        webp: partlyCloudyDayBaseMobileWebp,
+      },
+    },
     objectPosition: {
       desktop: 'center center',
       mobile: '56% center',
