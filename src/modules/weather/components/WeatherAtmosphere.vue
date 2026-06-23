@@ -5,11 +5,16 @@ const baseFormatStateByVisualIdentity = new Map<string, BaseFormatState>()
 </script>
 
 <script setup lang="ts">
-import { computed, ref, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import {
   getWeatherAtmosphereAssets,
   type WeatherAtmosphereAssetSource,
 } from '@/modules/weather/constants/weatherAtmosphereAssets'
+import { WeatherPixiLayer } from '@/modules/weather/renderers/pixi'
+import type {
+  PixiWeatherRendererStatus,
+  PixiWeatherVisualKey,
+} from '@/modules/weather/renderers/pixi'
 import type { WeatherLighting } from '@/modules/weather/types/weatherLighting'
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
 import type { ResolvedWeatherVisual } from '@/modules/weather/visual/types'
@@ -18,6 +23,7 @@ interface Props {
   atmosphere: WeatherAtmosphere
   lighting?: WeatherLighting
   visual?: ResolvedWeatherVisual
+  visualState?: 'stable' | 'outgoing' | 'incoming'
 }
 
 type AtmosphereLayer = 'base' | 'depth' | 'foreground'
@@ -27,8 +33,11 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   baseReady: [readiness: BaseArtworkReadiness]
 }>()
+const baseImageRef = useTemplateRef<HTMLImageElement>('baseImage')
 const failedLayers = ref<Set<AtmosphereLayer>>(new Set())
 const baseFormatState = shallowRef<BaseFormatState>('prefer-avif')
+const loadedBaseImage = shallowRef<HTMLImageElement | null>(null)
+const pixiStatus = shallowRef<PixiWeatherRendererStatus>('idle')
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
 const resolvedBase = computed(() => {
@@ -107,6 +116,28 @@ const visualIdentity = computed(() => [
   baseMobileSource.value?.webp ?? '',
   baseMobileSource.value?.png ?? '',
 ].join('|'))
+const pixiVisualKey = computed<PixiWeatherVisualKey | null>(() => {
+  if (
+    props.visual?.condition !== 'partly-cloudy' ||
+    (
+      props.visual.timeline !== 'day' &&
+      props.visual.timeline !== 'night'
+    )
+  ) {
+    return null
+  }
+
+  return props.visual.timeline === 'night'
+    ? 'partly-cloudy-night'
+    : 'partly-cloudy-day'
+})
+const shouldEnablePixi = computed(
+  () =>
+    props.visualState !== 'outgoing' &&
+    pixiVisualKey.value !== null &&
+    baseFormatState.value !== 'visual-fallback' &&
+    loadedBaseImage.value !== null,
+)
 const effectiveFallbackClass = computed(() =>
   baseFormatState.value === 'visual-fallback'
     ? 'weather-atmosphere--neutral'
@@ -171,6 +202,10 @@ function setBaseFormatState(nextState: BaseFormatState) {
 }
 
 function markLayerFailed(layer: AtmosphereLayer) {
+  if (layer === 'base') {
+    loadedBaseImage.value = null
+  }
+
   if (layer === 'base' && baseFormatState.value === 'prefer-avif') {
     if (hasBaseWebpFallback.value) {
       setBaseFormatState('webp-only')
@@ -190,7 +225,12 @@ function markLayerFailed(layer: AtmosphereLayer) {
 }
 
 function markBaseLoaded() {
+  loadedBaseImage.value = baseImageRef.value
   emit('baseReady', 'loaded')
+}
+
+function updatePixiStatus(status: PixiWeatherRendererStatus) {
+  pixiStatus.value = status
 }
 
 watch(
@@ -204,6 +244,8 @@ watch(
     }
 
     failedLayers.value = new Set()
+    loadedBaseImage.value = null
+    pixiStatus.value = 'idle'
   },
   { immediate: true },
 )
@@ -237,6 +279,7 @@ watch(
     :data-format-state="baseFormatState"
     :data-life-board-condition="visual?.condition ?? 'unknown'"
     :data-neutral-fallback-active="baseFormatState === 'visual-fallback' ? 'true' : 'false'"
+    :data-pixi-status="pixiStatus"
     :data-timeline="visual?.timeline ?? 'day'"
     :style="atmosphereStyle"
   >
@@ -283,6 +326,7 @@ watch(
         type="image/png"
       >
       <img
+        ref="baseImage"
         alt=""
         class="weather-atmosphere__image weather-atmosphere__image--base"
         decoding="async"
@@ -292,6 +336,14 @@ watch(
         @load="markBaseLoaded"
       >
     </picture>
+
+    <WeatherPixiLayer
+      v-if="pixiVisualKey"
+      :enabled="shouldEnablePixi"
+      :image-element="loadedBaseImage"
+      :visual-key="pixiVisualKey"
+      @status-change="updatePixiStatus"
+    />
 
     <picture
       v-if="hasDepthAsset"

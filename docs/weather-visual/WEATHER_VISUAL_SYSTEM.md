@@ -39,3 +39,19 @@ The format state is keyed to the visual identity, not to global app state. Data-
 - Runtime assets are imported from `src/assets`, never from `docs`.
 - Stage 22 did not change Open-Meteo request logic, city search logic, routes, or non-weather pages.
 - Stage 22.1 keeps format fallback inside the image presentation layer and does not modify WMO mapping, timeline calculation, or visual registry selection.
+
+## Stage 23 PixiJS Layer
+
+Stage 23 adds a PixiJS v8 enhancement layer only for registered `partly-cloudy + day` and `partly-cloudy + night` visuals.
+
+The runtime chain is:
+
+`visual resolver -> responsive <picture> -> loaded HTMLImageElement -> Pixi ImageSource/Texture -> base Sprite + ambient Sprite -> decorative canvas`
+
+Boundaries:
+
+- The existing `<picture>` remains the poster and format fallback owner.
+- Pixi does not request weather base images by URL.
+- Pixi does not select viewport, image format, weather condition, or timeline.
+- Reduced motion, Save Data, WebGL failure, unsupported weather states, and full image fallback keep the static poster.
+- Outgoing transition layers stay static so the hero does not keep multiple long-lived Pixi contexts.

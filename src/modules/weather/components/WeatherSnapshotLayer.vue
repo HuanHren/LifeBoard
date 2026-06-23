@@ -161,6 +161,7 @@ const effectiveLighting = computed(
       :atmosphere="snapshot.atmosphere"
       :lighting="effectiveLighting"
       :visual="snapshot.visual"
+      :visual-state="visualState"
       @base-ready="emit('baseArtworkReady', $event)"
     />
 
