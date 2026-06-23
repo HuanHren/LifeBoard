@@ -1,6 +1,6 @@
 # Weather Visual System
 
-Stage 21 adds a data-driven visual chain without changing weather providers:
+Stage 21 added a data-driven visual chain without changing weather providers:
 
 `Open-Meteo WMO code -> LifeBoardCondition -> WeatherEffectGroup -> WeatherTimeline -> WeatherVisualRegistry -> Desktop/Mobile Asset -> Motion Preset -> Fallback -> Weather Hero Rendering`
 
@@ -14,9 +14,22 @@ Stage 21 adds a data-driven visual chain without changing weather providers:
 
 ## Registered Visuals
 
-Only `partly-cloudy + day` has real Stage 21 assets.
+Registered real assets:
+
+- `partly-cloudy + day`: Stage 21 approved day sources and runtime assets.
+- `partly-cloudy + night`: Stage 22 approved night sources and runtime assets.
 
 Unregistered conditions resolve to typed fallback metadata and continue through the existing neutral/legacy atmosphere fallback instead of referencing missing files.
+
+## Image Format Failure Flow
+
+`WeatherAtmosphere.vue` keeps browser-native responsive `<picture>` selection and adds a presentation-layer network-error fallback:
+
+`prefer-avif -> webp-only -> visual-fallback`
+
+`<picture>` format capability selection is not the same as network-error retry. If the browser selects AVIF and that request fails, LifeBoard removes AVIF sources for the current visual identity so the same responsive asset set can select WebP. If WebP also fails, the base image is removed and the existing neutral CSS atmosphere remains behind the weather text.
+
+The format state is keyed to the visual identity, not to global app state. Data-only updates, theme changes, and reduced-motion changes do not reset the format state. A new day/night visual identity can try AVIF again.
 
 ## Clean Boundaries
 
@@ -24,3 +37,5 @@ Unregistered conditions resolve to typed fallback metadata and continue through 
 - WMO text labels remain in `weatherCodes.ts`.
 - WMO semantic visual mapping lives in `src/modules/weather/visual/`.
 - Runtime assets are imported from `src/assets`, never from `docs`.
+- Stage 22 did not change Open-Meteo request logic, city search logic, routes, or non-weather pages.
+- Stage 22.1 keeps format fallback inside the image presentation layer and does not modify WMO mapping, timeline calculation, or visual registry selection.

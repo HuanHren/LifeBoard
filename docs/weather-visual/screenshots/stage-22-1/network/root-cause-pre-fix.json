@@ -1,0 +1,52 @@
+[
+  {
+    "scenario": "pre-fix-normal-avif",
+    "requestedUrls": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "failedUrls": [],
+    "consoleErrors": [],
+    "data": {
+      "timeline": "night",
+      "formatState": null,
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "neutralFallbackActive": false,
+      "bodyTextLength": 2670,
+      "overflowX": false
+    }
+  },
+  {
+    "scenario": "pre-fix-avif-network-failure",
+    "requestedUrls": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "failedUrls": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "error": "net::ERR_FAILED"
+      }
+    ],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "data": {
+      "timeline": "night",
+      "formatState": null,
+      "currentSrc": null,
+      "naturalWidth": 0,
+      "naturalHeight": 0,
+      "neutralFallbackActive": false,
+      "bodyTextLength": 2670,
+      "overflowX": false
+    }
+  }
+]

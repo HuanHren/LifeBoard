@@ -1,0 +1,289 @@
+[
+  {
+    "name": "desktop-1440-motion",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [
+      "assert:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "desktop-1600-motion",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [
+      "assert:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1600,
+    "innerWidth": 1600,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "desktop-1440-reduced",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": true,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [
+      "assert:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "desktop-1440-dark",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [
+      "assert:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "desktop-1440-dark-reduced",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": true,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [
+      "assert:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "mobile-390-motion",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": false,
+    "requestSides": [
+      "assert:mobile"
+    ],
+    "responseSides": [
+      "assert:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "mobile-430-motion",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": false,
+    "requestSides": [
+      "assert:mobile"
+    ],
+    "responseSides": [
+      "assert:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 430,
+    "innerWidth": 430,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "mobile-390-reduced",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": true,
+    "requestSides": [
+      "assert:mobile"
+    ],
+    "responseSides": [
+      "assert:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "mobile-390-dark",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": false,
+    "requestSides": [
+      "assert:mobile"
+    ],
+    "responseSides": [
+      "assert:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "mobile-390-dark-reduced",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": true,
+    "requestSides": [
+      "assert:mobile"
+    ],
+    "responseSides": [
+      "assert:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "resize-mobile-to-desktop",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert-load:mobile",
+      "assert-resize:desktop"
+    ],
+    "responseSides": [
+      "assert-load:mobile",
+      "assert-resize:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "resize-desktop-to-mobile",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "sourceCount": 4,
+    "mobileMatch": true,
+    "reduced": false,
+    "requestSides": [
+      "assert-load:desktop",
+      "assert-resize:mobile"
+    ],
+    "responseSides": [
+      "assert-load:desktop",
+      "assert-resize:mobile"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "naturalWidth": 900,
+    "bodyTextLength": 2717
+  },
+  {
+    "name": "toggle-reduced-after-open",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": true,
+    "requestSides": [
+      "assert-load:desktop"
+    ],
+    "responseSides": [
+      "assert-load:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "toggle-theme-after-open",
+    "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "sourceCount": 4,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert-load:desktop"
+    ],
+    "responseSides": [
+      "assert-load:desktop"
+    ],
+    "fallback404Count": 0,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 1600,
+    "bodyTextLength": 2804
+  },
+  {
+    "name": "fallback-404",
+    "currentSrc": "",
+    "sourceCount": 0,
+    "mobileMatch": false,
+    "reduced": false,
+    "requestSides": [
+      "assert:desktop"
+    ],
+    "responseSides": [],
+    "fallback404Count": 1,
+    "screenshotEventSides": [],
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "naturalWidth": 0,
+    "bodyTextLength": 2804
+  }
+]

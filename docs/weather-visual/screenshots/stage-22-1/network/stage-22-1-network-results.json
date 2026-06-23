@@ -1,0 +1,570 @@
+[
+  {
+    "scenario": "normal-day-desktop-avif",
+    "visualKey": "partly-cloudy:day",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "day",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+    ],
+    "failedUrls": [],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "naturalWidth": 1600,
+    "naturalHeight": 700,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "dark",
+    "baseAnimation": "none"
+  },
+  {
+    "scenario": "normal-day-mobile-avif",
+    "visualKey": "partly-cloudy:day",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "day",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+    ],
+    "failedUrls": [],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+    "naturalWidth": 900,
+    "naturalHeight": 900,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "dark",
+    "baseAnimation": "none"
+  },
+  {
+    "scenario": "normal-night-desktop-avif",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "failedUrls": [],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "normal-night-mobile-avif",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "night",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+    ],
+    "failedUrls": [],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+    "naturalWidth": 941,
+    "naturalHeight": 1672,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "avif-fallback-day-desktop",
+    "visualKey": "partly-cloudy:day",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "day",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+    "naturalWidth": 1600,
+    "naturalHeight": 700,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "dark",
+    "baseAnimation": "none"
+  },
+  {
+    "scenario": "avif-fallback-day-mobile",
+    "visualKey": "partly-cloudy:day",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "day",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp",
+    "naturalWidth": 900,
+    "naturalHeight": 900,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "dark",
+    "baseAnimation": "none"
+  },
+  {
+    "scenario": "avif-fallback-night-desktop",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "avif-fallback-night-mobile",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp",
+    "naturalWidth": 941,
+    "naturalHeight": 1672,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "all-format-failure-night-desktop",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "visual-fallback",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "successfulUrl": null,
+    "finalCurrentSrc": null,
+    "naturalWidth": 0,
+    "naturalHeight": 0,
+    "neutralFallbackActive": true,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": null
+  },
+  {
+    "scenario": "all-format-failure-night-mobile",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "night",
+    "formatState": "visual-fallback",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp"
+    ],
+    "successfulUrl": null,
+    "finalCurrentSrc": null,
+    "naturalWidth": 0,
+    "naturalHeight": 0,
+    "neutralFallbackActive": true,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED",
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": null
+  },
+  {
+    "scenario": "theme-after-webp-fallback",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "reduced-motion-after-webp-fallback",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "none"
+  },
+  {
+    "scenario": "resize-webp-mobile-to-desktop",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "resize-webp-desktop-to-mobile",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp",
+    "naturalWidth": 941,
+    "naturalHeight": 1672,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-BdeWtguy.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  },
+  {
+    "scenario": "day-webp-to-night-avif",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp": 2,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 2
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": null
+  },
+  {
+    "scenario": "night-webp-to-day-avif",
+    "visualKey": "partly-cloudy:day",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "day",
+    "formatState": "prefer-avif",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+    "naturalWidth": 1600,
+    "naturalHeight": 700,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 2,
+      "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif": 2
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": null
+  },
+  {
+    "scenario": "same-visual-update-keeps-webp",
+    "visualKey": "partly-cloudy:night",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "timeline": "night",
+    "formatState": "webp-only",
+    "requestedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp"
+    ],
+    "failedUrls": [
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+    ],
+    "successfulUrl": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "finalCurrentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp",
+    "naturalWidth": 1896,
+    "naturalHeight": 829,
+    "neutralFallbackActive": false,
+    "requestCountByUrl": {
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif": 1,
+      "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-MlLPKAIQ.webp": 1
+    },
+    "unexpectedRequests": [],
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_FAILED"
+    ],
+    "textPresent": true,
+    "overflowX": false,
+    "contentTone": "light",
+    "baseAnimation": "weather-atmosphere-night-base-drift-6262ea8d"
+  }
+]

@@ -19,4 +19,4 @@ Forbidden and not used:
 - Xiaomi page layout.
 - Xiaomi animation parameters.
 
-Stage 21 uses LifeBoard naming, Vue/TypeScript code, CSS, and approved local original assets.
+Stage 21 through Stage 22.1 use LifeBoard naming, Vue/TypeScript code, CSS, and approved local original assets. Stage 22.1 changes only generic image failure handling and does not add or derive any visual asset.

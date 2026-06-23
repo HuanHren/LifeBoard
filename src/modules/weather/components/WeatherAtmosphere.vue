@@ -1,5 +1,11 @@
+<script lang="ts">
+type BaseFormatState = 'prefer-avif' | 'webp-only' | 'visual-fallback'
+
+const baseFormatStateByVisualIdentity = new Map<string, BaseFormatState>()
+</script>
+
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import {
   getWeatherAtmosphereAssets,
   type WeatherAtmosphereAssetSource,
@@ -22,6 +28,7 @@ const emit = defineEmits<{
   baseReady: [readiness: BaseArtworkReadiness]
 }>()
 const failedLayers = ref<Set<AtmosphereLayer>>(new Set())
+const baseFormatState = shallowRef<BaseFormatState>('prefer-avif')
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
 const resolvedBase = computed(() => {
@@ -45,14 +52,31 @@ const baseMobileSource = computed(
   () => resolvedBase.value?.mobile ?? assetSet.value.base?.mobile,
 )
 const baseFallbackSource = computed(
-  () =>
-    baseDesktopSource.value?.webp ??
-    baseDesktopSource.value?.avif ??
-    baseDesktopSource.value?.png ??
-    baseMobileSource.value?.webp ??
-    baseMobileSource.value?.avif ??
-    baseMobileSource.value?.png ??
-    null,
+  () => {
+    if (baseFormatState.value === 'visual-fallback') {
+      return null
+    }
+
+    if (baseFormatState.value === 'webp-only') {
+      return (
+        baseDesktopSource.value?.webp ??
+        baseDesktopSource.value?.png ??
+        baseMobileSource.value?.webp ??
+        baseMobileSource.value?.png ??
+        null
+      )
+    }
+
+    return (
+      baseDesktopSource.value?.webp ??
+      baseDesktopSource.value?.avif ??
+      baseDesktopSource.value?.png ??
+      baseMobileSource.value?.webp ??
+      baseMobileSource.value?.avif ??
+      baseMobileSource.value?.png ??
+      null
+    )
+  },
 )
 const depthSource = computed(() => assetSet.value.depth)
 const foregroundSource = computed(() => assetSet.value.foreground)
@@ -69,6 +93,24 @@ const hasForegroundAsset = computed(
 )
 const hasAnyAsset = computed(
   () => hasBaseAsset.value || hasDepthAsset.value || hasForegroundAsset.value,
+)
+const hasBaseWebpFallback = computed(
+  () => Boolean(baseDesktopSource.value?.webp || baseMobileSource.value?.webp),
+)
+const visualIdentity = computed(() => [
+  props.visual?.condition ?? 'legacy',
+  props.visual?.timeline ?? 'day',
+  baseDesktopSource.value?.avif ?? '',
+  baseDesktopSource.value?.webp ?? '',
+  baseDesktopSource.value?.png ?? '',
+  baseMobileSource.value?.avif ?? '',
+  baseMobileSource.value?.webp ?? '',
+  baseMobileSource.value?.png ?? '',
+].join('|'))
+const effectiveFallbackClass = computed(() =>
+  baseFormatState.value === 'visual-fallback'
+    ? 'weather-atmosphere--neutral'
+    : assetSet.value.fallbackClass,
 )
 const canDriftDepth = computed(
   () => Boolean(assetSet.value.shouldDriftDepth) && hasDepthAsset.value,
@@ -123,7 +165,23 @@ function hasLayerSource(source: WeatherAtmosphereAssetSource | undefined) {
   return Boolean(source?.webp || source?.avif || source?.png)
 }
 
+function setBaseFormatState(nextState: BaseFormatState) {
+  baseFormatState.value = nextState
+  baseFormatStateByVisualIdentity.set(visualIdentity.value, nextState)
+}
+
 function markLayerFailed(layer: AtmosphereLayer) {
+  if (layer === 'base' && baseFormatState.value === 'prefer-avif') {
+    if (hasBaseWebpFallback.value) {
+      setBaseFormatState('webp-only')
+      return
+    }
+  }
+
+  if (layer === 'base' && baseFormatState.value === 'webp-only') {
+    setBaseFormatState('visual-fallback')
+  }
+
   failedLayers.value = new Set(failedLayers.value).add(layer)
 
   if (layer === 'base') {
@@ -136,16 +194,24 @@ function markBaseLoaded() {
 }
 
 watch(
-  () => props.atmosphere,
-  () => {
+  visualIdentity,
+  (identity) => {
+    const preservedFormatState = baseFormatStateByVisualIdentity.get(identity)
+    baseFormatState.value = preservedFormatState ?? 'prefer-avif'
+
+    if (!preservedFormatState) {
+      baseFormatStateByVisualIdentity.set(identity, 'prefer-avif')
+    }
+
     failedLayers.value = new Set()
   },
+  { immediate: true },
 )
 
 watch(
-  baseFallbackSource,
-  (source) => {
-    if (!source) {
+  () => [baseFallbackSource.value, baseFormatState.value] as const,
+  ([source, formatState]) => {
+    if (!source && formatState !== 'visual-fallback') {
       emit('baseReady', 'absent')
     }
   },
@@ -158,7 +224,7 @@ watch(
     aria-hidden="true"
     class="weather-atmosphere"
     :class="[
-      assetSet.fallbackClass,
+      effectiveFallbackClass,
       {
         'weather-atmosphere--has-assets': hasAnyAsset,
         'weather-atmosphere--drift-depth': canDriftDepth,
@@ -168,7 +234,9 @@ watch(
     :data-atmosphere="atmosphere"
     :data-effect-group="visual?.effectGroup ?? 'legacy'"
     :data-fallback-reason="visual?.fallbackReason ?? 'registered'"
+    :data-format-state="baseFormatState"
     :data-life-board-condition="visual?.condition ?? 'unknown'"
+    :data-neutral-fallback-active="baseFormatState === 'visual-fallback' ? 'true' : 'false'"
     :data-timeline="visual?.timeline ?? 'day'"
     :style="atmosphereStyle"
   >
@@ -182,7 +250,7 @@ watch(
       class="weather-atmosphere__asset weather-atmosphere__asset--base"
     >
       <source
-        v-if="baseMobileSource?.avif"
+        v-if="baseFormatState === 'prefer-avif' && baseMobileSource?.avif"
         media="(max-width: 39.9375rem)"
         :srcset="baseMobileSource.avif"
         type="image/avif"
@@ -200,7 +268,7 @@ watch(
         type="image/png"
       >
       <source
-        v-if="baseDesktopSource?.avif"
+        v-if="baseFormatState === 'prefer-avif' && baseDesktopSource?.avif"
         :srcset="baseDesktopSource.avif"
         type="image/avif"
       >
@@ -588,6 +656,16 @@ watch(
   will-change: opacity, transform;
 }
 
+.weather-atmosphere--motion-partly-cloudy-night-gentle .weather-atmosphere__image--base {
+  animation: weather-atmosphere-night-base-drift 64s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.weather-atmosphere--motion-partly-cloudy-night-gentle .weather-atmosphere__highlight {
+  animation: weather-atmosphere-night-glow 22s var(--motion-ease) infinite alternate;
+  will-change: opacity, transform;
+}
+
 .weather-atmosphere--motion-overcast-drift .weather-atmosphere__wash {
   animation: weather-atmosphere-haze-drift 42s linear infinite;
   will-change: transform;
@@ -667,15 +745,23 @@ watch(
 }
 
 .weather-atmosphere--partly-cloudy-night {
-  --weather-sky-start: oklch(36% 0.033 250);
-  --weather-sky-end: oklch(25% 0.027 242);
-  --weather-horizon: oklch(58% 0.048 144 / 24%);
-  --weather-detail: oklch(78% 0.018 104 / 18%);
+  --weather-sky-start: oklch(30% 0.035 258);
+  --weather-sky-end: oklch(19% 0.03 248);
+  --weather-horizon: oklch(64% 0.038 118 / 20%);
+  --weather-detail: oklch(82% 0.018 104 / 16%);
   --weather-detail-size: 15rem;
+  --weather-detail-opacity: 0.42;
+  --weather-ambient-opacity: 0.2;
+  --weather-highlight-opacity: 0.16;
+  --weather-haze-opacity: 0.12;
+  --weather-cloud-shadow-opacity: 0.32;
+  --weather-contrast-strength: 0.54;
+  --weather-night-depth: 0.28;
   --weather-atmosphere-contrast: linear-gradient(
     90deg,
-    oklch(21% 0.02 244 / 48%),
-    transparent 62%
+    oklch(13% 0.018 244 / 50%),
+    oklch(16% 0.02 244 / 24%) 42%,
+    transparent 70%
   );
 }
 
@@ -784,6 +870,28 @@ watch(
 
   to {
     transform: translate3d(0.65rem, 0.12rem, 0);
+  }
+}
+
+@keyframes weather-atmosphere-night-base-drift {
+  from {
+    transform: translate3d(-0.08rem, 0, 0) scale(1.004);
+  }
+
+  to {
+    transform: translate3d(0.14rem, -0.06rem, 0) scale(1.01);
+  }
+}
+
+@keyframes weather-atmosphere-night-glow {
+  from {
+    opacity: 0.12;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0.18;
+    transform: translate3d(0.12rem, -0.08rem, 0);
   }
 }
 

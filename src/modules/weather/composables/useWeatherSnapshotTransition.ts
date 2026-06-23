@@ -175,7 +175,7 @@ export function useWeatherSnapshotTransition(
 
   function startTransition(nextSnapshot: WeatherVisualSnapshot) {
     if (
-      incomingSnapshot.value?.identity === nextSnapshot.identity &&
+      incomingSnapshot.value?.visualIdentity === nextSnapshot.visualIdentity &&
       (
         phase.value === 'preparing' ||
         phase.value === 'ready' ||
@@ -199,7 +199,7 @@ export function useWeatherSnapshotTransition(
       return
     }
 
-    if (previousSnapshot.identity === nextSnapshot.identity) {
+    if (previousSnapshot.visualIdentity === nextSnapshot.visualIdentity) {
       currentSnapshot.value = nextSnapshot
       phase.value = 'stable'
       outgoingSnapshot.value = null

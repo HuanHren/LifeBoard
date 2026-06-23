@@ -1,0 +1,157 @@
+[
+  {
+    "name": "pre-desktop-1440-motion",
+    "width": 1440,
+    "height": 1000,
+    "events": [
+      {
+        "kind": "request",
+        "t": 166,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "t": 210,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "status": 200,
+        "fromServiceWorker": false,
+        "contentLength": 13910
+      }
+    ],
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "pictureHtml": "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "animationName": "weather-atmosphere-haze-drift-98c2103d",
+      "scrollWidth": 1440,
+      "innerWidth": 1440
+    },
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 157.39999999850988,
+        "duration": 3.7000000029802322
+      }
+    ]
+  },
+  {
+    "name": "pre-desktop-1440-reduced",
+    "width": 1440,
+    "height": 1000,
+    "reduced": true,
+    "events": [
+      {
+        "kind": "request",
+        "t": 138,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "t": 180,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "status": 200,
+        "fromServiceWorker": false,
+        "contentLength": 13910
+      },
+      {
+        "kind": "request",
+        "t": 1255,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "t": 1297,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "status": 200,
+        "fromServiceWorker": false,
+        "contentLength": 9338
+      },
+      {
+        "kind": "request",
+        "t": 1304,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "t": 1319,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "status": 200,
+        "fromServiceWorker": false,
+        "contentLength": 13910
+      }
+    ],
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "pictureHtml": "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "animationName": "none",
+      "scrollWidth": 1440,
+      "innerWidth": 1440
+    },
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 132.09999999403954,
+        "duration": 5.4000000059604645
+      }
+    ]
+  },
+  {
+    "name": "pre-mobile-390-motion",
+    "width": 390,
+    "height": 844,
+    "events": [
+      {
+        "kind": "request",
+        "t": 141,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "t": 190,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "status": 200,
+        "fromServiceWorker": false,
+        "contentLength": 9338
+      }
+    ],
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "pictureHtml": "<picture data-v-98c2103d=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-98c2103d=\"\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><img data-v-98c2103d=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\"></picture>",
+      "animationName": "weather-atmosphere-haze-drift-98c2103d",
+      "scrollWidth": 390,
+      "innerWidth": 390
+    },
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 135.69999999552965,
+        "duration": 4.300000004470348
+      }
+    ]
+  }
+]

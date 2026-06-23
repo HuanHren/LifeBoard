@@ -30,6 +30,18 @@ export function createWeatherVisualSnapshot(
     current: weather.current,
     solarPhase: solarPhase.phase,
   })
+  const visualIdentity = [
+    atmosphere,
+    visual.condition,
+    visual.effectGroup,
+    visual.timeline,
+    visual.desktopAsset?.avif ?? '',
+    visual.desktopAsset?.webp ?? '',
+    visual.desktopAsset?.png ?? '',
+    visual.mobileAsset?.avif ?? '',
+    visual.mobileAsset?.webp ?? '',
+    visual.mobileAsset?.png ?? '',
+  ].join('|')
 
   return {
     identity: [
@@ -46,6 +58,7 @@ export function createWeatherVisualSnapshot(
       visual.timeline,
       weather.fetchedAt,
     ].join('|'),
+    visualIdentity,
     weather,
     locationId,
     atmosphere,

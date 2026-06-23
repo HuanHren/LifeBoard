@@ -1,0 +1,1217 @@
+[
+  {
+    "name": "network-desktop-night",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "network-mobile-night",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "network-desktop-day-regression",
+    "data": {
+      "atmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+      "contentTone": "dark",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+      "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "network-mobile-day-regression",
+    "data": {
+      "atmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+      "contentTone": "dark",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+      "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "day-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "desktop-night-1440x1000",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "desktop-night-1600x900",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 336,
+        "y": 216.1875,
+        "width": 1200,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "desktop-night-1440x1000-reduced",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "true",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "none",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "desktop-night-1440x1000-dark",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "dark",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "desktop-night-1440x1000-dark-reduced",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "true",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "none",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "dark",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-390x844",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-430x932",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 398,
+        "height": 317.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-360x800",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 328,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-390x844-reduced",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "true",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "none",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-390x844-dark",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "dark",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "mobile-night-390x844-dark-reduced",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "true",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+      "naturalWidth": 941,
+      "naturalHeight": 1672,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "none",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "dark",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "day-regression-desktop-1440x1000",
+    "data": {
+      "atmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+      "contentTone": "dark",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+      "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "day-regression-mobile-390x844",
+    "data": {
+      "atmosphere": "partly-cloudy-day",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "day",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+      "contentTone": "dark",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+      "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "day-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "resize-mobile-to-desktop-night",
+    "data": {
+      "before": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+        "naturalWidth": 941,
+        "naturalHeight": 1672,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 16,
+          "y": 227.546875,
+          "width": 358,
+          "height": 377.375
+        },
+        "overflowX": false
+      },
+      "after": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "naturalWidth": 1896,
+        "naturalHeight": 829,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      }
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      },
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "resize-desktop-to-mobile-night",
+    "data": {
+      "before": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "naturalWidth": 1896,
+        "naturalHeight": 829,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      },
+      "after": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+        "naturalWidth": 941,
+        "naturalHeight": 1672,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 16,
+          "y": 227.546875,
+          "width": 358,
+          "height": 377.375
+        },
+        "overflowX": false
+      }
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      },
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "theme-after-open-night",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "dark",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "postChangeAssets": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "reduced-motion-after-open-night",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "true",
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+      "naturalWidth": 1896,
+      "naturalHeight": 829,
+      "complete": true,
+      "baseAnimation": "none",
+      "highlightAnimation": "none",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "postChangeAssets": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "transition-day-to-night",
+    "data": {
+      "before": {
+        "atmosphere": "partly-cloudy-day",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "day",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+        "contentTone": "dark",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "naturalWidth": 1600,
+        "naturalHeight": 700,
+        "complete": true,
+        "baseAnimation": "none",
+        "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+        "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      },
+      "after": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "naturalWidth": 1896,
+        "naturalHeight": 829,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      },
+      "transitionResult": {
+        "ok": true,
+        "hasStore": true
+      }
+    },
+    "assets": [
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      },
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      },
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      },
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "transition-night-to-day",
+    "data": {
+      "before": {
+        "atmosphere": "partly-cloudy-night",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "night",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-night-gentle",
+        "contentTone": "light",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "naturalWidth": 1896,
+        "naturalHeight": 829,
+        "complete": true,
+        "baseAnimation": "weather-atmosphere-night-base-drift-1e9cede8",
+        "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+        "washAnimation": "none",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      },
+      "after": {
+        "atmosphere": "partly-cloudy-day",
+        "condition": "partly-cloudy",
+        "effectGroup": "partly-cloudy",
+        "timeline": "day",
+        "fallbackReason": "registered",
+        "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-day weather-atmosphere--has-assets weather-atmosphere--motion-partly-cloudy-gentle",
+        "contentTone": "dark",
+        "heroPhase": "stable",
+        "heroReducedMotion": "false",
+        "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "naturalWidth": 1600,
+        "naturalHeight": 700,
+        "complete": true,
+        "baseAnimation": "none",
+        "highlightAnimation": "weather-atmosphere-soft-glow-1e9cede8",
+        "washAnimation": "weather-atmosphere-haze-drift-1e9cede8",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentTheme": "light",
+        "heroRect": {
+          "x": 312,
+          "y": 216.1875,
+          "width": 1088,
+          "height": 372.09375
+        },
+        "overflowX": false
+      },
+      "transitionResult": {
+        "ok": true,
+        "hasStore": true
+      }
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      },
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      },
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      },
+      {
+        "kind": "day-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  {
+    "name": "fallback-desktop-avif-blocked",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": null,
+      "naturalWidth": 0,
+      "naturalHeight": 0,
+      "complete": false,
+      "baseAnimation": null,
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 312,
+        "y": 216.1875,
+        "width": 1088,
+        "height": 372.09375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif"
+      },
+      {
+        "kind": "night-desktop-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-desktop-Cc_SbHqn.avif",
+        "failed": "net::ERR_FAILED"
+      }
+    ],
+    "consoleMessages": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: net::ERR_FAILED"
+      }
+    ],
+    "pageErrors": []
+  },
+  {
+    "name": "fallback-mobile-avif-blocked",
+    "data": {
+      "atmosphere": "partly-cloudy-night",
+      "condition": "partly-cloudy",
+      "effectGroup": "partly-cloudy",
+      "timeline": "night",
+      "fallbackReason": "registered",
+      "classes": "weather-atmosphere weather-atmosphere--partly-cloudy-night weather-atmosphere--motion-partly-cloudy-night-gentle",
+      "contentTone": "light",
+      "heroPhase": "stable",
+      "heroReducedMotion": "false",
+      "currentSrc": null,
+      "naturalWidth": 0,
+      "naturalHeight": 0,
+      "complete": false,
+      "baseAnimation": null,
+      "highlightAnimation": "weather-atmosphere-night-glow-1e9cede8",
+      "washAnimation": "none",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentTheme": "light",
+      "heroRect": {
+        "x": 16,
+        "y": 227.546875,
+        "width": 358,
+        "height": 377.375
+      },
+      "overflowX": false
+    },
+    "assets": [
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif"
+      },
+      {
+        "kind": "night-mobile-avif",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-night-base-mobile-H72rWoAB.avif",
+        "failed": "net::ERR_FAILED"
+      }
+    ],
+    "consoleMessages": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: net::ERR_FAILED"
+      }
+    ],
+    "pageErrors": []
+  }
+]

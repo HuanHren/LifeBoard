@@ -8,6 +8,7 @@ import type { ResolvedWeatherVisual } from '@/modules/weather/visual/types'
 
 export interface WeatherVisualSnapshot {
   identity: string
+  visualIdentity: string
   weather: WeatherSnapshot
   locationId: string
   atmosphere: WeatherAtmosphere

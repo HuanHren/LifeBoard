@@ -15,6 +15,8 @@ function createRegistryKey(
 }
 
 const partlyCloudyDayAssets = WEATHER_VISUAL_ASSET_MANIFEST['partly-cloudy-day']
+const partlyCloudyNightAssets =
+  WEATHER_VISUAL_ASSET_MANIFEST['partly-cloudy-night']
 
 export const WEATHER_VISUAL_REGISTRY: Partial<
   Record<RegistryKey, WeatherVisualDefinition>
@@ -27,6 +29,16 @@ export const WEATHER_VISUAL_REGISTRY: Partial<
     mobileAsset: partlyCloudyDayAssets.mobile,
     motionPreset: 'partly-cloudy-gentle',
     contentTone: 'dark',
+    fallbackKey: 'neutral',
+  },
+  [createRegistryKey('partly-cloudy', 'night')]: {
+    condition: 'partly-cloudy',
+    effectGroup: 'partly-cloudy',
+    timeline: 'night',
+    desktopAsset: partlyCloudyNightAssets.desktop,
+    mobileAsset: partlyCloudyNightAssets.mobile,
+    motionPreset: 'partly-cloudy-night-gentle',
+    contentTone: 'light',
     fallbackKey: 'neutral',
   },
 }

@@ -20,4 +20,4 @@ Source: `src/modules/weather/visual/weather-timeline.ts`
 - Sunrise bucket: 45 minutes before to 45 minutes after sunrise.
 - Sunset bucket: 60 minutes before to 60 minutes after sunset.
 
-Only `partly-cloudy + day` currently has registered imagery. Other timeline buckets safely fall back.
+Registered imagery currently exists for `partly-cloudy + day` and `partly-cloudy + night`. Sunrise and sunset buckets still safely fall back unless a future stage registers dedicated imagery.

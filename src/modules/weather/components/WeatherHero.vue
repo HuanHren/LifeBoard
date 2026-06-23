@@ -82,7 +82,7 @@ watch(announcementSerial, () => {
     <div class="weather-hero__viewport">
       <WeatherSnapshotLayer
         v-if="showCurrentLayer && currentSnapshot"
-        :key="`stable-${currentSnapshot.identity}`"
+        :key="currentSnapshot.visualIdentity"
         active
         :lighting-result="activeLighting"
         :snapshot="currentSnapshot"
@@ -92,7 +92,7 @@ watch(announcementSerial, () => {
 
       <WeatherSnapshotLayer
         v-if="outgoingSnapshot"
-        :key="`outgoing-${outgoingSnapshot.identity}`"
+        :key="outgoingSnapshot.visualIdentity"
         active
         class="weather-hero__layer weather-hero__layer--outgoing"
         :snapshot="outgoingSnapshot"
@@ -101,7 +101,7 @@ watch(announcementSerial, () => {
 
       <WeatherSnapshotLayer
         v-if="incomingSnapshot"
-        :key="`incoming-${incomingSnapshot.identity}`"
+        :key="incomingSnapshot.visualIdentity"
         :active="false"
         class="weather-hero__layer weather-hero__layer--incoming"
         :snapshot="incomingSnapshot"

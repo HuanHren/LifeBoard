@@ -152,6 +152,7 @@ const effectiveLighting = computed(
     class="weather-snapshot-layer"
     :aria-hidden="active ? undefined : 'true'"
     :data-atmosphere="snapshot.atmosphere"
+    :data-content-tone="snapshot.visual.contentTone"
     :data-solar-phase="effectiveSolarPhase.phase"
     :data-solar-phase-source="effectiveSolarPhase.source"
     :data-visual-state="visualState"

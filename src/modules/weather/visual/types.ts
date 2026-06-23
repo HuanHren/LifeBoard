@@ -40,6 +40,7 @@ export type WeatherTimeline = 'sunrise' | 'day' | 'sunset' | 'night'
 export type WeatherMotionPresetName =
   | 'static'
   | 'partly-cloudy-gentle'
+  | 'partly-cloudy-night-gentle'
   | 'fallback-calm'
 
 export type WeatherContentTone = 'light' | 'dark' | 'adaptive'

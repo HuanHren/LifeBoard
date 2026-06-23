@@ -1,0 +1,1287 @@
+[
+  {
+    "name": "desktop-1440-motion",
+    "width": 1440,
+    "height": 1000,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 177,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 218,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 166.59999999403954,
+        "duration": 4.800000004470348
+      }
+    ]
+  },
+  {
+    "name": "desktop-1600-motion",
+    "width": 1600,
+    "height": 900,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1600,
+      "innerHeight": 900,
+      "scrollWidth": 1600,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 143,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 180,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 136.59999999403954,
+        "duration": 5.200000002980232
+      }
+    ]
+  },
+  {
+    "name": "desktop-1440-reduced",
+    "width": 1440,
+    "height": 1000,
+    "reduced": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": true,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 142,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 179,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 136.40000000596046,
+        "duration": 4.399999998509884
+      }
+    ]
+  },
+  {
+    "name": "desktop-1440-dark",
+    "width": 1440,
+    "height": 1000,
+    "dark": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 137,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 177,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 132.10000000149012,
+        "duration": 3.5999999940395355
+      }
+    ]
+  },
+  {
+    "name": "desktop-1440-dark-reduced",
+    "width": 1440,
+    "height": 1000,
+    "dark": true,
+    "reduced": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": true,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 185,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 238,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "decodedBodySize": 13910,
+        "startTime": 177.70000000298023,
+        "duration": 6.0999999940395355
+      }
+    ]
+  },
+  {
+    "name": "mobile-390-motion",
+    "width": 390,
+    "height": 844,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": false,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 137,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 179,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 131.5,
+        "duration": 4.399999998509884
+      }
+    ]
+  },
+  {
+    "name": "mobile-430-motion",
+    "width": 430,
+    "height": 932,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 430,
+      "innerHeight": 932,
+      "scrollWidth": 430,
+      "mobile": true,
+      "reduced": false,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 130,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 166,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 124.59999999403954,
+        "duration": 3.7000000029802322
+      }
+    ]
+  },
+  {
+    "name": "mobile-390-reduced",
+    "width": 390,
+    "height": 844,
+    "reduced": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": true,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 120,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 158,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 115,
+        "duration": 3.7000000029802322
+      }
+    ]
+  },
+  {
+    "name": "mobile-390-dark",
+    "width": 390,
+    "height": 844,
+    "dark": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": false,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 133,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 173,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 127.79999999701977,
+        "duration": 3.9000000059604645
+      }
+    ]
+  },
+  {
+    "name": "mobile-390-dark-reduced",
+    "width": 390,
+    "height": 844,
+    "dark": true,
+    "reduced": true,
+    "dom": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": true,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 153,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 199,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "decodedBodySize": 9338,
+        "startTime": 148.30000000447035,
+        "duration": 5
+      }
+    ]
+  },
+  {
+    "name": "resize-mobile-to-desktop",
+    "startWidth": 390,
+    "startHeight": 844,
+    "endWidth": 1440,
+    "endHeight": 1000,
+    "before": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": false,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "after": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert-load",
+        "t": 131,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-load",
+        "t": 168,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      },
+      {
+        "kind": "request",
+        "phase": "assert-resize",
+        "t": 1918,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-resize",
+        "t": 1923,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "startTime": 124.5
+      },
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "startTime": 1912.7000000029802
+      }
+    ]
+  },
+  {
+    "name": "resize-desktop-to-mobile",
+    "startWidth": 1440,
+    "startHeight": 1000,
+    "endWidth": 390,
+    "endHeight": 844,
+    "before": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "after": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 900,
+      "naturalHeight": 900,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "56% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "scrollWidth": 390,
+      "mobile": true,
+      "reduced": false,
+      "bodyTextLength": 2717,
+      "bodyTextSample": "跳到主要内容\n\n天气\n\n6月22日星期一\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高 28C\n/\n最低 18C\n更新于 6月22日周一, 6时 GMT+8\n/\nOpen-Meteo 预报\n\n紧凑 3 日预报只使用 Caiyun Weather。当前地点成功加载 Caiyun 预报后会显示。\n\n当前预报由 Open-Meteo 提供"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert-load",
+        "t": 131,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-load",
+        "t": 169,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      },
+      {
+        "kind": "request",
+        "phase": "assert-resize",
+        "t": 1911,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-resize",
+        "t": 1915,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "side": "mobile",
+        "status": 200,
+        "contentLength": 9338,
+        "fromServiceWorker": false
+      }
+    ],
+    "perf": [
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "initiatorType": "img",
+        "transferSize": 14210,
+        "encodedBodySize": 13910,
+        "startTime": 125.5
+      },
+      {
+        "name": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif",
+        "initiatorType": "img",
+        "transferSize": 9638,
+        "encodedBodySize": 9338,
+        "startTime": 1908
+      }
+    ]
+  },
+  {
+    "name": "toggle-reduced-after-open",
+    "before": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "after": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": true,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert-load",
+        "t": 131,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-load",
+        "t": 168,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ]
+  },
+  {
+    "name": "toggle-theme-after-open",
+    "before": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "after": {
+      "currentSrc": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+      "src": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp",
+      "naturalWidth": 1600,
+      "naturalHeight": 700,
+      "complete": true,
+      "animationName": "none",
+      "objectPosition": "50% 50%",
+      "sourceList": [
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif"
+        },
+        {
+          "media": "(max-width: 39.9375rem)",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp"
+        },
+        {
+          "media": "",
+          "type": "image/avif",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif"
+        },
+        {
+          "media": "",
+          "type": "image/webp",
+          "srcset": "/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp"
+        }
+      ],
+      "pictureHtml": "<picture data-v-6c4a48c4=\"\" class=\"weather-atmosphere__asset weather-atmosphere__asset--base\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-9Hq0kv7k.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" media=\"(max-width: 39.9375rem)\" srcset=\"/assets/partly-cloudy-day-base-mobile-Ci-EDzGr.webp\" type=\"image/webp\"><!----><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif\" type=\"image/avif\"><source data-v-6c4a48c4=\"\" srcset=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\" type=\"image/webp\"><!----><img data-v-6c4a48c4=\"\" alt=\"\" class=\"weather-atmosphere__image weather-atmosphere__image--base\" decoding=\"async\" fetchpriority=\"high\" src=\"/assets/partly-cloudy-day-base-desktop-Bws4FwYs.webp\"></picture>",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert-load",
+        "t": 129,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert-load",
+        "t": 165,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 200,
+        "contentLength": 13910,
+        "fromServiceWorker": false
+      }
+    ]
+  },
+  {
+    "name": "fallback-404",
+    "dom": {
+      "currentSrc": "",
+      "src": "",
+      "naturalWidth": 0,
+      "naturalHeight": 0,
+      "complete": false,
+      "animationName": "",
+      "objectPosition": "",
+      "sourceList": [],
+      "pictureHtml": "",
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollWidth": 1440,
+      "mobile": false,
+      "reduced": false,
+      "bodyTextLength": 2804,
+      "bodyTextSample": "跳到主要内容\nLB\nLifeBoard\n个人日常工作台\nHM\n首页\n每日概览\nWE\n天气\n本地天气状况\nTD\n待办\n任务与日期规划\nTL\n工具\n日常实用工具\nBK\n书签\n保存的参考资料\nST\n设置\n外观与布局\n\n坚持本地优先，已保存的数据留在此浏览器中。\n\n天气\n\n6月22日星期一\n外观\n跟随系统\n天气\n\n查看当前天气、准备随身物品，并选择舒适的外出时间。\n\n已加载 Beijing 的天气。\n\n+\n管理城市\n\nBeijing, China：24C，局部多云。最高 28C，最低 18C。\n\n已选位置\n\nBeijing, China\n\n24\nC\n\nUS AQI\n42\n·\n良好\n\n局部多云\n/\n最高"
+    },
+    "events": [
+      {
+        "kind": "request",
+        "phase": "assert",
+        "t": 150,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "resourceType": "image"
+      },
+      {
+        "kind": "response",
+        "phase": "assert",
+        "t": 195,
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop",
+        "status": 404,
+        "contentLength": 9,
+        "fromServiceWorker": false
+      },
+      {
+        "kind": "route-fulfill-404",
+        "phase": "assert",
+        "url": "http://127.0.0.1:5173/assets/partly-cloudy-day-base-desktop-uHEYhr8c.avif",
+        "side": "desktop"
+      }
+    ]
+  }
+]

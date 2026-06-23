@@ -17,6 +17,11 @@ export const WEATHER_MOTION_PRESETS = {
     durationMs: 42000,
     reducedMotion: 'static',
   },
+  'partly-cloudy-night-gentle': {
+    name: 'partly-cloudy-night-gentle',
+    durationMs: 64000,
+    reducedMotion: 'static',
+  },
   'fallback-calm': {
     name: 'fallback-calm',
     durationMs: 0,
