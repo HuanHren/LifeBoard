@@ -11,6 +11,7 @@ import {
   type WeatherAtmosphereAssetSource,
 } from '@/modules/weather/constants/weatherAtmosphereAssets'
 import { WeatherPixiLayer } from '@/modules/weather/renderers/pixi'
+import type { LocalWeatherReferenceScene } from '@/modules/weather/renderers/pixi/local-reference'
 import type {
   PixiWeatherRendererStatus,
   PixiWeatherVisualKey,
@@ -18,6 +19,8 @@ import type {
 import type { WeatherLighting } from '@/modules/weather/types/weatherLighting'
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
 import type { ResolvedWeatherVisual } from '@/modules/weather/visual/types'
+
+type LocalWeatherReferenceModule = typeof import('@/modules/weather/renderers/pixi/local-reference')
 
 interface Props {
   atmosphere: WeatherAtmosphere
@@ -37,7 +40,13 @@ const baseImageRef = useTemplateRef<HTMLImageElement>('baseImage')
 const failedLayers = ref<Set<AtmosphereLayer>>(new Set())
 const baseFormatState = shallowRef<BaseFormatState>('prefer-avif')
 const loadedBaseImage = shallowRef<HTMLImageElement | null>(null)
+const localReferenceScene = shallowRef<LocalWeatherReferenceScene | null>(null)
 const pixiStatus = shallowRef<PixiWeatherRendererStatus>('idle')
+let localReferenceRequestId = 0
+
+const localReferenceAssetsEnabled =
+  import.meta.env.DEV &&
+  import.meta.env.VITE_ENABLE_LOCAL_WEATHER_REFERENCE_ASSETS === 'true'
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
 const resolvedBase = computed(() => {
@@ -131,13 +140,41 @@ const pixiVisualKey = computed<PixiWeatherVisualKey | null>(() => {
     ? 'partly-cloudy-night'
     : 'partly-cloudy-day'
 })
+const localReferenceRequestKey = computed(() => {
+  if (
+    !props.visual ||
+    props.visual.effectGroup === 'partly-cloudy' ||
+    props.visual.effectGroup === 'unknown'
+  ) {
+    return null
+  }
+
+  return `${props.visual.effectGroup}:${props.visual.timeline}`
+})
 const shouldEnablePixi = computed(
   () =>
     props.visualState !== 'outgoing' &&
-    pixiVisualKey.value !== null &&
     baseFormatState.value !== 'visual-fallback' &&
-    loadedBaseImage.value !== null,
+    (
+      (pixiVisualKey.value !== null && loadedBaseImage.value !== null) ||
+      localReferenceScene.value !== null
+    ),
 )
+const assetOrigin = computed(() => {
+  if (localReferenceScene.value) {
+    return 'local-reference'
+  }
+
+  if (baseFormatState.value === 'visual-fallback') {
+    return 'fallback'
+  }
+
+  if (hasBaseAsset.value) {
+    return 'lifeboard-original'
+  }
+
+  return 'fallback'
+})
 const effectiveFallbackClass = computed(() =>
   baseFormatState.value === 'visual-fallback'
     ? 'weather-atmosphere--neutral'
@@ -251,6 +288,33 @@ watch(
 )
 
 watch(
+  localReferenceRequestKey,
+  async (key) => {
+    const requestId = ++localReferenceRequestId
+    localReferenceScene.value = null
+
+    if (!key || !props.visual || !localReferenceAssetsEnabled) {
+      return
+    }
+
+    const localReferenceModulePath =
+      '/src/modules/weather/renderers/pixi/local-reference/index.ts'
+    const { resolveLocalWeatherReferenceScene } = await import(
+      /* @vite-ignore */ localReferenceModulePath
+    ) as LocalWeatherReferenceModule
+    const scene = await resolveLocalWeatherReferenceScene({
+      effectGroup: props.visual.effectGroup,
+      timeline: props.visual.timeline,
+    })
+
+    if (requestId === localReferenceRequestId) {
+      localReferenceScene.value = scene
+    }
+  },
+  { immediate: true },
+)
+
+watch(
   () => [baseFallbackSource.value, baseFormatState.value] as const,
   ([source, formatState]) => {
     if (!source && formatState !== 'visual-fallback') {
@@ -274,6 +338,7 @@ watch(
       `weather-atmosphere--motion-${motionPreset}`,
     ]"
     :data-atmosphere="atmosphere"
+    :data-weather-asset-origin="assetOrigin"
     :data-effect-group="visual?.effectGroup ?? 'legacy'"
     :data-fallback-reason="visual?.fallbackReason ?? 'registered'"
     :data-format-state="baseFormatState"
@@ -338,9 +403,10 @@ watch(
     </picture>
 
     <WeatherPixiLayer
-      v-if="pixiVisualKey"
+      v-if="pixiVisualKey || localReferenceScene"
       :enabled="shouldEnablePixi"
       :image-element="loadedBaseImage"
+      :local-scene="localReferenceScene"
       :visual-key="pixiVisualKey"
       @status-change="updatePixiStatus"
     />

@@ -6,6 +6,7 @@ import type {
   TextureSource,
   Ticker,
 } from 'pixi.js'
+import type { LocalWeatherReferenceLayer } from './local-reference'
 import type { WeatherTimeline } from '@/modules/weather/visual/types'
 
 export type PixiWeatherRendererStatus =
@@ -36,12 +37,17 @@ export interface PixiWeatherSceneInput {
 export interface PixiWeatherSceneHandles {
   app: Application
   scene: Container
-  baseSprite: Sprite
-  ambientSprite: Sprite
-  baseTexture: Texture
-  baseTextureSource: TextureSource
-  ambientTexture: Texture
-  ambientTextureSource: TextureSource
+  baseSprite?: Sprite
+  ambientSprite?: Sprite
+  baseTexture?: Texture
+  baseTextureSource?: TextureSource
+  ambientTexture?: Texture
+  ambientTextureSource?: TextureSource
+  localLayers: Array<{
+    layer: LocalWeatherReferenceLayer
+    sprite: Sprite
+    phase: number
+  }>
   onTick: (ticker: Ticker) => void
 }
 

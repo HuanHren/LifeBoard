@@ -22,10 +22,12 @@ import type {
   PixiWeatherSceneHandles,
   PixiWeatherVisualKey,
 } from '@/modules/weather/renderers/pixi/types'
+import type { LocalWeatherReferenceScene } from './local-reference'
 
 interface Props {
   enabled: boolean
   imageElement: HTMLImageElement | null
+  localScene?: LocalWeatherReferenceScene | null
   visualKey: PixiWeatherVisualKey | null
 }
 
@@ -51,14 +53,20 @@ let disposed = false
 
 const canAttemptPixi = computed(() => {
   const image = props.imageElement
-
-  return (
-    props.enabled &&
+  const hasPosterScene =
     props.visualKey !== null &&
     image !== null &&
     image.complete &&
     image.naturalWidth > 0 &&
-    image.naturalHeight > 0 &&
+    image.naturalHeight > 0
+  const hasLocalScene =
+    props.localScene !== null &&
+    props.localScene !== undefined &&
+    props.localScene.layers.length > 0
+
+  return (
+    props.enabled &&
+    (hasPosterScene || hasLocalScene) &&
     !prefersReducedMotion.value
   )
 })
@@ -111,7 +119,7 @@ function getRootSize() {
 }
 
 function resizeScene() {
-  if (!handles || !props.imageElement) {
+  if (!handles) {
     return
   }
 
@@ -124,16 +132,33 @@ function resizeScene() {
 
   handles.app.ticker.maxFPS = preset.maxFps
   handles.app.renderer.resize(width, height, resolution)
-  fitWeatherSprite({
-    sprite: handles.baseSprite,
-    containerWidth: width,
-    containerHeight: height,
-    sourceWidth: props.imageElement.naturalWidth,
-    sourceHeight: props.imageElement.naturalHeight,
-    extraScale: preset.scale,
-  })
-  handles.ambientSprite.width = width
-  handles.ambientSprite.height = height
+
+  if (handles.baseSprite && props.imageElement) {
+    fitWeatherSprite({
+      sprite: handles.baseSprite,
+      containerWidth: width,
+      containerHeight: height,
+      sourceWidth: props.imageElement.naturalWidth,
+      sourceHeight: props.imageElement.naturalHeight,
+      extraScale: preset.scale,
+    })
+  }
+
+  if (handles.ambientSprite) {
+    handles.ambientSprite.width = width
+    handles.ambientSprite.height = height
+  }
+
+  for (const layerHandle of handles.localLayers) {
+    fitWeatherSprite({
+      sprite: layerHandle.sprite,
+      containerWidth: width,
+      containerHeight: height,
+      sourceWidth: layerHandle.sprite.texture.width,
+      sourceHeight: layerHandle.sprite.texture.height,
+      extraScale: layerHandle.layer.scale,
+    })
+  }
 
   const nextMetrics = metrics.value
 
@@ -167,7 +192,7 @@ function pauseForVisibility() {
 async function initializePixi() {
   destroyPixi('loading')
 
-  if (!canAttemptPixi.value || !props.imageElement || !props.visualKey) {
+  if (!canAttemptPixi.value) {
     setStatus('static-fallback')
     return
   }
@@ -197,7 +222,7 @@ async function initializePixi() {
     const { width, height } = getRootSize()
     const resolution = getCappedResolution(isMobileViewport.value)
     const preset = getPartlyCloudyPixiPreset(
-      props.visualKey,
+      props.visualKey ?? 'partly-cloudy-day',
       isMobileViewport.value,
     )
     const app = new pixi.Application()
@@ -224,14 +249,57 @@ async function initializePixi() {
       return
     }
 
-    const baseTexture = createPixiTextureFromImage(pixi, props.imageElement)
-    const ambientTexture = createAmbientLightTexture(pixi, props.visualKey)
     const scene = new pixi.Container()
-    const baseSprite = new pixi.Sprite(baseTexture.texture)
-    const ambientSprite = new pixi.Sprite(ambientTexture.texture)
+    const localLayers: PixiWeatherSceneHandles['localLayers'] = []
+    let baseTexture:
+      | ReturnType<typeof createPixiTextureFromImage>
+      | undefined
+    let ambientTexture:
+      | ReturnType<typeof createAmbientLightTexture>
+      | undefined
+    let baseSprite: import('pixi.js').Sprite | undefined
+    let ambientSprite: import('pixi.js').Sprite | undefined
 
-    scene.addChild(baseSprite)
-    scene.addChild(ambientSprite)
+    if (props.visualKey && props.imageElement) {
+      baseTexture = createPixiTextureFromImage(pixi, props.imageElement)
+      ambientTexture = createAmbientLightTexture(pixi, props.visualKey)
+      baseSprite = new pixi.Sprite(baseTexture.texture)
+      ambientSprite = new pixi.Sprite(ambientTexture.texture)
+
+      scene.addChild(baseSprite)
+      scene.addChild(ambientSprite)
+    }
+
+    if (props.localScene) {
+      const textures = await Promise.all(
+        props.localScene.layers.map(async (layer) => ({
+          layer,
+          texture: await pixi.Assets.load(layer.url),
+        })),
+      )
+
+      if (disposed || generation !== initGeneration.value) {
+        app.destroy({ removeView: true }, {
+          children: true,
+          texture: true,
+          textureSource: true,
+        })
+        return
+      }
+
+      textures.forEach(({ layer, texture }, index) => {
+        const sprite = new pixi.Sprite(texture)
+        sprite.alpha = layer.opacity
+        sprite.anchor.set(0.5)
+        scene.addChild(sprite)
+        localLayers.push({
+          layer,
+          sprite,
+          phase: index * 0.72,
+        })
+      })
+    }
+
     app.stage.addChild(scene)
 
     app.canvas.className = 'weather-pixi-layer__canvas'
@@ -249,9 +317,22 @@ async function initializePixi() {
       const cycle = elapsedMs / 52000
       const wave = Math.sin(cycle * Math.PI * 2)
 
-      scene.x = wave * preset.driftX
-      scene.y = wave * preset.driftY
-      ambientSprite.alpha = preset.ambientOpacity + wave * 0.025
+      if (ambientSprite) {
+        scene.x = wave * preset.driftX
+        scene.y = wave * preset.driftY
+        ambientSprite.alpha = preset.ambientOpacity + wave * 0.025
+      }
+
+      for (const layerHandle of localLayers) {
+        const layerWave = Math.sin(cycle * Math.PI * 2 + layerHandle.phase)
+        const verticalWave = Math.cos(cycle * Math.PI * 2 + layerHandle.phase)
+        layerHandle.sprite.x =
+          width / 2 + layerWave * width * layerHandle.layer.speedX
+        layerHandle.sprite.y =
+          height / 2 + verticalWave * height * layerHandle.layer.speedY
+        layerHandle.sprite.alpha =
+          layerHandle.layer.opacity + layerWave * layerHandle.layer.opacity * 0.05
+      }
     }
 
     handles = {
@@ -259,10 +340,11 @@ async function initializePixi() {
       scene,
       baseSprite,
       ambientSprite,
-      baseTexture: baseTexture.texture,
-      baseTextureSource: baseTexture.source,
-      ambientTexture: ambientTexture.texture,
-      ambientTextureSource: ambientTexture.source,
+      baseTexture: baseTexture?.texture,
+      baseTextureSource: baseTexture?.source,
+      ambientTexture: ambientTexture?.texture,
+      ambientTextureSource: ambientTexture?.source,
+      localLayers,
       onTick,
     }
 
@@ -314,7 +396,12 @@ watch(
 )
 
 watch(
-  () => [props.imageElement, props.visualKey, props.enabled] as const,
+  () => [
+    props.imageElement,
+    props.visualKey,
+    props.localScene?.key ?? null,
+    props.enabled,
+  ] as const,
   () => {
     void initializePixi()
   },
