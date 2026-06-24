@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, shallowRef } from 'vue'
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  shallowRef,
+  useTemplateRef,
+} from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterLink, useRouter } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
@@ -8,6 +15,7 @@ import { useI18n } from '@/i18n/useI18n'
 import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
 import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
+import { MIN_SEARCH_LENGTH } from '@/modules/weather/constants/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import type { WeatherFavoriteCity } from '@/modules/weather/types/weatherFavorites'
@@ -37,6 +45,7 @@ const {
   addSelectedLocationToFavorites,
   removeFavoriteCity,
   clearFavoriteMessage,
+  clearSearchResults,
   selectCurrentCoordinates,
 } = weatherStore
 
@@ -44,6 +53,11 @@ const currentLocationStatus = shallowRef<CurrentLocationStatus>('idle')
 const pageMessage = shallowRef<string | null>(null)
 const pageError = shallowRef<string | null>(null)
 const titleElement = shallowRef<HTMLHeadingElement | null>(null)
+const searchSection = useTemplateRef<HTMLElement>('searchSection')
+const searchResultsComponent = useTemplateRef<{
+  focusFirstResult: () => void
+}>('searchResultsComponent')
+const searchDebounceTimer = shallowRef<number | null>(null)
 
 const selectedLocationLabel = computed(() =>
   selectedLocation.value ? formatLocationName(selectedLocation.value) : null,
@@ -72,6 +86,57 @@ function geolocationPosition() {
       timeout: 10000,
     })
   })
+}
+
+function clearSearchDebounce() {
+  if (searchDebounceTimer.value === null) {
+    return
+  }
+
+  window.clearTimeout(searchDebounceTimer.value)
+  searchDebounceTimer.value = null
+}
+
+function closeSearchResults() {
+  clearSearchDebounce()
+  clearSearchResults()
+}
+
+function handleSearchSubmit(query: string) {
+  clearSearchDebounce()
+  void searchCities(query, locale.value)
+}
+
+function handleSearchQueryChange(query: string) {
+  clearSearchDebounce()
+  const normalizedQuery = query.trim()
+
+  if (normalizedQuery.length < MIN_SEARCH_LENGTH) {
+    if (normalizedQuery.length === 0) {
+      closeSearchResults()
+    }
+    return
+  }
+
+  searchDebounceTimer.value = window.setTimeout(() => {
+    searchDebounceTimer.value = null
+    void searchCities(normalizedQuery, locale.value)
+  }, 350)
+}
+
+async function focusSearchResults() {
+  await nextTick()
+  searchResultsComponent.value?.focusFirstResult()
+}
+
+function handleDocumentPointerdown(event: PointerEvent) {
+  const target = event.target
+
+  if (target instanceof Node && searchSection.value?.contains(target)) {
+    return
+  }
+
+  closeSearchResults()
 }
 
 async function returnToWeather() {
@@ -172,6 +237,12 @@ onMounted(() => {
   void nextTick(() => {
     titleElement.value?.focus()
   })
+  document.addEventListener('pointerdown', handleDocumentPointerdown)
+})
+
+onBeforeUnmount(() => {
+  clearSearchDebounce()
+  document.removeEventListener('pointerdown', handleDocumentPointerdown)
 })
 </script>
 
@@ -310,7 +381,10 @@ onMounted(() => {
       </article>
     </section>
 
-    <section aria-labelledby="weather-city-search-section-title">
+    <section
+      ref="searchSection"
+      aria-labelledby="weather-city-search-section-title"
+    >
       <div class="mb-3 max-w-2xl">
         <h2
           id="weather-city-search-section-title"
@@ -327,13 +401,18 @@ onMounted(() => {
           :notice="searchNotice"
           :service-error="searchError"
           :status="searchStatus"
-          @search="(query) => searchCities(query, locale)"
+          @close-results="closeSearchResults"
+          @focus-results="focusSearchResults"
+          @query-change="handleSearchQueryChange"
+          @search="handleSearchSubmit"
         />
 
         <WeatherSearchResults
           v-if="searchStatus === 'success'"
+          ref="searchResultsComponent"
           :query="searchQuery"
           :results="searchResults"
+          @close="closeSearchResults"
           @select="handleSelectLocation"
         />
       </div>

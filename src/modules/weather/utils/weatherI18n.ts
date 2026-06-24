@@ -5,10 +5,14 @@ import type {
   WeatherCondition,
   WeatherLocationKind,
 } from '@/modules/weather/types/weather'
+import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 
 const knownConditionCodes = new Set([
   0, 1, 2, 3, 45, 48, 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 71, 73, 75,
   77, 80, 81, 82, 85, 86, 95, 96, 99,
+  WEATHER_CONDITION_CODES.cloudy,
+  WEATHER_CONDITION_CODES.haze,
+  WEATHER_CONDITION_CODES.sandDust,
 ])
 
 const locationKindKeys: Record<WeatherLocationKind, TranslationKey> = {

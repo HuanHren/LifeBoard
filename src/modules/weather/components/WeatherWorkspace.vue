@@ -41,9 +41,7 @@ const {
   retryAirQuality,
 } = weatherStore
 const compactDailyForecast = computed(() =>
-  weather.value?.provider === 'caiyun'
-    ? weather.value.daily.slice(0, Math.min(3, COMPACT_DAILY_FORECAST_LENGTH))
-    : [],
+  weather.value?.daily.slice(0, COMPACT_DAILY_FORECAST_LENGTH) ?? [],
 )
 const showPreviousForecastError = computed(
   () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
@@ -140,10 +138,22 @@ onMounted(() => {
         <WeatherAlertSection :alerts="weather.alerts" />
         <DailyForecastStrip
           v-if="compactDailyForecast.length > 0"
-          :description="t('weather.daily.caiyunDescription')"
+          :description="
+            weather.provider === 'caiyun'
+              ? t('weather.daily.caiyunDescription')
+              : undefined
+          "
           :items="compactDailyForecast"
-          :scroll-label="t('weather.daily.caiyunScrollLabel')"
-          :title="t('weather.daily.caiyunTitle')"
+          :scroll-label="
+            weather.provider === 'caiyun'
+              ? t('weather.daily.caiyunScrollLabel')
+              : undefined
+          "
+          :title="
+            weather.provider === 'caiyun'
+              ? t('weather.daily.caiyunTitle')
+              : undefined
+          "
           :units="weather.units"
         />
         <p

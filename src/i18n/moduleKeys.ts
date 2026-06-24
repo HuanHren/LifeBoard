@@ -443,6 +443,12 @@ export const weatherTranslationKeys = [
   'weather.condition.96.short',
   'weather.condition.99.label',
   'weather.condition.99.short',
+  'weather.condition.10003.label',
+  'weather.condition.10003.short',
+  'weather.condition.10045.label',
+  'weather.condition.10045.short',
+  'weather.condition.10046.label',
+  'weather.condition.10046.short',
   'weather.condition.unavailable.label',
   'weather.condition.unavailable.short',
 ] as const

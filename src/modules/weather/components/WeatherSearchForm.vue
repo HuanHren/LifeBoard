@@ -15,6 +15,9 @@ interface Props {
 
 interface Emits {
   search: [query: string]
+  queryChange: [query: string]
+  closeResults: []
+  focusResults: []
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -68,6 +71,18 @@ function handleInput() {
   if (validationError.value && query.value.trim().length >= MIN_SEARCH_LENGTH) {
     validationError.value = null
   }
+
+  emit('queryChange', query.value)
+}
+
+function handleKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    emit('closeResults')
+  }
+
+  if (event.key === 'ArrowDown') {
+    emit('focusResults')
+  }
 }
 </script>
 
@@ -102,6 +117,7 @@ function handleInput() {
           :placeholder="t('weather.search.placeholder')"
           type="search"
           @input="handleInput"
+          @keydown="handleKeydown"
         />
       </div>
       <BaseButton
