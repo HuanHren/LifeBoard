@@ -1,8 +1,9 @@
 import type { LifeBoardCondition } from '@/modules/weather/visual/types'
+import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 
 const wmoConditionMap: Record<number, LifeBoardCondition> = {
   0: 'clear',
-  1: 'clear',
+  1: 'partly-cloudy',
   2: 'partly-cloudy',
   3: 'overcast',
   45: 'fog',
@@ -29,6 +30,9 @@ const wmoConditionMap: Record<number, LifeBoardCondition> = {
   95: 'thunderstorm',
   96: 'thunderstorm',
   99: 'thunderstorm',
+  [WEATHER_CONDITION_CODES.cloudy]: 'cloudy',
+  [WEATHER_CONDITION_CODES.haze]: 'haze',
+  [WEATHER_CONDITION_CODES.sandDust]: 'sand-dust',
 }
 
 export function getLifeBoardConditionFromWmo(

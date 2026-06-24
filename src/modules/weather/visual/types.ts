@@ -35,6 +35,16 @@ export type WeatherEffectGroup =
   | 'sand-dust'
   | 'unknown'
 
+export type WeatherIntensity = 'none' | 'light' | 'moderate' | 'heavy' | 'severe'
+
+export interface WeatherIntensityPreset {
+  density: number
+  speed: number
+  opacity: number
+  cloudDarkness: number
+  atmosphereOpacity: number
+}
+
 export type WeatherTimeline = 'sunrise' | 'day' | 'sunset' | 'night'
 
 export type WeatherMotionPresetName =
@@ -86,6 +96,7 @@ export interface ResolveWeatherVisualInput {
 export interface ResolvedWeatherVisual {
   condition: LifeBoardCondition
   effectGroup: WeatherEffectGroup
+  intensity: WeatherIntensity
   timeline: WeatherTimeline
   desktopAsset?: WeatherVisualAssetSource
   mobileAsset?: WeatherVisualAssetSource

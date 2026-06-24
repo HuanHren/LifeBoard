@@ -1,4 +1,5 @@
 import type { WeatherCondition } from '@/modules/weather/types/weather'
+import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 
 const weatherConditions: Record<number, Omit<WeatherCondition, 'code'>> = {
   0: { label: 'Clear sky', shortLabel: 'Clear' },
@@ -29,6 +30,9 @@ const weatherConditions: Record<number, Omit<WeatherCondition, 'code'>> = {
   95: { label: 'Thunderstorm', shortLabel: 'Thunderstorm' },
   96: { label: 'Thunderstorm with slight hail', shortLabel: 'Storm and hail' },
   99: { label: 'Thunderstorm with heavy hail', shortLabel: 'Storm and hail' },
+  [WEATHER_CONDITION_CODES.cloudy]: { label: 'Cloudy', shortLabel: 'Cloudy' },
+  [WEATHER_CONDITION_CODES.haze]: { label: 'Haze', shortLabel: 'Haze' },
+  [WEATHER_CONDITION_CODES.sandDust]: { label: 'Sand and dust', shortLabel: 'Dust' },
 }
 
 export function getWeatherCondition(code: number): WeatherCondition {

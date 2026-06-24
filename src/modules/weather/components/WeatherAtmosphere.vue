@@ -149,7 +149,7 @@ const localReferenceRequestKey = computed(() => {
     return null
   }
 
-  return `${props.visual.effectGroup}:${props.visual.timeline}`
+  return `${props.visual.effectGroup}:${props.visual.intensity}:${props.visual.timeline}`
 })
 const shouldEnablePixi = computed(
   () =>
@@ -304,6 +304,7 @@ watch(
     ) as LocalWeatherReferenceModule
     const scene = await resolveLocalWeatherReferenceScene({
       effectGroup: props.visual.effectGroup,
+      intensity: props.visual.intensity,
       timeline: props.visual.timeline,
     })
 
@@ -342,9 +343,11 @@ watch(
     :data-effect-group="visual?.effectGroup ?? 'legacy'"
     :data-fallback-reason="visual?.fallbackReason ?? 'registered'"
     :data-format-state="baseFormatState"
+    :data-intensity="visual?.intensity ?? 'none'"
     :data-life-board-condition="visual?.condition ?? 'unknown'"
     :data-neutral-fallback-active="baseFormatState === 'visual-fallback' ? 'true' : 'false'"
     :data-pixi-status="pixiStatus"
+    :data-weather-scene-key="localReferenceScene?.key ?? pixiVisualKey ?? 'fallback'"
     :data-timeline="visual?.timeline ?? 'day'"
     :style="atmosphereStyle"
   >

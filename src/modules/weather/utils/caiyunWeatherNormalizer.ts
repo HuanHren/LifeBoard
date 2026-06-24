@@ -22,6 +22,7 @@ import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
 import { createWeatherAdvice } from '@/modules/weather/utils/weatherAdvice'
 import { getWeatherCondition } from '@/modules/weather/utils/weatherCodes'
 import { createAirQualityLocationId } from '@/modules/weather/utils/airQualityNormalizer'
+import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 
 function requireValue<T>(value: T | undefined | null, field: string): T {
   if (value === undefined || value === null) {
@@ -173,10 +174,10 @@ function skyconToWeatherCode(skycon: CaiyunSkycon) {
     CLEAR_NIGHT: 0,
     PARTLY_CLOUDY_DAY: 2,
     PARTLY_CLOUDY_NIGHT: 2,
-    CLOUDY: 3,
-    LIGHT_HAZE: 45,
-    MODERATE_HAZE: 45,
-    HEAVY_HAZE: 45,
+    CLOUDY: WEATHER_CONDITION_CODES.cloudy,
+    LIGHT_HAZE: WEATHER_CONDITION_CODES.haze,
+    MODERATE_HAZE: WEATHER_CONDITION_CODES.haze,
+    HEAVY_HAZE: WEATHER_CONDITION_CODES.haze,
     LIGHT_RAIN: 61,
     MODERATE_RAIN: 63,
     HEAVY_RAIN: 65,
@@ -186,8 +187,8 @@ function skyconToWeatherCode(skycon: CaiyunSkycon) {
     MODERATE_SNOW: 73,
     HEAVY_SNOW: 75,
     STORM_SNOW: 86,
-    DUST: 45,
-    SAND: 45,
+    DUST: WEATHER_CONDITION_CODES.sandDust,
+    SAND: WEATHER_CONDITION_CODES.sandDust,
     WIND: 3,
   }
 

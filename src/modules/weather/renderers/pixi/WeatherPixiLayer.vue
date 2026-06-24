@@ -51,6 +51,8 @@ let handles: PixiWeatherSceneHandles | null = null
 let contextLostHandler: ((event: Event) => void) | null = null
 let disposed = false
 
+const MAX_LOCAL_REFERENCE_LAYERS = 4
+
 const canAttemptPixi = computed(() => {
   const image = props.imageElement
   const hasPosterScene =
@@ -147,6 +149,11 @@ function resizeScene() {
   if (handles.ambientSprite) {
     handles.ambientSprite.width = width
     handles.ambientSprite.height = height
+  }
+
+  if (handles.thunderOverlay) {
+    handles.thunderOverlay.width = width
+    handles.thunderOverlay.height = height
   }
 
   for (const layerHandle of handles.localLayers) {
@@ -259,6 +266,7 @@ async function initializePixi() {
       | undefined
     let baseSprite: import('pixi.js').Sprite | undefined
     let ambientSprite: import('pixi.js').Sprite | undefined
+    let thunderOverlay: import('pixi.js').Graphics | undefined
 
     if (props.visualKey && props.imageElement) {
       baseTexture = createPixiTextureFromImage(pixi, props.imageElement)
@@ -271,8 +279,9 @@ async function initializePixi() {
     }
 
     if (props.localScene) {
+      const sceneLayers = props.localScene.layers.slice(0, MAX_LOCAL_REFERENCE_LAYERS)
       const textures = await Promise.all(
-        props.localScene.layers.map(async (layer) => ({
+        sceneLayers.map(async (layer) => ({
           layer,
           texture: await pixi.Assets.load(layer.url),
         })),
@@ -298,6 +307,15 @@ async function initializePixi() {
           phase: index * 0.72,
         })
       })
+
+      if (props.localScene.isThunderstorm) {
+        thunderOverlay = new pixi.Graphics()
+        thunderOverlay
+          .rect(0, 0, width, height)
+          .fill({ color: 0xdce7ef, alpha: 1 })
+        thunderOverlay.alpha = 0
+        scene.addChild(thunderOverlay)
+      }
     }
 
     app.stage.addChild(scene)
@@ -312,6 +330,10 @@ async function initializePixi() {
     app.ticker.minFPS = 10
 
     let elapsedMs = 0
+    let thunderSeed = 0.37
+    let nextThunderMs =
+      props.localScene?.intensity === 'severe' ? 4200 : 6200
+    let thunderRemainingMs = 0
     const onTick = (ticker: import('pixi.js').Ticker) => {
       elapsedMs += ticker.deltaMS
       const cycle = elapsedMs / 52000
@@ -333,6 +355,27 @@ async function initializePixi() {
         layerHandle.sprite.alpha =
           layerHandle.layer.opacity + layerWave * layerHandle.layer.opacity * 0.05
       }
+
+      if (thunderOverlay && props.localScene?.isThunderstorm) {
+        if (thunderRemainingMs <= 0 && elapsedMs >= nextThunderMs) {
+          thunderSeed = (thunderSeed * 9301 + 49297) % 233280
+          const randomUnit = thunderSeed / 233280
+          thunderRemainingMs = props.localScene.intensity === 'severe' ? 130 : 90
+          nextThunderMs =
+            elapsedMs +
+            5200 +
+            randomUnit * (props.localScene.intensity === 'severe' ? 4200 : 7200)
+        }
+
+        if (thunderRemainingMs > 0) {
+          thunderRemainingMs = Math.max(0, thunderRemainingMs - ticker.deltaMS)
+          thunderOverlay.alpha =
+            (thunderRemainingMs / 130) *
+            (props.localScene.intensity === 'severe' ? 0.13 : 0.09)
+        } else {
+          thunderOverlay.alpha = 0
+        }
+      }
     }
 
     handles = {
@@ -344,6 +387,7 @@ async function initializePixi() {
       baseTextureSource: baseTexture?.source,
       ambientTexture: ambientTexture?.texture,
       ambientTextureSource: ambientTexture?.source,
+      thunderOverlay,
       localLayers,
       onTick,
     }

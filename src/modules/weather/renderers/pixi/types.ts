@@ -5,6 +5,7 @@ import type {
   Texture,
   TextureSource,
   Ticker,
+  Graphics,
 } from 'pixi.js'
 import type { LocalWeatherReferenceLayer } from './local-reference'
 import type { WeatherTimeline } from '@/modules/weather/visual/types'
@@ -43,6 +44,7 @@ export interface PixiWeatherSceneHandles {
   baseTextureSource?: TextureSource
   ambientTexture?: Texture
   ambientTextureSource?: TextureSource
+  thunderOverlay?: Graphics
   localLayers: Array<{
     layer: LocalWeatherReferenceLayer
     sprite: Sprite

@@ -1,5 +1,7 @@
 import type {
   WeatherEffectGroup,
+  WeatherIntensity,
+  WeatherIntensityPreset,
   WeatherTimeline,
 } from '@/modules/weather/visual/types'
 
@@ -46,7 +48,10 @@ export interface LocalWeatherReferenceScene {
   key: string
   source: 'local-reference'
   effectGroup: WeatherEffectGroup
+  intensity: WeatherIntensity
+  intensityPreset: WeatherIntensityPreset
   timeline: Extract<WeatherTimeline, 'day' | 'night'>
+  isThunderstorm: boolean
   layers: LocalWeatherReferenceLayer[]
 }
 
