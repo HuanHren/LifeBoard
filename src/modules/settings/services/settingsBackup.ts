@@ -25,6 +25,7 @@ import {
   WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
   WEATHER_AMAP_KEY_STORAGE_KEY,
   WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY,
+  WEATHER_FORECAST_CACHE_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_VERSION,
   WEATHER_PROVIDER_STORAGE_KEY,
@@ -38,6 +39,7 @@ import { THEME_STORAGE_KEY } from '@/stores/theme'
 const OWNED_STORAGE_KEYS = [
   THEME_STORAGE_KEY,
   WEATHER_STORAGE_KEY,
+  WEATHER_FORECAST_CACHE_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_KEY,
   WEATHER_PROVIDER_STORAGE_KEY,
   WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
@@ -296,6 +298,7 @@ export function clearLifeBoardData(target: SettingsClearTarget): SettingsResult 
   return runStorageTransaction((storage) => {
     if (target === 'weather' || target === 'all') {
       storage.removeItem(WEATHER_STORAGE_KEY)
+      storage.removeItem(WEATHER_FORECAST_CACHE_STORAGE_KEY)
       storage.removeItem(WEATHER_FAVORITES_STORAGE_KEY)
     }
 

@@ -103,6 +103,8 @@ const weatherErrorKeys: Record<string, TranslationKey> = {
     'weather.error.unreadableResponse',
   'The weather service returned an incomplete forecast.':
     'weather.error.incompleteForecast',
+  'The weather request timed out. Check your connection and try again.':
+    'weather.error.timeout',
 }
 
 export function localizeWeatherCondition(

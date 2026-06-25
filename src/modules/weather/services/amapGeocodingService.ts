@@ -1,5 +1,12 @@
-import { WEATHER_ENDPOINTS } from '@/modules/weather/constants/weather'
+import {
+  WEATHER_ENDPOINTS,
+  WEATHER_GEOCODING_TIMEOUT_MS,
+} from '@/modules/weather/constants/weather'
 import { readAmapKeyForRequest } from '@/modules/weather/services/weatherAmapStorage'
+import {
+  fetchWithTimeoutAndRetry,
+  WeatherRequestTimeoutError,
+} from '@/modules/weather/services/weatherRequest'
 import type { AppLocale } from '@/i18n/types'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 
@@ -26,7 +33,7 @@ async function fetchJson<T>(
   let response: Response
 
   try {
-    response = await fetch(endpoint, {
+    response = await fetchWithTimeoutAndRetry(endpoint, {
       body: JSON.stringify(body),
       headers: {
         Accept: 'application/json',
@@ -34,10 +41,14 @@ async function fetchJson<T>(
       },
       method: 'POST',
       signal,
-    })
+    }, WEATHER_GEOCODING_TIMEOUT_MS)
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw error
+    }
+
+    if (error instanceof WeatherRequestTimeoutError) {
+      throw new AmapGeocodingServiceError(error.message)
     }
 
     throw new AmapGeocodingServiceError(

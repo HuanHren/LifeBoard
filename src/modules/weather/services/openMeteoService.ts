@@ -4,8 +4,14 @@ import {
   DAILY_VARIABLES,
   HOURLY_VARIABLES,
   SEARCH_RESULT_LIMIT,
+  WEATHER_FORECAST_TIMEOUT_MS,
+  WEATHER_GEOCODING_TIMEOUT_MS,
   WEATHER_ENDPOINTS,
 } from '@/modules/weather/constants/weather'
+import {
+  fetchWithTimeoutAndRetry,
+  WeatherRequestTimeoutError,
+} from '@/modules/weather/services/weatherRequest'
 import type {
   OpenMeteoErrorResponse,
   OpenMeteoForecastResponse,
@@ -35,15 +41,19 @@ async function fetchJson<T>(url: URL, signal?: AbortSignal): Promise<T> {
   let response: Response
 
   try {
-    response = await fetch(url, {
+    response = await fetchWithTimeoutAndRetry(url, {
       headers: {
         Accept: 'application/json',
       },
       signal,
-    })
+    }, url.hostname.includes('geocoding') ? WEATHER_GEOCODING_TIMEOUT_MS : WEATHER_FORECAST_TIMEOUT_MS)
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw error
+    }
+
+    if (error instanceof WeatherRequestTimeoutError) {
+      throw new WeatherServiceError(error.message)
     }
 
     throw new WeatherServiceError(

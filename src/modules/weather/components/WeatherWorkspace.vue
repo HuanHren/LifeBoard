@@ -19,11 +19,12 @@ import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingStat
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
 import { COMPACT_DAILY_FORECAST_LENGTH } from '@/modules/weather/constants/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
+import { formatFullLocalTime } from '@/modules/weather/utils/weatherFormatting'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 const weatherStore = useWeatherStore()
 const router = useRouter()
-const { t } = useI18n()
+const { locale, t } = useI18n()
 const {
   selectedLocation,
   weather,
@@ -34,6 +35,8 @@ const {
   displayAirQualityError,
   provider,
   hasCaiyunToken,
+  forecastCacheState,
+  forecastCacheUpdatedAt,
 } = storeToRefs(weatherStore)
 const {
   initializeWeather,
@@ -46,6 +49,27 @@ const compactDailyForecast = computed(() =>
 const showPreviousForecastError = computed(
   () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
 )
+const cacheStatusMessage = computed(() => {
+  if (!weather.value) return null
+
+  const time = forecastCacheUpdatedAt.value
+    ? formatFullLocalTime(forecastCacheUpdatedAt.value, locale.value)
+    : ''
+
+  if (forecastCacheState.value === 'refreshing') {
+    return t('weather.cache.refreshing', { time })
+  }
+
+  if (forecastCacheState.value === 'stale') {
+    return t('weather.cache.stale', { time })
+  }
+
+  if (forecastCacheState.value === 'offline-stale') {
+    return t('weather.cache.offlineStale', { time })
+  }
+
+  return null
+})
 
 function openCityManagement() {
   void router.push({ name: 'weather-cities' })
@@ -135,6 +159,13 @@ onMounted(() => {
           :air-quality="displayAirQuality"
           :weather="weather"
         />
+        <p
+          v-if="cacheStatusMessage"
+          class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+          role="status"
+        >
+          {{ cacheStatusMessage }}
+        </p>
         <WeatherAlertSection :alerts="weather.alerts" />
         <DailyForecastStrip
           v-if="compactDailyForecast.length > 0"

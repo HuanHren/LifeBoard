@@ -1,6 +1,11 @@
 import {
+  WEATHER_FORECAST_TIMEOUT_MS,
   WEATHER_ENDPOINTS,
 } from '@/modules/weather/constants/weather'
+import {
+  fetchWithTimeoutAndRetry,
+  WeatherRequestTimeoutError,
+} from '@/modules/weather/services/weatherRequest'
 import type {
   CaiyunFailureResponse,
   CaiyunWeatherResponse,
@@ -83,7 +88,7 @@ export async function fetchCaiyunWeatherForecast(
   let response: Response
 
   try {
-    response = await fetch(WEATHER_ENDPOINTS.caiyunForecast, {
+    response = await fetchWithTimeoutAndRetry(WEATHER_ENDPOINTS.caiyunForecast, {
       body: JSON.stringify({
         token,
         longitude: location.longitude,
@@ -96,10 +101,14 @@ export async function fetchCaiyunWeatherForecast(
       },
       method: 'POST',
       signal,
-    })
+    }, WEATHER_FORECAST_TIMEOUT_MS)
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       throw error
+    }
+
+    if (error instanceof WeatherRequestTimeoutError) {
+      throw new CaiyunWeatherServiceError(error.message)
     }
 
     throw new CaiyunWeatherServiceError(

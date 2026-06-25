@@ -463,6 +463,9 @@ export const enUSModules = {
   'weather.state.retry': 'Retry forecast',
   'weather.state.loaded': 'Weather loaded for {city}.',
   'weather.state.updateFailed': 'Could not update weather. Showing the previous forecast.',
+  'weather.cache.refreshing': 'Refreshing weather in the background. Last updated {time}.',
+  'weather.cache.stale': 'Showing recently saved weather while LifeBoard refreshes it. Last updated {time}.',
+  'weather.cache.offlineStale': 'Showing saved weather because the latest update failed. Last updated {time}.',
   'weather.error.saveCity':
     'The selected city could not be saved in this browser. Check local storage access and try again.',
   'weather.error.clearCity':
@@ -497,6 +500,8 @@ export const enUSModules = {
   'weather.error.incompleteForecast': 'The weather service returned an incomplete forecast.',
   'weather.error.serviceRejected':
     'Open-Meteo could not complete this request. Please try again.',
+  'weather.error.timeout':
+    'The weather request timed out. Check your connection and try again.',
   'weather.condition.0.label': 'Clear sky',
   'weather.condition.0.short': 'Clear',
   'weather.condition.1.label': 'Mainly clear',
