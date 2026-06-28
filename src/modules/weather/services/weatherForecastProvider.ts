@@ -3,6 +3,10 @@ import { fetchOpenMeteoForecast } from '@/modules/weather/services/openMeteoServ
 import { readCaiyunTokenForRequest } from '@/modules/weather/services/weatherProviderStorage'
 import type { WeatherProviderId } from '@/modules/weather/types/weatherProvider'
 import type {
+  LongRangeForecastProviderResult,
+  NormalizedLongRangeForecast,
+} from '@/modules/weather/types/longRangeForecast'
+import type {
   WeatherLocation,
   WeatherSnapshot,
 } from '@/modules/weather/types/weather'
@@ -20,6 +24,20 @@ interface ForecastProviderOptions {
   provider: WeatherProviderId
   location: WeatherLocation
   signal?: AbortSignal
+}
+
+function toLongRangeForecast(
+  snapshot: WeatherSnapshot,
+): NormalizedLongRangeForecast {
+  return {
+    provider: snapshot.provider,
+    location: snapshot.location,
+    timezone: snapshot.timezone,
+    timezoneAbbreviation: snapshot.timezoneAbbreviation,
+    fetchedAt: snapshot.fetchedAt,
+    daily: snapshot.daily,
+    units: snapshot.units,
+  }
 }
 
 export async function fetchWeatherForecastForProvider({
@@ -42,4 +60,21 @@ export async function fetchWeatherForecastForProvider({
 
   const response = await fetchCaiyunWeatherForecast(location, tokenResult.data, signal)
   return normalizeCaiyunWeatherForecast(response, location)
+}
+
+export function createLongRangeForecastFromSnapshot(
+  snapshot: WeatherSnapshot,
+): NormalizedLongRangeForecast {
+  return toLongRangeForecast(snapshot)
+}
+
+export async function fetchLongRangeForecastForProvider(
+  options: ForecastProviderOptions,
+): Promise<LongRangeForecastProviderResult> {
+  const forecast = await fetchWeatherForecastForProvider(options)
+
+  return {
+    supported: true,
+    forecast: toLongRangeForecast(forecast),
+  }
 }

@@ -369,6 +369,12 @@ export const enUSModules = {
     'The loaded forecast does not include usable daily data right now.',
   'weather.longRange.noLocationDescription':
     'Choose a city in Weather before opening the long-range forecast.',
+  'weather.longRange.emptyTitle': 'No daily forecast returned',
+  'weather.longRange.emptyDescription':
+    'The selected provider responded, but it did not include usable daily entries for this location.',
+  'weather.longRange.unsupportedTitle': 'Long-range forecast not supported',
+  'weather.longRange.unsupportedDescription':
+    'The selected forecast provider does not support a long-range daily outlook for this location.',
   'weather.longRange.loadingTitle': 'Loading long-range forecast',
   'weather.longRange.loadingDescription':
     'LifeBoard is loading the selected location forecast without showing placeholder days.',

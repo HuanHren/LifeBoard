@@ -60,7 +60,7 @@ watch(announcementSerial, () => {
 
 <template>
   <section
-    class="weather-hero relative isolate overflow-hidden rounded-[var(--radius-xl)] border border-[var(--weather-hero-border)] shadow-[var(--shadow-sm)]"
+    class="weather-hero relative isolate overflow-hidden rounded-[var(--radius-lg)] border border-[var(--weather-hero-border)] shadow-[var(--shadow-soft)]"
     aria-labelledby="weather-hero-title"
     :data-atmosphere="heroAtmosphere"
     :data-phase="phase"

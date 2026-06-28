@@ -44,11 +44,19 @@ import {
   type PersistedWeatherSnapshot,
   type WeatherCacheFreshness,
 } from '@/modules/weather/services/weatherForecastCache'
-import { fetchWeatherForecastForProvider } from '@/modules/weather/services/weatherForecastProvider'
+import {
+  createLongRangeForecastFromSnapshot,
+  fetchLongRangeForecastForProvider,
+  fetchWeatherForecastForProvider,
+} from '@/modules/weather/services/weatherForecastProvider'
 import type {
   AirQualityErrorKind,
   AirQualitySnapshot,
 } from '@/modules/weather/types/airQuality'
+import type {
+  LongRangeForecastStatus,
+  NormalizedLongRangeForecast,
+} from '@/modules/weather/types/longRangeForecast'
 import type {
   WeatherFavoriteCity,
   WeatherFavoriteMessage,
@@ -79,6 +87,7 @@ import {
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 
 const AIR_QUALITY_FRESHNESS_MS = 30 * 60 * 1000
+const LONG_RANGE_SESSION_CACHE_MS = 10 * 60 * 1000
 const SEARCH_CACHE_LIMIT = 8
 
 type ForecastCacheUiState =
@@ -92,6 +101,11 @@ interface SearchCacheEntry {
   expiresAt: number
   notice: 'amapMissing' | 'amapUnavailable' | null
   results: WeatherLocation[]
+}
+
+interface LongRangeCacheEntry {
+  expiresAt: number
+  forecast: NormalizedLongRangeForecast
 }
 
 function getErrorMessage(error: unknown, fallback: string) {
@@ -166,16 +180,24 @@ export const useWeatherStore = defineStore('weather', () => {
   const forecastCacheState = shallowRef<ForecastCacheUiState>('error-no-data')
   const forecastCacheUpdatedAt = shallowRef<string | null>(null)
   const forecastCacheExpiresAt = shallowRef<string | null>(null)
+  const longRangeForecast = shallowRef<NormalizedLongRangeForecast | null>(null)
+  const longRangeStatus = shallowRef<LongRangeForecastStatus>('idle')
+  const longRangeError = shallowRef<string | null>(null)
   const isInitialized = shallowRef(false)
 
   let searchController: AbortController | null = null
   let forecastController: AbortController | null = null
   let airQualityController: AbortController | null = null
+  let longRangeController: AbortController | null = null
   let forecastRequestId = 0
   let airQualityRequestId = 0
+  let longRangeRequestId = 0
   let activeForecastKey: string | null = null
   let activeForecastPromise: Promise<boolean> | null = null
+  let activeLongRangeKey: string | null = null
+  let activeLongRangePromise: Promise<boolean> | null = null
   const searchCache = new Map<string, SearchCacheEntry>()
+  const longRangeSessionCache = new Map<string, LongRangeCacheEntry>()
 
   const hasLocation = computed(() => selectedLocation.value !== null)
   const hasWeather = computed(() => weather.value !== null)
@@ -237,6 +259,14 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastCacheState.value === 'stale' ||
     forecastCacheState.value === 'offline-stale' ||
     forecastCacheState.value === 'refreshing',
+  )
+  const longRangeLocationKey = computed(() =>
+    longRangeForecast.value
+      ? createWeatherForecastCacheKey(
+        longRangeForecast.value.provider,
+        longRangeForecast.value.location,
+      )
+      : null,
   )
 
   function hasFreshAirQuality(location: WeatherLocation) {
@@ -621,6 +651,132 @@ export const useWeatherStore = defineStore('weather', () => {
     airQualityFetchedAt.value = null
   }
 
+  function commitLongRangeForecast(forecast: NormalizedLongRangeForecast) {
+    longRangeForecast.value = forecast
+    longRangeStatus.value = forecast.daily.length > 0 ? 'success' : 'empty'
+    longRangeError.value = null
+  }
+
+  function clearLongRangeForecast(options: { keepForecast?: boolean } = {}) {
+    longRangeController?.abort()
+    longRangeRequestId += 1
+    activeLongRangeKey = null
+    activeLongRangePromise = null
+    longRangeStatus.value = options.keepForecast && longRangeForecast.value ? 'success' : 'idle'
+    longRangeError.value = null
+
+    if (!options.keepForecast) {
+      longRangeForecast.value = null
+    }
+  }
+
+  function getActiveLongRangeLocation(location: WeatherLocation | null = null) {
+    return location ?? weather.value?.location ?? selectedLocation.value
+  }
+
+  async function loadLongRangeForecast(
+    location: WeatherLocation | null = null,
+    options: { forceRefresh?: boolean } = {},
+  ) {
+    const targetLocation = getActiveLongRangeLocation(location)
+
+    if (!targetLocation) {
+      clearLongRangeForecast()
+      return false
+    }
+
+    const cacheKey = createWeatherForecastCacheKey(provider.value, targetLocation)
+
+    if (activeLongRangeKey === cacheKey && activeLongRangePromise) {
+      return activeLongRangePromise
+    }
+
+    if (
+      !options.forceRefresh &&
+      weather.value?.provider === provider.value &&
+      createWeatherForecastCacheKey(weather.value.provider, weather.value.location) === cacheKey &&
+      weather.value.daily.length > 0
+    ) {
+      const forecast = createLongRangeForecastFromSnapshot(weather.value)
+      longRangeSessionCache.set(cacheKey, {
+        expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
+        forecast,
+      })
+      commitLongRangeForecast(forecast)
+      return true
+    }
+
+    const cached = longRangeSessionCache.get(cacheKey)
+
+    if (!options.forceRefresh && cached && cached.expiresAt > Date.now()) {
+      commitLongRangeForecast(cached.forecast)
+      return true
+    }
+
+    const requestId = ++longRangeRequestId
+    longRangeController?.abort()
+    longRangeController = new AbortController()
+    const signal = longRangeController.signal
+    longRangeStatus.value = 'loading'
+    longRangeError.value = null
+    activeLongRangeKey = cacheKey
+
+    activeLongRangePromise = (async () => {
+      try {
+        const result = await fetchLongRangeForecastForProvider({
+          provider: provider.value,
+          location: targetLocation,
+          signal,
+        })
+
+        if (
+          requestId !== longRangeRequestId ||
+          createWeatherForecastCacheKey(provider.value, targetLocation) !== cacheKey
+        ) {
+          return false
+        }
+
+        if (!result.supported) {
+          longRangeStatus.value = 'unsupported'
+          longRangeError.value = null
+          return false
+        }
+
+        longRangeSessionCache.set(cacheKey, {
+          expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
+          forecast: result.forecast,
+        })
+        commitLongRangeForecast(result.forecast)
+        return true
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return false
+        }
+
+        if (
+          requestId !== longRangeRequestId ||
+          createWeatherForecastCacheKey(provider.value, targetLocation) !== cacheKey
+        ) {
+          return false
+        }
+
+        longRangeError.value = getErrorMessage(
+          error,
+          'The forecast could not be loaded. Please try again.',
+        )
+        longRangeStatus.value = 'error'
+        return false
+      } finally {
+        if (activeLongRangeKey === cacheKey) {
+          activeLongRangeKey = null
+          activeLongRangePromise = null
+        }
+      }
+    })()
+
+    return activeLongRangePromise
+  }
+
   async function initializeWeather() {
     if (isInitialized.value) {
       return
@@ -811,6 +967,7 @@ export const useWeatherStore = defineStore('weather', () => {
     provider.value = nextProvider
     providerPersistenceError.value = null
     providerMessage.value = 'providerSaved'
+    clearLongRangeForecast()
 
     if (selectedLocation.value) {
       void loadForecast(selectedLocation.value)
@@ -856,6 +1013,7 @@ export const useWeatherStore = defineStore('weather', () => {
       forecastController?.abort()
       forecastRequestId += 1
       pendingForecastLocation.value = null
+      clearLongRangeForecast()
       forecastStatus.value = weather.value ? 'error' : 'idle'
       forecastError.value = weather.value
         ? 'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.'
@@ -969,6 +1127,7 @@ export const useWeatherStore = defineStore('weather', () => {
     commitForecastCacheState('error-no-data')
     searchError.value = null
     pendingForecastLocation.value = null
+    clearLongRangeForecast()
     return true
   }
 
@@ -982,6 +1141,7 @@ export const useWeatherStore = defineStore('weather', () => {
     lastUpdatedAt.value = null
     commitForecastCacheState('error-no-data')
     pendingForecastLocation.value = null
+    clearLongRangeForecast()
     favoriteMessage.value = null
     searchNotice.value = null
   }
@@ -998,6 +1158,7 @@ export const useWeatherStore = defineStore('weather', () => {
     providerPersistenceError.value = null
     amapMessage.value = null
     amapPersistenceError.value = null
+    clearLongRangeForecast()
   }
 
   return {
@@ -1033,6 +1194,10 @@ export const useWeatherStore = defineStore('weather', () => {
     forecastCacheState,
     forecastCacheUpdatedAt,
     forecastCacheExpiresAt,
+    longRangeForecast,
+    longRangeStatus,
+    longRangeError,
+    longRangeLocationKey,
     hasUsableCachedWeather,
     isInitialized,
     hasLocation,
@@ -1060,6 +1225,8 @@ export const useWeatherStore = defineStore('weather', () => {
     clearAmapMessage,
     selectCurrentCoordinates,
     loadForecast,
+    loadLongRangeForecast,
+    clearLongRangeForecast,
     loadAirQuality,
     retryAirQuality,
     clearAirQuality,

@@ -330,6 +330,12 @@ export const zhCNModules = {
     '当前加载的预报暂时没有可用的每日数据。',
   'weather.longRange.noLocationDescription':
     '请先在天气中选择城市，再查看长期预报。',
+  'weather.longRange.emptyTitle': '没有返回每日预报',
+  'weather.longRange.emptyDescription':
+    '当前数据源已有响应，但没有为此位置返回可用的每日预报条目。',
+  'weather.longRange.unsupportedTitle': '当前数据源不支持长期预报',
+  'weather.longRange.unsupportedDescription':
+    '所选天气数据源暂不支持此位置的长期每日预报。',
   'weather.longRange.loadingTitle': '正在加载长期预报',
   'weather.longRange.loadingDescription':
     'LifeBoard 正在加载所选位置的预报，不会显示占位日期。',
