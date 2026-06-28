@@ -18,16 +18,16 @@ import {
 } from '@/modules/weather/renderers/pixi/pixiWeatherCapabilities'
 import type {
   PixiWeatherMetrics,
+  PixiWeatherReferenceScene,
   PixiWeatherRendererStatus,
   PixiWeatherSceneHandles,
   PixiWeatherVisualKey,
 } from '@/modules/weather/renderers/pixi/types'
-import type { LocalWeatherReferenceScene } from './local-reference'
 
 interface Props {
   enabled: boolean
   imageElement: HTMLImageElement | null
-  localScene?: LocalWeatherReferenceScene | null
+  referenceScene?: PixiWeatherReferenceScene | null
   visualKey: PixiWeatherVisualKey | null
 }
 
@@ -62,9 +62,9 @@ const canAttemptPixi = computed(() => {
     image.naturalWidth > 0 &&
     image.naturalHeight > 0
   const hasLocalScene =
-    props.localScene !== null &&
-    props.localScene !== undefined &&
-    props.localScene.layers.length > 0
+    props.referenceScene !== null &&
+    props.referenceScene !== undefined &&
+    props.referenceScene.layers.length > 0
 
   return (
     props.enabled &&
@@ -278,8 +278,8 @@ async function initializePixi() {
       scene.addChild(ambientSprite)
     }
 
-    if (props.localScene) {
-      const sceneLayers = props.localScene.layers.slice(0, MAX_LOCAL_REFERENCE_LAYERS)
+    if (props.referenceScene) {
+      const sceneLayers = props.referenceScene.layers.slice(0, MAX_LOCAL_REFERENCE_LAYERS)
       const textures = await Promise.all(
         sceneLayers.map(async (layer) => ({
           layer,
@@ -308,7 +308,7 @@ async function initializePixi() {
         })
       })
 
-      if (props.localScene.isThunderstorm) {
+      if (props.referenceScene.isThunderstorm) {
         thunderOverlay = new pixi.Graphics()
         thunderOverlay
           .rect(0, 0, width, height)
@@ -332,7 +332,7 @@ async function initializePixi() {
     let elapsedMs = 0
     let thunderSeed = 0.37
     let nextThunderMs =
-      props.localScene?.intensity === 'severe' ? 4200 : 6200
+      props.referenceScene?.intensity === 'severe' ? 4200 : 6200
     let thunderRemainingMs = 0
     const onTick = (ticker: import('pixi.js').Ticker) => {
       elapsedMs += ticker.deltaMS
@@ -356,22 +356,22 @@ async function initializePixi() {
           layerHandle.layer.opacity + layerWave * layerHandle.layer.opacity * 0.05
       }
 
-      if (thunderOverlay && props.localScene?.isThunderstorm) {
+      if (thunderOverlay && props.referenceScene?.isThunderstorm) {
         if (thunderRemainingMs <= 0 && elapsedMs >= nextThunderMs) {
           thunderSeed = (thunderSeed * 9301 + 49297) % 233280
           const randomUnit = thunderSeed / 233280
-          thunderRemainingMs = props.localScene.intensity === 'severe' ? 130 : 90
+          thunderRemainingMs = props.referenceScene.intensity === 'severe' ? 130 : 90
           nextThunderMs =
             elapsedMs +
             5200 +
-            randomUnit * (props.localScene.intensity === 'severe' ? 4200 : 7200)
+            randomUnit * (props.referenceScene.intensity === 'severe' ? 4200 : 7200)
         }
 
         if (thunderRemainingMs > 0) {
           thunderRemainingMs = Math.max(0, thunderRemainingMs - ticker.deltaMS)
           thunderOverlay.alpha =
             (thunderRemainingMs / 130) *
-            (props.localScene.intensity === 'severe' ? 0.13 : 0.09)
+            (props.referenceScene.intensity === 'severe' ? 0.13 : 0.09)
         } else {
           thunderOverlay.alpha = 0
         }
@@ -443,7 +443,7 @@ watch(
   () => [
     props.imageElement,
     props.visualKey,
-    props.localScene?.key ?? null,
+    props.referenceScene?.key ?? null,
     props.enabled,
   ] as const,
   () => {

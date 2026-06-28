@@ -7,8 +7,12 @@ import type {
   Ticker,
   Graphics,
 } from 'pixi.js'
-import type { LocalWeatherReferenceLayer } from './local-reference'
-import type { WeatherTimeline } from '@/modules/weather/visual/types'
+import type {
+  WeatherEffectGroup,
+  WeatherIntensity,
+  WeatherIntensityPreset,
+  WeatherTimeline,
+} from '@/modules/weather/visual/types'
 
 export type PixiWeatherRendererStatus =
   | 'idle'
@@ -19,6 +23,34 @@ export type PixiWeatherRendererStatus =
   | 'error'
 
 export type PixiWeatherVisualKey = 'partly-cloudy-day' | 'partly-cloudy-night'
+
+export type PixiWeatherReferenceSceneSource =
+  | 'authorized-vendor'
+  | 'local-reference'
+
+export interface PixiWeatherReferenceLayer {
+  type: 'image'
+  url: string
+  role: string
+  opacity: number
+  speedX: number
+  speedY: number
+  scale: number
+  fit: 'cover'
+  assetType: string
+  blendMode?: 'normal'
+}
+
+export interface PixiWeatherReferenceScene {
+  key: string
+  source: PixiWeatherReferenceSceneSource
+  effectGroup: WeatherEffectGroup
+  intensity: WeatherIntensity
+  intensityPreset: WeatherIntensityPreset
+  timeline: Extract<WeatherTimeline, 'day' | 'night'>
+  isThunderstorm: boolean
+  layers: PixiWeatherReferenceLayer[]
+}
 
 export interface PixiWeatherSceneOptions {
   driftX: number
@@ -46,7 +78,7 @@ export interface PixiWeatherSceneHandles {
   ambientTextureSource?: TextureSource
   thunderOverlay?: Graphics
   localLayers: Array<{
-    layer: LocalWeatherReferenceLayer
+    layer: PixiWeatherReferenceLayer
     sprite: Sprite
     phase: number
   }>

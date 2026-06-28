@@ -1,9 +1,7 @@
 import type {
-  WeatherEffectGroup,
-  WeatherIntensity,
-  WeatherIntensityPreset,
-  WeatherTimeline,
-} from '@/modules/weather/visual/types'
+  PixiWeatherReferenceLayer,
+  PixiWeatherReferenceScene,
+} from '@/modules/weather/renderers/pixi/types'
 
 export type LocalWeatherReferenceLayerRole =
   | 'air-dust'
@@ -32,26 +30,12 @@ export type LocalWeatherReferenceLayerRole =
   | 'thick-cloud'
   | 'thin-cloud'
 
-export interface LocalWeatherReferenceLayer {
-  type: 'image'
-  url: string
+export interface LocalWeatherReferenceLayer extends PixiWeatherReferenceLayer {
   role: LocalWeatherReferenceLayerRole
-  opacity: number
-  speedX: number
-  speedY: number
-  scale: number
-  fit: 'cover'
-  assetType: string
 }
 
-export interface LocalWeatherReferenceScene {
-  key: string
+export interface LocalWeatherReferenceScene extends PixiWeatherReferenceScene {
   source: 'local-reference'
-  effectGroup: WeatherEffectGroup
-  intensity: WeatherIntensity
-  intensityPreset: WeatherIntensityPreset
-  timeline: Extract<WeatherTimeline, 'day' | 'night'>
-  isThunderstorm: boolean
   layers: LocalWeatherReferenceLayer[]
 }
 

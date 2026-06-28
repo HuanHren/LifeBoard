@@ -1,0 +1,1344 @@
+﻿{
+    "version":  1,
+    "assetSet":  "xiaomi-authorized-transitional",
+    "status":  "authorized-vendor",
+    "assets":  [
+                   {
+                       "name":  "cloud-light.webp",
+                       "type":  "cloud-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                       "sha256":  "927fcc7831588e4cb4153cb774c0f6125416d657045949559dd3a3b4fc056d37",
+                       "width":  720,
+                       "height":  417,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  69398
+                   },
+                   {
+                       "name":  "cloud-dark.webp",
+                       "type":  "cloud-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                       "sha256":  "86a13875ea6255f9a281a9f0e95b35070184da82813faa6ef9b84830e2600980",
+                       "width":  720,
+                       "height":  417,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  64938
+                   },
+                   {
+                       "name":  "overcast-light.webp",
+                       "type":  "cloud-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                       "sha256":  "3f686f50cfd9680e5eb9040273aaf8dbeb36338acdeb3918cc8bb43e6767fc8c",
+                       "width":  720,
+                       "height":  417,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  67516
+                   },
+                   {
+                       "name":  "overcast-dark.webp",
+                       "type":  "cloud-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                       "sha256":  "ee69a1c342343b96752071efc8f0c7e89e1b96ade6598bcd6ba6a8a5d2de7888",
+                       "width":  720,
+                       "height":  417,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  53996
+                   },
+                   {
+                       "name":  "rain-light.webp",
+                       "type":  "rain-texture",
+                       "url":  "/weather-assets/vendor/xiaomi/rain/rain-light.webp",
+                       "sha256":  "ee8492706818720e66870c699adf121d279516e9e7f0b7b17ad2d431a943e03b",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  49028
+                   },
+                   {
+                       "name":  "rain-dark.webp",
+                       "type":  "rain-texture",
+                       "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                       "sha256":  "7d8e6c03ea05fc1e80bb73577e98a51b4a9f23d13562039cc372fc83744631ff",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  47692
+                   },
+                   {
+                       "name":  "snow-light.webp",
+                       "type":  "snow-texture",
+                       "url":  "/weather-assets/vendor/xiaomi/snow/snow-light.webp",
+                       "sha256":  "45a8e7d7992424811621f718d3552db380ee20acc7b90fec70a4accf2a21c43a",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  51602
+                   },
+                   {
+                       "name":  "snow-dark.webp",
+                       "type":  "snow-texture",
+                       "url":  "/weather-assets/vendor/xiaomi/snow/snow-dark.webp",
+                       "sha256":  "2df6459ebfd75bf87157c4cacae01868478aaa5ac723bf968b6255bbaa394173",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  50248
+                   },
+                   {
+                       "name":  "snow-frost-overlay.webp",
+                       "type":  "snow-texture",
+                       "url":  "/weather-assets/vendor/xiaomi/snow/snow-frost-overlay.webp",
+                       "sha256":  "7e5b455c41ffc59b8e6d9441ff18acd7ade8b3e508c7aab9d095859ea30b1587",
+                       "width":  1024,
+                       "height":  624,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  36594
+                   },
+                   {
+                       "name":  "frost-reference.webp",
+                       "type":  "full-background",
+                       "url":  "/weather-assets/vendor/xiaomi/backgrounds/frost-reference.webp",
+                       "sha256":  "d565343e6543b28394248c1004d4b5aa3df42ccc7fde47a32da132653d1b8704",
+                       "width":  1280,
+                       "height":  686,
+                       "mode":  "RGB",
+                       "hasAlpha":  false,
+                       "fileSize":  681880
+                   },
+                   {
+                       "name":  "fog-light.webp",
+                       "type":  "fog-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-light.webp",
+                       "sha256":  "256a62dc7f0477dccf7dcfff3581f3ed934d0beec542050732d7edb2561738ab",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  44594
+                   },
+                   {
+                       "name":  "fog-dark.webp",
+                       "type":  "fog-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-dark.webp",
+                       "sha256":  "b5d62be2e054ffffda02271acedce5cfbfaad83b6bafa41b43f8f20e22071988",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  48728
+                   },
+                   {
+                       "name":  "fog-particle.png",
+                       "type":  "fog-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-particle.png",
+                       "sha256":  "88bd1cde0480f1c59b3cf92a7d319d0569ae49fffe40ac55f31fe59ce459a7ad",
+                       "width":  512,
+                       "height":  512,
+                       "mode":  "P",
+                       "hasAlpha":  true,
+                       "fileSize":  79020
+                   },
+                   {
+                       "name":  "haze-light.webp",
+                       "type":  "haze-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/haze-light.webp",
+                       "sha256":  "d6523cbf97935bce36cc60c3320cbb302f88be3a2ad542b6d7836f554e9a3c08",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  44134
+                   },
+                   {
+                       "name":  "haze-dark.webp",
+                       "type":  "haze-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/haze-dark.webp",
+                       "sha256":  "73ea82d1c44e6b7a1d1d5d102ac31399fe639201ee5ab01b4290611114b7a4e7",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  50194
+                   },
+                   {
+                       "name":  "sand-light.webp",
+                       "type":  "dust-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/dust/sand-light.webp",
+                       "sha256":  "c5bb365cc80e3a65b9bd6667852da939395e8db8a87487bc485efd40c6f10dac",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  42156
+                   },
+                   {
+                       "name":  "sand-dark.webp",
+                       "type":  "dust-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/dust/sand-dark.webp",
+                       "sha256":  "090a31fd8352f52688ec4172aa9ef9f784c8066fa7489f85c7077168393eacdd",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  48310
+                   },
+                   {
+                       "name":  "small-sand-light.webp",
+                       "type":  "dust-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-light.webp",
+                       "sha256":  "061962a81522ee10466ac571d2ba4ea0321354843e1a2d3d343e63f7a02332a8",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  41230
+                   },
+                   {
+                       "name":  "small-sand-dark.webp",
+                       "type":  "dust-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-dark.webp",
+                       "sha256":  "64a11bb6863290e52ddecc09425dc854394e41c57937492f1622e36a00013e23",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  46714
+                   },
+                   {
+                       "name":  "sun-light.webp",
+                       "type":  "light-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/lights/sun-light.webp",
+                       "sha256":  "ae12d6d237a91cb829a74bc86d0c5e6c4a4f2ad11f2e89954be5d221f2ab0201",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  47114
+                   },
+                   {
+                       "name":  "sun-dark.webp",
+                       "type":  "light-layer",
+                       "url":  "/weather-assets/vendor/xiaomi/lights/sun-dark.webp",
+                       "sha256":  "9b0e289c11fa77b55d1b5c2079041f32316ac139ef8d587f86e65a90a14d7aa8",
+                       "width":  360,
+                       "height":  418,
+                       "mode":  "RGBA",
+                       "hasAlpha":  true,
+                       "fileSize":  38698
+                   }
+               ],
+    "scenes":  {
+                   "clear-day":  {
+                                     "layers":  [
+                                                    {
+                                                        "type":  "image",
+                                                        "url":  "/weather-assets/vendor/xiaomi/lights/sun-light.webp",
+                                                        "role":  "sunlight",
+                                                        "opacity":  0.28,
+                                                        "speed":  {
+                                                                      "x":  0.006,
+                                                                      "y":  0
+                                                                  },
+                                                        "speedX":  0.006,
+                                                        "speedY":  0,
+                                                        "blendMode":  "normal",
+                                                        "scale":  1.08,
+                                                        "fit":  "cover",
+                                                        "assetType":  "light-layer"
+                                                    },
+                                                    {
+                                                        "type":  "image",
+                                                        "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                                                        "role":  "thin-cloud",
+                                                        "opacity":  0.26,
+                                                        "speed":  {
+                                                                      "x":  0.012,
+                                                                      "y":  0
+                                                                  },
+                                                        "speedX":  0.012,
+                                                        "speedY":  0,
+                                                        "blendMode":  "normal",
+                                                        "scale":  1.05,
+                                                        "fit":  "cover",
+                                                        "assetType":  "cloud-layer"
+                                                    }
+                                                ]
+                                 },
+                   "clear-night":  {
+                                       "layers":  [
+                                                      {
+                                                          "type":  "image",
+                                                          "url":  "/weather-assets/vendor/xiaomi/lights/sun-dark.webp",
+                                                          "role":  "moonlight",
+                                                          "opacity":  0.22,
+                                                          "speed":  {
+                                                                        "x":  0.004,
+                                                                        "y":  0
+                                                                    },
+                                                          "speedX":  0.004,
+                                                          "speedY":  0,
+                                                          "blendMode":  "normal",
+                                                          "scale":  1.08,
+                                                          "fit":  "cover",
+                                                          "assetType":  "light-layer"
+                                                      },
+                                                      {
+                                                          "type":  "image",
+                                                          "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                                                          "role":  "thin-cloud",
+                                                          "opacity":  0.18,
+                                                          "speed":  {
+                                                                        "x":  0.008,
+                                                                        "y":  0
+                                                                    },
+                                                          "speedX":  0.008,
+                                                          "speedY":  0,
+                                                          "blendMode":  "normal",
+                                                          "scale":  1.05,
+                                                          "fit":  "cover",
+                                                          "assetType":  "cloud-layer"
+                                                      }
+                                                  ]
+                                   },
+                   "cloudy-day":  {
+                                      "layers":  [
+                                                     {
+                                                         "type":  "image",
+                                                         "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                                                         "role":  "mid-cloud",
+                                                         "opacity":  0.58,
+                                                         "speed":  {
+                                                                       "x":  0.018,
+                                                                       "y":  0
+                                                                   },
+                                                         "speedX":  0.018,
+                                                         "speedY":  0,
+                                                         "blendMode":  "normal",
+                                                         "scale":  1.04,
+                                                         "fit":  "cover",
+                                                         "assetType":  "cloud-layer"
+                                                     },
+                                                     {
+                                                         "type":  "image",
+                                                         "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                         "role":  "high-cloud",
+                                                         "opacity":  0.34,
+                                                         "speed":  {
+                                                                       "x":  0.012,
+                                                                       "y":  0
+                                                                   },
+                                                         "speedX":  0.012,
+                                                         "speedY":  0,
+                                                         "blendMode":  "normal",
+                                                         "scale":  1.04,
+                                                         "fit":  "cover",
+                                                         "assetType":  "cloud-layer"
+                                                     }
+                                                 ]
+                                  },
+                   "cloudy-night":  {
+                                        "layers":  [
+                                                       {
+                                                           "type":  "image",
+                                                           "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                                                           "role":  "mid-cloud",
+                                                           "opacity":  0.56,
+                                                           "speed":  {
+                                                                         "x":  0.012,
+                                                                         "y":  0
+                                                                     },
+                                                           "speedX":  0.012,
+                                                           "speedY":  0,
+                                                           "blendMode":  "normal",
+                                                           "scale":  1.04,
+                                                           "fit":  "cover",
+                                                           "assetType":  "cloud-layer"
+                                                       },
+                                                       {
+                                                           "type":  "image",
+                                                           "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                           "role":  "high-cloud",
+                                                           "opacity":  0.32,
+                                                           "speed":  {
+                                                                         "x":  0.008,
+                                                                         "y":  0
+                                                                     },
+                                                           "speedX":  0.008,
+                                                           "speedY":  0,
+                                                           "blendMode":  "normal",
+                                                           "scale":  1.04,
+                                                           "fit":  "cover",
+                                                           "assetType":  "cloud-layer"
+                                                       }
+                                                   ]
+                                    },
+                   "overcast-day":  {
+                                        "layers":  [
+                                                       {
+                                                           "type":  "image",
+                                                           "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                           "role":  "thick-cloud",
+                                                           "opacity":  0.72,
+                                                           "speed":  {
+                                                                         "x":  0.01,
+                                                                         "y":  0
+                                                                     },
+                                                           "speedX":  0.01,
+                                                           "speedY":  0,
+                                                           "blendMode":  "normal",
+                                                           "scale":  1.06,
+                                                           "fit":  "cover",
+                                                           "assetType":  "cloud-layer"
+                                                       },
+                                                       {
+                                                           "type":  "image",
+                                                           "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                                                           "role":  "low-cloud",
+                                                           "opacity":  0.42,
+                                                           "speed":  {
+                                                                         "x":  0.006,
+                                                                         "y":  0
+                                                                     },
+                                                           "speedX":  0.006,
+                                                           "speedY":  0,
+                                                           "blendMode":  "normal",
+                                                           "scale":  1.06,
+                                                           "fit":  "cover",
+                                                           "assetType":  "cloud-layer"
+                                                       }
+                                                   ]
+                                    },
+                   "overcast-night":  {
+                                          "layers":  [
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                             "role":  "thick-cloud",
+                                                             "opacity":  0.72,
+                                                             "speed":  {
+                                                                           "x":  0.008,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.008,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.06,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                                                             "role":  "low-cloud",
+                                                             "opacity":  0.42,
+                                                             "speed":  {
+                                                                           "x":  0.005,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.005,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.06,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         }
+                                                     ]
+                                      },
+                   "fog-day":  {
+                                   "layers":  [
+                                                  {
+                                                      "type":  "image",
+                                                      "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-light.webp",
+                                                      "role":  "fog-bank",
+                                                      "opacity":  0.58,
+                                                      "speed":  {
+                                                                    "x":  0.006,
+                                                                    "y":  0
+                                                                },
+                                                      "speedX":  0.006,
+                                                      "speedY":  0,
+                                                      "blendMode":  "normal",
+                                                      "scale":  1.12,
+                                                      "fit":  "cover",
+                                                      "assetType":  "fog-layer"
+                                                  },
+                                                  {
+                                                      "type":  "image",
+                                                      "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-particle.png",
+                                                      "role":  "mist",
+                                                      "opacity":  0.18,
+                                                      "speed":  {
+                                                                    "x":  0.004,
+                                                                    "y":  0
+                                                                },
+                                                      "speedX":  0.004,
+                                                      "speedY":  0,
+                                                      "blendMode":  "normal",
+                                                      "scale":  1.25,
+                                                      "fit":  "cover",
+                                                      "assetType":  "fog-layer"
+                                                  }
+                                              ]
+                               },
+                   "fog-night":  {
+                                     "layers":  [
+                                                    {
+                                                        "type":  "image",
+                                                        "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-dark.webp",
+                                                        "role":  "fog-bank",
+                                                        "opacity":  0.54,
+                                                        "speed":  {
+                                                                      "x":  0.004,
+                                                                      "y":  0
+                                                                  },
+                                                        "speedX":  0.004,
+                                                        "speedY":  0,
+                                                        "blendMode":  "normal",
+                                                        "scale":  1.12,
+                                                        "fit":  "cover",
+                                                        "assetType":  "fog-layer"
+                                                    },
+                                                    {
+                                                        "type":  "image",
+                                                        "url":  "/weather-assets/vendor/xiaomi/atmosphere/fog-particle.png",
+                                                        "role":  "mist",
+                                                        "opacity":  0.14,
+                                                        "speed":  {
+                                                                      "x":  0.003,
+                                                                      "y":  0
+                                                                  },
+                                                        "speedX":  0.003,
+                                                        "speedY":  0,
+                                                        "blendMode":  "normal",
+                                                        "scale":  1.25,
+                                                        "fit":  "cover",
+                                                        "assetType":  "fog-layer"
+                                                    }
+                                                ]
+                                 },
+                   "haze-day":  {
+                                    "layers":  [
+                                                   {
+                                                       "type":  "image",
+                                                       "url":  "/weather-assets/vendor/xiaomi/atmosphere/haze-light.webp",
+                                                       "role":  "haze",
+                                                       "opacity":  0.52,
+                                                       "speed":  {
+                                                                     "x":  0.005,
+                                                                     "y":  0
+                                                                 },
+                                                       "speedX":  0.005,
+                                                       "speedY":  0,
+                                                       "blendMode":  "normal",
+                                                       "scale":  1.1,
+                                                       "fit":  "cover",
+                                                       "assetType":  "haze-layer"
+                                                   },
+                                                   {
+                                                       "type":  "image",
+                                                       "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-light.webp",
+                                                       "role":  "air-dust",
+                                                       "opacity":  0.18,
+                                                       "speed":  {
+                                                                     "x":  0.004,
+                                                                     "y":  0
+                                                                 },
+                                                       "speedX":  0.004,
+                                                       "speedY":  0,
+                                                       "blendMode":  "normal",
+                                                       "scale":  1.12,
+                                                       "fit":  "cover",
+                                                       "assetType":  "dust-layer"
+                                                   }
+                                               ]
+                                },
+                   "haze-night":  {
+                                      "layers":  [
+                                                     {
+                                                         "type":  "image",
+                                                         "url":  "/weather-assets/vendor/xiaomi/atmosphere/haze-dark.webp",
+                                                         "role":  "haze",
+                                                         "opacity":  0.5,
+                                                         "speed":  {
+                                                                       "x":  0.004,
+                                                                       "y":  0
+                                                                   },
+                                                         "speedX":  0.004,
+                                                         "speedY":  0,
+                                                         "blendMode":  "normal",
+                                                         "scale":  1.1,
+                                                         "fit":  "cover",
+                                                         "assetType":  "haze-layer"
+                                                     },
+                                                     {
+                                                         "type":  "image",
+                                                         "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-dark.webp",
+                                                         "role":  "air-dust",
+                                                         "opacity":  0.16,
+                                                         "speed":  {
+                                                                       "x":  0.003,
+                                                                       "y":  0
+                                                                   },
+                                                         "speedX":  0.003,
+                                                         "speedY":  0,
+                                                         "blendMode":  "normal",
+                                                         "scale":  1.12,
+                                                         "fit":  "cover",
+                                                         "assetType":  "dust-layer"
+                                                     }
+                                                 ]
+                                  },
+                   "light-rain-day":  {
+                                          "layers":  [
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                             "role":  "rain-cloud",
+                                                             "opacity":  0.55,
+                                                             "speed":  {
+                                                                           "x":  0.01,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.01,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.06,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/rain/rain-light.webp",
+                                                             "role":  "rain",
+                                                             "opacity":  0.28,
+                                                             "speed":  {
+                                                                           "x":  0,
+                                                                           "y":  0.13
+                                                                       },
+                                                             "speedX":  0,
+                                                             "speedY":  0.13,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.12,
+                                                             "fit":  "cover",
+                                                             "assetType":  "rain-texture"
+                                                         }
+                                                     ]
+                                      },
+                   "light-rain-night":  {
+                                            "layers":  [
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                               "role":  "rain-cloud",
+                                                               "opacity":  0.55,
+                                                               "speed":  {
+                                                                             "x":  0.008,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.008,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.06,
+                                                               "fit":  "cover",
+                                                               "assetType":  "cloud-layer"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                               "role":  "rain",
+                                                               "opacity":  0.24,
+                                                               "speed":  {
+                                                                             "x":  0,
+                                                                             "y":  0.12
+                                                                         },
+                                                               "speedX":  0,
+                                                               "speedY":  0.12,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.12,
+                                                               "fit":  "cover",
+                                                               "assetType":  "rain-texture"
+                                                           }
+                                                       ]
+                                        },
+                   "moderate-rain-day":  {
+                                             "layers":  [
+                                                            {
+                                                                "type":  "image",
+                                                                "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                                "role":  "rain-cloud",
+                                                                "opacity":  0.66,
+                                                                "speed":  {
+                                                                              "x":  0.01,
+                                                                              "y":  0
+                                                                          },
+                                                                "speedX":  0.01,
+                                                                "speedY":  0,
+                                                                "blendMode":  "normal",
+                                                                "scale":  1.06,
+                                                                "fit":  "cover",
+                                                                "assetType":  "cloud-layer"
+                                                            },
+                                                            {
+                                                                "type":  "image",
+                                                                "url":  "/weather-assets/vendor/xiaomi/rain/rain-light.webp",
+                                                                "role":  "rain",
+                                                                "opacity":  0.38,
+                                                                "speed":  {
+                                                                              "x":  0,
+                                                                              "y":  0.18
+                                                                          },
+                                                                "speedX":  0,
+                                                                "speedY":  0.18,
+                                                                "blendMode":  "normal",
+                                                                "scale":  1.14,
+                                                                "fit":  "cover",
+                                                                "assetType":  "rain-texture"
+                                                            }
+                                                        ]
+                                         },
+                   "moderate-rain-night":  {
+                                               "layers":  [
+                                                              {
+                                                                  "type":  "image",
+                                                                  "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                                  "role":  "rain-cloud",
+                                                                  "opacity":  0.66,
+                                                                  "speed":  {
+                                                                                "x":  0.008,
+                                                                                "y":  0
+                                                                            },
+                                                                  "speedX":  0.008,
+                                                                  "speedY":  0,
+                                                                  "blendMode":  "normal",
+                                                                  "scale":  1.06,
+                                                                  "fit":  "cover",
+                                                                  "assetType":  "cloud-layer"
+                                                              },
+                                                              {
+                                                                  "type":  "image",
+                                                                  "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                                  "role":  "rain",
+                                                                  "opacity":  0.34,
+                                                                  "speed":  {
+                                                                                "x":  0,
+                                                                                "y":  0.16
+                                                                            },
+                                                                  "speedX":  0,
+                                                                  "speedY":  0.16,
+                                                                  "blendMode":  "normal",
+                                                                  "scale":  1.14,
+                                                                  "fit":  "cover",
+                                                                  "assetType":  "rain-texture"
+                                                              }
+                                                          ]
+                                           },
+                   "heavy-rain-day":  {
+                                          "layers":  [
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                             "role":  "storm-cloud",
+                                                             "opacity":  0.78,
+                                                             "speed":  {
+                                                                           "x":  0.008,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.008,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.08,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/rain/rain-light.webp",
+                                                             "role":  "heavy-rain",
+                                                             "opacity":  0.5,
+                                                             "speed":  {
+                                                                           "x":  0,
+                                                                           "y":  0.23
+                                                                       },
+                                                             "speedX":  0,
+                                                             "speedY":  0.23,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.18,
+                                                             "fit":  "cover",
+                                                             "assetType":  "rain-texture"
+                                                         }
+                                                     ]
+                                      },
+                   "heavy-rain-night":  {
+                                            "layers":  [
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                               "role":  "storm-cloud",
+                                                               "opacity":  0.78,
+                                                               "speed":  {
+                                                                             "x":  0.006,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.006,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.08,
+                                                               "fit":  "cover",
+                                                               "assetType":  "cloud-layer"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                               "role":  "heavy-rain",
+                                                               "opacity":  0.46,
+                                                               "speed":  {
+                                                                             "x":  0,
+                                                                             "y":  0.21
+                                                                         },
+                                                               "speedX":  0,
+                                                               "speedY":  0.21,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.18,
+                                                               "fit":  "cover",
+                                                               "assetType":  "rain-texture"
+                                                           }
+                                                       ]
+                                        },
+                   "thunderstorm-day":  {
+                                            "layers":  [
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                               "role":  "storm-cloud",
+                                                               "opacity":  0.78,
+                                                               "speed":  {
+                                                                             "x":  0.006,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.006,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.08,
+                                                               "fit":  "cover",
+                                                               "assetType":  "cloud-layer"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                               "role":  "storm-rain",
+                                                               "opacity":  0.32,
+                                                               "speed":  {
+                                                                             "x":  0,
+                                                                             "y":  0.18
+                                                                         },
+                                                               "speedX":  0,
+                                                               "speedY":  0.18,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.14,
+                                                               "fit":  "cover",
+                                                               "assetType":  "rain-texture"
+                                                           }
+                                                       ]
+                                        },
+                   "thunderstorm-night":  {
+                                              "layers":  [
+                                                             {
+                                                                 "type":  "image",
+                                                                 "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                                 "role":  "storm-cloud",
+                                                                 "opacity":  0.82,
+                                                                 "speed":  {
+                                                                               "x":  0.005,
+                                                                               "y":  0
+                                                                           },
+                                                                 "speedX":  0.005,
+                                                                 "speedY":  0,
+                                                                 "blendMode":  "normal",
+                                                                 "scale":  1.08,
+                                                                 "fit":  "cover",
+                                                                 "assetType":  "cloud-layer"
+                                                             },
+                                                             {
+                                                                 "type":  "image",
+                                                                 "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                                 "role":  "storm-rain",
+                                                                 "opacity":  0.34,
+                                                                 "speed":  {
+                                                                               "x":  0,
+                                                                               "y":  0.18
+                                                                           },
+                                                                 "speedX":  0,
+                                                                 "speedY":  0.18,
+                                                                 "blendMode":  "normal",
+                                                                 "scale":  1.14,
+                                                                 "fit":  "cover",
+                                                                 "assetType":  "rain-texture"
+                                                             }
+                                                         ]
+                                          },
+                   "light-snow-day":  {
+                                          "layers":  [
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                                                             "role":  "snow-cloud",
+                                                             "opacity":  0.46,
+                                                             "speed":  {
+                                                                           "x":  0.008,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.008,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.05,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/snow/snow-light.webp",
+                                                             "role":  "snow",
+                                                             "opacity":  0.25,
+                                                             "speed":  {
+                                                                           "x":  0.01,
+                                                                           "y":  0.06
+                                                                       },
+                                                             "speedX":  0.01,
+                                                             "speedY":  0.06,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.12,
+                                                             "fit":  "cover",
+                                                             "assetType":  "snow-texture"
+                                                         }
+                                                     ]
+                                      },
+                   "light-snow-night":  {
+                                            "layers":  [
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                                                               "role":  "snow-cloud",
+                                                               "opacity":  0.46,
+                                                               "speed":  {
+                                                                             "x":  0.006,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.006,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.05,
+                                                               "fit":  "cover",
+                                                               "assetType":  "cloud-layer"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/snow/snow-dark.webp",
+                                                               "role":  "snow",
+                                                               "opacity":  0.24,
+                                                               "speed":  {
+                                                                             "x":  0.008,
+                                                                             "y":  0.05
+                                                                         },
+                                                               "speedX":  0.008,
+                                                               "speedY":  0.05,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.12,
+                                                               "fit":  "cover",
+                                                               "assetType":  "snow-texture"
+                                                           }
+                                                       ]
+                                        },
+                   "moderate-snow-day":  {
+                                             "layers":  [
+                                                            {
+                                                                "type":  "image",
+                                                                "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-light.webp",
+                                                                "role":  "snow-cloud",
+                                                                "opacity":  0.52,
+                                                                "speed":  {
+                                                                              "x":  0.008,
+                                                                              "y":  0
+                                                                          },
+                                                                "speedX":  0.008,
+                                                                "speedY":  0,
+                                                                "blendMode":  "normal",
+                                                                "scale":  1.05,
+                                                                "fit":  "cover",
+                                                                "assetType":  "cloud-layer"
+                                                            },
+                                                            {
+                                                                "type":  "image",
+                                                                "url":  "/weather-assets/vendor/xiaomi/snow/snow-light.webp",
+                                                                "role":  "snow",
+                                                                "opacity":  0.36,
+                                                                "speed":  {
+                                                                              "x":  0.012,
+                                                                              "y":  0.08
+                                                                          },
+                                                                "speedX":  0.012,
+                                                                "speedY":  0.08,
+                                                                "blendMode":  "normal",
+                                                                "scale":  1.14,
+                                                                "fit":  "cover",
+                                                                "assetType":  "snow-texture"
+                                                            },
+                                                            {
+                                                                "type":  "image",
+                                                                "url":  "/weather-assets/vendor/xiaomi/snow/snow-frost-overlay.webp",
+                                                                "role":  "snow-haze",
+                                                                "opacity":  0.16,
+                                                                "speed":  {
+                                                                              "x":  0.004,
+                                                                              "y":  0
+                                                                          },
+                                                                "speedX":  0.004,
+                                                                "speedY":  0,
+                                                                "blendMode":  "normal",
+                                                                "scale":  1.05,
+                                                                "fit":  "cover",
+                                                                "assetType":  "snow-texture"
+                                                            }
+                                                        ]
+                                         },
+                   "moderate-snow-night":  {
+                                               "layers":  [
+                                                              {
+                                                                  "type":  "image",
+                                                                  "url":  "/weather-assets/vendor/xiaomi/clouds/cloud-dark.webp",
+                                                                  "role":  "snow-cloud",
+                                                                  "opacity":  0.52,
+                                                                  "speed":  {
+                                                                                "x":  0.006,
+                                                                                "y":  0
+                                                                            },
+                                                                  "speedX":  0.006,
+                                                                  "speedY":  0,
+                                                                  "blendMode":  "normal",
+                                                                  "scale":  1.05,
+                                                                  "fit":  "cover",
+                                                                  "assetType":  "cloud-layer"
+                                                              },
+                                                              {
+                                                                  "type":  "image",
+                                                                  "url":  "/weather-assets/vendor/xiaomi/snow/snow-dark.webp",
+                                                                  "role":  "snow",
+                                                                  "opacity":  0.34,
+                                                                  "speed":  {
+                                                                                "x":  0.01,
+                                                                                "y":  0.07
+                                                                            },
+                                                                  "speedX":  0.01,
+                                                                  "speedY":  0.07,
+                                                                  "blendMode":  "normal",
+                                                                  "scale":  1.14,
+                                                                  "fit":  "cover",
+                                                                  "assetType":  "snow-texture"
+                                                              },
+                                                              {
+                                                                  "type":  "image",
+                                                                  "url":  "/weather-assets/vendor/xiaomi/snow/snow-frost-overlay.webp",
+                                                                  "role":  "snow-haze",
+                                                                  "opacity":  0.12,
+                                                                  "speed":  {
+                                                                                "x":  0.003,
+                                                                                "y":  0
+                                                                            },
+                                                                  "speedX":  0.003,
+                                                                  "speedY":  0,
+                                                                  "blendMode":  "normal",
+                                                                  "scale":  1.05,
+                                                                  "fit":  "cover",
+                                                                  "assetType":  "snow-texture"
+                                                              }
+                                                          ]
+                                           },
+                   "heavy-snow-day":  {
+                                          "layers":  [
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-light.webp",
+                                                             "role":  "snow-cloud",
+                                                             "opacity":  0.58,
+                                                             "speed":  {
+                                                                           "x":  0.006,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.006,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.06,
+                                                             "fit":  "cover",
+                                                             "assetType":  "cloud-layer"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/snow/snow-light.webp",
+                                                             "role":  "heavy-snow",
+                                                             "opacity":  0.48,
+                                                             "speed":  {
+                                                                           "x":  0.016,
+                                                                           "y":  0.1
+                                                                       },
+                                                             "speedX":  0.016,
+                                                             "speedY":  0.1,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.18,
+                                                             "fit":  "cover",
+                                                             "assetType":  "snow-texture"
+                                                         },
+                                                         {
+                                                             "type":  "image",
+                                                             "url":  "/weather-assets/vendor/xiaomi/snow/snow-frost-overlay.webp",
+                                                             "role":  "snow-haze",
+                                                             "opacity":  0.22,
+                                                             "speed":  {
+                                                                           "x":  0.004,
+                                                                           "y":  0
+                                                                       },
+                                                             "speedX":  0.004,
+                                                             "speedY":  0,
+                                                             "blendMode":  "normal",
+                                                             "scale":  1.05,
+                                                             "fit":  "cover",
+                                                             "assetType":  "snow-texture"
+                                                         }
+                                                     ]
+                                      },
+                   "heavy-snow-night":  {
+                                            "layers":  [
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/clouds/overcast-dark.webp",
+                                                               "role":  "snow-cloud",
+                                                               "opacity":  0.58,
+                                                               "speed":  {
+                                                                             "x":  0.005,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.005,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.06,
+                                                               "fit":  "cover",
+                                                               "assetType":  "cloud-layer"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/snow/snow-dark.webp",
+                                                               "role":  "heavy-snow",
+                                                               "opacity":  0.44,
+                                                               "speed":  {
+                                                                             "x":  0.012,
+                                                                             "y":  0.09
+                                                                         },
+                                                               "speedX":  0.012,
+                                                               "speedY":  0.09,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.18,
+                                                               "fit":  "cover",
+                                                               "assetType":  "snow-texture"
+                                                           },
+                                                           {
+                                                               "type":  "image",
+                                                               "url":  "/weather-assets/vendor/xiaomi/snow/snow-frost-overlay.webp",
+                                                               "role":  "snow-haze",
+                                                               "opacity":  0.18,
+                                                               "speed":  {
+                                                                             "x":  0.003,
+                                                                             "y":  0
+                                                                         },
+                                                               "speedX":  0.003,
+                                                               "speedY":  0,
+                                                               "blendMode":  "normal",
+                                                               "scale":  1.05,
+                                                               "fit":  "cover",
+                                                               "assetType":  "snow-texture"
+                                                           }
+                                                       ]
+                                        },
+                   "sleet-freezing-day":  {
+                                              "layers":  [
+                                                             {
+                                                                 "type":  "image",
+                                                                 "url":  "/weather-assets/vendor/xiaomi/backgrounds/frost-reference.webp",
+                                                                 "role":  "frost",
+                                                                 "opacity":  0.28,
+                                                                 "speed":  {
+                                                                               "x":  0.002,
+                                                                               "y":  0
+                                                                           },
+                                                                 "speedX":  0.002,
+                                                                 "speedY":  0,
+                                                                 "blendMode":  "normal",
+                                                                 "scale":  1,
+                                                                 "fit":  "cover",
+                                                                 "assetType":  "full-background"
+                                                             },
+                                                             {
+                                                                 "type":  "image",
+                                                                 "url":  "/weather-assets/vendor/xiaomi/rain/rain-light.webp",
+                                                                 "role":  "sleet-rain",
+                                                                 "opacity":  0.2,
+                                                                 "speed":  {
+                                                                               "x":  0,
+                                                                               "y":  0.1
+                                                                           },
+                                                                 "speedX":  0,
+                                                                 "speedY":  0.1,
+                                                                 "blendMode":  "normal",
+                                                                 "scale":  1.12,
+                                                                 "fit":  "cover",
+                                                                 "assetType":  "rain-texture"
+                                                             },
+                                                             {
+                                                                 "type":  "image",
+                                                                 "url":  "/weather-assets/vendor/xiaomi/snow/snow-light.webp",
+                                                                 "role":  "sleet-snow",
+                                                                 "opacity":  0.18,
+                                                                 "speed":  {
+                                                                               "x":  0.008,
+                                                                               "y":  0.06
+                                                                           },
+                                                                 "speedX":  0.008,
+                                                                 "speedY":  0.06,
+                                                                 "blendMode":  "normal",
+                                                                 "scale":  1.12,
+                                                                 "fit":  "cover",
+                                                                 "assetType":  "snow-texture"
+                                                             }
+                                                         ]
+                                          },
+                   "sleet-freezing-night":  {
+                                                "layers":  [
+                                                               {
+                                                                   "type":  "image",
+                                                                   "url":  "/weather-assets/vendor/xiaomi/backgrounds/frost-reference.webp",
+                                                                   "role":  "frost",
+                                                                   "opacity":  0.24,
+                                                                   "speed":  {
+                                                                                 "x":  0.002,
+                                                                                 "y":  0
+                                                                             },
+                                                                   "speedX":  0.002,
+                                                                   "speedY":  0,
+                                                                   "blendMode":  "normal",
+                                                                   "scale":  1,
+                                                                   "fit":  "cover",
+                                                                   "assetType":  "full-background"
+                                                               },
+                                                               {
+                                                                   "type":  "image",
+                                                                   "url":  "/weather-assets/vendor/xiaomi/rain/rain-dark.webp",
+                                                                   "role":  "sleet-rain",
+                                                                   "opacity":  0.18,
+                                                                   "speed":  {
+                                                                                 "x":  0,
+                                                                                 "y":  0.09
+                                                                             },
+                                                                   "speedX":  0,
+                                                                   "speedY":  0.09,
+                                                                   "blendMode":  "normal",
+                                                                   "scale":  1.12,
+                                                                   "fit":  "cover",
+                                                                   "assetType":  "rain-texture"
+                                                               },
+                                                               {
+                                                                   "type":  "image",
+                                                                   "url":  "/weather-assets/vendor/xiaomi/snow/snow-dark.webp",
+                                                                   "role":  "sleet-snow",
+                                                                   "opacity":  0.16,
+                                                                   "speed":  {
+                                                                                 "x":  0.006,
+                                                                                 "y":  0.05
+                                                                             },
+                                                                   "speedX":  0.006,
+                                                                   "speedY":  0.05,
+                                                                   "blendMode":  "normal",
+                                                                   "scale":  1.12,
+                                                                   "fit":  "cover",
+                                                                   "assetType":  "snow-texture"
+                                                               }
+                                                           ]
+                                            },
+                   "sand-dust-day":  {
+                                         "layers":  [
+                                                        {
+                                                            "type":  "image",
+                                                            "url":  "/weather-assets/vendor/xiaomi/dust/sand-light.webp",
+                                                            "role":  "sand-cloud",
+                                                            "opacity":  0.52,
+                                                            "speed":  {
+                                                                          "x":  0.006,
+                                                                          "y":  0
+                                                                      },
+                                                            "speedX":  0.006,
+                                                            "speedY":  0,
+                                                            "blendMode":  "normal",
+                                                            "scale":  1.12,
+                                                            "fit":  "cover",
+                                                            "assetType":  "dust-layer"
+                                                        },
+                                                        {
+                                                            "type":  "image",
+                                                            "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-light.webp",
+                                                            "role":  "fine-dust",
+                                                            "opacity":  0.28,
+                                                            "speed":  {
+                                                                          "x":  0.012,
+                                                                          "y":  0
+                                                                      },
+                                                            "speedX":  0.012,
+                                                            "speedY":  0,
+                                                            "blendMode":  "normal",
+                                                            "scale":  1.14,
+                                                            "fit":  "cover",
+                                                            "assetType":  "dust-layer"
+                                                        }
+                                                    ]
+                                     },
+                   "sand-dust-night":  {
+                                           "layers":  [
+                                                          {
+                                                              "type":  "image",
+                                                              "url":  "/weather-assets/vendor/xiaomi/dust/sand-dark.webp",
+                                                              "role":  "sand-cloud",
+                                                              "opacity":  0.5,
+                                                              "speed":  {
+                                                                            "x":  0.005,
+                                                                            "y":  0
+                                                                        },
+                                                              "speedX":  0.005,
+                                                              "speedY":  0,
+                                                              "blendMode":  "normal",
+                                                              "scale":  1.12,
+                                                              "fit":  "cover",
+                                                              "assetType":  "dust-layer"
+                                                          },
+                                                          {
+                                                              "type":  "image",
+                                                              "url":  "/weather-assets/vendor/xiaomi/dust/small-sand-dark.webp",
+                                                              "role":  "fine-dust",
+                                                              "opacity":  0.24,
+                                                              "speed":  {
+                                                                            "x":  0.01,
+                                                                            "y":  0
+                                                                        },
+                                                              "speedX":  0.01,
+                                                              "speedY":  0,
+                                                              "blendMode":  "normal",
+                                                              "scale":  1.14,
+                                                              "fit":  "cover",
+                                                              "assetType":  "dust-layer"
+                                                          }
+                                                      ]
+                                       }
+               }
+}
