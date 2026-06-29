@@ -1,9 +1,10 @@
 import type { RouteLocationRaw } from 'vue-router'
+import type { BaseIconName } from '@/components/base/BaseIcon.vue'
 import type { TranslationKey } from '@/i18n/keys'
 
 export interface NavigationItem {
   labelKey: TranslationKey
-  marker: string
+  icon: BaseIconName
   descriptionKey: TranslationKey
   to: RouteLocationRaw
 }
@@ -11,37 +12,37 @@ export interface NavigationItem {
 export const navigationItems: NavigationItem[] = [
   {
     labelKey: 'navigation.home.label',
-    marker: 'HM',
+    icon: 'home',
     descriptionKey: 'navigation.home.description',
     to: { name: 'home' },
   },
   {
     labelKey: 'navigation.weather.label',
-    marker: 'WE',
+    icon: 'weather',
     descriptionKey: 'navigation.weather.description',
     to: { name: 'weather' },
   },
   {
     labelKey: 'navigation.todos.label',
-    marker: 'TD',
+    icon: 'todos',
     descriptionKey: 'navigation.todos.description',
     to: { name: 'todos' },
   },
   {
     labelKey: 'navigation.tools.label',
-    marker: 'TL',
+    icon: 'tools',
     descriptionKey: 'navigation.tools.description',
     to: { name: 'tools' },
   },
   {
     labelKey: 'navigation.bookmarks.label',
-    marker: 'BK',
+    icon: 'bookmarks',
     descriptionKey: 'navigation.bookmarks.description',
     to: { name: 'bookmarks' },
   },
   {
     labelKey: 'navigation.settings.label',
-    marker: 'ST',
+    icon: 'settings',
     descriptionKey: 'navigation.settings.description',
     to: { name: 'settings' },
   },

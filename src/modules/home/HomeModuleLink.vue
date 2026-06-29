@@ -2,12 +2,13 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { RouteLocationRaw } from 'vue-router'
+import BaseIcon, { type BaseIconName } from '@/components/base/BaseIcon.vue'
 import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
   title: string
   description: string
-  marker: string
+  icon: BaseIconName
   to: RouteLocationRaw
   prominence?: 'feature' | 'standard'
   statusLabel?: string
@@ -41,7 +42,7 @@ const resolvedActionLabel = computed(
         class="flex size-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-accent-soft)] text-xs font-semibold text-[var(--color-accent-text)]"
         aria-hidden="true"
       >
-        {{ marker }}
+        <BaseIcon :name="icon" />
       </span>
       <span class="text-caption font-medium text-[var(--color-text-secondary)]">
         {{ resolvedStatusLabel }}

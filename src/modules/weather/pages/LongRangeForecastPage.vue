@@ -10,6 +10,7 @@ import {
 import { storeToRefs } from 'pinia'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
+import PageLayout from '@/components/base/PageLayout.vue'
 import { useI18n } from '@/i18n/useI18n'
 import LongRangeForecastStrip from '@/modules/weather/components/LongRangeForecastStrip.vue'
 import WeatherAttribution from '@/modules/weather/components/WeatherAttribution.vue'
@@ -96,7 +97,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-6 pb-[var(--mobile-nav-clearance)] lg:pb-0">
+  <PageLayout variant="wide" gap="md">
     <RouterLink
       class="inline-flex w-fit items-center rounded-[var(--radius-pill)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-2 text-sm font-medium text-[var(--color-accent-text)] transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent-wash)] focus-visible:outline focus-visible:outline-[var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--color-focus)]"
       :to="{ name: 'weather' }"
@@ -187,5 +188,5 @@ onBeforeUnmount(() => {
       :description="unavailableDescription"
       :title="t('weather.longRange.unavailableTitle')"
     />
-  </div>
+  </PageLayout>
 </template>

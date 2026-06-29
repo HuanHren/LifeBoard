@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, shallowRef } from 'vue'
-import { useRoute } from 'vue-router'
 import ThemeToggle from '@/components/base/ThemeToggle.vue'
-import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 
-const route = useRoute()
-const { t, formatDate } = useI18n()
+const { formatDate } = useI18n()
 const now = shallowRef(new Date())
 let rolloverTimer: ReturnType<typeof window.setTimeout> | null = null
 
-const pageTitle = computed(() => {
-  const titleKey = route.meta.titleKey as TranslationKey | undefined
-  return titleKey ? t(titleKey) : 'LifeBoard'
-})
 const currentDate = computed(() =>
   formatDate(now.value, {
     weekday: 'long',
@@ -53,14 +46,16 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="sticky top-0 z-20 border-b border-[var(--color-border-soft)] bg-[var(--color-canvas)] safe-top"
+    class="sticky top-0 z-20 border-b border-[var(--color-border-soft)] bg-[var(--color-background)]/95 backdrop-blur-sm safe-top"
   >
-    <div class="mx-auto flex min-h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 py-2 sm:px-6 lg:px-10">
+    <div class="mx-auto flex min-h-14 w-full max-w-[var(--content-wide-max-width)] items-center justify-between gap-4 px-[var(--page-inline)] py-2">
       <div class="min-w-0">
-        <p class="truncate text-sm font-medium text-[var(--color-text-primary)]">{{ pageTitle }}</p>
+        <p class="truncate text-caption font-medium text-[var(--color-text-tertiary)]">
+          LifeBoard
+        </p>
         <time
           :datetime="currentDateTime"
-          class="mt-0.5 block truncate text-caption text-[var(--color-text-secondary)]"
+          class="block truncate text-sm font-medium text-[var(--color-text-primary)]"
         >
           {{ currentDate }}
         </time>

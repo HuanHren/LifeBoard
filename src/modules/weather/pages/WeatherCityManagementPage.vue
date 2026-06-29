@@ -11,6 +11,7 @@ import { storeToRefs } from 'pinia'
 import { RouterLink, useRouter } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
+import PageLayout from '@/components/base/PageLayout.vue'
 import { useI18n } from '@/i18n/useI18n'
 import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
@@ -247,7 +248,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="space-y-6 pb-[var(--mobile-nav-clearance)] lg:pb-0">
+  <PageLayout variant="wide" gap="md">
     <header class="max-w-4xl space-y-3">
       <RouterLink
         class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
@@ -428,5 +429,5 @@ onBeforeUnmount(() => {
       @remove="removeFavoriteCity"
       @select="handleSelectFavorite"
     />
-  </div>
+  </PageLayout>
 </template>

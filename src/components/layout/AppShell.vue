@@ -8,14 +8,14 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-dvh bg-[var(--color-canvas)] text-[var(--color-text-primary)]">
+  <div class="min-h-dvh bg-[var(--color-background)] text-[var(--color-foreground)]">
     <a class="skip-link" href="#main-content">{{ t('shell.skipToMain') }}</a>
     <SidebarNav />
-    <div class="min-h-dvh lg:pl-[17rem]">
+    <div class="min-h-dvh min-[56.25rem]:pl-[var(--sidebar-compact-width)] xl:pl-[var(--sidebar-width)]">
       <Topbar />
       <main
         id="main-content"
-        class="app-main mx-auto w-full max-w-7xl px-4 pt-6 sm:px-6 lg:px-10 lg:pt-8"
+        class="app-main mx-auto w-full px-[var(--page-inline)] pt-[var(--page-block)]"
         tabindex="-1"
       >
         <slot />

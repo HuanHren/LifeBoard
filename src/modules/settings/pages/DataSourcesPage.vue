@@ -2,6 +2,7 @@
 import { computed, onMounted, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import PageHeader from '@/components/base/PageHeader.vue'
+import PageLayout from '@/components/base/PageLayout.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import DataSourceRow from '@/modules/settings/components/DataSourceRow.vue'
@@ -353,7 +354,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-y-8">
+  <PageLayout>
     <RouterLink
       class="interactive-surface inline-flex rounded-[var(--radius-sm)] text-sm font-medium text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
       :to="{ name: 'settings' }"
@@ -591,5 +592,5 @@ onMounted(() => {
         {{ t('settings.dataSources.licenceDescription') }}
       </p>
     </section>
-  </div>
+  </PageLayout>
 </template>

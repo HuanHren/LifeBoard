@@ -5,9 +5,13 @@
 
   --font-size-page-title: 2rem;
   --font-size-section-title: 1.25rem;
+  --font-size-card-title: 1rem;
   --font-size-body: 1rem;
+  --font-size-body-small: 0.9375rem;
   --font-size-label: 0.875rem;
   --font-size-caption: 0.8125rem;
+  --font-size-numeric-large: 2.25rem;
+  --font-size-numeric-medium: 1.5rem;
 
   --font-weight-regular: 400;
   --font-weight-medium: 520;
@@ -27,76 +31,129 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
-  --mobile-nav-clearance: 7rem;
+  --page-inline: clamp(1rem, 2.4vw, 2.5rem);
+  --page-block: clamp(1.25rem, 2.8vw, 2rem);
+  --section-gap: clamp(1.5rem, 3vw, 2.5rem);
+  --panel-padding: clamp(1rem, 2vw, 1.5rem);
+  --control-gap: 0.75rem;
+  --compact-gap: 0.5rem;
+  --content-max-width: 76rem;
+  --content-wide-max-width: 90rem;
+  --sidebar-width: 16.5rem;
+  --sidebar-compact-width: 5.75rem;
+  --mobile-nav-clearance: 5.75rem;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
   --radius-pill: 999rem;
 
   --motion-fast: 120ms;
   --motion-base: 180ms;
+  --motion-standard: 220ms;
+  --motion-slow: 320ms;
   --motion-ease: ease-out;
 
-  --shadow-soft: 0 0.25rem 0.5rem oklch(0.42 0.025 150 / 0.08);
+  --shadow-none: none;
+  --shadow-soft: 0 0.25rem 0.5rem oklch(0.42 0.018 260 / 0.08);
+  --shadow-raised: 0 0.5rem 1rem oklch(0.42 0.018 260 / 0.1);
+  --shadow-overlay: 0 1rem 2rem oklch(0.32 0.018 260 / 0.16);
   --focus-ring-width: 0.1875rem;
   --focus-ring-offset: 0.1875rem;
 
-  --color-canvas: oklch(0.982 0.006 118);
-  --color-surface: oklch(0.958 0.008 118);
-  --color-surface-raised: oklch(0.99 0.004 118);
-  --color-surface-inset: oklch(0.935 0.01 118);
-  --color-border: oklch(0.82 0.018 122);
-  --color-border-soft: oklch(0.88 0.012 122);
-  --color-control-border: oklch(0.64 0.025 122);
+  --color-background: oklch(0.982 0.004 255);
+  --color-foreground: oklch(0.24 0.018 258);
+  --color-canvas: oklch(0.982 0.004 255);
+  --color-surface: oklch(0.958 0.006 255);
+  --color-surface-muted: oklch(0.945 0.006 255);
+  --color-surface-raised: oklch(0.995 0.002 255);
+  --color-surface-elevated: oklch(0.998 0.002 255);
+  --color-surface-interactive: oklch(0.965 0.008 245);
+  --color-surface-inset: oklch(0.935 0.006 255);
+  --color-border: oklch(0.82 0.012 255);
+  --color-border-soft: oklch(0.88 0.008 255);
+  --color-border-strong: oklch(0.68 0.016 255);
+  --color-control-border: oklch(0.64 0.018 255);
+  --color-muted: oklch(0.94 0.006 255);
+  --color-muted-foreground: oklch(0.47 0.018 258);
 
-  --color-text-primary: oklch(0.24 0.025 126);
-  --color-text-secondary: oklch(0.42 0.025 126);
-  --color-text-tertiary: oklch(0.55 0.018 126);
+  --color-text-primary: oklch(0.24 0.018 258);
+  --color-text-secondary: oklch(0.42 0.018 258);
+  --color-text-tertiary: oklch(0.55 0.014 258);
   --color-text-inverse: oklch(0.985 0.004 118);
 
+  --color-primary: oklch(0.48 0.075 142);
+  --color-primary-foreground: oklch(0.985 0.004 118);
+  --color-primary-soft: oklch(0.9 0.04 142);
   --color-accent: oklch(0.48 0.075 142);
   --color-accent-hover: oklch(0.43 0.08 142);
   --color-accent-soft: oklch(0.9 0.04 142);
   --color-accent-wash: oklch(0.955 0.018 142);
   --color-accent-text: oklch(0.26 0.05 142);
   --color-focus: oklch(0.5 0.09 142);
+  --color-focus-ring: oklch(0.5 0.09 142);
 
+  --color-success: oklch(0.46 0.09 145);
+  --color-success-soft: oklch(0.93 0.04 145);
+  --color-warning: oklch(0.64 0.12 78);
+  --color-warning-soft: oklch(0.94 0.055 78);
   --color-danger: oklch(0.5 0.13 28);
   --color-danger-soft: oklch(0.94 0.035 28);
+  --color-overlay: oklch(0.18 0.014 258 / 0.52);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --shadow-soft: 0 0.25rem 0.5rem oklch(0.12 0.02 142 / 0.35);
-  --color-canvas: oklch(0.18 0.018 132);
-  --color-surface: oklch(0.22 0.02 132);
-  --color-surface-raised: oklch(0.26 0.02 132);
-  --color-surface-inset: oklch(0.16 0.018 132);
-  --color-border: oklch(0.35 0.02 132);
-  --color-border-soft: oklch(0.29 0.018 132);
-  --color-control-border: oklch(0.54 0.025 132);
+  --shadow-soft: 0 0.25rem 0.5rem oklch(0.12 0.018 260 / 0.35);
+  --shadow-raised: 0 0.5rem 1rem oklch(0.1 0.018 260 / 0.42);
+  --shadow-overlay: 0 1rem 2rem oklch(0.08 0.018 260 / 0.55);
+  --color-background: oklch(0.18 0.018 260);
+  --color-foreground: oklch(0.94 0.008 118);
+  --color-canvas: oklch(0.18 0.018 260);
+  --color-surface: oklch(0.22 0.02 260);
+  --color-surface-muted: oklch(0.205 0.019 260);
+  --color-surface-raised: oklch(0.26 0.02 260);
+  --color-surface-elevated: oklch(0.3 0.022 260);
+  --color-surface-interactive: oklch(0.285 0.024 252);
+  --color-surface-inset: oklch(0.16 0.018 260);
+  --color-border: oklch(0.35 0.02 260);
+  --color-border-soft: oklch(0.29 0.018 260);
+  --color-border-strong: oklch(0.48 0.025 260);
+  --color-control-border: oklch(0.54 0.025 260);
+  --color-muted: oklch(0.235 0.018 260);
+  --color-muted-foreground: oklch(0.72 0.012 118);
 
   --color-text-primary: oklch(0.94 0.008 118);
   --color-text-secondary: oklch(0.78 0.012 118);
   --color-text-tertiary: oklch(0.64 0.014 118);
-  --color-text-inverse: oklch(0.18 0.018 132);
+  --color-text-inverse: oklch(0.18 0.018 260);
 
+  --color-primary: oklch(0.68 0.08 142);
+  --color-primary-foreground: oklch(0.16 0.018 260);
+  --color-primary-soft: oklch(0.31 0.045 142);
   --color-accent: oklch(0.68 0.08 142);
   --color-accent-hover: oklch(0.74 0.075 142);
   --color-accent-soft: oklch(0.31 0.045 142);
   --color-accent-wash: oklch(0.235 0.024 142);
   --color-accent-text: oklch(0.9 0.05 142);
   --color-focus: oklch(0.72 0.09 142);
+  --color-focus-ring: oklch(0.72 0.09 142);
 
+  --color-success: oklch(0.72 0.085 145);
+  --color-success-soft: oklch(0.28 0.045 145);
+  --color-warning: oklch(0.78 0.11 78);
+  --color-warning-soft: oklch(0.31 0.06 78);
   --color-danger: oklch(0.72 0.12 28);
   --color-danger-soft: oklch(0.29 0.045 28);
+  --color-overlay: oklch(0.08 0.018 260 / 0.68);
 }
 
 @media (min-width: 64rem) {
   :root {
     --font-size-page-title: 2.5rem;
     --font-size-section-title: 1.5rem;
+    --font-size-numeric-large: 2.75rem;
   }
 }

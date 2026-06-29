@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PageLayout from '@/components/base/PageLayout.vue'
 import HomeBookmarksSummary from '@/modules/home/HomeBookmarksSummary.vue'
 import HomeModuleLink from '@/modules/home/HomeModuleLink.vue'
 import HomeToolsSummary from '@/modules/home/HomeToolsSummary.vue'
@@ -18,7 +19,7 @@ const moduleItems = navigationItems
 </script>
 
 <template>
-  <div class="space-y-12">
+  <PageLayout>
     <section
       class="grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-accent-wash)] shadow-[var(--shadow-soft)] lg:grid-cols-[minmax(0,1.45fr)_minmax(17rem,0.55fr)]"
       aria-labelledby="home-title"
@@ -66,7 +67,7 @@ const moduleItems = navigationItems
           v-for="item in moduleItems"
           :key="item.labelKey"
           :description="t(item.homeDescriptionKey)"
-          :marker="item.marker"
+          :icon="item.icon"
           :title="t(item.labelKey)"
           :to="item.to"
           :action-label="t('home.settings.action')"
@@ -74,5 +75,5 @@ const moduleItems = navigationItems
         />
       </div>
     </section>
-  </div>
+  </PageLayout>
 </template>
