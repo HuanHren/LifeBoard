@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed, onMounted, shallowRef } from 'vue'
 import { RouterLink } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseError from '@/components/base/BaseError.vue'
+import BaseIcon from '@/components/base/BaseIcon.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import {
@@ -25,6 +27,7 @@ const {
   weather,
   forecastStatus,
   forecastError,
+  forecastCacheState,
   autoLocationOnHome,
   isInitialized,
 } = storeToRefs(weatherStore)
@@ -34,30 +37,26 @@ const currentLocationStatus = shallowRef<'idle' | 'loading'>('idle')
 const currentLocationMessage = shallowRef<string | null>(null)
 const hasAttemptedAutoLocation = shallowRef(false)
 
-const isPreparing = computed(
-  () => !isInitialized.value || forecastStatus.value === 'loading',
-)
-
-const adviceHighlight = computed(() => {
-  if (!weather.value) {
-    return null
+const isPreparing = computed(() => !isInitialized.value || forecastStatus.value === 'loading')
+const todayForecast = computed(() => weather.value?.daily[0] ?? null)
+const weatherStatusLabel = computed(() => {
+  if (forecastCacheState.value === 'stale' || forecastCacheState.value === 'offline-stale') {
+    return t('home.weather.stale')
   }
 
+  if (forecastCacheState.value === 'refreshing') return t('home.weather.refreshing')
+  return t('shared.status.connected')
+})
+const adviceHighlight = computed(() => {
+  if (!weather.value) return null
   return (
     weather.value.advice.items.find((item) => item.kind === 'outdoor') ??
     weather.value.advice.items[0] ??
     null
   )
 })
-
-const umbrellaAdvice = computed(
-  () => weather.value?.advice.items.find((item) => item.kind === 'umbrella') ?? null,
-)
 const localizedAdviceHighlight = computed(() =>
   adviceHighlight.value ? localizeAdviceItem(adviceHighlight.value, t) : null,
-)
-const localizedUmbrellaAdvice = computed(() =>
-  umbrellaAdvice.value ? localizeAdviceItem(umbrellaAdvice.value, t) : null,
 )
 
 function refreshWeather() {
@@ -129,11 +128,7 @@ async function useCurrentLocationWeather() {
 
 onMounted(() => {
   void initializeWeather().then(() => {
-    if (
-      autoLocationOnHome.value &&
-      !hasAttemptedAutoLocation.value &&
-      !selectedLocation.value
-    ) {
+    if (autoLocationOnHome.value && !hasAttemptedAutoLocation.value && !selectedLocation.value) {
       hasAttemptedAutoLocation.value = true
       void useCurrentLocationWeather()
     }
@@ -145,44 +140,24 @@ onMounted(() => {
   <section aria-labelledby="home-weather-title">
     <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h2
-          id="home-weather-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
+        <p class="text-caption font-semibold text-[var(--color-accent-text)]">
+          {{ t('home.weather.eyebrow') }}
+        </p>
+        <h2 id="home-weather-title" class="mt-1 text-section-title text-[var(--color-text-primary)]">
           {{ t('home.weather.title') }}
         </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('home.weather.description') }}
-        </p>
       </div>
-      <div class="flex flex-wrap gap-2">
-        <BaseButton
-          :aria-busy="currentLocationStatus === 'loading'"
-          :disabled="currentLocationStatus === 'loading'"
-          size="sm"
-          variant="secondary"
-          @click="useCurrentLocationWeather"
-        >
-          {{
-            currentLocationStatus === 'loading'
-              ? t('home.weather.currentLocationLoading')
-              : t('home.weather.useCurrentLocation')
-          }}
-        </BaseButton>
-        <RouterLink
-          v-if="selectedLocation"
-          class="interactive-surface inline-flex min-h-11 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
-          :to="{ name: 'weather' }"
-        >
-          {{ t('home.weather.open') }}
-          <span class="ml-2" aria-hidden="true">&rarr;</span>
-        </RouterLink>
-      </div>
+      <RouterLink
+        class="interactive-surface inline-flex min-h-10 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
+        :to="{ name: 'weather' }"
+      >
+        {{ t('home.weather.open') }}
+      </RouterLink>
     </div>
 
     <p
       v-if="currentLocationMessage"
-      class="mb-4 rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+      class="mb-3 rounded-[var(--radius-sm)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
       aria-live="polite"
     >
       {{ currentLocationMessage }}
@@ -198,107 +173,130 @@ onMounted(() => {
       @action="refreshWeather"
     />
 
-    <article
-      v-else-if="weather"
-      class="grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-accent-wash)] lg:grid-cols-[minmax(0,0.9fr)_minmax(18rem,1.1fr)]"
-    >
-      <div class="p-6 sm:p-8">
-        <p class="text-sm font-medium text-[var(--color-accent-text)]">
-          {{ formatLocationName(weather.location) }}
-        </p>
-        <div class="mt-5 flex flex-wrap items-end gap-x-5 gap-y-2">
-          <p class="text-5xl font-semibold leading-none tabular-nums text-[var(--color-text-primary)]">
-            {{ formatTemperature(weather.current.temperature, weather.units.temperature) }}
+    <BaseSurface v-else-if="weather" as="article" class="home-weather-card" padding="lg" variant="plain">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <p class="truncate text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ formatLocationName(weather.location) }}
           </p>
-          <div class="pb-0.5">
-            <p class="text-lg font-semibold text-balance text-[var(--color-text-primary)]">
-              {{ localizeWeatherCondition(weather.current.condition, t) }}
-            </p>
-            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
-              {{
-                t('home.weather.feelsLike', {
-                  temperature: formatTemperature(
-                    weather.current.apparentTemperature,
-                    weather.units.temperature,
-                  ),
-                })
-              }}
-            </p>
-          </div>
+          <p class="mt-1 text-caption text-[var(--color-text-secondary)]">
+            {{ weatherStatusLabel }}
+          </p>
         </div>
-        <p class="mt-6 text-caption text-[var(--color-text-secondary)]">
-          {{
-            t('home.weather.updated', {
-              time: formatFullLocalTime(weather.current.time, locale),
-              timezone: weather.timezoneAbbreviation,
-            })
-          }}
-        </p>
+        <BaseIcon name="weather" class="text-[var(--color-accent-text)]" size="lg" />
       </div>
+
+      <div class="mt-5 flex flex-wrap items-end gap-x-4 gap-y-2">
+        <p class="text-5xl font-semibold leading-none tabular-nums text-[var(--color-text-primary)]">
+          {{ formatTemperature(weather.current.temperature, weather.units.temperature) }}
+        </p>
+        <div class="pb-1">
+          <p class="text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ localizeWeatherCondition(weather.current.condition, t) }}
+          </p>
+          <p class="mt-1 text-caption text-[var(--color-text-secondary)]">
+            {{
+              t('home.weather.feelsLike', {
+                temperature: formatTemperature(
+                  weather.current.apparentTemperature,
+                  weather.units.temperature,
+                ),
+              })
+            }}
+          </p>
+        </div>
+      </div>
+
+      <dl
+        v-if="todayForecast"
+        class="mt-5 grid grid-cols-2 gap-3 border-t border-[var(--color-border-soft)] pt-4 text-sm"
+      >
+        <div>
+          <dt class="text-caption text-[var(--color-text-secondary)]">
+            {{ t('home.weather.high') }}
+          </dt>
+          <dd class="mt-1 font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {{ formatTemperature(todayForecast.temperatureMax, weather.units.temperature) }}
+          </dd>
+        </div>
+        <div>
+          <dt class="text-caption text-[var(--color-text-secondary)]">
+            {{ t('home.weather.low') }}
+          </dt>
+          <dd class="mt-1 font-semibold tabular-nums text-[var(--color-text-primary)]">
+            {{ formatTemperature(todayForecast.temperatureMin, weather.units.temperature) }}
+          </dd>
+        </div>
+      </dl>
 
       <div
-        class="border-t border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-6 sm:p-8 lg:border-t-0 lg:border-l"
+        v-if="localizedAdviceHighlight"
+        class="mt-5 border-t border-[var(--color-border-soft)] pt-4"
       >
-        <div v-if="localizedAdviceHighlight">
-          <p class="text-caption font-medium text-[var(--color-text-secondary)]">
-            {{ t('home.weather.guidance') }}
-          </p>
-          <p class="mt-2 text-base font-semibold leading-6 text-pretty text-[var(--color-text-primary)]">
-            {{ localizedAdviceHighlight.summary }}
-          </p>
-          <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-            {{ localizedAdviceHighlight.detail }}
-          </p>
-        </div>
-
-        <div
-          v-if="localizedUmbrellaAdvice"
-          class="mt-5 border-t border-[var(--color-border-soft)] pt-4"
-        >
-          <p class="text-caption font-medium text-[var(--color-text-secondary)]">
-            {{ t('home.weather.umbrella') }}
-          </p>
-          <p class="mt-1 text-sm font-semibold leading-6 text-pretty text-[var(--color-text-primary)]">
-            {{ localizedUmbrellaAdvice.summary }}
-          </p>
-        </div>
+        <p class="text-caption font-medium text-[var(--color-text-secondary)]">
+          {{ t('home.weather.guidance') }}
+        </p>
+        <p class="mt-2 text-sm font-semibold leading-6 text-[var(--color-text-primary)]">
+          {{ localizedAdviceHighlight.summary }}
+        </p>
       </div>
-    </article>
 
-    <article
-      v-else-if="selectedLocation"
-      class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-6"
-    >
-      <h3 class="text-section-title text-balance text-[var(--color-text-primary)]">
+      <p class="mt-5 text-caption text-[var(--color-text-secondary)]">
+        {{
+          t('home.weather.updated', {
+            time: formatFullLocalTime(weather.current.time, locale),
+            timezone: weather.timezoneAbbreviation,
+          })
+        }}
+      </p>
+    </BaseSurface>
+
+    <BaseSurface v-else-if="selectedLocation" as="article" padding="lg" variant="muted">
+      <h3 class="text-base font-semibold text-[var(--color-text-primary)]">
         {{ t('home.weather.loadTitle', { city: selectedLocation.name }) }}
       </h3>
-      <p class="mt-2 max-w-xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+      <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ t('home.weather.loadDescription') }}
       </p>
       <BaseButton class="mt-4" size="sm" variant="primary" @click="refreshWeather">
         {{ t('home.weather.retry') }}
       </BaseButton>
-    </article>
+    </BaseSurface>
 
-    <article
-      v-else
-      class="rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6 sm:p-8"
-    >
-      <h3 class="text-section-title text-balance text-[var(--color-text-primary)]">
+    <BaseSurface v-else as="article" class="home-weather-card" padding="lg" variant="muted">
+      <h3 class="text-base font-semibold text-[var(--color-text-primary)]">
         {{ t('home.weather.connectTitle') }}
       </h3>
-      <p class="mt-2 max-w-xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+      <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ t('home.weather.connectDescription') }}
       </p>
-      <RouterLink
-        class="interactive-surface mt-4 inline-flex min-h-11 items-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
-        :to="{ name: 'weather' }"
-      >
-        {{ t('home.weather.chooseCity') }}
-      </RouterLink>
-      <p class="mt-3 text-caption text-[var(--color-text-secondary)]">
-        {{ t('home.weather.currentLocationHelper') }}
-      </p>
-    </article>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <RouterLink
+          class="interactive-surface inline-flex min-h-10 items-center rounded-[var(--radius-sm)] border border-[var(--color-primary)] bg-[var(--color-primary)] px-3 text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-accent-hover)]"
+          :to="{ name: 'weather' }"
+        >
+          {{ t('home.weather.chooseCity') }}
+        </RouterLink>
+        <BaseButton
+          :aria-busy="currentLocationStatus === 'loading'"
+          :disabled="currentLocationStatus === 'loading'"
+          size="sm"
+          variant="secondary"
+          @click="useCurrentLocationWeather"
+        >
+          {{
+            currentLocationStatus === 'loading'
+              ? t('home.weather.currentLocationLoading')
+              : t('home.weather.useCurrentLocation')
+          }}
+        </BaseButton>
+      </div>
+    </BaseSurface>
   </section>
 </template>
+
+<style scoped>
+.home-weather-card {
+  min-height: 100%;
+}
+</style>

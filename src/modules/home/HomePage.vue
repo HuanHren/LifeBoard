@@ -1,79 +1,95 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import PageLayout from '@/components/base/PageLayout.vue'
-import HomeBookmarksSummary from '@/modules/home/HomeBookmarksSummary.vue'
-import HomeModuleLink from '@/modules/home/HomeModuleLink.vue'
-import HomeToolsSummary from '@/modules/home/HomeToolsSummary.vue'
-import HomeTodosSummary from '@/modules/home/HomeTodosSummary.vue'
+import HomeNextUp from '@/modules/home/HomeNextUp.vue'
+import HomeQuickAccess from '@/modules/home/HomeQuickAccess.vue'
+import HomeTodayHeader from '@/modules/home/HomeTodayHeader.vue'
 import HomeWeatherSummary from '@/modules/home/HomeWeatherSummary.vue'
+import TodayFocusPanel from '@/modules/home/TodayFocusPanel.vue'
 import { useI18n } from '@/i18n/useI18n'
-import { navigationItems } from '@/shared/constants/navigation'
+import { useHomeDashboard } from '@/modules/home/composables/useHomeDashboard'
 
 const { t } = useI18n()
+const dashboard = useHomeDashboard()
+const nextCountdown = computed(() => dashboard.countdownRows.value[0] ?? null)
 
-const moduleItems = navigationItems
-  .filter((item) => item.labelKey === 'navigation.settings.label')
-  .map((item) => ({
-    ...item,
-    homeDescriptionKey: 'home.settings.cardDescription' as const,
-  }))
+onMounted(() => {
+  dashboard.initializeHomeDashboard()
+})
 </script>
 
 <template>
-  <PageLayout>
-    <section
-      class="grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-accent-wash)] shadow-[var(--shadow-soft)] lg:grid-cols-[minmax(0,1.45fr)_minmax(17rem,0.55fr)]"
-      aria-labelledby="home-title"
-    >
-      <div class="px-6 py-9 sm:px-8 sm:py-12">
-        <h1 id="home-title" class="text-page-title max-w-xl text-[var(--color-text-primary)]">
-          {{ t('home.hero.title') }}
-        </h1>
-        <p class="mt-4 max-w-xl text-base leading-7 text-[var(--color-text-secondary)]">
-          {{ t('home.hero.description') }}
-        </p>
-      </div>
-      <div
-        class="border-t border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-6 py-7 sm:px-8 lg:border-t-0 lg:border-l"
-      >
-        <p class="text-sm font-semibold text-[var(--color-text-primary)]">
-          {{ t('home.hero.contextTitle') }}
-        </p>
-        <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-          {{ t('home.hero.contextDescription') }}
-        </p>
-      </div>
-    </section>
+  <PageLayout variant="wide" gap="md">
+    <HomeTodayHeader
+      :local-today="dashboard.localToday.value"
+      :next-countdown="nextCountdown"
+      :today-task-count="dashboard.todayFocusTasks.value.length + dashboard.todayTaskOverflowCount.value"
+    />
 
-    <HomeWeatherSummary />
-
-    <HomeTodosSummary />
-
-    <HomeToolsSummary />
-
-    <HomeBookmarksSummary />
-
-    <section aria-labelledby="modules-title">
-      <div class="max-w-2xl">
-        <h2 id="modules-title" class="text-section-title text-[var(--color-text-primary)]">
-          {{ t('home.settings.title') }}
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-          {{ t('home.settings.description') }}
-        </p>
-      </div>
-
-      <div class="mt-6 max-w-2xl">
-        <HomeModuleLink
-          v-for="item in moduleItems"
-          :key="item.labelKey"
-          :description="t(item.homeDescriptionKey)"
-          :icon="item.icon"
-          :title="t(item.labelKey)"
-          :to="item.to"
-          :action-label="t('home.settings.action')"
-          :status-label="t('home.settings.status')"
+    <div class="home-workspace-grid">
+      <main class="home-workspace-grid__main" :aria-label="t('home.accessibility.todayWorkspace')">
+        <TodayFocusPanel
+          :initialized="dashboard.todosInitialized.value"
+          :local-today="dashboard.localToday.value"
+          :overflow-count="dashboard.todayTaskOverflowCount.value"
+          :persistence-error="dashboard.todosPersistenceError.value"
+          :tasks="dashboard.todayFocusTasks.value"
+          @toggle-task="dashboard.todosStore.toggleTask"
         />
-      </div>
-    </section>
+
+        <HomeNextUp
+          :countdowns="dashboard.countdownRows.value"
+          :initialized="dashboard.todosInitialized.value"
+          :persistence-error="dashboard.todosPersistenceError.value"
+          :upcoming-tasks="dashboard.upcomingTaskRows.value"
+        />
+      </main>
+
+      <aside
+        class="home-workspace-grid__side"
+        :aria-label="t('home.accessibility.sideWorkspace')"
+      >
+        <HomeWeatherSummary />
+        <HomeQuickAccess
+          :bookmarks="dashboard.bookmarkRows.value"
+          :bookmarks-error="dashboard.bookmarksPersistenceError.value"
+          :bookmarks-initialized="dashboard.bookmarksInitialized.value"
+          :tools="dashboard.toolShortcuts.value"
+        />
+      </aside>
+    </div>
   </PageLayout>
 </template>
+
+<style scoped>
+.home-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(20rem, 0.85fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.home-workspace-grid__main,
+.home-workspace-grid__side {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1180px) {
+  .home-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-workspace-grid__side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .home-workspace-grid,
+  .home-workspace-grid__side {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+</style>
