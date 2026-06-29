@@ -7,10 +7,12 @@ This directory contains the authorized transitional vendor weather assets used b
 | Directory | Role |
 | --- | --- |
 | `backgrounds/` | Large reference backgrounds used only when a scene needs a cold/frost field. |
+| `sky/` | Small authorized skybox-derived sky gradients used as browser scene base layers. |
 | `clouds/` | Cloud layers for clear, cloudy, partly cloudy, overcast, rain, snow, and storm scenes. |
 | `lights/` | Broad day/night light layers. |
 | `sun/` | Small sun particle texture candidates. |
 | `glows/` | Small glow particle texture candidates. |
+| `frost/` | Frost edge mask used for rime fog, freezing drizzle, freezing rain, and sleet scenes. |
 | `rain/` | Rain sheets and rain particle textures. |
 | `snow/` | Snow sheets, snow particles, and frost overlays. |
 | `atmosphere/` | Fog and haze sheets from the existing authorized set. |

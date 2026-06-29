@@ -7,7 +7,7 @@ import {
   useTemplateRef,
   watch,
 } from 'vue'
-import type { Texture } from 'pixi.js'
+import type { Sprite, Texture } from 'pixi.js'
 import { createAmbientLightTexture } from '@/modules/weather/renderers/pixi/createAmbientLightTexture'
 import { createPixiTextureFromImage } from '@/modules/weather/renderers/pixi/createPixiTextureFromImage'
 import { fitWeatherSprite } from '@/modules/weather/renderers/pixi/fitWeatherSprite'
@@ -57,6 +57,7 @@ let contextLostHandler: ((event: Event) => void) | null = null
 let disposed = false
 
 const MAX_REFERENCE_LAYERS = 8
+const PARTICLE_LAYER_LIMIT = 96
 
 const canAttemptPixi = computed(() => {
   const image = props.imageElement
@@ -201,6 +202,76 @@ function getSceneOptions(): PixiWeatherSceneOptions {
   }
 }
 
+function seededUnit(seed: number) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453
+  return value - Math.floor(value)
+}
+
+function getParticleCount(layer: PixiWeatherReferenceScene['layers'][number]) {
+  return Math.max(4, Math.min(PARTICLE_LAYER_LIMIT, layer.particleCount ?? 24))
+}
+
+function getParticleScale(layer: PixiWeatherReferenceScene['layers'][number]) {
+  if (layer.particleScale) {
+    return layer.particleScale
+  }
+
+  if (layer.role.includes('rain')) {
+    return 0.42
+  }
+
+  if (
+    layer.role.includes('snow') ||
+    layer.role.includes('hail') ||
+    layer.role.includes('ice')
+  ) {
+    return 0.36
+  }
+
+  if (
+    layer.role.includes('dust') ||
+    layer.role.includes('sand') ||
+    layer.role.includes('haze') ||
+    layer.role.includes('mist')
+  ) {
+    return 0.26
+  }
+
+  return 0.32
+}
+
+function positionParticleSprite({
+  sprite,
+  index,
+  seed,
+  width,
+  height,
+  layer,
+}: {
+  sprite: Sprite
+  index: number
+  seed: number
+  width: number
+  height: number
+  layer: PixiWeatherReferenceScene['layers'][number]
+}) {
+  const spread = layer.particleSpread ?? 1
+  const unitX = seededUnit(seed + index * 1.37)
+  const unitY = seededUnit(seed + index * 2.11)
+  sprite.x = (unitX * width * spread) % Math.max(1, width)
+  sprite.y = (unitY * height * spread) % Math.max(1, height)
+}
+
+function offsetLayerSprite(
+  sprite: Sprite,
+  layer: PixiWeatherReferenceScene['layers'][number],
+  width: number,
+  height: number,
+) {
+  sprite.x += width * (layer.positionX ?? 0)
+  sprite.y += height * (layer.positionY ?? 0)
+}
+
 function resizeScene() {
   if (!handles) {
     return
@@ -243,6 +314,23 @@ function resizeScene() {
       sourceHeight: layerHandle.sprite.texture.height,
       extraScale: layerHandle.layer.scale,
     })
+    offsetLayerSprite(layerHandle.sprite, layerHandle.layer, width, height)
+  }
+
+  for (const particleHandle of handles.particleLayers) {
+    particleHandle.width = width
+    particleHandle.height = height
+
+    particleHandle.sprites.forEach((sprite, index) => {
+      positionParticleSprite({
+        sprite,
+        index,
+        seed: particleHandle.seed,
+        width,
+        height,
+        layer: particleHandle.layer,
+      })
+    })
   }
 
   const nextMetrics = metrics.value
@@ -257,7 +345,8 @@ function resizeScene() {
       performanceTier: preset.performanceTier,
       viewportProfile: preset.viewportProfile,
       layerCount: props.referenceScene?.layers.length ?? 0,
-      loadedLayerCount: handles.localLayers.length,
+      loadedLayerCount:
+        handles.localLayers.length + handles.particleLayers.length,
       maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
     }
     emit('metrics', metrics.value)
@@ -338,6 +427,7 @@ async function initializePixi() {
 
     const scene = new pixi.Container()
     const localLayers: PixiWeatherSceneHandles['localLayers'] = []
+    const particleLayers: PixiWeatherSceneHandles['particleLayers'] = []
     let baseTexture:
       | ReturnType<typeof createPixiTextureFromImage>
       | undefined
@@ -397,9 +487,48 @@ async function initializePixi() {
           return
         }
 
+        if (layer.type === 'particle') {
+          const particleCount = getParticleCount(layer)
+          const sprites: Sprite[] = []
+          const seed = index * 19.31 + particleCount
+
+          for (let particleIndex = 0; particleIndex < particleCount; particleIndex += 1) {
+            const particleSprite = new pixi.Sprite(texture as Texture)
+            const particleScale = getParticleScale(layer) * layer.scale
+            particleSprite.alpha = layer.opacity * (0.64 + seededUnit(seed + particleIndex) * 0.36)
+            particleSprite.anchor.set(0.5)
+            particleSprite.scale.set(particleScale)
+            if (layer.tint) {
+              particleSprite.tint = layer.tint
+            }
+            positionParticleSprite({
+              sprite: particleSprite,
+              index: particleIndex,
+              seed,
+              width,
+              height,
+              layer,
+            })
+            scene.addChild(particleSprite)
+            sprites.push(particleSprite)
+          }
+
+          particleLayers.push({
+            layer,
+            sprites,
+            seed,
+            width,
+            height,
+          })
+          return
+        }
+
         const sprite = new pixi.Sprite(texture as Texture)
         sprite.alpha = layer.opacity
         sprite.anchor.set(0.5)
+        if (layer.tint) {
+          sprite.tint = layer.tint
+        }
         scene.addChild(sprite)
         localLayers.push({
           layer,
@@ -408,7 +537,12 @@ async function initializePixi() {
         })
       })
 
-      if (sceneLayers.length > 0 && localLayers.length === 0 && !baseSprite) {
+      if (
+        sceneLayers.length > 0 &&
+        localLayers.length === 0 &&
+        particleLayers.length === 0 &&
+        !baseSprite
+      ) {
         app.destroy({ removeView: true }, {
           children: true,
           texture: true,
@@ -468,6 +602,33 @@ async function initializePixi() {
           layerHandle.layer.opacity + layerWave * layerHandle.layer.opacity * 0.05
       }
 
+      for (const particleHandle of particleLayers) {
+        const screenWidth = app.screen.width
+        const screenHeight = app.screen.height
+        const speedX =
+          particleHandle.layer.speedX * screenWidth * (ticker.deltaMS / 1000)
+        const speedY =
+          particleHandle.layer.speedY * screenHeight * (ticker.deltaMS / 1000)
+
+        particleHandle.sprites.forEach((sprite, index) => {
+          const drift = Math.sin(cycle * Math.PI * 2 + particleHandle.seed + index)
+          sprite.x += speedX + drift * 0.12
+          sprite.y += speedY
+
+          if (sprite.x > screenWidth + 24) {
+            sprite.x = -24
+          } else if (sprite.x < -24) {
+            sprite.x = screenWidth + 24
+          }
+
+          if (sprite.y > screenHeight + 24) {
+            sprite.y = -24
+          } else if (sprite.y < -24) {
+            sprite.y = screenHeight + 24
+          }
+        })
+      }
+
       if (thunderOverlay && props.referenceScene?.isThunderstorm) {
         if (thunderRemainingMs <= 0 && elapsedMs >= nextThunderMs) {
           thunderSeed = (thunderSeed * 9301 + 49297) % 233280
@@ -501,6 +662,7 @@ async function initializePixi() {
       ambientTextureSource: ambientTexture?.source,
       thunderOverlay,
       localLayers,
+      particleLayers,
       onTick,
     }
 
@@ -529,7 +691,7 @@ async function initializePixi() {
       performanceTier: preset.performanceTier,
       viewportProfile: preset.viewportProfile,
       layerCount: props.referenceScene?.layers.length ?? 0,
-      loadedLayerCount: localLayers.length,
+      loadedLayerCount: localLayers.length + particleLayers.length,
       maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
       initMs: Math.round(readyMs - startMs),
       readyMs: Math.round(readyMs - startMs),

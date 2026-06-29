@@ -1,11 +1,11 @@
 import type {
   Application,
   Container,
+  Graphics,
   Sprite,
   Texture,
   TextureSource,
   Ticker,
-  Graphics,
 } from 'pixi.js'
 import type {
   LifeBoardCondition,
@@ -57,6 +57,12 @@ export interface PixiWeatherReferenceLayer {
   fit: 'cover'
   assetType: string
   blendMode?: 'normal'
+  tint?: number
+  positionX?: number
+  positionY?: number
+  particleCount?: number
+  particleScale?: number
+  particleSpread?: number
 }
 
 export interface PixiWeatherReferenceScene {
@@ -105,6 +111,13 @@ export interface PixiWeatherSceneHandles {
     layer: PixiWeatherReferenceLayer
     sprite: Sprite
     phase: number
+  }>
+  particleLayers: Array<{
+    layer: PixiWeatherReferenceLayer
+    sprites: Sprite[]
+    seed: number
+    width: number
+    height: number
   }>
   onTick: (ticker: Ticker) => void
 }
