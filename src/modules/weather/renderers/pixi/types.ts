@@ -8,6 +8,7 @@ import type {
   Graphics,
 } from 'pixi.js'
 import type {
+  LifeBoardCondition,
   WeatherEffectGroup,
   WeatherIntensity,
   WeatherIntensityPreset,
@@ -24,12 +25,29 @@ export type PixiWeatherRendererStatus =
 
 export type PixiWeatherVisualKey = 'partly-cloudy-day' | 'partly-cloudy-night'
 
+export type PixiWeatherLayerType =
+  | 'sprite'
+  | 'tiling-sprite'
+  | 'particle'
+  | 'atmosphere'
+  | 'overlay'
+  | 'sequence'
+  | 'image'
+
+export type PixiWeatherPerformanceTier = 'high' | 'balanced' | 'low' | 'static'
+
+export type PixiWeatherViewportProfile =
+  | 'desktop'
+  | 'tablet-portrait'
+  | 'tablet-landscape'
+  | 'mobile'
+
 export type PixiWeatherReferenceSceneSource =
   | 'authorized-vendor'
   | 'local-reference'
 
 export interface PixiWeatherReferenceLayer {
-  type: 'image'
+  type: PixiWeatherLayerType
   url: string
   role: string
   opacity: number
@@ -44,11 +62,15 @@ export interface PixiWeatherReferenceLayer {
 export interface PixiWeatherReferenceScene {
   key: string
   source: PixiWeatherReferenceSceneSource
+  condition?: LifeBoardCondition
   effectGroup: WeatherEffectGroup
   intensity: WeatherIntensity
   intensityPreset: WeatherIntensityPreset
   timeline: Extract<WeatherTimeline, 'day' | 'night'>
   isThunderstorm: boolean
+  family: string
+  v12Family?: number
+  maxParticleCount: number
   layers: PixiWeatherReferenceLayer[]
 }
 
@@ -58,6 +80,8 @@ export interface PixiWeatherSceneOptions {
   scale: number
   ambientOpacity: number
   maxFps: number
+  performanceTier: PixiWeatherPerformanceTier
+  viewportProfile: PixiWeatherViewportProfile
 }
 
 export interface PixiWeatherSceneInput {
@@ -90,6 +114,11 @@ export interface PixiWeatherMetrics {
   canvasHeight: number
   dpr: number
   maxFps: number
+  performanceTier: PixiWeatherPerformanceTier
+  viewportProfile: PixiWeatherViewportProfile
+  layerCount: number
+  loadedLayerCount: number
+  maxParticleCount: number
   initMs: number
   readyMs: number
   rendererType: string

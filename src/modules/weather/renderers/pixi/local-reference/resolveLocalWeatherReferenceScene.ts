@@ -90,6 +90,8 @@ export async function resolveLocalWeatherReferenceScene({
     intensityPreset,
     timeline: normalizeTimeline(timeline),
     isThunderstorm: effectGroup === 'thunderstorm',
+    family: key.replace(/-(day|night)$/, ''),
+    maxParticleCount: 48,
     layers,
   }
 }

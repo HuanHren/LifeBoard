@@ -15,6 +15,34 @@ export interface VendorWeatherManifestAsset {
   fileSize: number
 }
 
+export interface VendorWeatherCatalogAsset {
+  id: string
+  url: string
+  category:
+    | 'sky'
+    | 'background'
+    | 'cloud'
+    | 'sun'
+    | 'moon'
+    | 'glow'
+    | 'rain'
+    | 'snow'
+    | 'fog'
+    | 'haze'
+    | 'dust'
+    | 'lightning'
+    | 'droplet'
+    | 'frost'
+    | 'atlas'
+    | 'sequence'
+  role: string
+  width: number
+  height: number
+  hasAlpha: boolean
+  sourceSha256: string
+  fileSha256: string
+}
+
 export interface VendorWeatherManifestLayer
   extends Omit<PixiWeatherReferenceLayer, 'speedX' | 'speedY'> {
   speed: {

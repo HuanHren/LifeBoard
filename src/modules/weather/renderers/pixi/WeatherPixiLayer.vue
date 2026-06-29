@@ -7,6 +7,7 @@ import {
   useTemplateRef,
   watch,
 } from 'vue'
+import type { Texture } from 'pixi.js'
 import { createAmbientLightTexture } from '@/modules/weather/renderers/pixi/createAmbientLightTexture'
 import { createPixiTextureFromImage } from '@/modules/weather/renderers/pixi/createPixiTextureFromImage'
 import { fitWeatherSprite } from '@/modules/weather/renderers/pixi/fitWeatherSprite'
@@ -18,10 +19,13 @@ import {
 } from '@/modules/weather/renderers/pixi/pixiWeatherCapabilities'
 import type {
   PixiWeatherMetrics,
+  PixiWeatherPerformanceTier,
   PixiWeatherReferenceScene,
   PixiWeatherRendererStatus,
   PixiWeatherSceneHandles,
+  PixiWeatherSceneOptions,
   PixiWeatherVisualKey,
+  PixiWeatherViewportProfile,
 } from '@/modules/weather/renderers/pixi/types'
 
 interface Props {
@@ -46,12 +50,13 @@ const initGeneration = shallowRef(0)
 
 let mediaQuery: MediaQueryList | null = null
 let mobileQuery: MediaQueryList | null = null
+let tabletQuery: MediaQueryList | null = null
 let resizeObserver: ResizeObserver | null = null
 let handles: PixiWeatherSceneHandles | null = null
 let contextLostHandler: ((event: Event) => void) | null = null
 let disposed = false
 
-const MAX_LOCAL_REFERENCE_LAYERS = 4
+const MAX_REFERENCE_LAYERS = 8
 
 const canAttemptPixi = computed(() => {
   const image = props.imageElement
@@ -120,6 +125,82 @@ function getRootSize() {
   }
 }
 
+function getViewportProfile(): PixiWeatherViewportProfile {
+  if (isMobileViewport.value) {
+    return 'mobile'
+  }
+
+  if (tabletQuery?.matches) {
+    return window.innerWidth > window.innerHeight
+      ? 'tablet-landscape'
+      : 'tablet-portrait'
+  }
+
+  return 'desktop'
+}
+
+function getPerformanceTier(): PixiWeatherPerformanceTier {
+  if (prefersReducedMotion.value) {
+    return 'static'
+  }
+
+  if (isSaveDataEnabled()) {
+    return 'low'
+  }
+
+  const viewportProfile = getViewportProfile()
+
+  if (viewportProfile === 'mobile') {
+    return 'low'
+  }
+
+  if (
+    viewportProfile === 'tablet-landscape' ||
+    viewportProfile === 'tablet-portrait'
+  ) {
+    return 'balanced'
+  }
+
+  return 'high'
+}
+
+function getSceneOptions(): PixiWeatherSceneOptions {
+  const performanceTier = getPerformanceTier()
+  const viewportProfile = getViewportProfile()
+  const posterPreset = getPartlyCloudyPixiPreset(
+    props.visualKey ?? 'partly-cloudy-day',
+    viewportProfile === 'mobile',
+  )
+  const intensityPreset = props.referenceScene?.intensityPreset
+
+  if (!props.referenceScene || !intensityPreset) {
+    return {
+      ...posterPreset,
+      performanceTier,
+      viewportProfile,
+    }
+  }
+
+  const tierMultiplier =
+    performanceTier === 'high'
+      ? 1
+      : performanceTier === 'balanced'
+        ? 0.82
+        : performanceTier === 'low'
+          ? 0.64
+          : 0
+
+  return {
+    driftX: (4 + intensityPreset.cloudDarkness * 3) * tierMultiplier,
+    driftY: (-1.2 - intensityPreset.atmosphereOpacity) * tierMultiplier,
+    scale: 1.01 + intensityPreset.density * 0.035,
+    ambientOpacity: Math.min(0.32, 0.14 + intensityPreset.atmosphereOpacity * 0.16),
+    maxFps: viewportProfile === 'mobile' ? 24 : 30,
+    performanceTier,
+    viewportProfile,
+  }
+}
+
 function resizeScene() {
   if (!handles) {
     return
@@ -127,10 +208,7 @@ function resizeScene() {
 
   const { width, height } = getRootSize()
   const resolution = getCappedResolution(isMobileViewport.value)
-  const preset = getPartlyCloudyPixiPreset(
-    props.visualKey ?? 'partly-cloudy-day',
-    isMobileViewport.value,
-  )
+  const preset = getSceneOptions()
 
   handles.app.ticker.maxFPS = preset.maxFps
   handles.app.renderer.resize(width, height, resolution)
@@ -176,6 +254,11 @@ function resizeScene() {
       canvasHeight: handles.app.canvas.height,
       dpr: resolution,
       maxFps: preset.maxFps,
+      performanceTier: preset.performanceTier,
+      viewportProfile: preset.viewportProfile,
+      layerCount: props.referenceScene?.layers.length ?? 0,
+      loadedLayerCount: handles.localLayers.length,
+      maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
     }
     emit('metrics', metrics.value)
   }
@@ -228,10 +311,7 @@ async function initializePixi() {
 
     const { width, height } = getRootSize()
     const resolution = getCappedResolution(isMobileViewport.value)
-    const preset = getPartlyCloudyPixiPreset(
-      props.visualKey ?? 'partly-cloudy-day',
-      isMobileViewport.value,
-    )
+    const preset = getSceneOptions()
     const app = new pixi.Application()
 
     await app.init({
@@ -279,11 +359,19 @@ async function initializePixi() {
     }
 
     if (props.referenceScene) {
-      const sceneLayers = props.referenceScene.layers.slice(0, MAX_LOCAL_REFERENCE_LAYERS)
-      const textures = await Promise.all(
-        sceneLayers.map(async (layer) => ({
-          layer,
-          texture: await pixi.Assets.load(layer.url),
+      const tierLayerLimit =
+        preset.performanceTier === 'high'
+          ? MAX_REFERENCE_LAYERS
+          : preset.performanceTier === 'balanced'
+            ? 6
+            : 4
+      const sceneLayers = props.referenceScene.layers.slice(0, tierLayerLimit)
+      const textureByUrl = new Map<string, unknown>()
+      const uniqueUrls = [...new Set(sceneLayers.map((layer) => layer.url))]
+      const textureResults = await Promise.allSettled(
+        uniqueUrls.map(async (url) => ({
+          url,
+          texture: await pixi.Assets.load(url),
         })),
       )
 
@@ -296,8 +384,20 @@ async function initializePixi() {
         return
       }
 
-      textures.forEach(({ layer, texture }, index) => {
-        const sprite = new pixi.Sprite(texture)
+      for (const result of textureResults) {
+        if (result.status === 'fulfilled') {
+          textureByUrl.set(result.value.url, result.value.texture)
+        }
+      }
+
+      sceneLayers.forEach((layer, index) => {
+        const texture = textureByUrl.get(layer.url)
+
+        if (!texture) {
+          return
+        }
+
+        const sprite = new pixi.Sprite(texture as Texture)
         sprite.alpha = layer.opacity
         sprite.anchor.set(0.5)
         scene.addChild(sprite)
@@ -307,6 +407,16 @@ async function initializePixi() {
           phase: index * 0.72,
         })
       })
+
+      if (sceneLayers.length > 0 && localLayers.length === 0 && !baseSprite) {
+        app.destroy({ removeView: true }, {
+          children: true,
+          texture: true,
+          textureSource: true,
+        })
+        setStatus('static-fallback')
+        return
+      }
 
       if (props.referenceScene.isThunderstorm) {
         thunderOverlay = new pixi.Graphics()
@@ -348,10 +458,12 @@ async function initializePixi() {
       for (const layerHandle of localLayers) {
         const layerWave = Math.sin(cycle * Math.PI * 2 + layerHandle.phase)
         const verticalWave = Math.cos(cycle * Math.PI * 2 + layerHandle.phase)
+        const screenWidth = app.screen.width
+        const screenHeight = app.screen.height
         layerHandle.sprite.x =
-          width / 2 + layerWave * width * layerHandle.layer.speedX
+          screenWidth / 2 + layerWave * screenWidth * layerHandle.layer.speedX
         layerHandle.sprite.y =
-          height / 2 + verticalWave * height * layerHandle.layer.speedY
+          screenHeight / 2 + verticalWave * screenHeight * layerHandle.layer.speedY
         layerHandle.sprite.alpha =
           layerHandle.layer.opacity + layerWave * layerHandle.layer.opacity * 0.05
       }
@@ -414,6 +526,11 @@ async function initializePixi() {
       canvasHeight: app.canvas.height,
       dpr: resolution,
       maxFps: preset.maxFps,
+      performanceTier: preset.performanceTier,
+      viewportProfile: preset.viewportProfile,
+      layerCount: props.referenceScene?.layers.length ?? 0,
+      loadedLayerCount: localLayers.length,
+      maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
       initMs: Math.round(readyMs - startMs),
       readyMs: Math.round(readyMs - startMs),
       rendererType: String((app.renderer as { type?: unknown }).type ?? 'webgl'),
@@ -459,6 +576,7 @@ watch(isMobileViewport, () => {
 function installMediaListeners() {
   mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
   mobileQuery = window.matchMedia('(max-width: 39.9375rem)')
+  tabletQuery = window.matchMedia('(min-width: 40rem) and (max-width: 74.9375rem)')
   prefersReducedMotion.value = mediaQuery.matches
   isMobileViewport.value = mobileQuery.matches
 
@@ -474,14 +592,20 @@ function installMediaListeners() {
   }
   const handleMobileChange = (event: MediaQueryListEvent) => {
     isMobileViewport.value = event.matches
+    resizeScene()
+  }
+  const handleTabletChange = () => {
+    resizeScene()
   }
 
   mediaQuery.addEventListener('change', handleReducedMotionChange)
   mobileQuery.addEventListener('change', handleMobileChange)
+  tabletQuery.addEventListener('change', handleTabletChange)
 
   onBeforeUnmount(() => {
     mediaQuery?.removeEventListener('change', handleReducedMotionChange)
     mobileQuery?.removeEventListener('change', handleMobileChange)
+    tabletQuery?.removeEventListener('change', handleTabletChange)
   })
 }
 
@@ -507,10 +631,15 @@ onBeforeUnmount(() => {
     aria-hidden="true"
     class="weather-pixi-layer"
     :data-pixi-dpr="metrics?.dpr ?? ''"
+    :data-pixi-layer-count="metrics?.layerCount ?? ''"
+    :data-pixi-loaded-layer-count="metrics?.loadedLayerCount ?? ''"
     :data-pixi-max-fps="metrics?.maxFps ?? ''"
+    :data-pixi-max-particle-count="metrics?.maxParticleCount ?? ''"
+    :data-pixi-performance-tier="metrics?.performanceTier ?? 'static'"
     :data-pixi-ready-ms="metrics?.readyMs ?? ''"
     :data-pixi-renderer="metrics?.rendererType ?? ''"
     :data-pixi-status="status"
+    :data-pixi-viewport-profile="metrics?.viewportProfile ?? ''"
   />
 </template>
 

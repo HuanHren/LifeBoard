@@ -46,6 +46,9 @@ const localReferenceScene = shallowRef<LocalWeatherReferenceScene | null>(null)
 const vendorWeatherScene = shallowRef<PixiWeatherReferenceScene | null>(null)
 const vendorWeatherResolved = shallowRef(false)
 const pixiStatus = shallowRef<PixiWeatherRendererStatus>('idle')
+const pixiLayerCount = shallowRef(0)
+const pixiLoadedLayerCount = shallowRef(0)
+const pixiPerformanceTier = shallowRef('static')
 let localReferenceRequestId = 0
 let vendorWeatherRequestId = 0
 
@@ -69,10 +72,10 @@ const resolvedBase = computed(() => {
   }
 })
 const baseDesktopSource = computed(
-  () => resolvedBase.value?.desktop ?? assetSet.value.base?.desktop,
+  () => resolvedBase.value?.desktop,
 )
 const baseMobileSource = computed(
-  () => resolvedBase.value?.mobile ?? assetSet.value.base?.mobile,
+  () => resolvedBase.value?.mobile,
 )
 const baseFallbackSource = computed(
   () => {
@@ -101,8 +104,12 @@ const baseFallbackSource = computed(
     )
   },
 )
-const depthSource = computed(() => assetSet.value.depth)
-const foregroundSource = computed(() => assetSet.value.foreground)
+const depthSource = computed(() =>
+  props.visual ? undefined : assetSet.value.depth,
+)
+const foregroundSource = computed(() =>
+  props.visual ? undefined : assetSet.value.foreground,
+)
 const hasBaseAsset = computed(
   () => Boolean(baseFallbackSource.value) && !failedLayers.value.has('base'),
 )
@@ -148,7 +155,6 @@ const pixiVisualKey = computed<PixiWeatherVisualKey | null>(() => {
 const localReferenceRequestKey = computed(() => {
   if (
     !props.visual ||
-    props.visual.effectGroup === 'partly-cloudy' ||
     props.visual.effectGroup === 'unknown' ||
     !vendorWeatherResolved.value ||
     vendorWeatherScene.value !== null
@@ -161,7 +167,6 @@ const localReferenceRequestKey = computed(() => {
 const vendorWeatherRequestKey = computed(() => {
   if (
     !props.visual ||
-    props.visual.effectGroup === 'partly-cloudy' ||
     props.visual.effectGroup === 'unknown'
   ) {
     return null
@@ -195,11 +200,17 @@ const assetOrigin = computed(() => {
   }
 
   if (hasBaseAsset.value) {
-    return 'lifeboard-original'
+    return 'fallback'
   }
 
   return 'fallback'
 })
+const sceneKey = computed(() => referenceScene.value?.key ?? 'fallback')
+const sceneFamily = computed(
+  () => referenceScene.value?.family ?? props.visual?.effectGroup ?? 'unknown',
+)
+const layerCount = computed(() => referenceScene.value?.layers.length ?? pixiLayerCount.value)
+const loadedLayerCount = computed(() => pixiLoadedLayerCount.value)
 const effectiveFallbackClass = computed(() =>
   baseFormatState.value === 'visual-fallback'
     ? 'weather-atmosphere--neutral'
@@ -295,6 +306,16 @@ function updatePixiStatus(status: PixiWeatherRendererStatus) {
   pixiStatus.value = status
 }
 
+function updatePixiMetrics(metrics: {
+  layerCount: number
+  loadedLayerCount: number
+  performanceTier: string
+}) {
+  pixiLayerCount.value = metrics.layerCount
+  pixiLoadedLayerCount.value = metrics.loadedLayerCount
+  pixiPerformanceTier.value = metrics.performanceTier
+}
+
 watch(
   visualIdentity,
   (identity) => {
@@ -310,6 +331,9 @@ watch(
     vendorWeatherScene.value = null
     vendorWeatherResolved.value = false
     pixiStatus.value = 'idle'
+    pixiLayerCount.value = 0
+    pixiLoadedLayerCount.value = 0
+    pixiPerformanceTier.value = 'static'
   },
   { immediate: true },
 )
@@ -327,9 +351,11 @@ watch(
     }
 
     const scene = await resolveVendorWeatherScene({
+      condition: props.visual.condition,
       effectGroup: props.visual.effectGroup,
       intensity: props.visual.intensity,
       timeline: props.visual.timeline,
+      weatherCode: props.visual.weatherCode,
     })
 
     if (requestId === vendorWeatherRequestId) {
@@ -399,8 +425,16 @@ watch(
     :data-intensity="visual?.intensity ?? 'none'"
     :data-life-board-condition="visual?.condition ?? 'unknown'"
     :data-neutral-fallback-active="baseFormatState === 'visual-fallback' ? 'true' : 'false'"
+    :data-weather-condition-code="visual?.weatherCode ?? ''"
+    :data-weather-intensity="visual?.intensity ?? 'none'"
+    :data-weather-layer-count="layerCount"
+    :data-weather-loaded-layer-count="loadedLayerCount"
+    :data-weather-performance-tier="pixiPerformanceTier"
+    :data-weather-pixi-status="pixiStatus"
+    :data-weather-scene-family="sceneFamily"
     :data-pixi-status="pixiStatus"
-    :data-weather-scene-key="referenceScene?.key ?? pixiVisualKey ?? 'fallback'"
+    :data-weather-scene-key="sceneKey"
+    :data-weather-timeline="visual?.timeline ?? 'day'"
     :data-timeline="visual?.timeline ?? 'day'"
     :style="atmosphereStyle"
   >
@@ -464,6 +498,7 @@ watch(
       :image-element="loadedBaseImage"
       :reference-scene="referenceScene"
       :visual-key="pixiVisualKey"
+      @metrics="updatePixiMetrics"
       @status-change="updatePixiStatus"
     />
 

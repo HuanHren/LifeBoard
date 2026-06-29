@@ -9,6 +9,8 @@ const DAY_PRESET: PixiWeatherSceneOptions = {
   scale: 1.008,
   ambientOpacity: 0.2,
   maxFps: 30,
+  performanceTier: 'high',
+  viewportProfile: 'desktop',
 }
 
 const NIGHT_PRESET: PixiWeatherSceneOptions = {
@@ -17,6 +19,8 @@ const NIGHT_PRESET: PixiWeatherSceneOptions = {
   scale: 1.006,
   ambientOpacity: 0.16,
   maxFps: 30,
+  performanceTier: 'high',
+  viewportProfile: 'desktop',
 }
 
 export function getPartlyCloudyPixiPreset(
@@ -28,5 +32,7 @@ export function getPartlyCloudyPixiPreset(
   return {
     ...basePreset,
     maxFps: isMobile ? 24 : basePreset.maxFps,
+    performanceTier: isMobile ? 'low' : 'high',
+    viewportProfile: isMobile ? 'mobile' : 'desktop',
   }
 }

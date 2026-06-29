@@ -94,6 +94,7 @@ export interface ResolveWeatherVisualInput {
 }
 
 export interface ResolvedWeatherVisual {
+  weatherCode: number
   condition: LifeBoardCondition
   effectGroup: WeatherEffectGroup
   intensity: WeatherIntensity

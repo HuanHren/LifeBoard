@@ -10,6 +10,7 @@ import {
 import type {
   WeatherEffectGroup,
   WeatherIntensity,
+  LifeBoardCondition,
   WeatherTimeline,
 } from '@/modules/weather/visual/types'
 
@@ -21,9 +22,89 @@ function normalizeTimeline(
 
 function createSceneKey(
   effectGroup: WeatherEffectGroup,
+  intensity: WeatherIntensity,
   timeline: WeatherTimeline,
+  condition?: LifeBoardCondition,
+  weatherCode?: number,
 ) {
-  return `${effectGroup}-${normalizeTimeline(timeline)}`
+  const normalizedTimeline = normalizeTimeline(timeline)
+
+  if (weatherCode === 1) {
+    return `mostly-clear-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 2 || condition === 'partly-cloudy') {
+    return `partly-cloudy-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 48) {
+    return `rime-fog-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 51 || weatherCode === 53 || weatherCode === 55 || condition === 'drizzle') {
+    return `drizzle-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 56 || weatherCode === 57) {
+    return `freezing-drizzle-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 66 || weatherCode === 67) {
+    return `freezing-rain-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 80 || weatherCode === 81 || weatherCode === 82) {
+    return `rain-showers-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 77) {
+    return `snow-grains-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 85 || weatherCode === 86) {
+    return `snow-showers-${normalizedTimeline}`
+  }
+
+  if (weatherCode === 96 || weatherCode === 99) {
+    return `thunderstorm-hail-${normalizedTimeline}`
+  }
+
+  if (effectGroup === 'thunderstorm' && intensity === 'heavy') {
+    return `heavy-thunderstorm-${normalizedTimeline}`
+  }
+
+  return `${effectGroup}-${normalizedTimeline}`
+}
+
+function getMaxParticleCount(
+  effectGroup: WeatherEffectGroup,
+  intensity: WeatherIntensity,
+) {
+  if (effectGroup === 'thunderstorm') {
+    return intensity === 'severe' ? 96 : 76
+  }
+
+  if (
+    effectGroup === 'heavy-rain' ||
+    effectGroup === 'heavy-snow' ||
+    effectGroup === 'sleet-freezing'
+  ) {
+    return intensity === 'severe' ? 88 : 72
+  }
+
+  if (
+    effectGroup === 'moderate-rain' ||
+    effectGroup === 'moderate-snow' ||
+    effectGroup === 'sand-dust'
+  ) {
+    return 54
+  }
+
+  if (effectGroup === 'light-rain' || effectGroup === 'light-snow') {
+    return 36
+  }
+
+  return 16
 }
 
 function getLayerSpeedX(layer: VendorWeatherManifestLayer) {
@@ -35,15 +116,19 @@ function getLayerSpeedY(layer: VendorWeatherManifestLayer) {
 }
 
 export async function resolveVendorWeatherScene({
+  condition,
   effectGroup,
   intensity,
   timeline,
+  weatherCode,
 }: {
+  condition?: LifeBoardCondition
   effectGroup: WeatherEffectGroup
   intensity: WeatherIntensity
   timeline: WeatherTimeline
+  weatherCode?: number
 }): Promise<VendorWeatherScene | null> {
-  if (effectGroup === 'partly-cloudy' || effectGroup === 'unknown') {
+  if (effectGroup === 'unknown') {
     return null
   }
 
@@ -53,7 +138,7 @@ export async function resolveVendorWeatherScene({
     return null
   }
 
-  const key = createSceneKey(effectGroup, timeline)
+  const key = createSceneKey(effectGroup, intensity, timeline, condition, weatherCode)
   const scene = manifest.scenes[key]
 
   if (!scene || scene.layers.length === 0) {
@@ -101,11 +186,14 @@ export async function resolveVendorWeatherScene({
   return {
     key,
     source: 'authorized-vendor',
+    condition,
     effectGroup,
     intensity,
     intensityPreset,
     timeline: normalizeTimeline(timeline),
     isThunderstorm: effectGroup === 'thunderstorm',
+    family: key.replace(/-(day|night)$/, ''),
+    maxParticleCount: getMaxParticleCount(effectGroup, intensity),
     layers,
   }
 }
