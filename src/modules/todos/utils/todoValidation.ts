@@ -90,6 +90,9 @@ export function isTask(value: unknown): value is Task {
     (value.label === null ||
       (typeof value.label === 'string' && value.label.length <= TASK_LABEL_MAX_LENGTH)) &&
     (value.completedAt === null || isIsoTimestamp(value.completedAt)) &&
+    (value.deletedAt === undefined ||
+      value.deletedAt === null ||
+      isIsoTimestamp(value.deletedAt)) &&
     isIsoTimestamp(value.createdAt) &&
     isIsoTimestamp(value.updatedAt)
   )

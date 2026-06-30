@@ -5,6 +5,7 @@ import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
   itemName: string
+  permanent?: boolean
 }
 
 interface Emits {
@@ -12,7 +13,9 @@ interface Emits {
   cancel: []
 }
 
-defineProps<Props>()
+withDefaults(defineProps<Props>(), {
+  permanent: false,
+})
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
 const cancelButton = useTemplateRef<ComponentPublicInstance>('cancelButton')
@@ -30,11 +33,15 @@ onMounted(() => {
   <div
     class="flex min-h-11 flex-wrap items-center justify-end gap-2"
     role="group"
-    :aria-label="t('todos.delete.aria', { name: itemName })"
+    :aria-label="
+      permanent
+        ? t('todos.delete.permanentAria', { name: itemName })
+        : t('todos.delete.aria', { name: itemName })
+    "
     @keydown.esc.stop="emit('cancel')"
   >
     <span class="mr-auto text-sm font-medium text-[var(--color-danger)]">
-      {{ t('todos.delete.prompt') }}
+      {{ permanent ? t('todos.delete.permanentPrompt') : t('todos.delete.prompt') }}
     </span>
     <BaseButton ref="cancelButton" size="sm" variant="ghost" @click="emit('cancel')">
       {{ t('todos.delete.cancel') }}
@@ -45,7 +52,7 @@ onMounted(() => {
       variant="secondary"
       @click="emit('confirm')"
     >
-      {{ t('todos.tasks.deleteAction') }}
+      {{ permanent ? t('todos.delete.permanentConfirm') : t('todos.tasks.deleteAction') }}
     </BaseButton>
   </div>
 </template>

@@ -11,10 +11,13 @@ import { formatReadableDate } from '@/modules/todos/utils/todoDates'
 
 interface Props {
   countdown: Countdown
+  featured?: boolean
   today: string
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  featured: false,
+})
 const { locale, t } = useI18n()
 const todosStore = useTodosStore()
 const isEditing = shallowRef(false)
@@ -30,7 +33,7 @@ function deleteCountdown() {
 </script>
 
 <template>
-  <li class="py-4 first:pt-0 last:pb-0">
+  <component :is="featured ? 'div' : 'li'" :class="featured ? '' : 'py-4 first:pt-0 last:pb-0'">
     <CountdownForm
       v-if="isEditing"
       :countdown="countdown"
@@ -40,7 +43,12 @@ function deleteCountdown() {
     <div v-else>
       <div class="flex items-start justify-between gap-3">
         <div class="min-w-0">
-          <h3 class="font-semibold text-[var(--color-text-primary)]">{{ countdown.title }}</h3>
+          <h3
+            class="break-words font-semibold text-[var(--color-text-primary)]"
+            :class="featured ? 'text-base' : ''"
+          >
+            {{ countdown.title }}
+          </h3>
           <p
             class="mt-1 text-sm font-medium"
             :class="
@@ -76,5 +84,5 @@ function deleteCountdown() {
         </BaseButton>
       </div>
     </div>
-  </li>
+  </component>
 </template>

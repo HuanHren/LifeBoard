@@ -34,43 +34,51 @@ export const useTodosStore = defineStore('todos', () => {
   const persistenceError = shallowRef<string | null>(null)
   const localToday = useLocalToday()
 
+  function isDeleted(task: Task) {
+    return task.deletedAt !== undefined && task.deletedAt !== null
+  }
+
+  function isActive(task: Task) {
+    return task.completedAt === null && !isDeleted(task)
+  }
+
+  function compareTaskDueDate(left: Task, right: Task) {
+    return (
+      compareDateStrings(left.dueDate ?? '', right.dueDate ?? '') ||
+      left.createdAt.localeCompare(right.createdAt)
+    )
+  }
+
   const todayTasks = computed(() =>
     tasks.value
       .filter(
         (task) =>
-          task.completedAt === null &&
+          isActive(task) &&
           task.dueDate !== null &&
           compareDateStrings(task.dueDate, localToday.value) <= 0,
       )
-      .sort((left, right) => {
-        const dateOrder = compareDateStrings(left.dueDate ?? '', right.dueDate ?? '')
-        return dateOrder || left.createdAt.localeCompare(right.createdAt)
-      }),
+      .sort(compareTaskDueDate),
   )
 
   const upcomingTasks = computed(() =>
     tasks.value
       .filter(
         (task) =>
-          task.completedAt === null &&
+          isActive(task) &&
           task.dueDate !== null &&
           compareDateStrings(task.dueDate, localToday.value) > 0,
       )
-      .sort(
-        (left, right) =>
-          compareDateStrings(left.dueDate ?? '', right.dueDate ?? '') ||
-          left.createdAt.localeCompare(right.createdAt),
-      ),
+      .sort(compareTaskDueDate),
   )
 
   const completedTasks = computed(() =>
     tasks.value
-      .filter((task) => task.completedAt !== null)
+      .filter((task) => task.completedAt !== null && !isDeleted(task))
       .sort((left, right) => (right.completedAt ?? '').localeCompare(left.completedAt ?? '')),
   )
 
   const allTasks = computed(() =>
-    [...tasks.value].sort((left, right) => {
+    tasks.value.filter((task) => !isDeleted(task)).sort((left, right) => {
       if (left.completedAt !== null && right.completedAt === null) return 1
       if (left.completedAt === null && right.completedAt !== null) return -1
       if (left.dueDate === null && right.dueDate !== null) return 1
@@ -82,11 +90,18 @@ export const useTodosStore = defineStore('todos', () => {
     }),
   )
 
+  const deletedTasks = computed(() =>
+    tasks.value
+      .filter(isDeleted)
+      .sort((left, right) => (right.deletedAt ?? '').localeCompare(left.deletedAt ?? '')),
+  )
+
   const visibleTasks = computed(() => {
     if (activeFilter.value === 'today') return todayTasks.value
     if (activeFilter.value === 'upcoming') return upcomingTasks.value
+    if (activeFilter.value === 'all') return allTasks.value
     if (activeFilter.value === 'completed') return completedTasks.value
-    return allTasks.value
+    return deletedTasks.value
   })
 
   const sortedCountdowns = computed(() =>
@@ -113,11 +128,12 @@ export const useTodosStore = defineStore('todos', () => {
     () =>
       todayTasks.value[0] ??
       upcomingTasks.value[0] ??
-      allTasks.value.find((task) => task.completedAt === null) ??
+      allTasks.value.find((task) => task.completedAt === null && !isDeleted(task)) ??
       null,
   )
   const activeTaskCountForToday = computed(() => todayTasks.value.length)
-  const hasTasks = computed(() => tasks.value.length > 0)
+  const hasTasks = computed(() => tasks.value.some((task) => !isDeleted(task)))
+  const hasDeletedTasks = computed(() => deletedTasks.value.length > 0)
   const hasCountdowns = computed(() => countdowns.value.length > 0)
 
   function persistNext(nextTasks: Task[], nextCountdowns: Countdown[]) {
@@ -166,6 +182,7 @@ export const useTodosStore = defineStore('todos', () => {
       id: crypto.randomUUID(),
       ...normalized,
       completedAt: null,
+      deletedAt: null,
       createdAt: now,
       updatedAt: now,
     }
@@ -187,7 +204,7 @@ export const useTodosStore = defineStore('todos', () => {
   function toggleTask(id: string) {
     const now = new Date().toISOString()
     const nextTasks = tasks.value.map((task) =>
-      task.id === id
+      task.id === id && !isDeleted(task)
         ? {
             ...task,
             completedAt: task.completedAt === null ? now : null,
@@ -199,6 +216,34 @@ export const useTodosStore = defineStore('todos', () => {
   }
 
   function deleteTask(id: string) {
+    const now = new Date().toISOString()
+    const nextTasks = tasks.value.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            deletedAt: now,
+            updatedAt: now,
+          }
+        : task,
+    )
+    return persistNext(nextTasks, countdowns.value)
+  }
+
+  function restoreTask(id: string) {
+    const now = new Date().toISOString()
+    const nextTasks = tasks.value.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            deletedAt: null,
+            updatedAt: now,
+          }
+        : task,
+    )
+    return persistNext(nextTasks, countdowns.value)
+  }
+
+  function permanentlyDeleteTask(id: string) {
     return persistNext(
       tasks.value.filter((task) => task.id !== id),
       countdowns.value,
@@ -264,18 +309,22 @@ export const useTodosStore = defineStore('todos', () => {
     upcomingTasks,
     completedTasks,
     allTasks,
+    deletedTasks,
     visibleTasks,
     sortedCountdowns,
     nextCountdown,
     nextActiveTask,
     activeTaskCountForToday,
     hasTasks,
+    hasDeletedTasks,
     hasCountdowns,
     initializeTodos,
     addTask,
     updateTask,
     toggleTask,
     deleteTask,
+    restoreTask,
+    permanentlyDeleteTask,
     setFilter,
     addCountdown,
     updateCountdown,

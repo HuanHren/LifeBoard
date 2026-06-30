@@ -27,8 +27,9 @@ const errorKeys: Record<string, TranslationKey> = {
 const filterKeys: Record<TaskFilter, TranslationKey> = {
   today: 'todos.tasks.filter.today',
   upcoming: 'todos.tasks.filter.upcoming',
-  completed: 'todos.tasks.filter.completed',
   all: 'todos.tasks.filter.all',
+  completed: 'todos.tasks.filter.completed',
+  deleted: 'todos.tasks.filter.deleted',
 }
 
 export function localizeTodosError(value: string | null, t: Translator) {

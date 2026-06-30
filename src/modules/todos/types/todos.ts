@@ -4,6 +4,7 @@ export interface Task {
   dueDate: string | null
   label: string | null
   completedAt: string | null
+  deletedAt?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -16,7 +17,7 @@ export interface Countdown {
   updatedAt: string
 }
 
-export type TaskFilter = 'today' | 'upcoming' | 'completed' | 'all'
+export type TaskFilter = 'today' | 'upcoming' | 'all' | 'completed' | 'deleted'
 
 export interface TaskDraft {
   title: string

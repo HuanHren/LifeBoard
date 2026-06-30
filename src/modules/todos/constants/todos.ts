@@ -9,6 +9,7 @@ export const COUNTDOWN_TITLE_MAX_LENGTH = 120
 export const TASK_FILTERS: ReadonlyArray<{ value: TaskFilter; label: string }> = [
   { value: 'today', label: 'Today' },
   { value: 'upcoming', label: 'Upcoming' },
-  { value: 'completed', label: 'Completed' },
   { value: 'all', label: 'All' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'deleted', label: 'Deleted' },
 ]

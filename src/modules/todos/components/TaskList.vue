@@ -32,6 +32,10 @@ const emptyCopy = computed<Record<TaskFilter, { title: string; description: stri
       title: t('todos.tasks.empty.allTitle'),
       description: t('todos.tasks.empty.allDescription'),
     },
+    deleted: {
+      title: t('todos.tasks.empty.deletedTitle'),
+      description: t('todos.tasks.empty.deletedDescription'),
+    },
   }),
 )
 </script>
@@ -46,6 +50,11 @@ const emptyCopy = computed<Record<TaskFilter, { title: string; description: stri
     v-else
     class="divide-y divide-[var(--color-border-soft)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]"
   >
-    <TaskItem v-for="task in tasks" :key="task.id" :task="task" :today="today" />
+    <TaskItem
+      v-for="task in tasks"
+      :key="task.id"
+      :task="task"
+      :today="today"
+    />
   </ul>
 </template>

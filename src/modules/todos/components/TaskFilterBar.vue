@@ -6,6 +6,7 @@ import { getTaskFilterLabel } from '@/modules/todos/utils/todosI18n'
 
 interface Props {
   activeFilter: TaskFilter
+  counts: Record<TaskFilter, number>
 }
 
 interface Emits {
@@ -19,15 +20,15 @@ const { t } = useI18n()
 
 <template>
   <div
-    class="flex max-w-full gap-1 overflow-x-auto rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-1"
+    class="flex w-full max-w-full gap-1 overflow-x-auto rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-1"
     :aria-label="t('todos.tasks.filterLabel')"
     role="group"
   >
     <button
       v-for="filter in TASK_FILTERS"
       :key="filter.value"
-      :aria-pressed="activeFilter === filter.value"
-      class="interactive-surface min-h-11 shrink-0 rounded-[var(--radius-sm)] px-3 text-sm font-medium"
+      :aria-current="activeFilter === filter.value ? 'page' : undefined"
+      class="interactive-surface min-h-11 shrink-0 rounded-[var(--radius-sm)] px-2.5 text-sm font-medium"
       :class="
         activeFilter === filter.value
           ? 'bg-[var(--color-surface-raised)] text-[var(--color-accent-text)] shadow-[var(--shadow-soft)]'
@@ -36,7 +37,13 @@ const { t } = useI18n()
       type="button"
       @click="emit('change', filter.value)"
     >
-      {{ getTaskFilterLabel(filter.value, t) }}
+      <span>{{ getTaskFilterLabel(filter.value, t) }}</span>
+      <span
+        v-if="counts[filter.value] > 0"
+        class="ml-2 rounded-[var(--radius-pill)] bg-[var(--color-surface-muted)] px-1.5 py-0.5 text-[0.7rem] tabular-nums text-[var(--color-text-secondary)]"
+      >
+        {{ counts[filter.value] }}
+      </span>
     </button>
   </div>
 </template>

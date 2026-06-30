@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue'
+import { computed, shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
-import BaseCard from '@/components/base/BaseCard.vue'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import CountdownForm from '@/modules/todos/components/CountdownForm.vue'
+import CountdownItem from '@/modules/todos/components/CountdownItem.vue'
 import CountdownList from '@/modules/todos/components/CountdownList.vue'
+import { differenceInCalendarDays } from '@/modules/todos/utils/todoDates'
 import type { Countdown } from '@/modules/todos/types/todos'
 
 interface Props {
@@ -13,13 +15,22 @@ interface Props {
   today: string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const { t } = useI18n()
 const isCreating = shallowRef(false)
+const primaryCountdown = computed(
+  () =>
+    props.countdowns.find(
+      (countdown) => differenceInCalendarDays(countdown.targetDate, props.today) >= 0,
+    ) ?? props.countdowns[0] ?? null,
+)
+const secondaryCountdowns = computed(() =>
+  props.countdowns.filter((countdown) => countdown.id !== primaryCountdown.value?.id),
+)
 </script>
 
 <template>
-  <BaseCard as="section">
+  <BaseSurface as="section" class="min-w-0" padding="md" variant="plain">
     <div class="flex items-start justify-between gap-4">
       <div>
         <h2 class="text-section-title text-[var(--color-text-primary)]">
@@ -55,7 +66,19 @@ const isCreating = shallowRef(false)
         :title="t('todos.countdowns.emptyTitle')"
         @action="isCreating = true"
       />
-      <CountdownList v-else :countdowns="countdowns" :today="today" />
+      <div v-else class="space-y-4">
+        <div
+          v-if="primaryCountdown"
+          class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-accent-wash)] px-4 py-3"
+        >
+          <CountdownItem :countdown="primaryCountdown" featured :today="today" />
+        </div>
+        <CountdownList
+          v-if="secondaryCountdowns.length > 0"
+          :countdowns="secondaryCountdowns"
+          :today="today"
+        />
+      </div>
     </div>
-  </BaseCard>
+  </BaseSurface>
 </template>
