@@ -125,11 +125,6 @@ const updatedTime = computed(() =>
     timezone: props.snapshot.weather.timezoneAbbreviation,
   }),
 )
-const providerLabel = computed(() =>
-  props.snapshot.weather.provider === 'caiyun'
-    ? t('weather.hero.provider.caiyun')
-    : t('weather.hero.provider.openMeteo'),
-)
 const screenReaderSummary = computed(() =>
   t('weather.hero.summary', {
     location: locationName.value,
@@ -236,8 +231,6 @@ const effectiveLighting = computed(
         class="weather-snapshot-layer__item weather-snapshot-layer__item--meta mt-4 flex flex-wrap gap-x-3 gap-y-1 text-sm leading-6 text-[var(--weather-hero-muted)]"
       >
         <span>{{ updatedTime }}</span>
-        <span aria-hidden="true" class="text-[var(--weather-hero-subtle)]">/</span>
-        <span>{{ providerLabel }}</span>
       </div>
     </div>
   </div>

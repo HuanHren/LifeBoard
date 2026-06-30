@@ -127,6 +127,8 @@ export const zhCNModules = {
   'shared.action.openModule': '打开模块',
   'weather.page.title': '天气',
   'weather.page.description': '查看当前天气、准备随身物品，并选择舒适的外出时间。',
+  'weather.page.cityContext': '正在显示 {city}',
+  'weather.page.noCity': '尚未选择城市',
   'weather.search.label': '搜索城市',
   'weather.search.anotherLabel': '搜索其他城市',
   'weather.search.placeholder': '城市或邮政编码',

@@ -29,7 +29,7 @@ function barWidth(item: HourlyForecastItem) {
 </script>
 
 <template>
-  <section aria-labelledby="precipitation-timeline-title">
+  <section class="min-w-0" aria-labelledby="precipitation-timeline-title">
     <div class="max-w-2xl">
       <h2
         id="precipitation-timeline-title"

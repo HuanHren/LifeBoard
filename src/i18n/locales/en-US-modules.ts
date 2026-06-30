@@ -136,6 +136,8 @@ export const enUSModules = {
   'weather.page.title': 'Weather',
   'weather.page.description':
     'Check current conditions, plan what to bring, and choose a comfortable time to go out.',
+  'weather.page.cityContext': 'Showing {city}',
+  'weather.page.noCity': 'No city selected',
   'weather.search.label': 'Search for a city',
   'weather.search.anotherLabel': 'Search another city',
   'weather.search.placeholder': 'City or postal code',

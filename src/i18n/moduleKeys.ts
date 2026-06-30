@@ -125,6 +125,8 @@ export const homeTranslationKeys = [
 export const weatherTranslationKeys = [
   'weather.page.title',
   'weather.page.description',
+  'weather.page.cityContext',
+  'weather.page.noCity',
   'weather.search.label',
   'weather.search.anotherLabel',
   'weather.search.placeholder',

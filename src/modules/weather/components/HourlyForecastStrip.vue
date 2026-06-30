@@ -20,7 +20,7 @@ const { locale, t } = useI18n()
 </script>
 
 <template>
-  <section aria-labelledby="hourly-forecast-title">
+  <section class="min-w-0" aria-labelledby="hourly-forecast-title">
     <div class="max-w-2xl">
       <h2
         id="hourly-forecast-title"

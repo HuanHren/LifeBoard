@@ -37,15 +37,14 @@ const { locale, t } = useI18n()
     </div>
 
     <div
-      class="forecast-scroll mt-4 overflow-x-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-offset-4"
+      class="mt-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2"
       :aria-label="props.scrollLabel ?? t('weather.daily.scrollLabel')"
-      tabindex="0"
     >
-      <ol class="flex min-w-max snap-x snap-proximity gap-2">
+      <ol class="daily-forecast-grid grid gap-2">
         <li
           v-for="(item, index) in items"
           :key="item.date"
-          class="w-48 shrink-0 snap-start rounded-[var(--radius-md)] px-4 py-4"
+          class="min-w-0 rounded-[var(--radius-md)] px-4 py-4"
           :class="
             index === 0
               ? 'bg-[var(--color-accent-wash)]'
@@ -104,3 +103,9 @@ const { locale, t } = useI18n()
     </div>
   </section>
 </template>
+
+<style scoped>
+.daily-forecast-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+</style>

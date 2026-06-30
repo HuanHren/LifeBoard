@@ -25,7 +25,7 @@ const visibleItems = computed(() => props.shortTerm?.items.slice(0, 6) ?? [])
 
 <template>
   <section
-    class="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-5"
+    class="min-w-0 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-5"
     aria-labelledby="short-term-precipitation-title"
   >
     <div class="max-w-2xl">
