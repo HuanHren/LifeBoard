@@ -38,6 +38,8 @@ Future migration order:
 4. Replace the compatibility adapter only after config presets drive all intended existing runtime behavior.
 5. Only then consider additional effects.
 
+LB-2E clear-day migration suitability: `clear-day` was evaluated as `NOT_SUITABLE_YET`. Current production clear-day still resolves through the legacy authorized-vendor reference scene, not the local clear-day poster assets, and the browser baseline uses three vendor layers including a particle sparkle layer. The current config-driven runtime remains limited to `partly-cloudy-day` and `partly-cloudy-night`; clear-day is not allowed to enter LB-2F yet.
+
 `ShaderLayer` is defined only as a disabled reserved type. Active shader support is not part of this foundation.
 
 The prior weather research provides general architecture reference only. This implementation is a LifeBoard clean-room design with LifeBoard-owned names, assets and Web/PixiJS constraints.
