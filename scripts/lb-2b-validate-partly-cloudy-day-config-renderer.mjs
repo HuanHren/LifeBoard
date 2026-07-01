@@ -44,8 +44,8 @@ if (!/scene\.preset\.id === PARTLY_CLOUDY_DAY_SCENE_ID/.test(capabilities)) {
 if (!/scene\.selectedQuality !== 'static'/.test(capabilities)) {
   errors.push('static quality is not excluded from config-driven routing')
 }
-if (!/scene\.context\.timeline !== 'night'/.test(capabilities)) {
-  errors.push('night timeline is not excluded from config-driven routing')
+if (!/isPartlyCloudyDayScene\(scene\) && scene\.context\.timeline !== 'night'/.test(capabilities)) {
+  errors.push('partly-cloudy-day routing does not guard against night timeline')
 }
 if (!/!scene\.context\.reducedMotion/.test(capabilities)) {
   errors.push('reduced motion is not excluded from config-driven routing')
@@ -56,12 +56,12 @@ for (const token of [
   'validateWeatherScenePreset',
   'resolveWeatherSceneAsset',
   "'UNSUPPORTED_LAYER'",
-  "visualKey: 'partly-cloudy-day'",
+  ":'partly-cloudy-day'",
   'driftX: cloudLayer.drift.x',
   'driftY: cloudLayer.drift.y',
   'ambientOpacity: lightLayer.opacity',
 ]) {
-  if (!planBuilder.includes(token)) {
+  if (!planBuilder.replace(/\s+/g, '').includes(token.replace(/\s+/g, ''))) {
     errors.push(`render plan is missing ${token}`)
   }
 }
@@ -83,9 +83,6 @@ for (const token of [
   if (!preset.includes(token)) {
     errors.push(`partly-cloudy-day preset is missing ${token}`)
   }
-}
-if (/partlyCloudyNightScenePreset[\s\S]*kind: 'cloud'/.test(preset)) {
-  errors.push('partly-cloudy-night was unexpectedly migrated')
 }
 if (/kind:\s*'particle'|kind:\s*'shader'/.test(preset)) {
   errors.push('partly cloudy presets enable forbidden particle or shader layers')

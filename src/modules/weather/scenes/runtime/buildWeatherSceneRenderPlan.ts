@@ -6,7 +6,8 @@ import type {
   WeatherSceneLayer,
 } from '@/modules/weather/scenes/weatherSceneTypes'
 import {
-  isPartlyCloudyDayScene,
+  isConfigDrivenPartlyCloudyScene,
+  isPartlyCloudyNightScene,
   shouldUseConfigDrivenRenderer,
 } from '@/modules/weather/scenes/runtime/weatherSceneCapabilities'
 import { resolveWeatherSceneAsset } from '@/modules/weather/scenes/runtime/resolveWeatherSceneAsset'
@@ -73,13 +74,13 @@ function getPerformanceTier(scene: ResolvedWeatherScene): PixiWeatherPerformance
 export function buildWeatherSceneRenderPlan(
   scene: ResolvedWeatherScene,
 ): WeatherSceneRenderPlanResult {
-  if (!isPartlyCloudyDayScene(scene)) {
+  if (!isConfigDrivenPartlyCloudyScene(scene)) {
     return {
       ok: false,
       issues: [
         {
           code: 'SCENE_BUILD_FAILED',
-          message: 'Only partly-cloudy-day is enabled for config-driven rendering.',
+          message: 'Only partly-cloudy-day and partly-cloudy-night are enabled for config-driven rendering.',
           path: 'id',
         },
       ],
@@ -116,7 +117,7 @@ export function buildWeatherSceneRenderPlan(
       issues: [
         {
           code: 'UNSUPPORTED_LAYER',
-          message: `Layer kind ${unsupportedLayer.kind} is not supported by the LB-2B renderer.`,
+          message: `Layer kind ${unsupportedLayer.kind} is not supported by the partly cloudy config renderer.`,
           path: `layers.${unsupportedLayer.id}`,
         },
       ],
@@ -132,7 +133,7 @@ export function buildWeatherSceneRenderPlan(
       issues: [
         {
           code: 'SCENE_BUILD_FAILED',
-          message: 'The partly-cloudy-day renderer requires one cloud layer and one light layer.',
+          message: 'The partly cloudy config renderer requires one cloud layer and one light layer.',
           path: 'layers',
         },
       ],
@@ -151,6 +152,9 @@ export function buildWeatherSceneRenderPlan(
   }
 
   const quality = scene.preset.quality[scene.selectedQuality]
+  const visualKey = isPartlyCloudyNightScene(scene)
+    ? 'partly-cloudy-night'
+    : 'partly-cloudy-day'
   const performanceTier = getPerformanceTier(scene)
   const maxFps = scene.selectedViewport === 'mobile'
     ? 24
@@ -162,7 +166,7 @@ export function buildWeatherSceneRenderPlan(
       id: scene.preset.id,
       asset: posterResult.asset,
       fallbackAsset: fallbackResult.asset,
-      visualKey: 'partly-cloudy-day',
+      visualKey,
       options: {
         driftX: cloudLayer.drift.x,
         driftY: cloudLayer.drift.y,

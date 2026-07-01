@@ -13,6 +13,7 @@ export const WEATHER_SCENE_ASSET_IDS = {
 const clearDayAssets = WEATHER_ATMOSPHERE_ASSETS['clear-day'].base
 const clearNightAssets = WEATHER_ATMOSPHERE_ASSETS['clear-night'].base
 const partlyCloudyDayAssets = WEATHER_ATMOSPHERE_ASSETS['partly-cloudy-day'].base
+const partlyCloudyNightAssets = WEATHER_ATMOSPHERE_ASSETS['partly-cloudy-night'].base
 
 export const WEATHER_SCENE_ASSETS = [
   {
@@ -42,6 +43,9 @@ export const WEATHER_SCENE_ASSETS = [
   {
     id: WEATHER_SCENE_ASSET_IDS.partlyCloudyNightPoster,
     kind: 'poster',
+    desktop: partlyCloudyNightAssets?.desktop,
+    mobile: partlyCloudyNightAssets?.mobile,
+    fallback: partlyCloudyNightAssets?.desktop,
     preload: true,
   },
   {

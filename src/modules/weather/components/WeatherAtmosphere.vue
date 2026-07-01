@@ -118,12 +118,21 @@ const configDrivenRenderPlan = computed<ConfigDrivenWeatherScenePlan | null>(() 
     ? configDrivenRenderPlanResult.value.plan
     : null,
 )
+const shouldUseStaticNightPoster = computed(() =>
+  props.atmosphere === 'partly-cloudy-night' &&
+  (prefersReducedMotion.value || renderQuality.value === 'static') &&
+  Boolean(assetSet.value.base),
+)
 const resolvedBase = computed(() => {
   if (configDrivenRenderPlan.value) {
     return {
       desktop: configDrivenRenderPlan.value.asset.desktop,
       mobile: configDrivenRenderPlan.value.asset.mobile,
     }
+  }
+
+  if (shouldUseStaticNightPoster.value) {
+    return assetSet.value.base
   }
 
   if (!props.visual?.hasRegisteredVisual) {

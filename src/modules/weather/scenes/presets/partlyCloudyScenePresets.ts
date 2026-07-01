@@ -12,7 +12,7 @@ import {
   staticSceneQuality,
 } from '@/modules/weather/scenes/presets/sharedScenePresetParts'
 
-const partlyCloudyDaySceneQuality = {
+const partlyCloudyConfigSceneQuality = {
   high: {
     ...staticSceneQuality.high,
     maxLayers: 2,
@@ -91,7 +91,7 @@ export const partlyCloudyDayScenePreset = {
       objectPosition: '56% center',
     },
   },
-  quality: partlyCloudyDaySceneQuality,
+  quality: partlyCloudyConfigSceneQuality,
   accessibility: defaultSceneAccessibility,
   transitions: defaultSceneTransition,
   fallback: {
@@ -129,9 +129,40 @@ export const partlyCloudyNightScenePreset = {
     fit: 'cover',
     eager: true,
   },
-  layers: [],
-  responsive: defaultResponsiveSceneLayout,
-  quality: staticSceneQuality,
+  layers: [
+    {
+      id: weatherSceneLayerId('partly-cloudy-night-base'),
+      kind: 'cloud',
+      assetId: WEATHER_SCENE_ASSET_IDS.partlyCloudyNightPoster,
+      role: 'mid',
+      zIndex: 1,
+      opacity: 1,
+      drift: {
+        x: 3,
+        y: -1.5,
+      },
+      scale: 1.006,
+    },
+    {
+      id: weatherSceneLayerId('partly-cloudy-night-ambient'),
+      kind: 'light',
+      lightKind: 'ambient',
+      zIndex: 2,
+      opacity: 0.16,
+      position: {
+        x: 0.72,
+        y: 0.27,
+      },
+    },
+  ],
+  responsive: {
+    ...defaultResponsiveSceneLayout,
+    mobile: {
+      ...defaultResponsiveSceneLayout.mobile,
+      objectPosition: '56% center',
+    },
+  },
+  quality: partlyCloudyConfigSceneQuality,
   accessibility: defaultSceneAccessibility,
   transitions: defaultSceneTransition,
   fallback: {
