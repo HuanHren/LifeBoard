@@ -3,6 +3,7 @@ import type { WeatherScenePreset } from '@/modules/weather/scenes/weatherSceneTy
 import {
   WEATHER_SCENE_CLEAN_ROOM_NOTICE,
   weatherSceneId,
+  weatherSceneLayerId,
 } from '@/modules/weather/scenes/weatherSceneTypes'
 import {
   defaultResponsiveSceneLayout,
@@ -10,6 +11,31 @@ import {
   defaultSceneTransition,
   staticSceneQuality,
 } from '@/modules/weather/scenes/presets/sharedScenePresetParts'
+
+const partlyCloudyDaySceneQuality = {
+  high: {
+    ...staticSceneQuality.high,
+    maxLayers: 2,
+    maxFps: 30,
+    enableClouds: true,
+    renderMode: 'animated',
+  },
+  balanced: {
+    ...staticSceneQuality.balanced,
+    maxLayers: 2,
+    maxFps: 30,
+    enableClouds: true,
+    renderMode: 'animated',
+  },
+  low: {
+    ...staticSceneQuality.low,
+    maxLayers: 2,
+    maxFps: 24,
+    enableClouds: true,
+    renderMode: 'animated',
+  },
+  static: staticSceneQuality.static,
+} satisfies WeatherScenePreset['quality']
 
 export const partlyCloudyDayScenePreset = {
   schemaVersion: '1.0.0',
@@ -32,9 +58,40 @@ export const partlyCloudyDayScenePreset = {
     fit: 'cover',
     eager: true,
   },
-  layers: [],
-  responsive: defaultResponsiveSceneLayout,
-  quality: staticSceneQuality,
+  layers: [
+    {
+      id: weatherSceneLayerId('partly-cloudy-day-base'),
+      kind: 'cloud',
+      assetId: WEATHER_SCENE_ASSET_IDS.partlyCloudyDayPoster,
+      role: 'mid',
+      zIndex: 1,
+      opacity: 1,
+      drift: {
+        x: 5,
+        y: -2,
+      },
+      scale: 1.008,
+    },
+    {
+      id: weatherSceneLayerId('partly-cloudy-day-ambient'),
+      kind: 'light',
+      lightKind: 'ambient',
+      zIndex: 2,
+      opacity: 0.2,
+      position: {
+        x: 0.72,
+        y: 0.27,
+      },
+    },
+  ],
+  responsive: {
+    ...defaultResponsiveSceneLayout,
+    mobile: {
+      ...defaultResponsiveSceneLayout.mobile,
+      objectPosition: '56% center',
+    },
+  },
+  quality: partlyCloudyDaySceneQuality,
   accessibility: defaultSceneAccessibility,
   transitions: defaultSceneTransition,
   fallback: {

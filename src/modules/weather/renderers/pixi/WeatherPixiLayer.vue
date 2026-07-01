@@ -27,11 +27,13 @@ import type {
   PixiWeatherVisualKey,
   PixiWeatherViewportProfile,
 } from '@/modules/weather/renderers/pixi/types'
+import type { ConfigDrivenWeatherScenePlan } from '@/modules/weather/scenes/runtime/weatherSceneRuntimeTypes'
 
 interface Props {
   enabled: boolean
   imageElement: HTMLImageElement | null
   referenceScene?: PixiWeatherReferenceScene | null
+  scenePlan?: ConfigDrivenWeatherScenePlan | null
   visualKey: PixiWeatherVisualKey | null
 }
 
@@ -71,10 +73,17 @@ const canAttemptPixi = computed(() => {
     props.referenceScene !== null &&
     props.referenceScene !== undefined &&
     props.referenceScene.layers.length > 0
+  const hasConfigDrivenScene =
+    props.scenePlan !== null &&
+    props.scenePlan !== undefined &&
+    image !== null &&
+    image.complete &&
+    image.naturalWidth > 0 &&
+    image.naturalHeight > 0
 
   return (
     props.enabled &&
-    (hasPosterScene || hasLocalScene) &&
+    (hasPosterScene || hasLocalScene || hasConfigDrivenScene) &&
     !prefersReducedMotion.value
   )
 })
@@ -166,6 +175,10 @@ function getPerformanceTier(): PixiWeatherPerformanceTier {
 }
 
 function getSceneOptions(): PixiWeatherSceneOptions {
+  if (props.scenePlan) {
+    return props.scenePlan.options
+  }
+
   const performanceTier = getPerformanceTier()
   const viewportProfile = getViewportProfile()
   const posterPreset = getPartlyCloudyPixiPreset(
@@ -344,8 +357,9 @@ function resizeScene() {
       maxFps: preset.maxFps,
       performanceTier: preset.performanceTier,
       viewportProfile: preset.viewportProfile,
-      layerCount: props.referenceScene?.layers.length ?? 0,
+      layerCount: props.scenePlan?.layerCount ?? props.referenceScene?.layers.length ?? 0,
       loadedLayerCount:
+        props.scenePlan?.loadedLayerCount ??
         handles.localLayers.length + handles.particleLayers.length,
       maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
     }
@@ -438,9 +452,11 @@ async function initializePixi() {
     let ambientSprite: import('pixi.js').Sprite | undefined
     let thunderOverlay: import('pixi.js').Graphics | undefined
 
-    if (props.visualKey && props.imageElement) {
+    const planVisualKey = props.scenePlan?.visualKey ?? props.visualKey
+
+    if (planVisualKey && props.imageElement) {
       baseTexture = createPixiTextureFromImage(pixi, props.imageElement)
-      ambientTexture = createAmbientLightTexture(pixi, props.visualKey)
+      ambientTexture = createAmbientLightTexture(pixi, planVisualKey)
       baseSprite = new pixi.Sprite(baseTexture.texture)
       ambientSprite = new pixi.Sprite(ambientTexture.texture)
 
@@ -690,8 +706,10 @@ async function initializePixi() {
       maxFps: preset.maxFps,
       performanceTier: preset.performanceTier,
       viewportProfile: preset.viewportProfile,
-      layerCount: props.referenceScene?.layers.length ?? 0,
-      loadedLayerCount: localLayers.length + particleLayers.length,
+      layerCount: props.scenePlan?.layerCount ?? props.referenceScene?.layers.length ?? 0,
+      loadedLayerCount:
+        props.scenePlan?.loadedLayerCount ??
+        localLayers.length + particleLayers.length,
       maxParticleCount: props.referenceScene?.maxParticleCount ?? 0,
       initMs: Math.round(readyMs - startMs),
       readyMs: Math.round(readyMs - startMs),
@@ -722,6 +740,7 @@ watch(
   () => [
     props.imageElement,
     props.visualKey,
+    props.scenePlan?.id ?? null,
     props.referenceScene?.key ?? null,
     props.enabled,
   ] as const,

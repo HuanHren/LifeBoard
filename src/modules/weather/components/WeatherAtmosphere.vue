@@ -5,7 +5,7 @@ const baseFormatStateByVisualIdentity = new Map<string, BaseFormatState>()
 </script>
 
 <script setup lang="ts">
-import { computed, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import {
   getWeatherAtmosphereAssets,
   type WeatherAtmosphereAssetSource,
@@ -17,7 +17,15 @@ import type {
   PixiWeatherRendererStatus,
   PixiWeatherVisualKey,
 } from '@/modules/weather/renderers/pixi'
+import { isSaveDataEnabled } from '@/modules/weather/renderers/pixi/pixiWeatherCapabilities'
+import { buildWeatherSceneContext } from '@/modules/weather/scenes/buildWeatherSceneContext'
+import { resolveWeatherScene } from '@/modules/weather/scenes/resolveWeatherScene'
+import { buildWeatherSceneRenderPlan } from '@/modules/weather/scenes/runtime/buildWeatherSceneRenderPlan'
+import type { ConfigDrivenWeatherScenePlan } from '@/modules/weather/scenes/runtime/weatherSceneRuntimeTypes'
+import type { WeatherSceneRenderQuality, WeatherSceneViewport } from '@/modules/weather/scenes/weatherSceneTypes'
 import type { WeatherLighting } from '@/modules/weather/types/weatherLighting'
+import type { WeatherSnapshot } from '@/modules/weather/types/weather'
+import type { WeatherSolarPhaseResult } from '@/modules/weather/types/weatherSolarPhase'
 import type { WeatherAtmosphere } from '@/modules/weather/utils/weatherAtmosphere'
 import type { ResolvedWeatherVisual } from '@/modules/weather/visual/types'
 import { resolveVendorWeatherScene } from '@/modules/weather/visual/vendor'
@@ -27,8 +35,10 @@ type LocalWeatherReferenceModule = typeof import('@/modules/weather/renderers/pi
 interface Props {
   atmosphere: WeatherAtmosphere
   lighting?: WeatherLighting
+  solarPhase?: WeatherSolarPhaseResult
   visual?: ResolvedWeatherVisual
   visualState?: 'stable' | 'outgoing' | 'incoming'
+  weather?: WeatherSnapshot
 }
 
 type AtmosphereLayer = 'base' | 'depth' | 'foreground'
@@ -49,15 +59,73 @@ const pixiStatus = shallowRef<PixiWeatherRendererStatus>('idle')
 const pixiLayerCount = shallowRef(0)
 const pixiLoadedLayerCount = shallowRef(0)
 const pixiPerformanceTier = shallowRef('static')
+const prefersReducedMotion = shallowRef(false)
+const viewport = shallowRef<WeatherSceneViewport>('desktop')
 let localReferenceRequestId = 0
 let vendorWeatherRequestId = 0
+let reducedMotionQuery: MediaQueryList | null = null
+let mobileQuery: MediaQueryList | null = null
+let tabletQuery: MediaQueryList | null = null
 
 const localReferenceAssetsEnabled =
   import.meta.env.DEV &&
   import.meta.env.VITE_ENABLE_LOCAL_WEATHER_REFERENCE_ASSETS === 'true'
 
 const assetSet = computed(() => getWeatherAtmosphereAssets(props.atmosphere))
+const renderQuality = computed<WeatherSceneRenderQuality>(() => {
+  if (prefersReducedMotion.value) {
+    return 'static'
+  }
+
+  if (isSaveDataEnabled()) {
+    return 'low'
+  }
+
+  if (viewport.value === 'mobile') {
+    return 'low'
+  }
+
+  if (viewport.value === 'tablet') {
+    return 'balanced'
+  }
+
+  return 'high'
+})
+const configDrivenScene = computed(() => {
+  if (!props.weather || !props.solarPhase) {
+    return null
+  }
+
+  return resolveWeatherScene(
+    buildWeatherSceneContext({
+      weather: props.weather,
+      solarPhase: props.solarPhase,
+      viewport: viewport.value,
+      quality: renderQuality.value,
+      reducedMotion: prefersReducedMotion.value,
+    }),
+  )
+})
+const configDrivenRenderPlanResult = computed(() => {
+  if (!configDrivenScene.value) {
+    return null
+  }
+
+  return buildWeatherSceneRenderPlan(configDrivenScene.value)
+})
+const configDrivenRenderPlan = computed<ConfigDrivenWeatherScenePlan | null>(() =>
+  configDrivenRenderPlanResult.value?.ok
+    ? configDrivenRenderPlanResult.value.plan
+    : null,
+)
 const resolvedBase = computed(() => {
+  if (configDrivenRenderPlan.value) {
+    return {
+      desktop: configDrivenRenderPlan.value.asset.desktop,
+      mobile: configDrivenRenderPlan.value.asset.mobile,
+    }
+  }
+
   if (!props.visual?.hasRegisteredVisual) {
     return null
   }
@@ -138,6 +206,10 @@ const visualIdentity = computed(() => [
   baseMobileSource.value?.png ?? '',
 ].join('|'))
 const pixiVisualKey = computed<PixiWeatherVisualKey | null>(() => {
+  if (configDrivenRenderPlan.value) {
+    return null
+  }
+
   if (
     props.visual?.condition !== 'partly-cloudy' ||
     (
@@ -156,6 +228,8 @@ const localReferenceRequestKey = computed(() => {
   if (
     !props.visual ||
     props.visual.effectGroup === 'unknown' ||
+    prefersReducedMotion.value ||
+    configDrivenRenderPlan.value !== null ||
     !vendorWeatherResolved.value ||
     vendorWeatherScene.value !== null
   ) {
@@ -167,7 +241,9 @@ const localReferenceRequestKey = computed(() => {
 const vendorWeatherRequestKey = computed(() => {
   if (
     !props.visual ||
-    props.visual.effectGroup === 'unknown'
+    props.visual.effectGroup === 'unknown' ||
+    prefersReducedMotion.value ||
+    configDrivenRenderPlan.value !== null
   ) {
     return null
   }
@@ -182,11 +258,16 @@ const shouldEnablePixi = computed(
     props.visualState !== 'outgoing' &&
     baseFormatState.value !== 'visual-fallback' &&
     (
+      (configDrivenRenderPlan.value !== null && loadedBaseImage.value !== null) ||
       (pixiVisualKey.value !== null && loadedBaseImage.value !== null) ||
       referenceScene.value !== null
     ),
 )
 const assetOrigin = computed(() => {
+  if (configDrivenRenderPlan.value) {
+    return 'config-driven'
+  }
+
   if (vendorWeatherScene.value) {
     return 'authorized-vendor'
   }
@@ -205,12 +286,24 @@ const assetOrigin = computed(() => {
 
   return 'fallback'
 })
-const sceneKey = computed(() => referenceScene.value?.key ?? 'fallback')
-const sceneFamily = computed(
-  () => referenceScene.value?.family ?? props.visual?.effectGroup ?? 'unknown',
+const sceneKey = computed(() =>
+  configDrivenRenderPlan.value?.id ?? referenceScene.value?.key ?? 'fallback',
 )
-const layerCount = computed(() => referenceScene.value?.layers.length ?? pixiLayerCount.value)
-const loadedLayerCount = computed(() => pixiLoadedLayerCount.value)
+const sceneFamily = computed(
+  () =>
+    configDrivenRenderPlan.value?.id ??
+    referenceScene.value?.family ??
+    props.visual?.effectGroup ??
+    'unknown',
+)
+const layerCount = computed(() =>
+  configDrivenRenderPlan.value?.layerCount ??
+  referenceScene.value?.layers.length ??
+  pixiLayerCount.value,
+)
+const loadedLayerCount = computed(() =>
+  configDrivenRenderPlan.value?.loadedLayerCount ?? pixiLoadedLayerCount.value,
+)
 const effectiveFallbackClass = computed(() =>
   baseFormatState.value === 'visual-fallback'
     ? 'weather-atmosphere--neutral'
@@ -403,6 +496,51 @@ watch(
   },
   { immediate: true },
 )
+
+function updateViewportFromQueries() {
+  if (mobileQuery?.matches) {
+    viewport.value = 'mobile'
+    return
+  }
+
+  if (tabletQuery?.matches) {
+    viewport.value = 'tablet'
+    return
+  }
+
+  viewport.value = 'desktop'
+}
+
+function installSceneMediaListeners() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+  mobileQuery = window.matchMedia('(max-width: 39.9375rem)')
+  tabletQuery = window.matchMedia('(min-width: 40rem) and (max-width: 74.9375rem)')
+  prefersReducedMotion.value = reducedMotionQuery.matches
+  updateViewportFromQueries()
+
+  const handleReducedMotionChange = (event: MediaQueryListEvent) => {
+    prefersReducedMotion.value = event.matches
+  }
+  const handleViewportChange = () => {
+    updateViewportFromQueries()
+  }
+
+  reducedMotionQuery.addEventListener('change', handleReducedMotionChange)
+  mobileQuery.addEventListener('change', handleViewportChange)
+  tabletQuery.addEventListener('change', handleViewportChange)
+
+  onBeforeUnmount(() => {
+    reducedMotionQuery?.removeEventListener('change', handleReducedMotionChange)
+    mobileQuery?.removeEventListener('change', handleViewportChange)
+    tabletQuery?.removeEventListener('change', handleViewportChange)
+  })
+}
+
+installSceneMediaListeners()
 </script>
 
 <template>
@@ -493,10 +631,11 @@ watch(
     </picture>
 
     <WeatherPixiLayer
-      v-if="pixiVisualKey || referenceScene"
+      v-if="configDrivenRenderPlan || pixiVisualKey || referenceScene"
       :enabled="shouldEnablePixi"
       :image-element="loadedBaseImage"
       :reference-scene="referenceScene"
+      :scene-plan="configDrivenRenderPlan"
       :visual-key="pixiVisualKey"
       @metrics="updatePixiMetrics"
       @status-change="updatePixiStatus"

@@ -51,6 +51,8 @@ export const WEATHER_SCENE_ASSETS = [
   },
 ] as const satisfies readonly AssetReference[]
 
-export function getWeatherSceneAsset(assetId: WeatherSceneAssetId) {
+export function getWeatherSceneAsset(
+  assetId: WeatherSceneAssetId,
+): AssetReference | null {
   return WEATHER_SCENE_ASSETS.find((asset) => asset.id === assetId) ?? null
 }
