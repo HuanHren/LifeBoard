@@ -43,3 +43,11 @@ LB-2E clear-day migration suitability: `clear-day` was evaluated as `NOT_SUITABL
 `ShaderLayer` is defined only as a disabled reserved type. Active shader support is not part of this foundation.
 
 The prior weather research provides general architecture reference only. This implementation is a LifeBoard clean-room design with LifeBoard-owned names, assets and Web/PixiJS constraints.
+
+LB-3A closeout update: the mixed renderer is now the formal weather rendering architecture. Config-driven scene data remains useful where it is browser-proven, but weather completion does not require full renderer unification.
+
+LB-3A closeout update: `clear-day` remains Legacy. It should stay on the current authorized-vendor/legacy renderer path unless a later product bug creates a concrete implementation blocker.
+
+LB-3A closeout update: Stop unprofitable scene migration. Do not start another weather scene migration only to make the architecture look uniform.
+
+LB-3A closeout update: the weather module is in closeout. Remaining work should be limited to P1 product completion, reproducible verification, and documentation truthfulness.
