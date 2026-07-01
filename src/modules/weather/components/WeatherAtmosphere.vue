@@ -5,7 +5,7 @@ const baseFormatStateByVisualIdentity = new Map<string, BaseFormatState>()
 </script>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from 'vue'
 import {
   getWeatherAtmosphereAssets,
   type WeatherAtmosphereAssetSource,
@@ -404,6 +404,22 @@ function markBaseLoaded() {
   emit('baseReady', 'loaded')
 }
 
+function markCompleteBaseImageLoaded(expectedIdentity = visualIdentity.value) {
+  void nextTick(() => {
+    const image = baseImageRef.value
+
+    if (
+      visualIdentity.value === expectedIdentity &&
+      image &&
+      image.complete &&
+      image.naturalWidth > 0 &&
+      image.naturalHeight > 0
+    ) {
+      markBaseLoaded()
+    }
+  })
+}
+
 function updatePixiStatus(status: PixiWeatherRendererStatus) {
   pixiStatus.value = status
 }
@@ -436,9 +452,15 @@ watch(
     pixiLayerCount.value = 0
     pixiLoadedLayerCount.value = 0
     pixiPerformanceTier.value = 'static'
+    markCompleteBaseImageLoaded(identity)
   },
   { immediate: true },
 )
+
+watch(viewport, () => {
+  loadedBaseImage.value = null
+  markCompleteBaseImageLoaded()
+})
 
 watch(
   vendorWeatherRequestKey,

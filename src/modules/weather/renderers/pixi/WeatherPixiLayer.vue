@@ -17,6 +17,28 @@ import {
   getCappedResolution,
   isSaveDataEnabled,
 } from '@/modules/weather/renderers/pixi/pixiWeatherCapabilities'
+import {
+  ensureWeatherPixiRuntimeDebugApi,
+  recordWeatherPixiApplicationCreated,
+  recordWeatherPixiApplicationDestroyed,
+  recordWeatherPixiCanvasMounted,
+  recordWeatherPixiCanvasRemoved,
+  recordWeatherPixiGeneration,
+  recordWeatherPixiMediaQueryListenersAdded,
+  recordWeatherPixiMediaQueryListenersRemoved,
+  recordWeatherPixiPaused,
+  recordWeatherPixiResizeListenerAdded,
+  recordWeatherPixiResizeListenerRemoved,
+  recordWeatherPixiResumed,
+  recordWeatherPixiSceneBuilt,
+  recordWeatherPixiSceneDestroyed,
+  recordWeatherPixiTexturesCreated,
+  recordWeatherPixiTexturesDestroyed,
+  recordWeatherPixiTickerAdded,
+  recordWeatherPixiTickerRemoved,
+  recordWeatherPixiVisibilityListenerAdded,
+  recordWeatherPixiVisibilityListenerRemoved,
+} from '@/modules/weather/renderers/pixi/weatherPixiRuntimeDebug'
 import type {
   PixiWeatherMetrics,
   PixiWeatherPerformanceTier,
@@ -57,6 +79,13 @@ let resizeObserver: ResizeObserver | null = null
 let handles: PixiWeatherSceneHandles | null = null
 let contextLostHandler: ((event: Event) => void) | null = null
 let disposed = false
+let canvasMounted = false
+let sceneRegistered = false
+let tickerRegistered = false
+let activeTextureCount = 0
+let resizeListenerRegistered = false
+let visibilityListenerRegistered = false
+let mediaQueryListenerCount = 0
 
 const MAX_REFERENCE_LAYERS = 8
 const PARTICLE_LAYER_LIMIT = 96
@@ -95,19 +124,43 @@ function setStatus(nextStatus: PixiWeatherRendererStatus) {
 
 function destroyPixi(nextStatus: PixiWeatherRendererStatus = 'destroyed') {
   initGeneration.value += 1
+  recordWeatherPixiGeneration(initGeneration.value)
 
   if (resizeObserver) {
     resizeObserver.disconnect()
     resizeObserver = null
+    if (resizeListenerRegistered) {
+      recordWeatherPixiResizeListenerRemoved()
+      resizeListenerRegistered = false
+    }
   }
 
   if (handles) {
     handles.app.ticker.stop()
-    handles.app.ticker.remove(handles.onTick)
+    if (tickerRegistered) {
+      handles.app.ticker.remove(handles.onTick)
+      recordWeatherPixiTickerRemoved()
+      tickerRegistered = false
+    }
 
     if (contextLostHandler) {
       handles.app.canvas.removeEventListener('webglcontextlost', contextLostHandler)
       contextLostHandler = null
+    }
+
+    if (activeTextureCount > 0) {
+      recordWeatherPixiTexturesDestroyed(activeTextureCount)
+      activeTextureCount = 0
+    }
+
+    if (sceneRegistered) {
+      recordWeatherPixiSceneDestroyed()
+      sceneRegistered = false
+    }
+
+    if (canvasMounted) {
+      recordWeatherPixiCanvasRemoved()
+      canvasMounted = false
     }
 
     handles.app.destroy({ removeView: true }, {
@@ -115,6 +168,7 @@ function destroyPixi(nextStatus: PixiWeatherRendererStatus = 'destroyed') {
       texture: true,
       textureSource: true,
     })
+    recordWeatherPixiApplicationDestroyed()
     handles = null
   }
 
@@ -374,11 +428,13 @@ function pauseForVisibility() {
 
   if (document.visibilityState === 'hidden') {
     handles.app.ticker.stop()
+    recordWeatherPixiPaused()
     return
   }
 
   if (status.value === 'ready' && !prefersReducedMotion.value) {
     handles.app.ticker.start()
+    recordWeatherPixiResumed()
   }
 }
 
@@ -404,6 +460,7 @@ async function initializePixi() {
 
   const generation = initGeneration.value
   const startMs = performance.now()
+  let initializingApp: import('pixi.js').Application | null = null
 
   try {
     const pixi = await import('pixi.js')
@@ -416,6 +473,8 @@ async function initializePixi() {
     const resolution = getCappedResolution(isMobileViewport.value)
     const preset = getSceneOptions()
     const app = new pixi.Application()
+    initializingApp = app
+    recordWeatherPixiApplicationCreated()
 
     await app.init({
       width,
@@ -436,6 +495,8 @@ async function initializePixi() {
         texture: true,
         textureSource: true,
       })
+      recordWeatherPixiApplicationDestroyed()
+      initializingApp = null
       return
     }
 
@@ -487,6 +548,8 @@ async function initializePixi() {
           texture: true,
           textureSource: true,
         })
+        recordWeatherPixiApplicationDestroyed()
+        initializingApp = null
         return
       }
 
@@ -564,6 +627,8 @@ async function initializePixi() {
           texture: true,
           textureSource: true,
         })
+        recordWeatherPixiApplicationDestroyed()
+        initializingApp = null
         setStatus('static-fallback')
         return
       }
@@ -586,6 +651,8 @@ async function initializePixi() {
     app.canvas.setAttribute('tabindex', '-1')
 
     root.appendChild(app.canvas)
+    canvasMounted = true
+    recordWeatherPixiCanvasMounted()
     app.ticker.maxFPS = preset.maxFps
     app.ticker.minFPS = 10
 
@@ -681,6 +748,13 @@ async function initializePixi() {
       particleLayers,
       onTick,
     }
+    initializingApp = null
+    recordWeatherPixiSceneBuilt(props.scenePlan?.id ?? props.referenceScene?.key ?? planVisualKey)
+    sceneRegistered = true
+    activeTextureCount = Number(Boolean(baseTexture)) + Number(Boolean(ambientTexture))
+    if (activeTextureCount > 0) {
+      recordWeatherPixiTexturesCreated(activeTextureCount)
+    }
 
     contextLostHandler = (event: Event) => {
       event.preventDefault()
@@ -691,12 +765,16 @@ async function initializePixi() {
     resizeScene()
     app.render()
     app.ticker.add(onTick)
+    tickerRegistered = true
+    recordWeatherPixiTickerAdded()
     app.ticker.start()
 
     resizeObserver = new ResizeObserver(() => {
       resizeScene()
     })
     resizeObserver.observe(root)
+    resizeListenerRegistered = true
+    recordWeatherPixiResizeListenerAdded()
 
     const readyMs = performance.now()
     const nextMetrics = {
@@ -720,6 +798,16 @@ async function initializePixi() {
     emit('metrics', nextMetrics)
     setStatus('ready')
   } catch (error) {
+    if (initializingApp) {
+      initializingApp.destroy({ removeView: true }, {
+        children: true,
+        texture: true,
+        textureSource: true,
+      })
+      recordWeatherPixiApplicationDestroyed()
+      initializingApp = null
+    }
+
     if (import.meta.env.DEV) {
       console.warn('Weather Pixi renderer fell back to static poster.', error)
     }
@@ -782,17 +870,26 @@ function installMediaListeners() {
   mediaQuery.addEventListener('change', handleReducedMotionChange)
   mobileQuery.addEventListener('change', handleMobileChange)
   tabletQuery.addEventListener('change', handleTabletChange)
+  mediaQueryListenerCount = 3
+  recordWeatherPixiMediaQueryListenersAdded(mediaQueryListenerCount)
 
   onBeforeUnmount(() => {
     mediaQuery?.removeEventListener('change', handleReducedMotionChange)
     mobileQuery?.removeEventListener('change', handleMobileChange)
     tabletQuery?.removeEventListener('change', handleTabletChange)
+    if (mediaQueryListenerCount > 0) {
+      recordWeatherPixiMediaQueryListenersRemoved(mediaQueryListenerCount)
+      mediaQueryListenerCount = 0
+    }
   })
 }
 
 if (typeof window !== 'undefined') {
+  ensureWeatherPixiRuntimeDebugApi()
   installMediaListeners()
   document.addEventListener('visibilitychange', pauseForVisibility)
+  visibilityListenerRegistered = true
+  recordWeatherPixiVisibilityListenerAdded()
 }
 
 onMounted(() => {
@@ -801,7 +898,11 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   disposed = true
-  document.removeEventListener('visibilitychange', pauseForVisibility)
+  if (visibilityListenerRegistered) {
+    document.removeEventListener('visibilitychange', pauseForVisibility)
+    visibilityListenerRegistered = false
+    recordWeatherPixiVisibilityListenerRemoved()
+  }
   destroyPixi('destroyed')
 })
 </script>

@@ -28,6 +28,8 @@ Current production routing:
 
 The partly cloudy config-driven renderer supports only the layer kinds used by `partly-cloudy-day` and `partly-cloudy-night`: `cloud` for the existing base drift parameters and `light` for the existing ambient overlay opacity. Unsupported layer kinds produce an explicit fallback issue instead of silent visual corruption.
 
+LB-2D adds a test-gated runtime debug snapshot for lifecycle audits. It is exposed only in development or when the browser explicitly sets `localStorage.__lifeboard_weather_runtime_debug = '1'` before loading the weather page. The snapshot contains renderer counts only: applications, canvases, active scenes, ticker callbacks, listeners, texture counts, scene build/destroy totals and the current scene id/generation. It does not include city, forecast, provider payload or user data, and it is not telemetry.
+
 Future migration order:
 
 1. Keep `partly-cloudy-day` and `partly-cloudy-night` on the config-driven renderer and all other scenes on legacy.
