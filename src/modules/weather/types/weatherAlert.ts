@@ -1,4 +1,10 @@
 export type WeatherAlertTransportProvider = 'caiyun'
+export type WeatherAlertStatus =
+  | 'ACTIVE_ALERTS'
+  | 'SUPPORTED_NO_ACTIVE_ALERTS'
+  | 'UNSUPPORTED_BY_PROVIDER'
+  | 'UNAVAILABLE'
+  | 'ERROR'
 
 export interface WeatherAlert {
   id: string

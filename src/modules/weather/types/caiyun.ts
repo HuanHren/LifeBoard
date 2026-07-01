@@ -53,6 +53,7 @@ export interface CaiyunRealtime {
   apparent_temperature?: number
   humidity: number
   pressure?: number
+  visibility?: number
   cloudrate?: number
   skycon: CaiyunSkycon
   wind?: CaiyunWind

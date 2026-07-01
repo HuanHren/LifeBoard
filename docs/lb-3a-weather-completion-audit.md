@@ -6,9 +6,11 @@ Scope: LifeBoard weather module closeout audit only. No production code, asset, 
 
 ## Executive Decision
 
-Weather is product-usable and has no P0 blocker. It is not ready for a formal freeze until the P1 closeout items are resolved or explicitly accepted.
+Weather is product-usable and has no P0 blocker. LB-3C resolved the approved P1 closeout items; final freeze still requires LB-3D verification.
 
 Recommended next stage: LB-3C.
+
+LB-3C update: Recommended next stage after P1 closeout is LB-3D.
 
 ## Skill Gate
 
@@ -43,22 +45,22 @@ Recommended next stage: LB-3C.
 | 24-hour forecast | Complete | `HourlyForecastStrip.vue`; normalizers require 24 hourly rows. | Responsive horizontal strip exists. |
 | Multi-day forecast | Complete | `DailyForecastStrip.vue`, `LongRangeForecastPage.vue`, `DAILY_FORECAST_LENGTH = 15`. | 7-day compact and 15-day route are present. |
 | City search | Complete | `WeatherSearchForm.vue`, `WeatherSearchResults.vue`, Open-Meteo/AMap fallback in store. | Keyboard and validation paths are implemented. |
-| Auto location | Partial | `WeatherCityManagementPage.vue` geolocation path with secure-context and denied errors. | Needs browser-denied harness coverage before freeze. |
+| Auto location | Complete | `WeatherCityManagementPage.vue` geolocation path with secure-context and denied errors; LB-3C browser harness covers denied and timeout states. | Ready for final freeze verification. |
 | Multi-city favorites | Complete | `WeatherFavoritesBar.vue`, `weatherFavoritesStorage.ts`. | Add/remove/select paths exist. |
 | Sunrise/sunset | Complete | `WeatherDetailsGrid.vue`, `WeatherSnapshotLayer.vue`, solar phase utilities. | Shown in detail grid and used for lighting. |
 | Timezone | Complete | Snapshot timezone fields and local formatting utilities. | Used across current, hourly, daily and attribution text. |
 | Precipitation probability | Complete | Hourly and daily forecast items. | Shown in hourly/daily/precipitation panels. |
 | Wind speed/direction | Complete | Current/daily fields and `WeatherDetailsGrid.vue`. | Direction, speed and gust data normalized. |
 | Humidity | Complete | `CurrentConditions.relativeHumidity`, `WeatherDetailsGrid.vue`. | Shown with qualitative helper. |
-| Visibility | Missing | No `visibility` field in `CurrentConditions`; no provider variable or detail card. | P1: add or formally drop before freeze. |
+| Visibility | Complete | `CurrentConditions.visibility`, provider normalizers, `formatVisibility()` and `WeatherDetailsGrid.vue`. | Missing visibility renders as unavailable for old cache/provider gaps. |
 | Air quality | Complete | `AirQualityPanel.vue`, `airQualityNormalizer.ts`, store request state. | Default Open-Meteo air-quality path has loading/error/retry. |
 | UV index | Complete | Hourly/daily/current UV normalization and detail card. | Null-safe display is implemented. |
-| Weather alerts | Partial | Caiyun alerts normalized and rendered; Open-Meteo alerts are empty. | P1: label provider-specific coverage or add default-provider source. |
+| Weather alerts | Complete | Caiyun alerts normalize and render; provider alert capability/status now distinguishes unsupported, supported-none and active alert states. | Open-Meteo is honestly labelled unsupported for alerts. |
 | Offline cache | Complete | `weatherForecastCache.ts`; stale restore paths in store. | Browser verified stale-cache page still renders. |
 | Stale fallback | Complete | `classifyWeatherCacheFreshness`, `restoreCachedForecast`. | Stale data remains usable while refresh fails. |
 | Request timeout | Complete | `fetchWithTimeout` and timeout constants. | Forecast/geocoding services use timeout+retry. |
 | Request retry | Complete | `fetchWithTimeoutAndRetry` plus UI retry actions. | One automatic transient retry plus manual retries. |
-| Error states | Partial | Forecast, air quality, long-range, city and geolocation errors exist. | P1: not all are browser-harness reproducible yet. |
+| Error states | Complete | Forecast, air quality, city, geolocation, cache and partial provider states are covered by deterministic browser harness scenarios. | Long-range final freeze coverage remains part of LB-3D. |
 | Loading states | Complete | `WeatherLoadingState.vue`, panels, long-range page. | Busy/status semantics exist. |
 | Empty states | Complete | Base empty states for setup, city, long-range unsupported/empty. | Product surfaces do not dead-end silently. |
 
@@ -74,9 +76,11 @@ Browser evidence from `C:\Users\jingr\AppData\Local\Temp\lifeboard-lb3a-browser\
 | clear-day | authorized-vendor | clear-day | ready | Legacy path confirmed and should remain. |
 | clear-night | authorized-vendor | clear-night | ready | Legacy path confirmed. |
 | rain-day | authorized-vendor | light-rain-day | ready | Legacy path confirmed. |
-| partly-cloudy-day | authorized-vendor | partly-cloudy-day | ready | Static LB-2B validation exists, but browser baseline did not show config-driven origin. |
+| partly-cloudy-day | config-driven | partly-cloudy-day | ready | LB-3C fixed snapshot-time solar phase routing and browser state verification now shows config-driven origin. |
 
-This does not break the product experience: all tested cases rendered, had one canvas when animated, and reported no horizontal overflow. It does make the old architecture statement too strong. Freeze requires either fixing the browser-active partly-cloudy-day config path or documenting that only partly-cloudy-night is currently browser-active config-driven.
+This does not break the product experience: all tested cases rendered, had one canvas when animated, and reported no horizontal overflow. LB-3C fixed the browser-active partly-cloudy-day config path.
+
+LB-3C root cause: the visual timeline was derived from `weather.current.time`, while the detailed solar phase used the browser wall clock when matching sunrise/sunset. Stale or deterministic day snapshots loaded during a browser night/pre-dawn period could miss the day preset and fall back to the legacy vendor path. Solar phase now prefers the snapshot current time and only falls back to the browser clock when the snapshot time is unusable.
 
 ## Responsive Browser Matrix
 
@@ -100,7 +104,7 @@ All viewport tests used existing production preview and localStorage forecast ca
 - City search has labelled input, validation error linkage, Escape handling, result focus control and arrow-key navigation.
 - Reduced motion disables the Pixi/canvas path in the tested mobile case.
 - Weather visuals are decorative with `aria-hidden="true"`; textual weather data remains available in the hero and panels.
-- P1 state QA remains because several error states are code-verified but not yet reproducibly browser-verified.
+- LB-3C state QA adds reproducible browser coverage for location denied, location timeout, empty search, provider error, stale cache, partial provider payloads, alerts, visibility, reduced motion and WebGL fallback.
 
 ## Reliability Findings
 
@@ -133,10 +137,10 @@ P1:
 
 | ID | Issue | Blocks freeze |
 | --- | --- | --- |
-| LB3A-P1-01 | Partly-cloudy-day browser runtime does not currently prove config-driven origin. | Yes |
-| LB3A-P1-02 | Visibility is absent from the normalized weather model and UI. | Yes |
-| LB3A-P1-03 | Alerts are provider-specific without clear default-provider coverage. | Yes |
-| LB3A-P1-04 | Critical state QA needs one reusable browser harness. | Yes |
+| P1-01 | Partly-cloudy-day browser runtime now proves config-driven origin. | No |
+| P1-02 | Visibility is present in the normalized weather model and UI. | No |
+| P1-03 | Alerts are provider-capability labelled with explicit unsupported/supported-none/active statuses. | No |
+| P1-04 | Critical state QA has one reusable browser harness. | No |
 
 P2:
 
@@ -158,8 +162,8 @@ DROP:
 
 Weather can freeze after:
 
-1. P1 items are fixed or explicitly accepted in writing.
-2. `npm run build` and LB-2A through LB-3A validation scripts pass.
+1. LB-3D final freeze verification refreshes build, scripts and browser evidence.
+2. `npm run build` and LB-2A through LB-3C validation scripts pass.
 3. Browser matrix evidence is refreshed for desktop, tablet, mobile, reduced motion, stale cache and route lifecycle.
 4. Architecture docs state the actual mixed renderer behavior.
 5. No source, asset, dependency or provider-response changes are bundled into the closeout docs commit.

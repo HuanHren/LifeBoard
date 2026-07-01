@@ -54,6 +54,19 @@ export function formatPressure(value: number, unit = 'hPa') {
   return `${Math.round(value)} ${unit}`
 }
 
+export function formatVisibility(
+  value: number | null | undefined,
+  unit = 'km',
+  unavailableLabel: string,
+) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return unavailableLabel
+  }
+
+  const formatted = value >= 10 ? String(Math.round(value)) : value.toFixed(1)
+  return `${formatted} ${unit}`
+}
+
 export function formatHour(value: string, locale: AppLocale) {
   const hour = Number(value.slice(11, 13))
 

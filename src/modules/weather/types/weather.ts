@@ -1,4 +1,5 @@
 import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
+import type { WeatherProviderCapabilities } from '@/modules/weather/types/weatherProvider'
 
 export type WeatherRequestStatus = 'idle' | 'loading' | 'success' | 'error'
 export type WeatherDataProvider = 'openMeteo' | 'caiyun'
@@ -42,6 +43,7 @@ export interface WeatherUnits {
   humidity: string
   uvIndex: string
   pressure: string
+  visibility: string
 }
 
 export interface CurrentConditions {
@@ -59,6 +61,7 @@ export interface CurrentConditions {
   windGusts: number | null
   uvIndex: number | null
   pressure: number | null
+  visibility: number | null
   isDay: boolean
   condition: WeatherCondition
 }
@@ -128,6 +131,7 @@ export interface WeatherSnapshot {
   daily: DailyForecastItem[]
   shortTermPrecipitation: ShortTermPrecipitation | null
   alerts: WeatherAlert[]
+  providerCapabilities?: WeatherProviderCapabilities
   units: WeatherUnits
   advice: WeatherAdvice
 }

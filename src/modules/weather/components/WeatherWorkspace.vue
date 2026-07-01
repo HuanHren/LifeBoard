@@ -23,6 +23,7 @@ import {
   formatFullLocalTime,
   formatLocationName,
 } from '@/modules/weather/utils/weatherFormatting'
+import { resolveWeatherAlertStatus } from '@/modules/weather/utils/weatherAlerts'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
 const weatherStore = useWeatherStore()
@@ -57,6 +58,7 @@ const activeLocationLabel = computed(() => {
 const showPreviousForecastError = computed(
   () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
 )
+const weatherAlertStatus = computed(() => resolveWeatherAlertStatus(weather.value))
 const cacheStatusMessage = computed(() => {
   if (!weather.value) return null
 
@@ -215,7 +217,10 @@ onMounted(() => {
           </p>
         </div>
       </div>
-      <WeatherAlertSection :alerts="weather.alerts" />
+      <WeatherAlertSection
+        :alerts="weather.alerts"
+        :status="weatherAlertStatus"
+      />
     </div>
 
     <div v-if="weather" class="order-4 space-y-8">

@@ -6,8 +6,10 @@ import type { WeatherSnapshot } from '@/modules/weather/types/weather'
 import {
   describeHumidity,
   describeUvIndex,
+  describeVisibility,
   describeWind,
   toneForUvIndex,
+  toneForVisibility,
   toneForWind,
   type WeatherDetailItem,
 } from '@/modules/weather/utils/weatherDetails'
@@ -17,6 +19,7 @@ import {
   formatPressure,
   formatTemperature,
   formatUvIndex,
+  formatVisibility,
   formatWind,
   formatWindDirection,
 } from '@/modules/weather/utils/weatherFormatting'
@@ -64,6 +67,17 @@ const details = computed<WeatherDetailItem[]>(() => {
       value: formatTemperature(current.apparentTemperature, units.temperature),
       helper: t('weather.details.feelsLike.helper'),
       tone: 'neutral',
+    },
+    {
+      id: 'visibility',
+      label: t('weather.details.visibility.label'),
+      value: formatVisibility(
+        current.visibility,
+        units.visibility,
+        unavailableLabel.value,
+      ),
+      helper: describeVisibility(current.visibility, t),
+      tone: toneForVisibility(current.visibility),
     },
     {
       id: 'wind',

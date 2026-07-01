@@ -19,7 +19,7 @@ export const WEATHER_SOURCE_METADATA = {
   caiyun: {
     id: 'caiyun',
     displayName: 'Caiyun Weather',
-    domains: ['forecast', 'current', 'precipitation-nowcast', 'long-range'],
+    domains: ['forecast', 'current', 'precipitation-nowcast', 'alerts', 'long-range'],
     officialUrl: 'https://www.caiyunapp.com/',
     requiresUserCredential: true,
   },

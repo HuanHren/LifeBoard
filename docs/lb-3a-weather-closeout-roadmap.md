@@ -2,11 +2,13 @@
 
 Recommended next stage: LB-3C.
 
-LB-3B is skipped because LB-3A found no P0 blocker. Weather should not enter freeze yet because P1 items remain.
+LB-3B is skipped because LB-3A found no P0 blocker. LB-3C resolved the approved P1 items. Weather should enter LB-3D final freeze verification next, without widening scope.
 
 ## LB-3C: Approved P1 Closeout
 
 Goal: make the current weather module truthful, complete enough and freezeable without starting a new renderer migration.
+
+Status: complete in LB-3C.
 
 Allowed scope:
 
@@ -19,7 +21,7 @@ Exit criteria:
 
 - P1 count is zero or explicitly accepted.
 - Architecture docs match browser evidence.
-- Existing LB-2A through LB-3A validation stays green.
+- Existing LB-2A through LB-3C validation stays green.
 - No Xiaomi reverse engineering is required.
 
 ## LB-3D: Freeze Verification
@@ -29,6 +31,7 @@ Goal: verify the final weather product surface after LB-3C without broadening sc
 Allowed scope:
 
 - Run build and all weather validation scripts.
+- Include `scripts/lb-3c-validate-weather-p1-closeout.mjs` and `scripts/lb-3c-verify-weather-states.mjs`.
 - Run the browser matrix across desktop, tablet, mobile, reduced motion, stale cache and route leave/return.
 - Record the final freeze evidence in docs.
 - Fix only regressions introduced by LB-3C.

@@ -2,6 +2,7 @@ import {
   DAILY_FORECAST_LENGTH,
   HOURLY_FORECAST_LENGTH,
 } from '@/modules/weather/constants/weather'
+import { getWeatherProviderCapabilities } from '@/modules/weather/constants/weatherProviderCapabilities'
 import type {
   CaiyunSeries,
   CaiyunDailyRange,
@@ -80,6 +81,14 @@ function normalizePressure(value: number | undefined) {
   }
 
   return value > 2000 ? Math.round(value / 100) : Math.round(value)
+}
+
+function normalizeVisibilityKm(value: number | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return null
+  }
+
+  return value
 }
 
 function realtimeUv(response: CaiyunWeatherResponse) {
@@ -326,6 +335,7 @@ export function normalizeCaiyunWeatherForecast(
     windGusts: null,
     uvIndex: realtimeUv(response),
     pressure: normalizePressure(realtime.pressure),
+    visibility: normalizeVisibilityKm(realtime.visibility),
     isDay: isDayFromSkycon(currentSkycon),
     condition: getWeatherCondition(skyconToWeatherCode(currentSkycon)),
   }
@@ -345,6 +355,7 @@ export function normalizeCaiyunWeatherForecast(
     daily,
     shortTermPrecipitation: normalizeShortTermPrecipitation(response),
     alerts: normalizeAlerts(response, location),
+    providerCapabilities: getWeatherProviderCapabilities('caiyun'),
     units: {
       temperature: '°C',
       precipitation: 'mm',
@@ -353,6 +364,7 @@ export function normalizeCaiyunWeatherForecast(
       humidity: '%',
       uvIndex: '',
       pressure: 'hPa',
+      visibility: 'km',
     },
     advice: createWeatherAdvice({ current, hourly, daily }),
   }

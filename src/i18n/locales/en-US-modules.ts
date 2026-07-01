@@ -205,6 +205,14 @@ export const enUSModules = {
   'weather.alert.issuedTime': 'Issue time',
   'weather.alert.transportSource': 'Transport source',
   'weather.alert.source': 'Caiyun Weather',
+  'weather.alert.status.supportedNone':
+    'This provider supports weather alerts. No active alerts are returned for this location.',
+  'weather.alert.status.unsupported':
+    'The current forecast provider does not supply weather alerts.',
+  'weather.alert.status.unavailable':
+    'Weather alert status is unavailable for this forecast.',
+  'weather.alert.status.error':
+    'Weather alert status could not be checked.',
   'weather.cities.title': 'Manage cities',
   'weather.cities.description':
     'Search, choose, save, and switch weather cities without adding a new data trail.',
@@ -262,6 +270,10 @@ export const enUSModules = {
   'weather.details.humidity.humid': 'The air may feel humid.',
   'weather.details.feelsLike.label': 'Feels like',
   'weather.details.feelsLike.helper': 'Useful for clothing and comfort.',
+  'weather.details.visibility.label': 'Visibility',
+  'weather.details.visibility.clear': 'Clear enough for most daily travel.',
+  'weather.details.visibility.moderate': 'Reduced visibility is possible.',
+  'weather.details.visibility.low': 'Low visibility may affect travel.',
   'weather.details.wind.label': 'Wind',
   'weather.details.wind.calm': 'Light wind for most plans.',
   'weather.details.wind.breezy': 'Noticeable breeze outside.',

@@ -251,6 +251,20 @@ function parseSolarTimestamp(
   return zonedLocalDateTimeToTimestamp(parsed, timezone)
 }
 
+function getWeatherCurrentTimestamp(
+  weather: WeatherSnapshot,
+  timezone: string | null,
+) {
+  const timestamp = parseSolarTimestamp(weather.current.time, timezone)
+
+  if (timestamp !== null) {
+    return timestamp
+  }
+
+  const parsed = Date.parse(weather.current.time)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
 function findDailyItemForLocalDate(
   daily: DailyForecastItem[],
   localDate: string,
@@ -416,12 +430,13 @@ export function deriveWeatherSolarPhase(
   nowMs = Date.now(),
 ): WeatherSolarPhaseResult {
   const timezone = isValidWeatherTimeZone(weather.timezone) ? weather.timezone : null
-  const localNow = timezone ? getLocationDateTimeParts(nowMs, timezone) : null
+  const phaseNowMs = getWeatherCurrentTimestamp(weather, timezone) ?? nowMs
+  const localNow = timezone ? getLocationDateTimeParts(phaseNowMs, timezone) : null
 
   if (timezone && localNow) {
     const solarResult = detailedPhaseFromSunriseSunset(
       weather,
-      nowMs,
+      phaseNowMs,
       timezone,
       localDateIdentity(localNow),
     )
@@ -439,7 +454,7 @@ export function deriveWeatherSolarPhase(
     return localHourFallback(localNow.hour, localNow.minute, 'location-hour')
   }
 
-  const browserDate = new Date(nowMs)
+  const browserDate = new Date(phaseNowMs)
   const browserHour = browserDate.getHours()
   const browserMinute = browserDate.getMinutes()
 

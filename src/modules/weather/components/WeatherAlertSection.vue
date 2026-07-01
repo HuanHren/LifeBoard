@@ -1,17 +1,40 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '@/i18n/useI18n'
-import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
+import type {
+  WeatherAlert,
+  WeatherAlertStatus,
+} from '@/modules/weather/types/weatherAlert'
 import { formatFullLocalTime } from '@/modules/weather/utils/weatherFormatting'
 
 interface Props {
   alerts: WeatherAlert[]
+  status: WeatherAlertStatus
 }
 
 const props = defineProps<Props>()
 const { locale, t } = useI18n()
 
 const activeAlerts = computed(() => props.alerts.filter((alert) => alert.provider === 'caiyun'))
+const statusMessage = computed(() => {
+  if (props.status === 'SUPPORTED_NO_ACTIVE_ALERTS') {
+    return t('weather.alert.status.supportedNone')
+  }
+
+  if (props.status === 'UNSUPPORTED_BY_PROVIDER') {
+    return t('weather.alert.status.unsupported')
+  }
+
+  if (props.status === 'ERROR') {
+    return t('weather.alert.status.error')
+  }
+
+  return t('weather.alert.status.unavailable')
+})
+const showStatusOnly = computed(() => activeAlerts.value.length === 0)
+const shouldRender = computed(
+  () => activeAlerts.value.length > 0 || props.status !== 'UNAVAILABLE',
+)
 
 function issuedAtLabel(alert: WeatherAlert) {
   if (!alert.issuedAt) {
@@ -26,7 +49,7 @@ function issuedAtLabel(alert: WeatherAlert) {
 
 <template>
   <section
-    v-if="activeAlerts.length > 0"
+    v-if="shouldRender"
     aria-labelledby="weather-alert-title"
     class="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-4 shadow-[var(--shadow-xs)] sm:p-5"
   >
@@ -37,12 +60,23 @@ function issuedAtLabel(alert: WeatherAlert) {
       >
         {{ t('weather.alert.title') }}
       </h2>
-      <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+      <p
+        v-if="!showStatusOnly"
+        class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]"
+      >
         {{ t('weather.alert.description') }}
       </p>
     </div>
 
-    <ul class="mt-4 space-y-3" :aria-label="t('weather.alert.listLabel')">
+    <p
+      v-if="showStatusOnly"
+      class="mt-4 rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
+      role="status"
+    >
+      {{ statusMessage }}
+    </p>
+
+    <ul v-else class="mt-4 space-y-3" :aria-label="t('weather.alert.listLabel')">
       <li
         v-for="alert in activeAlerts"
         :key="alert.id"

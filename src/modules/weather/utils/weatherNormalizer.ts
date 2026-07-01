@@ -2,6 +2,7 @@ import {
   DAILY_FORECAST_LENGTH,
   HOURLY_FORECAST_LENGTH,
 } from '@/modules/weather/constants/weather'
+import { getWeatherProviderCapabilities } from '@/modules/weather/constants/weatherProviderCapabilities'
 import type {
   OpenMeteoForecastResponse,
   OpenMeteoGeocodingResult,
@@ -15,6 +16,14 @@ import type {
 } from '@/modules/weather/types/weather'
 import { createWeatherAdvice } from '@/modules/weather/utils/weatherAdvice'
 import { getWeatherCondition } from '@/modules/weather/utils/weatherCodes'
+
+function normalizeVisibilityMeters(value: number | undefined) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return null
+  }
+
+  return value / 1000
+}
 
 function valueAt<T>(values: T[], index: number, field: string): T {
   const value = values[index]
@@ -164,6 +173,7 @@ export function normalizeWeatherForecast(
     windGusts: response.current.wind_gusts_10m,
     uvIndex: hourly[0]?.uvIndex ?? null,
     pressure: response.current.surface_pressure,
+    visibility: normalizeVisibilityMeters(response.current.visibility),
     isDay: response.current.is_day === 1,
     condition: getWeatherCondition(response.current.weather_code),
   }
@@ -183,6 +193,7 @@ export function normalizeWeatherForecast(
     daily,
     shortTermPrecipitation: null,
     alerts: [],
+    providerCapabilities: getWeatherProviderCapabilities('openMeteo'),
     units: {
       temperature: response.current_units.temperature_2m,
       precipitation: response.current_units.precipitation,
@@ -191,6 +202,7 @@ export function normalizeWeatherForecast(
       humidity: response.current_units.relative_humidity_2m,
       uvIndex: response.hourly_units.uv_index,
       pressure: response.current_units.surface_pressure,
+      visibility: 'km',
     },
     advice: createWeatherAdvice({ current, hourly, daily }),
   }

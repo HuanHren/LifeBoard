@@ -97,3 +97,37 @@ export function toneForWind(speed: number | null): WeatherDetailTone {
 
   return 'caution'
 }
+
+export function describeVisibility(value: number | null | undefined, t: Translator) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return t('weather.details.unavailable')
+  }
+
+  if (value >= 10) {
+    return t('weather.details.visibility.clear')
+  }
+
+  if (value >= 4) {
+    return t('weather.details.visibility.moderate')
+  }
+
+  return t('weather.details.visibility.low')
+}
+
+export function toneForVisibility(
+  value: number | null | undefined,
+): WeatherDetailTone {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return 'neutral'
+  }
+
+  if (value >= 10) {
+    return 'clear'
+  }
+
+  if (value >= 4) {
+    return 'consider'
+  }
+
+  return 'caution'
+}

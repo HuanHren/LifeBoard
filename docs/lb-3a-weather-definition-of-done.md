@@ -5,10 +5,10 @@ This definition is the freeze gate for the LifeBoard weather module. It describe
 ## Functional
 
 - Current weather, 24-hour forecast, multi-day forecast, city search, selected city, favorites, manual refresh/retry and long-range route work from normalized `WeatherSnapshot` data.
-- Weather details include temperature, apparent temperature, humidity, wind, UV, pressure, sunrise and sunset.
-- Visibility is either implemented end to end or explicitly removed from the weather completion scope.
+- Weather details include temperature, apparent temperature, humidity, wind, UV, pressure, visibility, sunrise and sunset.
+- Visibility is implemented end to end for Open-Meteo and Caiyun, with unavailable formatting for missing cached/provider values.
 - Air quality renders loading, success, failure and retry states.
-- Weather alerts are either supported for the selected provider or clearly labelled as provider-specific/unavailable.
+- Weather alerts are supported for Caiyun and clearly labelled as unsupported for providers without alert capability.
 - Open-Meteo remains usable without additional keys; Caiyun and AMap paths degrade cleanly when credentials are absent.
 
 ## Visual
@@ -26,7 +26,7 @@ This definition is the freeze gate for the LifeBoard weather module. It describe
 - Forecast cache restores fresh and stale snapshots only after version, key and shape validation.
 - Timeout and transient retry behavior remains centralized.
 - Route leave/return does not accumulate extra active canvases for the same weather scene.
-- Storage unavailable, expired cache, stale cache, provider unavailable and incomplete data paths have reproducible verification.
+- Expired cache, stale cache, provider unavailable, incomplete data, location denied/timeout and empty search paths have reproducible verification.
 
 ## Accessibility
 
@@ -46,4 +46,4 @@ This definition is the freeze gate for the LifeBoard weather module. It describe
 
 ## Freeze Gate
 
-Weather is done when P0 is zero, every P1 in `docs/lb-3a-weather-issue-matrix.csv` is fixed or explicitly accepted, LB-2A through LB-3A validation passes, and the browser matrix is refreshed without unexpected console errors or layout overflow.
+Weather is done when P0 is zero, every P1 in `docs/lb-3a-weather-issue-matrix.csv` is fixed or explicitly accepted, LB-2A through LB-3C validation passes, and the browser matrix is refreshed without unexpected console errors or layout overflow.

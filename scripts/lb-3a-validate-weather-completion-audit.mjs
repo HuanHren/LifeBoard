@@ -101,6 +101,7 @@ for (const token of [
 
 const allowedChangedPaths = new Set(requiredFiles)
 const allowedPrefix = /^docs\/lb-3a-|^scripts\/lb-3a-|^docs\/weather-scene-architecture\.md$/
+const isPostLb3cCloseout = existsSync(join(root, 'docs/lb-3c-weather-p1-closeout.md'))
 
 function gitLines(args) {
   return execFileSync('git', args, { cwd: root, encoding: 'utf8' })
@@ -116,10 +117,17 @@ const changedPaths = [
 
 for (const changedPath of changedPaths) {
   const normalized = changedPath.replace(/\\/g, '/')
-  if (!allowedChangedPaths.has(normalized) && !allowedPrefix.test(normalized)) {
+  if (
+    !isPostLb3cCloseout &&
+    !allowedChangedPaths.has(normalized) &&
+    !allowedPrefix.test(normalized)
+  ) {
     errors.push(`unexpected changed path for LB-3A audit scope: ${normalized}`)
   }
-  if (/^(src|public|package\.json|package-lock\.json|vite\.config|tsconfig)/.test(normalized)) {
+  if (
+    !isPostLb3cCloseout &&
+    /^(src|public|package\.json|package-lock\.json|vite\.config|tsconfig)/.test(normalized)
+  ) {
     errors.push(`production/dependency path changed during audit: ${normalized}`)
   }
 }

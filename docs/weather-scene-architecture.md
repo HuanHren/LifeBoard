@@ -51,3 +51,7 @@ LB-3A closeout update: `clear-day` remains Legacy. It should stay on the current
 LB-3A closeout update: Stop unprofitable scene migration. Do not start another weather scene migration only to make the architecture look uniform.
 
 LB-3A closeout update: the weather module is in closeout. Remaining work should be limited to P1 product completion, reproducible verification, and documentation truthfulness.
+
+LB-3C closeout update: `partly-cloudy-day` is browser-active on the config-driven renderer when the snapshot is a day partly-cloudy scene. The P1 root cause was a mismatch between visual timeline derivation from `weather.current.time` and solar phase derivation from the browser wall clock. Solar phase now prefers the snapshot current time, preserving deterministic cache/harness behavior while keeping browser time as fallback only when the snapshot time cannot be parsed.
+
+LB-3C closeout update: provider data completeness is explicit. Visibility is normalized into `WeatherSnapshot.current.visibility` with `km` display units; old cache entries without visibility remain compatible and render an unavailable value. Alert coverage is capability-driven: Caiyun can report active/no-active alerts, while Open-Meteo is labelled unsupported for alerts instead of silently hiding the section.
