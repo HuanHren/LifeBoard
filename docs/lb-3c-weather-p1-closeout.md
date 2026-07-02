@@ -66,3 +66,13 @@ Required validation set for LB-3C:
 - `clear-day` remains legacy/authorized-vendor.
 - No additional Xiaomi Weather reverse engineering is needed.
 - Cache compatibility is preserved because the forecast cache shape check remains intentionally loose for `current` and `units`; old cache entries without visibility restore and render visibility as unavailable.
+
+## LB-3D Follow-up
+
+LB-3D final freeze verification completed after this P1 closeout.
+
+- Freeze decision: FROZEN_WITH_ACCEPTED_P2.
+- Freeze marker: WEATHER_MODULE_FROZEN.
+- P1-01 through P1-04 remain RESOLVED.
+- P2 items remain accepted non-blocking follow-up work.
+- Weather development should not reopen unless a condition in `docs/weather-module-freeze-baseline.md` is met.

@@ -2,6 +2,8 @@
 
 Recommended next stage: LB-3C.
 
+LB-3D update: Weather module frozen. Begin the planned whole-site architecture and commercial-grade visual upgrade.
+
 LB-3B is skipped because LB-3A found no P0 blocker. LB-3C resolved the approved P1 items. Weather should enter LB-3D final freeze verification next, without widening scope.
 
 ## LB-3C: Approved P1 Closeout
@@ -28,6 +30,8 @@ Exit criteria:
 
 Goal: verify the final weather product surface after LB-3C without broadening scope.
 
+Status: complete in LB-3D.
+
 Allowed scope:
 
 - Run build and all weather validation scripts.
@@ -42,6 +46,8 @@ Exit criteria:
 - No unexpected browser console errors.
 - No horizontal overflow in the required viewport matrix.
 - Route lifecycle does not accumulate canvases.
+
+Final decision: FROZEN_WITH_ACCEPTED_P2. The remaining large chunk warning, texture reuse optimization and additional scene migrations are accepted P2 items and do not block WEATHER_MODULE_FROZEN.
 
 ## Weather Freeze Commit
 

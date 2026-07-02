@@ -46,6 +46,8 @@ The prior weather research provides general architecture reference only. This im
 
 LB-3A closeout update: the mixed renderer is now the formal weather rendering architecture. Config-driven scene data remains useful where it is browser-proven, but weather completion does not require full renderer unification.
 
+LB-3D freeze update: Mixed renderer is the frozen production architecture for the current weather module.
+
 LB-3A closeout update: `clear-day` remains Legacy. It should stay on the current authorized-vendor/legacy renderer path unless a later product bug creates a concrete implementation blocker.
 
 LB-3A closeout update: Stop unprofitable scene migration. Do not start another weather scene migration only to make the architecture look uniform.

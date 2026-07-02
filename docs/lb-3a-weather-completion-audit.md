@@ -167,3 +167,21 @@ Weather can freeze after:
 3. Browser matrix evidence is refreshed for desktop, tablet, mobile, reduced motion, stale cache and route lifecycle.
 4. Architecture docs state the actual mixed renderer behavior.
 5. No source, asset, dependency or provider-response changes are bundled into the closeout docs commit.
+
+## LB-3D Freeze Update
+
+LB-3D completed the final freeze verification on 2026-07-02.
+
+Result: FROZEN_WITH_ACCEPTED_P2.
+
+Freeze marker: WEATHER_MODULE_FROZEN.
+
+Evidence:
+
+- Build and LB-2A through LB-3C validators passed.
+- LB-3C deterministic browser state matrix passed all 17 scenarios.
+- LB-3D freeze harness passed the six required responsive viewports, config-driven day/night routing, legacy clear/rain routing, reduced-motion day/night, route loop and visibility loop.
+- No P0 or P1 freeze blocker was found.
+- Remaining P2 items are explicitly accepted as non-blocking.
+
+The weather module should now stay frozen unless a documented reopen condition from `docs/weather-module-freeze-baseline.md` is met.

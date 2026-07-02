@@ -47,3 +47,19 @@ This definition is the freeze gate for the LifeBoard weather module. It describe
 ## Freeze Gate
 
 Weather is done when P0 is zero, every P1 in `docs/lb-3a-weather-issue-matrix.csv` is fixed or explicitly accepted, LB-2A through LB-3C validation passes, and the browser matrix is refreshed without unexpected console errors or layout overflow.
+
+## LB-3D Freeze Review
+
+| Area | LB-3D result | Notes |
+| --- | --- | --- |
+| Functional | PASS | Current weather, hourly, daily, long range, city search, selected city, favorites, retry, auto-location states, visibility, AQI, UV, alerts, timezone, sunrise/sunset, wind, humidity and precipitation are complete for freeze. |
+| Reliability | PASS | Timeout, retry, AbortController, request id, stale cache, provider error, partial payload, location denied and location timeout paths have validator or browser coverage. |
+| Visual | PASS | Mixed renderer, poster fallback, mobile assets and the six required viewports pass without horizontal overflow. |
+| Runtime | PASS | Config-driven partly-cloudy day/night and legacy clear/rain paths pass; route and visibility loops do not accumulate runtime counters. |
+| Accessibility | PASS | Search labels, keyboard behavior, focusable retries, explicit error/location/empty/alert states, decorative canvas semantics and reduced-motion behavior are verified. |
+| Scope | PASS | Freeze does not require renderer unification, clear-day migration, additional reverse engineering, new dependencies or shader/native parity. |
+| P2 backlog | ACCEPTED_P2 | Large Vite chunk warning, texture reuse and further scene migrations remain non-blocking post-freeze work. |
+
+Freeze decision: FROZEN_WITH_ACCEPTED_P2.
+
+Freeze marker: WEATHER_MODULE_FROZEN.
