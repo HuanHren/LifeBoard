@@ -55,11 +55,17 @@ export function useLandingScrollNarrative(root: Ref<HTMLElement | null>) {
       })
 
       timeline
-        .to('[data-scene-weather]', { yPercent: -18, scale: 1.04 }, 0)
-        .to('[data-scene-todos]', { yPercent: -44, autoAlpha: 1 }, 0.16)
-        .to('[data-scene-bookmarks]', { yPercent: -70, autoAlpha: 1 }, 0.34)
-        .to('[data-scene-tools]', { yPercent: -96, autoAlpha: 1 }, 0.52)
-        .to('[data-scene-orbit]', { rotate: 24, scale: 1.08 }, 0)
+        .to('[data-scene-weather]', { yPercent: -16, scale: 0.92 }, 0)
+        .fromTo(
+          '[data-scene-workspace]',
+          { yPercent: 18, scale: 0.96 },
+          { yPercent: -18, scale: 1, autoAlpha: 1 },
+          0.12,
+        )
+        .to('[data-scene-todos]', { yPercent: -42, autoAlpha: 1 }, 0.3)
+        .to('[data-scene-bookmarks]', { yPercent: -58, autoAlpha: 1 }, 0.46)
+        .to('[data-scene-tools]', { yPercent: -78, autoAlpha: 1 }, 0.62)
+        .to('[data-scene-orbit]', { rotate: 18, scale: 0.9 }, 0)
         .to('[data-story-progress]', { scaleX: 1 }, 0)
     }, rootElement)
 
