@@ -766,6 +766,12 @@
   }
 }
 
+@media (max-width: 40rem) {
+  .landing-nav__cta {
+    display: none;
+  }
+}
+
 @media (min-width: 64rem) {
   .app-top-nav__date {
     display: inline;

@@ -7,9 +7,10 @@ import { useI18n } from '@/i18n/useI18n'
 import { useLandingScrollNarrative } from '@/modules/landing/composables/useLandingScrollNarrative'
 
 type DemoKey = 'weather' | 'todos' | 'tools'
+type StoryKey = 'weather' | 'workspace' | 'todos' | 'countdown' | 'tools' | 'bookmarks'
 
 interface StoryStep {
-  key: string
+  key: StoryKey
   eyebrowKey: TranslationKey
   titleKey: TranslationKey
   descriptionKey: TranslationKey
@@ -35,11 +36,21 @@ interface DemoItem {
   to: RouteLocationRaw
 }
 
+interface WeatherHour {
+  timeKey: TranslationKey
+  temp: string
+  conditionKey: TranslationKey
+}
+
 const { t } = useI18n()
 const landingRoot = ref<HTMLElement | null>(null)
 const activeDemo = ref<DemoKey>('weather')
 const sampleTaskDone = ref(false)
 const toolSample = ref('Morning meeting notes\nBuy train tickets\nRead weather before leaving')
+const heroTitleLines = [
+  'landing.hero.titleLineOne',
+  'landing.hero.titleLineTwo',
+] satisfies TranslationKey[]
 
 const { isReducedMotion, motionState } = useLandingScrollNarrative(landingRoot)
 
@@ -66,11 +77,11 @@ const storySteps: StoryStep[] = [
     icon: 'todos',
   },
   {
-    key: 'bookmarks',
-    eyebrowKey: 'landing.story.bookmarks.eyebrow',
-    titleKey: 'landing.story.bookmarks.title',
-    descriptionKey: 'landing.story.bookmarks.description',
-    icon: 'bookmarks',
+    key: 'countdown',
+    eyebrowKey: 'landing.story.countdown.eyebrow',
+    titleKey: 'landing.story.countdown.title',
+    descriptionKey: 'landing.story.countdown.description',
+    icon: 'todos',
   },
   {
     key: 'tools',
@@ -78,6 +89,13 @@ const storySteps: StoryStep[] = [
     titleKey: 'landing.story.tools.title',
     descriptionKey: 'landing.story.tools.description',
     icon: 'tools',
+  },
+  {
+    key: 'bookmarks',
+    eyebrowKey: 'landing.story.bookmarks.eyebrow',
+    titleKey: 'landing.story.bookmarks.title',
+    descriptionKey: 'landing.story.bookmarks.description',
+    icon: 'bookmarks',
   },
 ]
 
@@ -158,6 +176,29 @@ const activeDemoItem = computed(() =>
   demoItems.find((item) => item.key === activeDemo.value) ?? demoItems[0],
 )
 
+const weatherHours: WeatherHour[] = [
+  {
+    timeKey: 'landing.demo.weather.hourMorning',
+    temp: '23°',
+    conditionKey: 'landing.demo.weather.trendMorning',
+  },
+  {
+    timeKey: 'landing.demo.weather.hourNoon',
+    temp: '26°',
+    conditionKey: 'landing.demo.weather.trendNoon',
+  },
+  {
+    timeKey: 'landing.demo.weather.hourAfternoon',
+    temp: '25°',
+    conditionKey: 'landing.demo.weather.trendAfternoon',
+  },
+  {
+    timeKey: 'landing.demo.weather.hourEvening',
+    temp: '21°',
+    conditionKey: 'landing.demo.weather.trendEvening',
+  },
+]
+
 const toolStats = computed(() => {
   const text = toolSample.value
   const trimmed = text.trim()
@@ -212,7 +253,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
       <div class="landing-hero__content">
         <p class="landing-hero__kicker">{{ t('landing.hero.kicker') }}</p>
         <h1 id="landing-title" class="landing-hero__title">
-          {{ t('landing.hero.title') }}
+          <span v-for="line in heroTitleLines" :key="line">{{ t(line) }}</span>
         </h1>
         <p class="landing-hero__description">
           {{ t('landing.hero.description') }}
@@ -313,11 +354,20 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
             <article class="landing-scene-card landing-scene-card--workspace" data-scene-workspace>
               <span>{{ t('navigation.workspace.label') }}</span>
               <p>{{ t('landing.scene.workspace') }}</p>
-              <div>
-                <i />
-                <i />
-                <i />
-              </div>
+              <dl class="landing-scene-workspace">
+                <div>
+                  <dt>{{ t('landing.scene.workspaceWeatherLabel') }}</dt>
+                  <dd>{{ t('landing.scene.workspaceWeatherValue') }}</dd>
+                </div>
+                <div>
+                  <dt>{{ t('landing.scene.workspaceFocusLabel') }}</dt>
+                  <dd>{{ t('landing.scene.workspaceFocusValue') }}</dd>
+                </div>
+                <div>
+                  <dt>{{ t('landing.scene.workspaceToolLabel') }}</dt>
+                  <dd>{{ t('landing.scene.workspaceToolValue') }}</dd>
+                </div>
+              </dl>
             </article>
 
             <article class="landing-scene-card landing-scene-card--todos" data-scene-todos>
@@ -325,14 +375,19 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
               <p>{{ t('landing.scene.todos') }}</p>
             </article>
 
-            <article class="landing-scene-card landing-scene-card--bookmarks" data-scene-bookmarks>
-              <span>{{ t('navigation.bookmarks.label') }}</span>
-              <p>{{ t('landing.scene.bookmarks') }}</p>
+            <article class="landing-scene-card landing-scene-card--countdown" data-scene-countdown>
+              <span>{{ t('landing.scene.countdownMetric') }}</span>
+              <p>{{ t('landing.scene.countdown') }}</p>
             </article>
 
             <article class="landing-scene-card landing-scene-card--tools" data-scene-tools>
               <span>{{ t('navigation.tools.label') }}</span>
               <p>{{ t('landing.scene.tools') }}</p>
+            </article>
+
+            <article class="landing-scene-card landing-scene-card--bookmarks" data-scene-bookmarks>
+              <span>{{ t('navigation.bookmarks.label') }}</span>
+              <p>{{ t('landing.scene.bookmarks') }}</p>
             </article>
           </div>
         </div>
@@ -427,15 +482,41 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
             </RouterLink>
           </div>
 
-          <div v-if="activeDemo === 'weather'" class="landing-demo-weather" aria-hidden="true">
+          <div v-if="activeDemo === 'weather'" class="landing-demo-weather">
             <div class="landing-demo-weather__sky">
-              <span />
-              <i />
+              <span aria-hidden="true" />
+              <i aria-hidden="true" />
+              <div class="landing-demo-weather__current">
+                <p>{{ t('landing.demo.weather.now') }}</p>
+                <strong>24°C</strong>
+                <span>{{ t('landing.demo.weather.condition') }}</span>
+              </div>
             </div>
             <div class="landing-demo-weather__body">
-              <strong>24°C</strong>
-              <p>{{ t('landing.demo.weather.card') }}</p>
-              <small>{{ t('landing.demo.weather.detail') }}</small>
+              <dl class="landing-demo-weather__facts">
+                <div>
+                  <dt>{{ t('landing.demo.weather.highLow') }}</dt>
+                  <dd>27° / 18°</dd>
+                </div>
+                <div>
+                  <dt>{{ t('landing.demo.weather.humidity') }}</dt>
+                  <dd>52%</dd>
+                </div>
+                <div>
+                  <dt>{{ t('landing.demo.weather.wind') }}</dt>
+                  <dd>8 km/h</dd>
+                </div>
+              </dl>
+              <div class="landing-demo-weather__trend">
+                <p>{{ t('landing.demo.weather.trendTitle') }}</p>
+                <ol>
+                  <li v-for="hour in weatherHours" :key="hour.timeKey">
+                    <span>{{ t(hour.timeKey) }}</span>
+                    <strong>{{ hour.temp }}</strong>
+                    <small>{{ t(hour.conditionKey) }}</small>
+                  </li>
+                </ol>
+              </div>
             </div>
           </div>
 
@@ -613,13 +694,18 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 }
 
 .landing-hero__title {
-  max-width: 12em;
+  max-width: 10em;
   margin: var(--space-4) 0 0;
   color: var(--color-text-primary);
-  font-size: clamp(2.75rem, 6.2vw, 5.65rem);
+  font-size: clamp(2.45rem, 4.15vw, 3.65rem);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0;
-  line-height: 1.04;
+  line-height: 1.06;
+  text-wrap: normal;
+}
+
+.landing-hero__title span {
+  display: block;
 }
 
 .landing-hero__description {
@@ -850,7 +936,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 .landing-entry,
 .landing-demo,
 .landing-final {
-  padding-block: clamp(3rem, 6.5vw, 6rem);
+  padding-block: clamp(2.75rem, 5.4vw, 5rem);
 }
 
 .landing-story__grid {
@@ -861,7 +947,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 .landing-story__scene {
   position: relative;
   overflow: hidden;
-  min-height: 28rem;
+  min-height: 30rem;
   padding: var(--space-4);
   box-shadow: var(--shadow-soft);
 }
@@ -885,7 +971,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 .landing-scene {
   position: relative;
-  min-height: 25rem;
+  min-height: 28rem;
   isolation: isolate;
 }
 
@@ -958,37 +1044,59 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 }
 
 .landing-scene-card--workspace {
-  top: 40%;
-  left: 22%;
-  width: min(24rem, 82vw);
+  top: 27%;
+  right: 5%;
+  width: min(30rem, 60%);
 }
 
-.landing-scene-card--workspace div {
+.landing-scene-workspace {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr 0.8fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-2);
   margin-top: var(--space-2);
+  margin-bottom: 0;
 }
 
-.landing-scene-card--workspace i {
-  height: 2rem;
+.landing-scene-workspace div {
+  display: grid;
+  gap: 0.25rem;
   border-radius: var(--radius-sm);
-  background: var(--color-surface-inset);
+  background: color-mix(in oklch, var(--color-primary-soft) 62%, transparent);
+  padding: var(--space-2);
+}
+
+.landing-scene-workspace dt {
+  color: var(--color-text-tertiary);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+}
+
+.landing-scene-workspace dd {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
 }
 
 .landing-scene-card--todos {
-  top: 69%;
+  top: 58%;
   left: 6%;
 }
 
-.landing-scene-card--bookmarks {
-  top: 75%;
-  right: 6%;
+.landing-scene-card--countdown {
+  top: 68%;
+  left: 35%;
 }
 
 .landing-scene-card--tools {
-  top: 94%;
-  left: 33%;
+  top: 72%;
+  right: 7%;
+}
+
+.landing-scene-card--bookmarks {
+  top: 83%;
+  left: 20%;
 }
 
 .landing-story-step {
@@ -1051,7 +1159,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 .landing-entry__item--primary {
   grid-column: span 3;
-  min-height: 9rem;
+  min-height: 10rem;
   align-items: end;
   background:
     radial-gradient(circle at 88% 18%, var(--color-accent-soft) 0 4.5rem, transparent 4.75rem),
@@ -1060,7 +1168,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 .landing-entry__item--secondary {
   grid-column: span 3;
-  min-height: 9rem;
+  min-height: 8.5rem;
 }
 
 .landing-entry__item--compact {
@@ -1184,12 +1292,12 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 .landing-demo-weather__sky {
   position: relative;
-  min-height: 10rem;
+  min-height: 12rem;
   background:
     linear-gradient(150deg, oklch(0.78 0.07 220), oklch(0.9 0.06 154));
 }
 
-.landing-demo-weather__sky span {
+.landing-demo-weather__sky > span {
   position: absolute;
   top: 2rem;
   right: 3rem;
@@ -1199,7 +1307,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
   background: oklch(0.91 0.11 86);
 }
 
-.landing-demo-weather__sky i {
+.landing-demo-weather__sky > i {
   position: absolute;
   right: 4.8rem;
   bottom: 2.2rem;
@@ -1209,20 +1317,91 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
   background: oklch(0.99 0.01 150 / 0.76);
 }
 
+.landing-demo-weather__current {
+  position: absolute;
+  bottom: var(--space-4);
+  left: var(--space-4);
+  display: grid;
+  gap: 0.25rem;
+  color: oklch(0.18 0.018 258);
+}
+
+.landing-demo-weather__current p,
+.landing-demo-weather__current span {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.landing-demo-weather__current strong {
+  font-size: clamp(3.25rem, 8vw, 4.75rem);
+  line-height: 0.9;
+}
+
 .landing-demo-weather__body {
+  display: grid;
+  gap: var(--space-4);
   padding: var(--space-4);
 }
 
-.landing-demo-weather__body strong {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-numeric-large);
+.landing-demo-weather__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
 }
 
-.landing-demo-weather__body p,
-.landing-demo-weather__body small {
-  display: block;
-  margin: var(--space-1) 0 0;
+.landing-demo-weather__facts div,
+.landing-demo-weather__trend li {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  padding: var(--space-3);
+}
+
+.landing-demo-weather__facts dt,
+.landing-demo-weather__trend span,
+.landing-demo-weather__trend small {
   color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+}
+
+.landing-demo-weather__facts dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.landing-demo-weather__trend {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.landing-demo-weather__trend p {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.landing-demo-weather__trend ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-demo-weather__trend li {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.landing-demo-weather__trend strong {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-numeric-medium);
+  line-height: 1;
 }
 
 .landing-demo-check {
@@ -1311,20 +1490,22 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
 
 @media (min-width: 64rem) {
   .landing-hero {
-    grid-template-columns: minmax(0, 0.82fr) minmax(28rem, 1.18fr);
+    grid-template-columns: minmax(0, 0.9fr) minmax(28rem, 1.1fr);
   }
 
   .landing-story__grid {
-    grid-template-columns: minmax(24rem, 0.9fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.48fr) minmax(19rem, 0.72fr);
     align-items: start;
+    gap: clamp(1.5rem, 3vw, 3rem);
   }
 
   .landing-story__scene {
-    min-height: calc(100dvh - var(--top-nav-height) - var(--space-8));
+    min-height: min(42rem, calc(100dvh - var(--top-nav-height) - var(--space-5)));
+    padding: clamp(1rem, 2vw, 1.5rem);
   }
 
   .landing-story-step {
-    min-height: 47vh;
+    min-height: 34vh;
   }
 
   .landing-demo__content {
@@ -1348,6 +1529,10 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
     position: relative;
     inset: auto;
     width: 100%;
+  }
+
+  .landing-scene-workspace {
+    grid-template-columns: 1fr;
   }
 
   .landing-scene__sun,
@@ -1413,8 +1598,9 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
   }
 
   .landing-hero__title {
-    font-size: clamp(2.25rem, 10.8vw, 3.35rem);
-    line-height: 1.08;
+    max-width: 10.5em;
+    font-size: clamp(1.95rem, 8.9vw, 2.65rem);
+    line-height: 1.09;
   }
 
   .landing-hero__description {
@@ -1422,10 +1608,30 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
     line-height: 1.68;
   }
 
-  .landing-button,
-  .landing-hero__actions,
+  .landing-hero__actions {
+    width: 100%;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+  }
+
+  .landing-hero__actions .landing-button--primary,
+  .landing-final__actions .landing-button,
   .landing-final__actions {
     width: 100%;
+  }
+
+  .landing-hero__actions .landing-button--secondary {
+    width: auto;
+    min-height: 2.5rem;
+    border-color: transparent;
+    background: transparent;
+    color: var(--color-accent-text);
+    padding-inline: 0;
+  }
+
+  .landing-demo-weather__facts,
+  .landing-demo-weather__trend ol {
+    grid-template-columns: 1fr;
   }
 
   .landing-demo-tools__stats {

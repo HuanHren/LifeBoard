@@ -46,8 +46,8 @@ export function useLandingScrollNarrative(root: Ref<HTMLElement | null>) {
         scrollTrigger: {
           trigger: '[data-landing-story]',
           start: 'top top+=72',
-          end: '+=2200',
-          scrub: 0.8,
+          end: '+=1700',
+          scrub: 0.65,
           pin: '[data-landing-scene]',
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -55,17 +55,18 @@ export function useLandingScrollNarrative(root: Ref<HTMLElement | null>) {
       })
 
       timeline
-        .to('[data-scene-weather]', { yPercent: -16, scale: 0.92 }, 0)
+        .to('[data-scene-weather]', { yPercent: -8, scale: 0.95 }, 0)
         .fromTo(
           '[data-scene-workspace]',
-          { yPercent: 18, scale: 0.96 },
-          { yPercent: -18, scale: 1, autoAlpha: 1 },
+          { yPercent: 14, scale: 0.97 },
+          { yPercent: -10, scale: 1, autoAlpha: 1 },
           0.12,
         )
-        .to('[data-scene-todos]', { yPercent: -42, autoAlpha: 1 }, 0.3)
-        .to('[data-scene-bookmarks]', { yPercent: -58, autoAlpha: 1 }, 0.46)
-        .to('[data-scene-tools]', { yPercent: -78, autoAlpha: 1 }, 0.62)
-        .to('[data-scene-orbit]', { rotate: 18, scale: 0.9 }, 0)
+        .to('[data-scene-todos]', { yPercent: -18, autoAlpha: 1 }, 0.3)
+        .to('[data-scene-countdown]', { yPercent: -30, autoAlpha: 1 }, 0.44)
+        .to('[data-scene-tools]', { yPercent: -42, autoAlpha: 1 }, 0.58)
+        .to('[data-scene-bookmarks]', { yPercent: -52, autoAlpha: 1 }, 0.72)
+        .to('[data-scene-orbit]', { rotate: 12, scale: 0.92 }, 0)
         .to('[data-story-progress]', { scaleX: 1 }, 0)
     }, rootElement)
 
