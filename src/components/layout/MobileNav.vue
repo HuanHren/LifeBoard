@@ -2,23 +2,17 @@
 import { RouterLink, useRoute } from 'vue-router'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import { useI18n } from '@/i18n/useI18n'
-import { navigationItems, type NavigationItem } from '@/shared/constants/navigation'
+import {
+  getNavigationKey,
+  navigationItems,
+  type NavigationItem,
+} from '@/shared/constants/navigation'
 
 const { t } = useI18n()
 const route = useRoute()
 
 function isNavigationItemActive(item: NavigationItem) {
-  if (typeof item.to === 'object' && 'name' in item.to && item.to.name === 'weather') {
-    return route.path === '/weather' || route.path.startsWith('/weather/')
-  }
-
-  if (typeof item.to === 'object' && 'name' in item.to && item.to.name === 'settings') {
-    return route.path === '/settings' || route.path.startsWith('/settings/')
-  }
-
-  return typeof item.to === 'object' && 'name' in item.to
-    ? route.name === item.to.name
-    : false
+  return getNavigationKey(route.meta.navigationKey) === item.key
 }
 </script>
 
@@ -27,7 +21,7 @@ function isNavigationItemActive(item: NavigationItem) {
     class="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--color-border-soft)] bg-[var(--color-surface-elevated)] px-1.5 safe-bottom min-[56.25rem]:hidden"
     :aria-label="t('shell.mobile.primaryLabel')"
   >
-    <div class="grid grid-cols-6 gap-0.5">
+    <div class="grid grid-cols-5 gap-0.5">
       <RouterLink
         v-for="item in navigationItems"
           :key="item.labelKey"

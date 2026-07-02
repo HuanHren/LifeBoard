@@ -41,6 +41,8 @@
   --content-wide-max-width: 90rem;
   --sidebar-width: 16.5rem;
   --sidebar-compact-width: 5.75rem;
+  --top-nav-height: 4.5rem;
+  --bottom-nav-height: 4.75rem;
   --mobile-nav-clearance: 5.75rem;
 
   --radius-sm: 0.5rem;
@@ -61,6 +63,12 @@
   --shadow-overlay: 0 1rem 2rem oklch(0.32 0.018 260 / 0.16);
   --focus-ring-width: 0.1875rem;
   --focus-ring-offset: 0.1875rem;
+  --z-sticky: 20;
+  --z-navigation: 30;
+  --z-bottom-navigation: 40;
+  --z-skip-link: 50;
+  --z-drawer-backdrop: 60;
+  --z-drawer: 70;
 
   --color-background: oklch(0.982 0.004 255);
   --color-foreground: oklch(0.24 0.018 258);

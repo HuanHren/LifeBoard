@@ -2,23 +2,17 @@
 import { RouterLink, useRoute } from 'vue-router'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import { useI18n } from '@/i18n/useI18n'
-import { navigationItems, type NavigationItem } from '@/shared/constants/navigation'
+import {
+  getNavigationKey,
+  navigationItems,
+  type NavigationItem,
+} from '@/shared/constants/navigation'
 
 const { t } = useI18n()
 const route = useRoute()
 
 function isNavigationItemActive(item: NavigationItem) {
-  if (typeof item.to === 'object' && 'name' in item.to && item.to.name === 'weather') {
-    return route.path === '/weather' || route.path.startsWith('/weather/')
-  }
-
-  if (typeof item.to === 'object' && 'name' in item.to && item.to.name === 'settings') {
-    return route.path === '/settings' || route.path.startsWith('/settings/')
-  }
-
-  return typeof item.to === 'object' && 'name' in item.to
-    ? route.name === item.to.name
-    : false
+  return getNavigationKey(route.meta.navigationKey) === item.key
 }
 </script>
 
@@ -29,7 +23,7 @@ function isNavigationItemActive(item: NavigationItem) {
   >
     <div class="flex h-full flex-col">
       <RouterLink
-        :to="{ name: 'home' }"
+        :to="{ name: 'landing' }"
         class="interactive-surface flex min-h-14 items-center justify-center gap-3 rounded-[var(--radius-md)] px-2 py-2 hover:bg-[var(--color-surface-interactive)] xl:justify-start xl:px-3"
         aria-label="LifeBoard"
       >

@@ -16,7 +16,15 @@ app.use(router)
 
 const themeStore = useThemeStore(pinia)
 themeStore.initializeTheme()
-document.documentElement.dataset.theme = themeStore.resolvedTheme
+const { resolvedTheme } = storeToRefs(themeStore)
+
+watch(
+  resolvedTheme,
+  (theme) => {
+    document.documentElement.dataset.theme = theme
+  },
+  { immediate: true },
+)
 
 const languageStore = useLanguageStore(pinia)
 languageStore.initializeLanguage()

@@ -24,12 +24,20 @@ const { t } = useI18n()
       <p class="mt-4 max-w-xl text-pretty text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ t('notFound.description') }}
       </p>
-      <RouterLink
-        :to="{ name: 'home' }"
-        class="interactive-surface mt-6 inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
-      >
-        {{ t('notFound.action') }}
-      </RouterLink>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <RouterLink
+          :to="{ name: 'landing' }"
+          class="interactive-surface inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
+        >
+          {{ t('notFound.landingAction') }}
+        </RouterLink>
+        <RouterLink
+          :to="{ name: 'workspace' }"
+          class="interactive-surface inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-surface-interactive)]"
+        >
+          {{ t('notFound.workspaceAction') }}
+        </RouterLink>
+      </div>
     </section>
   </PageLayout>
 </template>
