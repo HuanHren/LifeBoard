@@ -451,12 +451,65 @@ export const enUS = {
   'landing.hero.kicker': 'Calm personal operating system',
   'landing.hero.title': 'LifeBoard keeps daily context within reach.',
   'landing.hero.description':
-    'A local-first workspace for weather, plans, private tools, and saved references. The full scrolling product story arrives later; the app is available now.',
+    'A local-first daily workspace with weather atmosphere, plans, private tools, and saved references. Explore the product story, or go straight into the app whenever you need it.',
   'landing.cta.enterWorkspace': 'Enter Workspace',
-  'landing.cta.explore': 'Explore entry points',
+  'landing.cta.explore': 'Explore the story',
+  'landing.story.kicker': 'A calm operating layer',
+  'landing.story.title': 'Weather, plans, references, and tools move as one daily context.',
+  'landing.story.description':
+    'The Landing page introduces LifeBoard without becoming a gate. Each scene previews a real app area while direct routes remain one click away.',
+  'landing.story.weather.eyebrow': 'Weather atmosphere',
+  'landing.story.weather.title': 'Start with the outside world.',
+  'landing.story.weather.description':
+    'Weather frames the day with local conditions and a quiet visual atmosphere, while the full Weather page remains the source of truth.',
+  'landing.story.todos.eyebrow': 'Plans and countdowns',
+  'landing.story.todos.title': 'Turn intent into the next visible action.',
+  'landing.story.todos.description':
+    'Todos and important dates sit close to weather and workspace context, without requiring a separate project system.',
+  'landing.story.bookmarks.eyebrow': 'Saved references',
+  'landing.story.bookmarks.title': 'Keep the useful links in reach.',
+  'landing.story.bookmarks.description':
+    'Bookmarks are presented as part of the day, not as a detached archive of tabs.',
+  'landing.story.tools.eyebrow': 'Private tools',
+  'landing.story.tools.title': 'Use small utilities without giving them your data.',
+  'landing.story.tools.description':
+    'Tool inputs stay local and temporary, matching LifeBoard’s long-term, low-fatigue rhythm.',
+  'landing.scene.weather': 'Local conditions set the tone.',
+  'landing.scene.todosMetric': '3 next',
+  'landing.scene.todos': 'Tasks and countdowns stay visible.',
+  'landing.scene.bookmarksMetric': '8 saved',
+  'landing.scene.bookmarks': 'References remain close to the work.',
+  'landing.scene.toolsMetric': 'Local',
+  'landing.scene.tools': 'Utilities work without account friction.',
+  'landing.entry.kicker': 'Direct entry',
   'landing.entry.title': 'Go directly to what you need',
   'landing.entry.description':
     'Landing is the product entry, not a gate. Every core app route remains directly available.',
+  'landing.demo.kicker': 'Small real interactions',
+  'landing.demo.title': 'Preview the workflow without leaving the story.',
+  'landing.demo.description':
+    'Stage 4 keeps interactions local to Landing. They demonstrate the product shape without reading or mutating app stores.',
+  'landing.demo.tabLabel': 'Landing preview modules',
+  'landing.demo.weather.title': 'A weather-aware start',
+  'landing.demo.weather.description':
+    'A compact weather preview shows the product atmosphere without importing the frozen Weather module.',
+  'landing.demo.weather.card': 'Clear enough to plan the next step.',
+  'landing.demo.todos.title': 'A task can be resolved in place',
+  'landing.demo.todos.description':
+    'This checkbox is Landing-local demo state. It does not touch the Todos store.',
+  'landing.demo.todos.sample': 'Prepare the afternoon focus block',
+  'landing.demo.todos.open': 'Open: the task remains in today’s flow.',
+  'landing.demo.todos.done': 'Done: the demo state changed locally.',
+  'landing.demo.tools.title': 'Private utility space',
+  'landing.demo.tools.description':
+    'The text area is temporary and browser-local; it exists only to preview the Tools rhythm.',
+  'landing.demo.tools.inputLabel': 'Scratch input',
+  'landing.demo.tools.placeholder': 'Paste a few words to feel the quiet tool surface...',
+  'landing.final.kicker': 'Ready when you are',
+  'landing.final.title': 'Open the workspace, or jump straight into the module you need.',
+  'landing.final.description':
+    'LifeBoard keeps the brand entry predictable: returning to / shows the product story, while /app and app routes remain bookmarkable.',
+  'landing.final.weatherAction': 'Open Weather',
   'landing.footer.localFirst': 'Local-first. No account required.',
   'home.hero.title': 'Your day, in one place.',
   'home.hero.description':
