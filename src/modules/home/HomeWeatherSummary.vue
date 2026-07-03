@@ -294,9 +294,3 @@ onMounted(() => {
     </BaseSurface>
   </section>
 </template>
-
-<style scoped>
-.home-weather-card {
-  min-height: 100%;
-}
-</style>
