@@ -52,7 +52,8 @@ function displayBookmarkHost(url: string) {
       </div>
     </div>
 
-    <div class="home-quick-grid">
+    <div class="home-quick-access">
+      <div class="home-quick-grid">
       <BaseSurface as="article" padding="none" variant="plain">
         <div class="home-quick-header">
           <BaseIcon name="bookmarks" size="sm" />
@@ -139,7 +140,7 @@ function displayBookmarkHost(url: string) {
           >
             <BaseIcon name="tools" size="sm" />
             <span class="min-w-0">
-              <span class="block truncate text-sm font-semibold text-[var(--color-text-primary)]">
+              <span class="home-tool-shortcut__title text-sm font-semibold text-[var(--color-text-primary)]">
                 {{ tool.shortTitle }}
               </span>
               <span class="mt-1 block text-caption text-[var(--color-text-secondary)]">
@@ -149,6 +150,7 @@ function displayBookmarkHost(url: string) {
           </RouterLink>
         </div>
       </BaseSurface>
+      </div>
     </div>
 
     <p v-if="!hasQuickAccess" class="sr-only">
@@ -158,6 +160,10 @@ function displayBookmarkHost(url: string) {
 </template>
 
 <style scoped>
+.home-quick-access {
+  container-type: inline-size;
+}
+
 .home-quick-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -201,7 +207,7 @@ function displayBookmarkHost(url: string) {
 
 .home-tool-shortcuts {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
 }
 
@@ -210,19 +216,24 @@ function displayBookmarkHost(url: string) {
   border-bottom: 1px solid var(--color-border-soft);
 }
 
+.home-tool-shortcut__title {
+  display: block;
+  overflow-wrap: normal;
+  white-space: normal;
+  word-break: normal;
+}
+
 .home-quick-empty {
   padding: 1rem 1.25rem 1.25rem;
 }
 
-@media (min-width: 768px) and (max-width: 1180px) {
+@container (min-width: 42rem) {
   .home-quick-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
 
-@media (max-width: 480px) {
   .home-tool-shortcuts {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(10.5rem, 1fr));
   }
 }
 </style>
