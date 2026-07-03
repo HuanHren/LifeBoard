@@ -36,7 +36,7 @@ function toggleTask(task: Task) {
 
 <template>
   <section aria-labelledby="home-focus-title">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+    <div class="home-focus-heading mb-4 flex flex-wrap items-end justify-between gap-3">
       <div>
         <p class="text-caption font-semibold text-[var(--color-accent-text)]">
           {{ t('home.focus.eyebrow') }}
@@ -188,12 +188,35 @@ function toggleTask(task: Task) {
 }
 
 @media (max-width: 639px) {
+  .home-focus-heading {
+    margin-bottom: 0.7rem;
+    gap: 0.5rem;
+  }
+
+  .home-focus-heading a {
+    min-height: 2.25rem;
+    padding-inline: 0.6rem;
+    font-size: 0.8125rem;
+  }
+
   .home-focus-summary {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.8rem 0.9rem;
   }
 
   .home-focus-summary__number {
-    font-size: 2.25rem;
+    display: none;
+  }
+
+  .home-focus-task-row {
+    gap: 0.65rem;
+    padding: 0.8rem 0.9rem;
+  }
+
+  .home-focus-empty {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 </style>

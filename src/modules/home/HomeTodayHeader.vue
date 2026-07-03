@@ -39,13 +39,18 @@ const statusText = computed(() => {
       <p class="text-caption font-semibold text-[var(--color-accent-text)]">
         {{ t('home.today.eyebrow') }}
       </p>
-      <h1 id="home-title" class="mt-2 text-page-title text-[var(--color-text-primary)]">
+      <h1
+        id="home-title"
+        class="home-today-header__title mt-2 text-page-title text-[var(--color-text-primary)]"
+      >
         {{ t('home.today.title') }}
       </h1>
-      <p class="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
+      <p
+        class="home-today-header__summary mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base"
+      >
         {{ statusText }}
       </p>
-      <p class="mt-2 text-caption text-[var(--color-text-tertiary)]">
+      <p class="home-today-header__date mt-2 text-caption text-[var(--color-text-tertiary)]">
         <time :datetime="localToday">
           {{
             formatDate(todayDate, {
@@ -96,11 +101,35 @@ const statusText = computed(() => {
 @media (max-width: 767px) {
   .home-today-header {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.7rem;
+    padding-block: 0;
+  }
+
+  .home-today-header__title {
+    margin-top: 0.35rem;
+    font-size: 1.7rem;
+    line-height: 1.08;
+  }
+
+  .home-today-header__summary {
+    margin-top: 0.55rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .home-today-header__date {
+    margin-top: 0.4rem;
   }
 
   .home-today-header__actions {
     justify-content: flex-start;
+    gap: 0.4rem;
+  }
+
+  .home-today-header__actions a {
+    min-height: 2.35rem;
+    padding-inline: 0.75rem;
+    font-size: 0.8125rem;
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { RouterLink } from 'vue-router'
 import PageLayout from '@/components/base/PageLayout.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
+import type { BaseIconName } from '@/components/base/BaseIcon.vue'
 import HomeNextUp from '@/modules/home/HomeNextUp.vue'
 import HomeQuickAccess from '@/modules/home/HomeQuickAccess.vue'
 import HomeTodayHeader from '@/modules/home/HomeTodayHeader.vue'
@@ -11,7 +11,7 @@ import TodayFocusPanel from '@/modules/home/TodayFocusPanel.vue'
 import { useI18n } from '@/i18n/useI18n'
 import { useHomeDashboard } from '@/modules/home/composables/useHomeDashboard'
 
-const { t } = useI18n()
+const { t, formatNumber } = useI18n()
 const dashboard = useHomeDashboard()
 const nextCountdown = computed(() => dashboard.countdownRows.value[0] ?? null)
 const totalTodayTasks = computed(
@@ -20,6 +20,53 @@ const totalTodayTasks = computed(
 const activeCountdownCount = computed(() => dashboard.countdownRows.value.length)
 const quickBookmarkCount = computed(() => dashboard.bookmarkRows.value.length)
 const weatherReady = computed(() => dashboard.weatherStore.hasWeather)
+const statusRailItems = computed<
+  {
+    key: string
+    icon: BaseIconName
+    value: string
+    label: string
+    featured: boolean
+  }[]
+>(() => [
+  {
+    key: 'today',
+    icon: 'todos',
+    value:
+      totalTodayTasks.value > 0
+        ? formatNumber(totalTodayTasks.value)
+        : t('home.workspace.emptyTodayTasks'),
+    label: t('home.workspace.todayTasks'),
+    featured: true,
+  },
+  {
+    key: 'dates',
+    icon: 'check',
+    value:
+      activeCountdownCount.value > 0
+        ? formatNumber(activeCountdownCount.value)
+        : t('home.workspace.emptySavedDates'),
+    label: t('home.workspace.savedDates'),
+    featured: false,
+  },
+  {
+    key: 'weather',
+    icon: 'weather',
+    value: weatherReady.value ? t('shared.status.connected') : t('home.workspace.weatherNotConnected'),
+    label: t('home.workspace.weatherContext'),
+    featured: false,
+  },
+  {
+    key: 'references',
+    icon: 'bookmarks',
+    value:
+      quickBookmarkCount.value > 0
+        ? formatNumber(quickBookmarkCount.value)
+        : t('home.workspace.emptyQuickReferences'),
+    label: t('home.workspace.quickReferences'),
+    featured: false,
+  },
+])
 
 onMounted(() => {
   dashboard.initializeHomeDashboard()
@@ -27,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <PageLayout variant="wide" gap="lg">
+  <PageLayout variant="wide" gap="md">
     <section class="workspace-hero" aria-labelledby="home-title">
       <HomeTodayHeader
         :local-today="dashboard.localToday.value"
@@ -35,36 +82,20 @@ onMounted(() => {
         :today-task-count="totalTodayTasks"
       />
 
-      <div class="workspace-hero__rail" :aria-label="t('home.workspace.railLabel')">
-        <RouterLink class="workspace-metric workspace-metric--primary" :to="{ name: 'todos' }">
-          <BaseIcon name="todos" size="sm" />
+      <ul class="workspace-hero__rail" :aria-label="t('home.workspace.railLabel')">
+        <li
+          v-for="item in statusRailItems"
+          :key="item.key"
+          class="workspace-metric"
+          :class="{ 'workspace-metric--primary': item.featured }"
+        >
+          <BaseIcon :name="item.icon" size="sm" />
           <span>
-            <strong>{{ totalTodayTasks }}</strong>
-            <span>{{ t('home.workspace.todayTasks') }}</span>
+            <strong>{{ item.value }}</strong>
+            <span>{{ item.label }}</span>
           </span>
-        </RouterLink>
-        <RouterLink class="workspace-metric" :to="{ name: 'todos' }">
-          <BaseIcon name="check" size="sm" />
-          <span>
-            <strong>{{ activeCountdownCount }}</strong>
-            <span>{{ t('home.workspace.savedDates') }}</span>
-          </span>
-        </RouterLink>
-        <RouterLink class="workspace-metric" :to="{ name: 'weather' }">
-          <BaseIcon name="weather" size="sm" />
-          <span>
-            <strong>{{ weatherReady ? t('shared.status.connected') : t('home.weather.connectTitle') }}</strong>
-            <span>{{ t('home.workspace.weatherContext') }}</span>
-          </span>
-        </RouterLink>
-        <RouterLink class="workspace-metric" :to="{ name: 'bookmarks' }">
-          <BaseIcon name="bookmarks" size="sm" />
-          <span>
-            <strong>{{ quickBookmarkCount }}</strong>
-            <span>{{ t('home.workspace.quickReferences') }}</span>
-          </span>
-        </RouterLink>
-      </div>
+        </li>
+      </ul>
     </section>
 
     <div class="home-workspace-grid">
@@ -118,6 +149,9 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .workspace-metric {
@@ -125,16 +159,11 @@ onMounted(() => {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.75rem;
   align-items: center;
-  min-height: 5rem;
+  min-height: 4.25rem;
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-md);
   background: color-mix(in oklch, var(--color-surface-raised) 82%, transparent);
   padding: 0.9rem 1rem;
-}
-
-.workspace-metric:hover {
-  border-color: var(--color-border);
-  background: var(--color-surface-interactive);
 }
 
 .workspace-metric > svg {
@@ -198,15 +227,36 @@ onMounted(() => {
 
 @media (max-width: 767px) {
   .home-workspace-grid,
-  .workspace-hero__rail,
   .home-workspace-grid__side {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.875rem;
+  }
+
+  .workspace-hero__rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
   }
 
   .workspace-hero {
     border-radius: var(--radius-md);
     margin-inline: calc(var(--page-inline) * -0.25);
+    gap: 0.75rem;
+    padding: 0.85rem;
+  }
+
+  .workspace-metric {
+    min-height: 3.45rem;
+    gap: 0.55rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .workspace-metric strong {
+    font-size: 0.875rem;
+  }
+
+  .workspace-metric span span {
+    margin-top: 0.125rem;
+    font-size: 0.75rem;
   }
 }
 </style>
