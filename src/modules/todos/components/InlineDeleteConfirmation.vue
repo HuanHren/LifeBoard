@@ -43,11 +43,17 @@ onMounted(() => {
     <span class="mr-auto text-sm font-medium text-[var(--color-danger)]">
       {{ permanent ? t('todos.delete.permanentPrompt') : t('todos.delete.prompt') }}
     </span>
-    <BaseButton ref="cancelButton" size="sm" variant="ghost" @click="emit('cancel')">
+    <BaseButton
+      ref="cancelButton"
+      class="min-h-11"
+      size="sm"
+      variant="ghost"
+      @click="emit('cancel')"
+    >
       {{ t('todos.delete.cancel') }}
     </BaseButton>
     <BaseButton
-      class="border-[var(--color-danger)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
+      class="min-h-11 border-[var(--color-danger)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
       size="sm"
       variant="secondary"
       @click="emit('confirm')"

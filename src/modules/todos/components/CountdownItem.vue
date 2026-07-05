@@ -80,10 +80,20 @@ function deleteCountdown() {
         @confirm="deleteCountdown"
       />
       <div v-else class="countdown-item__actions">
-        <BaseButton size="sm" variant="ghost" @click="isEditing = true">
+        <BaseButton
+          class="countdown-item__action-button"
+          size="sm"
+          variant="ghost"
+          @click="isEditing = true"
+        >
           {{ t('todos.tasks.editAction') }}
         </BaseButton>
-        <BaseButton size="sm" variant="ghost" @click="isConfirmingDelete = true">
+        <BaseButton
+          class="countdown-item__action-button"
+          size="sm"
+          variant="ghost"
+          @click="isConfirmingDelete = true"
+        >
           {{ t('todos.tasks.deleteAction') }}
         </BaseButton>
       </div>
@@ -125,8 +135,12 @@ function deleteCountdown() {
 .countdown-item__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.25rem;
+  gap: 0.4rem;
   margin-top: 0.5rem;
+}
+
+.countdown-item__action-button {
+  min-height: 2.75rem;
 }
 
 .countdown-item--reached {
@@ -135,7 +149,13 @@ function deleteCountdown() {
 
 @media (max-width: 520px) {
   .countdown-item__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-content: flex-start;
+  }
+
+  .countdown-item__action-button {
+    width: 100%;
   }
 }
 </style>

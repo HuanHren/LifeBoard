@@ -13,7 +13,7 @@ import { useTodosStore } from '@/modules/todos/stores/todos'
 import type { TaskFilter } from '@/modules/todos/types/todos'
 import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
-const { t } = useI18n()
+const { formatNumber, t } = useI18n()
 const todosStore = useTodosStore()
 const {
   activeFilter,
@@ -89,6 +89,52 @@ const visibleTaskCountLabel = computed(() =>
     { count: visibleTasks.value.length, filter: activeFilterLabel.value },
   ),
 )
+const todayMetricValue = computed(() =>
+  todayTasks.value.length === 0
+    ? t('todos.tasks.metric.todayClear')
+    : formatNumber(todayTasks.value.length),
+)
+const todayMetricDetail = computed(() =>
+  todayTasks.value.length === 0
+    ? t('todos.tasks.metric.todayClearDetail')
+    : t(todayTasks.value.length === 1 ? 'todos.tasks.summary.todayOne' : 'todos.tasks.summary.todayMany', {
+        count: formatNumber(todayTasks.value.length),
+      }),
+)
+const overdueMetricValue = computed(() =>
+  overdueCount.value === 0
+    ? t('todos.tasks.metric.overdueClear')
+    : formatNumber(overdueCount.value),
+)
+const overdueMetricDetail = computed(() =>
+  overdueCount.value === 0
+    ? t('todos.tasks.metric.overdueClearDetail')
+    : t(overdueCount.value === 1 ? 'todos.tasks.summary.overdueOne' : 'todos.tasks.summary.overdueMany', {
+        count: formatNumber(overdueCount.value),
+      }),
+)
+const weekMetricValue = computed(() =>
+  weekCount.value === 0
+    ? t('todos.tasks.metric.weekClear')
+    : formatNumber(weekCount.value),
+)
+const weekMetricDetail = computed(() =>
+  weekCount.value === 0
+    ? t('todos.tasks.metric.weekClearDetail')
+    : t(weekCount.value === 1 ? 'todos.tasks.summary.weekOne' : 'todos.tasks.summary.weekMany', {
+        count: formatNumber(weekCount.value),
+      }),
+)
+const countdownMetricValue = computed(() =>
+  sortedCountdowns.value.length === 0
+    ? t('todos.countdowns.metric.clear')
+    : formatNumber(sortedCountdowns.value.length),
+)
+const countdownMetricDetail = computed(() =>
+  sortedCountdowns.value.length === 0
+    ? t('todos.countdowns.metric.clearDetail')
+    : countdownCountLabel.value,
+)
 
 function focusQuickAdd() {
   const input = document.getElementById('task-title')
@@ -126,23 +172,23 @@ onMounted(() => {
       <dl class="todos-workspace__metrics" :aria-label="t('todos.tasks.overview.label')">
         <div class="todos-workspace__metric todos-workspace__metric--primary">
           <dt>{{ t('todos.tasks.filter.today') }}</dt>
-          <dd>{{ todayTasks.length }}</dd>
-          <p>{{ t(todayTasks.length === 1 ? 'todos.tasks.summary.todayOne' : 'todos.tasks.summary.todayMany', { count: todayTasks.length }) }}</p>
+          <dd>{{ todayMetricValue }}</dd>
+          <p>{{ todayMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric" :class="overdueCount > 0 ? 'todos-workspace__metric--danger' : ''">
           <dt>{{ t('todos.tasks.pastDue') }}</dt>
-          <dd>{{ overdueCount }}</dd>
-          <p>{{ t(overdueCount === 1 ? 'todos.tasks.summary.overdueOne' : 'todos.tasks.summary.overdueMany', { count: overdueCount }) }}</p>
+          <dd>{{ overdueMetricValue }}</dd>
+          <p>{{ overdueMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric">
           <dt>{{ t('todos.tasks.summary.weekLabel') }}</dt>
-          <dd>{{ weekCount }}</dd>
-          <p>{{ t(weekCount === 1 ? 'todos.tasks.summary.weekOne' : 'todos.tasks.summary.weekMany', { count: weekCount }) }}</p>
+          <dd>{{ weekMetricValue }}</dd>
+          <p>{{ weekMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric">
           <dt>{{ t('todos.countdowns.title') }}</dt>
-          <dd>{{ sortedCountdowns.length }}</dd>
-          <p>{{ countdownCountLabel }}</p>
+          <dd>{{ countdownMetricValue }}</dd>
+          <p>{{ countdownMetricDetail }}</p>
         </div>
       </dl>
     </header>
@@ -374,13 +420,14 @@ onMounted(() => {
   }
 
   .todos-workspace__title {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    line-height: 1.04;
   }
 
   .todos-workspace__description {
-    margin-top: 0.65rem;
+    margin-top: 0.55rem;
     font-size: 0.9rem;
-    line-height: 1.6;
+    line-height: 1.45;
   }
 
   .todos-workspace__primary-action {
@@ -393,7 +440,21 @@ onMounted(() => {
   }
 
   .todos-workspace__metric {
-    padding: 0.75rem;
+    padding: 0.62rem;
+  }
+
+  .todos-workspace__metric dd {
+    margin-top: 0.28rem;
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+
+  .todos-workspace__metric p {
+    display: none;
+  }
+
+  .todos-workspace__section-heading p:not(.todos-workspace__eyebrow) {
+    display: none;
   }
 
   .todos-workspace__section-heading {
@@ -425,7 +486,6 @@ onMounted(() => {
 }
 
 @media (max-width: 430px) {
-  .todos-workspace__metrics,
   .todos-workspace__side {
     grid-template-columns: 1fr;
   }

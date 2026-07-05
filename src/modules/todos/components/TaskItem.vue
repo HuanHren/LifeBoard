@@ -145,17 +145,36 @@ function toggleTask(event: Event) {
           @confirm="permanentlyDeleteTask"
         />
         <div v-else class="task-item__actions">
-          <BaseButton v-if="!isDeleted" size="sm" variant="ghost" @click="isEditing = true">
+          <BaseButton
+            v-if="!isDeleted"
+            class="task-item__action-button"
+            size="sm"
+            variant="ghost"
+            @click="isEditing = true"
+          >
             {{ t('todos.tasks.editAction') }}
           </BaseButton>
-          <BaseButton v-if="!isDeleted" size="sm" variant="ghost" @click="isConfirmingDelete = true">
+          <BaseButton
+            v-if="!isDeleted"
+            class="task-item__action-button"
+            size="sm"
+            variant="ghost"
+            @click="isConfirmingDelete = true"
+          >
             {{ t('todos.tasks.deleteAction') }}
           </BaseButton>
-          <BaseButton v-if="isDeleted" size="sm" variant="secondary" @click="restoreTask">
+          <BaseButton
+            v-if="isDeleted"
+            class="task-item__action-button"
+            size="sm"
+            variant="secondary"
+            @click="restoreTask"
+          >
             {{ t('todos.tasks.restoreAction') }}
           </BaseButton>
           <BaseButton
             v-if="isDeleted"
+            class="task-item__action-button"
             size="sm"
             variant="ghost"
             @click="isConfirmingPermanentDelete = true"
@@ -195,8 +214,8 @@ function toggleTask(event: Event) {
 .task-item__deleted-mark {
   display: grid;
   place-items: center;
-  width: 2.35rem;
-  height: 2.35rem;
+  width: 2.75rem;
+  height: 2.75rem;
   margin-top: 0.05rem;
   flex-shrink: 0;
   border: 1px solid var(--color-control-border);
@@ -255,8 +274,12 @@ function toggleTask(event: Event) {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.25rem;
+  gap: 0.4rem;
   margin-top: 0.45rem;
+}
+
+.task-item__action-button {
+  min-height: 2.75rem;
 }
 
 @media (max-width: 520px) {
@@ -269,7 +292,13 @@ function toggleTask(event: Event) {
   }
 
   .task-item__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-content: flex-start;
+  }
+
+  .task-item__action-button {
+    width: 100%;
   }
 }
 </style>
