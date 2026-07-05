@@ -30,10 +30,11 @@ const secondaryCountdowns = computed(() =>
 </script>
 
 <template>
-  <BaseSurface as="section" class="min-w-0" padding="md" variant="plain">
-    <div class="flex items-start justify-between gap-4">
+  <BaseSurface as="section" class="countdown-section" padding="md" variant="plain">
+    <div class="countdown-section__header">
       <div>
-        <h2 class="text-section-title text-[var(--color-text-primary)]">
+        <p class="countdown-section__eyebrow">{{ t('todos.countdowns.eyebrow') }}</p>
+        <h2 class="mt-1 text-section-title text-[var(--color-text-primary)]">
           {{ t('todos.countdowns.title') }}
         </h2>
         <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
@@ -51,14 +52,11 @@ const secondaryCountdowns = computed(() =>
       </BaseButton>
     </div>
 
-    <div
-      v-if="isCreating"
-      class="mt-5 border-t border-[var(--color-border-soft)] pt-5"
-    >
+    <div v-if="isCreating" class="countdown-section__form">
       <CountdownForm @cancel="isCreating = false" @saved="isCreating = false" />
     </div>
 
-    <div class="mt-5 border-t border-[var(--color-border-soft)] pt-5">
+    <div class="countdown-section__body">
       <BaseEmpty
         v-if="countdowns.length === 0"
         :action-label="t('todos.countdowns.addAction')"
@@ -66,10 +64,10 @@ const secondaryCountdowns = computed(() =>
         :title="t('todos.countdowns.emptyTitle')"
         @action="isCreating = true"
       />
-      <div v-else class="space-y-4">
+      <div v-else class="countdown-section__content">
         <div
           v-if="primaryCountdown"
-          class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-accent-wash)] px-4 py-3"
+          class="countdown-section__featured"
         >
           <CountdownItem :countdown="primaryCountdown" featured :today="today" />
         </div>
@@ -82,3 +80,50 @@ const secondaryCountdowns = computed(() =>
     </div>
   </BaseSurface>
 </template>
+
+<style scoped>
+.countdown-section {
+  min-width: 0;
+}
+
+.countdown-section__header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.countdown-section__eyebrow {
+  color: var(--color-accent-text);
+  font-size: var(--text-caption);
+  font-weight: 700;
+}
+
+.countdown-section__form,
+.countdown-section__body {
+  margin-top: 1rem;
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: 1rem;
+}
+
+.countdown-section__content {
+  display: grid;
+  gap: 1rem;
+}
+
+.countdown-section__featured {
+  border: 1px solid color-mix(in srgb, var(--color-accent) 42%, var(--color-border-soft));
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(135deg, var(--color-accent-wash), color-mix(in srgb, var(--color-surface-raised) 70%, transparent)),
+    var(--color-surface-raised);
+  padding: 1rem;
+}
+
+@media (max-width: 640px) {
+  .countdown-section__header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+</style>

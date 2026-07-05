@@ -43,12 +43,13 @@ const emptyCopy = computed<Record<TaskFilter, { title: string; description: stri
 <template>
   <BaseEmpty
     v-if="tasks.length === 0"
+    class="todos-task-list__empty"
     :description="emptyCopy[props.filter].description"
     :title="emptyCopy[props.filter].title"
   />
   <ul
     v-else
-    class="divide-y divide-[var(--color-border-soft)] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]"
+    class="todos-task-list divide-y divide-[var(--color-border-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]"
   >
     <TaskItem
       v-for="task in tasks"
@@ -58,3 +59,13 @@ const emptyCopy = computed<Record<TaskFilter, { title: string; description: stri
     />
   </ul>
 </template>
+
+<style scoped>
+.todos-task-list {
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--color-border-soft) 70%, transparent);
+}
+
+.todos-task-list__empty {
+  border-style: dashed;
+}
+</style>

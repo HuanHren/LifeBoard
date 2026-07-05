@@ -3,12 +3,14 @@ import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import CountdownSection from '@/modules/todos/components/CountdownSection.vue'
 import TaskComposer from '@/modules/todos/components/TaskComposer.vue'
 import TaskFilterBar from '@/modules/todos/components/TaskFilterBar.vue'
 import TaskList from '@/modules/todos/components/TaskList.vue'
 import { useTodosStore } from '@/modules/todos/stores/todos'
+import type { TaskFilter } from '@/modules/todos/types/todos'
 import { localizeTodosError } from '@/modules/todos/utils/todosI18n'
 
 const { t } = useI18n()
@@ -52,6 +54,41 @@ const filterCounts = computed(() => ({
   completed: completedTasks.value.length,
   deleted: deletedTasks.value.length,
 }))
+const activeTaskTotal = computed(() => todayTasks.value.length + upcomingTasks.value.length)
+const taskCountLabel = computed(() =>
+  t(
+    activeTaskTotal.value === 1
+      ? 'todos.tasks.overview.activeOne'
+      : 'todos.tasks.overview.activeMany',
+    { count: activeTaskTotal.value },
+  ),
+)
+const countdownCountLabel = computed(() =>
+  t(
+    sortedCountdowns.value.length === 1
+      ? 'todos.countdowns.overview.one'
+      : 'todos.countdowns.overview.many',
+    { count: sortedCountdowns.value.length },
+  ),
+)
+const activeFilterLabel = computed(() => {
+  const keyByFilter = {
+    today: 'todos.tasks.filter.today',
+    upcoming: 'todos.tasks.filter.upcoming',
+    all: 'todos.tasks.filter.all',
+    completed: 'todos.tasks.filter.completed',
+    deleted: 'todos.tasks.filter.deleted',
+  } satisfies Record<TaskFilter, Parameters<typeof t>[0]>
+  return t(keyByFilter[activeFilter.value])
+})
+const visibleTaskCountLabel = computed(() =>
+  t(
+    visibleTasks.value.length === 1
+      ? 'todos.tasks.overview.visibleOne'
+      : 'todos.tasks.overview.visibleMany',
+    { count: visibleTasks.value.length, filter: activeFilterLabel.value },
+  ),
+)
 
 function focusQuickAdd() {
   const input = document.getElementById('task-title')
@@ -66,52 +103,49 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-y-6">
-    <header
-      class="grid gap-5 rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end"
-    >
-      <div class="min-w-0">
-        <h1 class="text-page-title text-balance text-[var(--color-text-primary)]">
+  <div class="todos-workspace">
+    <header class="todos-workspace__hero">
+      <div class="todos-workspace__hero-copy">
+        <p class="todos-workspace__eyebrow">{{ t('todos.page.eyebrow') }}</p>
+        <h1 class="todos-workspace__title">
           {{ t('todos.page.title') }}
         </h1>
-        <p class="mt-2 max-w-3xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+        <p class="todos-workspace__description">
           {{ t('todos.page.description') }}
         </p>
-        <dl class="mt-4 flex flex-wrap gap-2 text-caption">
-          <div
-            v-if="todayTasks.length > 0"
-            class="rounded-[var(--radius-pill)] bg-[var(--color-accent-wash)] px-3 py-1 font-medium text-[var(--color-accent-text)]"
-          >
-            <dt class="sr-only">{{ t('todos.tasks.filter.today') }}</dt>
-            <dd>{{ t('todos.tasks.summary.today', { count: todayTasks.length }) }}</dd>
-          </div>
-          <div
-            v-if="overdueCount > 0"
-            class="rounded-[var(--radius-pill)] bg-[var(--color-danger-soft)] px-3 py-1 font-medium text-[var(--color-danger)]"
-          >
-            <dt class="sr-only">{{ t('todos.tasks.pastDue') }}</dt>
-            <dd>{{ t('todos.tasks.summary.overdue', { count: overdueCount }) }}</dd>
-          </div>
-          <div
-            v-if="weekCount > 0"
-            class="rounded-[var(--radius-pill)] bg-[var(--color-surface-muted)] px-3 py-1 font-medium text-[var(--color-text-secondary)]"
-          >
-            <dt class="sr-only">{{ t('todos.tasks.filter.upcoming') }}</dt>
-            <dd>{{ t('todos.tasks.summary.week', { count: weekCount }) }}</dd>
-          </div>
-        </dl>
       </div>
       <BaseButton
-        class="w-full lg:w-auto"
+        class="todos-workspace__primary-action"
         type="button"
         variant="primary"
         @click="focusQuickAdd"
       >
         {{ t('todos.tasks.headerAction') }}
       </BaseButton>
-    </header>
 
-    <TaskComposer />
+      <dl class="todos-workspace__metrics" :aria-label="t('todos.tasks.overview.label')">
+        <div class="todos-workspace__metric todos-workspace__metric--primary">
+          <dt>{{ t('todos.tasks.filter.today') }}</dt>
+          <dd>{{ todayTasks.length }}</dd>
+          <p>{{ t(todayTasks.length === 1 ? 'todos.tasks.summary.todayOne' : 'todos.tasks.summary.todayMany', { count: todayTasks.length }) }}</p>
+        </div>
+        <div class="todos-workspace__metric" :class="overdueCount > 0 ? 'todos-workspace__metric--danger' : ''">
+          <dt>{{ t('todos.tasks.pastDue') }}</dt>
+          <dd>{{ overdueCount }}</dd>
+          <p>{{ t(overdueCount === 1 ? 'todos.tasks.summary.overdueOne' : 'todos.tasks.summary.overdueMany', { count: overdueCount }) }}</p>
+        </div>
+        <div class="todos-workspace__metric">
+          <dt>{{ t('todos.tasks.summary.weekLabel') }}</dt>
+          <dd>{{ weekCount }}</dd>
+          <p>{{ t(weekCount === 1 ? 'todos.tasks.summary.weekOne' : 'todos.tasks.summary.weekMany', { count: weekCount }) }}</p>
+        </div>
+        <div class="todos-workspace__metric">
+          <dt>{{ t('todos.countdowns.title') }}</dt>
+          <dd>{{ sortedCountdowns.length }}</dd>
+          <p>{{ countdownCountLabel }}</p>
+        </div>
+      </dl>
+    </header>
 
     <BaseError
       v-if="persistenceError"
@@ -121,31 +155,279 @@ onMounted(() => {
       @action="retryPersistence"
     />
 
-    <div class="grid items-start gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(20rem,0.8fr)]">
-      <section class="min-w-0 space-y-4" aria-labelledby="task-list-title">
-        <div class="flex flex-col gap-3">
+    <div class="todos-workspace__grid">
+      <section class="todos-workspace__main" aria-labelledby="task-list-title">
+        <TaskComposer />
+
+        <BaseSurface as="section" class="todos-workspace__tasks" padding="none" variant="plain">
+          <div class="todos-workspace__section-heading">
           <div>
-            <h2 id="task-list-title" class="text-section-title text-[var(--color-text-primary)]">
+              <p class="todos-workspace__eyebrow">{{ t('todos.tasks.sectionEyebrow') }}</p>
+              <h2 id="task-list-title" class="text-section-title text-[var(--color-text-primary)]">
               {{ t('todos.tasks.sectionTitle') }}
             </h2>
-            <p class="mt-1 text-sm text-[var(--color-text-secondary)]">
+              <p class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
               {{ t('todos.tasks.sectionDescription') }}
             </p>
+          </div>
+            <p class="todos-workspace__filter-summary">{{ visibleTaskCountLabel }}</p>
           </div>
           <TaskFilterBar
             :active-filter="activeFilter"
             :counts="filterCounts"
             @change="setFilter"
           />
-        </div>
-        <TaskList
-          :filter="activeFilter"
-          :tasks="visibleTasks"
-          :today="localToday"
-        />
+          <div class="todos-workspace__list">
+            <TaskList
+              :filter="activeFilter"
+              :tasks="visibleTasks"
+              :today="localToday"
+            />
+          </div>
+        </BaseSurface>
       </section>
 
-      <CountdownSection :countdowns="sortedCountdowns" :today="localToday" />
+      <aside class="todos-workspace__side" :aria-label="t('todos.countdowns.title')">
+        <BaseSurface as="div" class="todos-workspace__side-card" padding="sm" variant="muted">
+          <p class="todos-workspace__eyebrow">{{ t('todos.tasks.overview.label') }}</p>
+          <p class="mt-2 text-lg font-semibold text-[var(--color-text-primary)]">
+            {{ taskCountLabel }}
+          </p>
+          <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+            {{ t('todos.tasks.overview.description') }}
+          </p>
+        </BaseSurface>
+        <CountdownSection :countdowns="sortedCountdowns" :today="localToday" />
+      </aside>
     </div>
   </div>
 </template>
+
+<style scoped>
+.todos-workspace {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.todos-workspace__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: end;
+  overflow: hidden;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-accent-wash) 68%, transparent), transparent 58%),
+    var(--color-surface-raised);
+  padding: clamp(1.1rem, 2.5vw, 1.75rem);
+}
+
+.todos-workspace__hero-copy {
+  min-width: 0;
+}
+
+.todos-workspace__eyebrow {
+  color: var(--color-accent-text);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.todos-workspace__title {
+  margin-top: 0.35rem;
+  color: var(--color-text-primary);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 720;
+  line-height: 0.98;
+}
+
+.todos-workspace__description {
+  margin-top: 0.85rem;
+  max-width: 44rem;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.todos-workspace__primary-action {
+  min-width: 8.5rem;
+}
+
+.todos-workspace__metrics {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.todos-workspace__metric {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-surface-raised) 86%, transparent);
+  padding: 0.85rem;
+}
+
+.todos-workspace__metric--primary {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border-soft));
+  background: var(--color-accent-wash);
+}
+
+.todos-workspace__metric--danger {
+  border-color: color-mix(in srgb, var(--color-danger) 50%, var(--color-border-soft));
+  background: var(--color-danger-soft);
+}
+
+.todos-workspace__metric dt {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: 650;
+}
+
+.todos-workspace__metric dd {
+  margin-top: 0.35rem;
+  color: var(--color-text-primary);
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 730;
+  line-height: 1;
+}
+
+.todos-workspace__metric p {
+  margin-top: 0.35rem;
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  line-height: 1.45;
+}
+
+.todos-workspace__grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(20rem, 0.7fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.todos-workspace__main,
+.todos-workspace__side {
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.todos-workspace__tasks {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.todos-workspace__side {
+  position: sticky;
+  top: calc(var(--app-top-navigation-height, 4.5rem) + 1rem);
+}
+
+.todos-workspace__section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  padding: 1.1rem 1.1rem 0;
+}
+
+.todos-workspace__filter-summary {
+  max-width: 14rem;
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: 650;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.todos-workspace__tasks :deep(.task-filter-bar) {
+  margin: 1rem 1.1rem 0;
+}
+
+.todos-workspace__list {
+  padding: 1rem;
+}
+
+@media (max-width: 1180px) {
+  .todos-workspace__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .todos-workspace__side {
+    position: static;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .todos-workspace {
+    gap: 0.9rem;
+  }
+
+  .todos-workspace__hero {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    padding: 1rem;
+  }
+
+  .todos-workspace__title {
+    font-size: 2rem;
+  }
+
+  .todos-workspace__description {
+    margin-top: 0.65rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .todos-workspace__primary-action {
+    width: 100%;
+  }
+
+  .todos-workspace__metrics,
+  .todos-workspace__side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .todos-workspace__metric {
+    padding: 0.75rem;
+  }
+
+  .todos-workspace__section-heading {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.95rem 0.95rem 0;
+  }
+
+  .todos-workspace__filter-summary {
+    max-width: none;
+    text-align: left;
+  }
+
+  .todos-workspace__tasks :deep(.task-filter-bar) {
+    margin: 0.85rem 0.95rem 0;
+  }
+
+  .todos-workspace__list {
+    padding: 0.85rem;
+  }
+
+  .todos-workspace__tasks {
+    order: 1;
+  }
+
+  .todos-workspace__main :deep(.task-composer) {
+    order: 2;
+  }
+}
+
+@media (max-width: 430px) {
+  .todos-workspace__metrics,
+  .todos-workspace__side {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

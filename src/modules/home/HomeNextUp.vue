@@ -109,7 +109,7 @@ const { locale, t, formatNumber } = useI18n()
                   ? t('home.next.countdownToday')
                   : item.state === 'reached'
                     ? t('home.next.countdownReached')
-                    : t('home.next.countdownDays', { count: formatNumber(item.days) })
+                    : t(item.days === 1 ? 'home.next.countdownDay' : 'home.next.countdownDays', { count: formatNumber(item.days) })
               }}
             </p>
           </li>

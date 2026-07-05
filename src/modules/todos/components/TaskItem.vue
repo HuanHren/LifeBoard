@@ -55,17 +55,24 @@ function toggleTask(event: Event) {
 </script>
 
 <template>
-  <li class="px-4 py-3.5 sm:px-5">
+  <li
+    class="task-item"
+    :class="[
+      isCompleted ? 'task-item--completed' : '',
+      isDeleted ? 'task-item--deleted' : '',
+      isPastDue ? 'task-item--past-due' : '',
+    ]"
+  >
     <TaskEditForm
       v-if="isEditing && !isDeleted"
       :task="task"
       @cancel="isEditing = false"
       @saved="isEditing = false"
     />
-    <div v-else class="grid grid-cols-[auto_minmax(0,1fr)] gap-3">
+    <div v-else class="task-item__body">
       <label
         v-if="!isDeleted"
-        class="mt-0.5 grid size-9 shrink-0 cursor-pointer place-items-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]"
+        class="task-item__check"
         :for="`task-complete-${task.id}`"
       >
         <input
@@ -79,18 +86,14 @@ function toggleTask(event: Event) {
           {{ isCompleted ? t('todos.tasks.restoreAction') : t('todos.tasks.completed') }}
         </span>
       </label>
-      <div
-        v-else
-        class="mt-0.5 grid size-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] text-[var(--color-text-tertiary)]"
-        aria-hidden="true"
-      >
+      <div v-else class="task-item__deleted-mark" aria-hidden="true">
         &minus;
       </div>
       <div class="min-w-0">
         <component
           :is="isDeleted ? 'p' : 'label'"
           :for="isDeleted ? undefined : `task-complete-${task.id}`"
-          class="block break-words font-medium"
+          class="task-item__title"
           :class="
             isDeleted || isCompleted
               ? 'line-through text-[var(--color-text-tertiary)]'
@@ -99,11 +102,11 @@ function toggleTask(event: Event) {
         >
           {{ task.title }}
         </component>
-        <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-caption">
-          <span v-if="isDeleted" class="font-medium text-[var(--color-text-secondary)]">
+        <div class="task-item__meta">
+          <span v-if="isDeleted" class="task-item__badge">
             {{ t('todos.tasks.deleted') }}
           </span>
-          <span v-if="isCompleted" class="font-medium text-[var(--color-text-secondary)]">
+          <span v-if="isCompleted" class="task-item__badge">
             {{ t('todos.tasks.completed') }}
           </span>
           <time
@@ -115,13 +118,10 @@ function toggleTask(event: Event) {
                 : 'text-[var(--color-text-secondary)]'
             "
           >
-            {{ isPastDue ? `${t('todos.tasks.pastDue')} · ` : ''
+            {{ isPastDue ? `${t('todos.tasks.pastDue')} - ` : ''
             }}{{ formatReadableDate(task.dueDate, locale) }}
           </time>
-          <span
-            v-if="task.label"
-            class="rounded-[var(--radius-pill)] bg-[var(--color-accent-wash)] px-2 py-0.5 font-medium text-[var(--color-accent-text)]"
-          >
+          <span v-if="task.label" class="task-item__label">
             {{ task.label }}
           </span>
           <span v-if="!task.dueDate" class="text-[var(--color-text-secondary)]">
@@ -144,7 +144,7 @@ function toggleTask(event: Event) {
           @cancel="isConfirmingPermanentDelete = false"
           @confirm="permanentlyDeleteTask"
         />
-        <div v-else class="mt-2 flex flex-wrap justify-end gap-1">
+        <div v-else class="task-item__actions">
           <BaseButton v-if="!isDeleted" size="sm" variant="ghost" @click="isEditing = true">
             {{ t('todos.tasks.editAction') }}
           </BaseButton>
@@ -167,3 +167,109 @@ function toggleTask(event: Event) {
     </div>
   </li>
 </template>
+
+<style scoped>
+.task-item {
+  padding: 0.9rem 1rem;
+  background: var(--color-surface-raised);
+}
+
+.task-item--past-due {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--color-danger-soft) 55%, transparent), transparent 42%),
+    var(--color-surface-raised);
+}
+
+.task-item--completed,
+.task-item--deleted {
+  background: var(--color-surface);
+}
+
+.task-item__body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+}
+
+.task-item__check,
+.task-item__deleted-mark {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-top: 0.05rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.task-item__check {
+  cursor: pointer;
+}
+
+.task-item__check:hover {
+  border-color: var(--color-accent);
+}
+
+.task-item__deleted-mark {
+  border-color: var(--color-border-soft);
+  background: var(--color-surface-muted);
+  color: var(--color-text-tertiary);
+}
+
+.task-item__title {
+  display: block;
+  word-break: break-word;
+  font-weight: 680;
+  line-height: 1.45;
+}
+
+.task-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin-top: 0.4rem;
+  font-size: var(--text-caption);
+}
+
+.task-item__badge,
+.task-item__label {
+  border-radius: var(--radius-pill);
+  padding: 0.15rem 0.5rem;
+  font-weight: 650;
+}
+
+.task-item__badge {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.task-item__label {
+  background: var(--color-accent-wash);
+  color: var(--color-accent-text);
+}
+
+.task-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-top: 0.45rem;
+}
+
+@media (max-width: 520px) {
+  .task-item {
+    padding: 0.8rem;
+  }
+
+  .task-item__body {
+    gap: 0.65rem;
+  }
+
+  .task-item__actions {
+    justify-content: flex-start;
+  }
+}
+</style>

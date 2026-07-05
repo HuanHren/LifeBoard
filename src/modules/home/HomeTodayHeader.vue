@@ -17,7 +17,7 @@ const { t, formatDate, formatNumber } = useI18n()
 const todayDate = computed(() => new Date(`${props.localToday}T12:00:00`))
 const statusText = computed(() => {
   if (props.todayTaskCount > 0) {
-    return t('home.today.statusWithTasks', {
+    return t(props.todayTaskCount === 1 ? 'home.today.statusWithTasksOne' : 'home.today.statusWithTasksMany', {
       count: formatNumber(props.todayTaskCount),
     })
   }

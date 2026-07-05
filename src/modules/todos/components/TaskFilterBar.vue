@@ -20,7 +20,7 @@ const { t } = useI18n()
 
 <template>
   <div
-    class="flex w-full max-w-full gap-1 overflow-x-auto rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-1"
+    class="task-filter-bar flex w-full max-w-full gap-1 overflow-x-auto rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-1"
     :aria-label="t('todos.tasks.filterLabel')"
     role="group"
   >
@@ -39,7 +39,6 @@ const { t } = useI18n()
     >
       <span>{{ getTaskFilterLabel(filter.value, t) }}</span>
       <span
-        v-if="counts[filter.value] > 0"
         class="ml-2 rounded-[var(--radius-pill)] bg-[var(--color-surface-muted)] px-1.5 py-0.5 text-[0.7rem] tabular-nums text-[var(--color-text-secondary)]"
       >
         {{ counts[filter.value] }}

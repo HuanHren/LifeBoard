@@ -67,7 +67,7 @@ function toggleTask(task: Task) {
         <div>
           <p class="text-sm font-semibold text-[var(--color-text-primary)]">
             {{
-              t('home.focus.taskSummary', {
+              t(tasks.length + overflowCount === 1 ? 'home.focus.taskSummaryOne' : 'home.focus.taskSummaryMany', {
                 count: formatNumber(tasks.length + overflowCount),
               })
             }}

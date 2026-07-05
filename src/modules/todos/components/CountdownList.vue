@@ -11,7 +11,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <ul class="divide-y divide-[var(--color-border-soft)]">
+  <ul class="countdown-list divide-y divide-[var(--color-border-soft)]">
     <CountdownItem
       v-for="countdown in countdowns"
       :key="countdown.id"
@@ -20,3 +20,9 @@ defineProps<Props>()
     />
   </ul>
 </template>
+
+<style scoped>
+.countdown-list {
+  border-radius: var(--radius-md);
+}
+</style>

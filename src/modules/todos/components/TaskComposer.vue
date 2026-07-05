@@ -77,16 +77,16 @@ function handleTitleEnter(event: KeyboardEvent) {
 
 <template>
   <form
-    class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-4 sm:p-5"
+    class="task-composer"
     novalidate
     @submit.prevent="submitTask"
   >
-    <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div class="task-composer__header">
       <div>
-        <h2 class="text-base font-semibold text-[var(--color-text-primary)]">
+        <h2 class="task-composer__title">
         {{ t('todos.tasks.addTitle') }}
         </h2>
-        <p id="task-title-description" class="mt-1 text-caption text-[var(--color-text-secondary)]">
+        <p id="task-title-description" class="task-composer__description">
           {{ t('todos.tasks.addDescription') }}
         </p>
       </div>
@@ -100,7 +100,7 @@ function handleTitleEnter(event: KeyboardEvent) {
       </BaseButton>
     </div>
 
-    <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+    <div class="task-composer__quick-row">
       <div class="space-y-2">
         <label class="sr-only" for="task-title">
           {{ t('todos.tasks.titleLabel') }}
@@ -112,7 +112,7 @@ function handleTitleEnter(event: KeyboardEvent) {
           :aria-describedby="titleDescribedBy"
           :aria-invalid="errors.title ? 'true' : 'false'"
           autocomplete="off"
-          class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
+          class="task-composer__input"
           :maxlength="TASK_TITLE_MAX_LENGTH"
           name="task-title"
           :placeholder="t('todos.tasks.titlePlaceholder')"
@@ -129,12 +129,12 @@ function handleTitleEnter(event: KeyboardEvent) {
         </p>
       </div>
 
-      <BaseButton class="w-full lg:w-auto" type="submit" variant="primary">
+      <BaseButton class="task-composer__submit" type="submit" variant="primary">
         {{ t('todos.tasks.addAction') }}
       </BaseButton>
     </div>
 
-    <div v-if="isExpanded" class="mt-4 grid gap-4 border-t border-[var(--color-border-soft)] pt-4 sm:grid-cols-2">
+    <div v-if="isExpanded" class="task-composer__details">
       <FormField
         id="task-due-date"
         :error="localizeTodosError(errors.date, t)"
@@ -146,7 +146,7 @@ function handleTitleEnter(event: KeyboardEvent) {
             v-model="dueDate"
             :aria-describedby="ariaDescribedby"
             :aria-invalid="ariaInvalid === 'true' ? 'true' : undefined"
-            class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
+            class="task-composer__input"
             name="task-due-date"
             type="date"
           />
@@ -166,7 +166,7 @@ function handleTitleEnter(event: KeyboardEvent) {
             :aria-describedby="ariaDescribedby || labelDescribedBy"
             :aria-invalid="ariaInvalid === 'true' ? 'true' : undefined"
             autocomplete="off"
-            class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
+            class="task-composer__input"
             :maxlength="TASK_LABEL_MAX_LENGTH"
             name="task-label"
             :placeholder="t('todos.tasks.labelPlaceholder')"
@@ -179,7 +179,7 @@ function handleTitleEnter(event: KeyboardEvent) {
     <p
       v-if="!isExpanded"
       id="task-label-helper"
-      class="mt-2 text-caption text-[var(--color-text-secondary)]"
+      class="task-composer__helper"
     >
       {{ t('todos.tasks.titleHelper') }}
     </p>
@@ -193,3 +193,96 @@ function handleTitleEnter(event: KeyboardEvent) {
     <p class="sr-only" aria-live="polite">{{ announcement }}</p>
   </form>
 </template>
+
+<style scoped>
+.task-composer {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 82%, transparent), transparent),
+    var(--color-surface-raised);
+  padding: 1rem;
+}
+
+.task-composer__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.task-composer__header > div {
+  min-width: 0;
+}
+
+.task-composer__title {
+  color: var(--color-text-primary);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.task-composer__description,
+.task-composer__helper {
+  margin-top: 0.25rem;
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  line-height: 1.5;
+}
+
+.task-composer__quick-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.task-composer__quick-row > div {
+  min-width: 0;
+}
+
+.task-composer__input {
+  min-height: 2.75rem;
+  width: 100%;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-inset);
+  padding-inline: 0.75rem;
+  color: var(--color-text-primary);
+}
+
+.task-composer__input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.task-composer__input:hover {
+  border-color: var(--color-accent);
+}
+
+.task-composer__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .task-composer {
+    padding: 0.9rem;
+  }
+
+  .task-composer__quick-row,
+  .task-composer__details {
+    grid-template-columns: 1fr;
+  }
+
+  .task-composer__submit {
+    width: 100%;
+  }
+}
+</style>
