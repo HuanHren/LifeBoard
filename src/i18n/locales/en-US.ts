@@ -40,7 +40,21 @@ export const enUS = {
   'navigation.more.about': 'About LifeBoard',
   'settings.page.title': 'Settings',
   'settings.page.description':
-    "Manage this browser's appearance, language, local data, privacy, and portable LifeBoard backup.",
+    "Manage this browser's preferences, local data, source connections, and recovery paths without changing how LifeBoard stores your information.",
+  'settings.hero.eyebrow': 'Local control center',
+  'settings.hero.actionsLabel': 'Settings control center actions',
+  'settings.hero.primaryAction': 'Review preferences',
+  'settings.hero.secondaryAction': 'View data sources',
+  'settings.hero.factsLabel': 'Settings status',
+  'settings.hero.factLocal': 'Local data',
+  'settings.hero.factLocalValue': 'Stored in this browser',
+  'settings.hero.factTheme': 'Theme',
+  'settings.hero.factLanguage': 'Language',
+  'settings.hero.factBackup': 'Backup',
+  'settings.hero.factBackupValue': 'JSON export and import',
+  'settings.section.preferences.title': 'Preferences',
+  'settings.section.preferences.description':
+    'Adjust appearance and language first; both preferences are saved only in this browser.',
   'settings.section.appearance.title': 'Appearance',
   'settings.section.appearance.description':
     'A browser-local preference that follows you only on this device.',
@@ -145,7 +159,12 @@ export const enUS = {
   'settings.locationServices.error.emptyAmapKey': 'Enter an AMap key before saving.',
   'settings.dataSources.pageTitle': 'Weather data sources',
   'settings.dataSources.pageDescription':
-    'See the weather services LifeBoard currently uses, what each one provides, and which optional credentials are configured.',
+    'Review the weather, location, air-quality, and alert boundaries LifeBoard can use from the current browser state.',
+  'settings.dataSources.hero.eyebrow': 'Source boundaries',
+  'settings.dataSources.hero.factsLabel': 'Data source status',
+  'settings.dataSources.hero.localStorage': 'Credential storage',
+  'settings.dataSources.hero.localStorageValue': 'Browser local storage',
+  'settings.dataSources.openWeather': 'Open Weather',
   'settings.dataSources.backToSettings': 'Back to Settings',
   'settings.dataSources.entryTitle': 'Weather source details',
   'settings.dataSources.entryDescription':

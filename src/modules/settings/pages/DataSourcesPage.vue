@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
-import PageHeader from '@/components/base/PageHeader.vue'
 import PageLayout from '@/components/base/PageLayout.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
@@ -189,6 +188,25 @@ const activeConfigurationItems = computed<SummaryItem[]>(() => [
   },
 ])
 
+const heroFacts = computed(() => [
+  {
+    label: openMeteoSource.displayName,
+    value: providerStatus('openMeteo'),
+  },
+  {
+    label: caiyunSource.displayName,
+    value: caiyunCredentialStatus.value,
+  },
+  {
+    label: amapSource.displayName,
+    value: amapCredentialStatus.value,
+  },
+  {
+    label: t('settings.dataSources.hero.localStorage'),
+    value: t('settings.dataSources.hero.localStorageValue'),
+  },
+])
+
 function providerStatus(sourceProvider: WeatherDataProvider) {
   if (weather.value?.provider === sourceProvider) {
     return weather.value.provider === provider.value
@@ -354,212 +372,212 @@ onMounted(() => {
 </script>
 
 <template>
-  <PageLayout>
-    <RouterLink
-      class="interactive-surface inline-flex rounded-[var(--radius-sm)] text-sm font-medium text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
-      :to="{ name: 'settings' }"
-    >
-      {{ t('settings.dataSources.backToSettings') }}
-    </RouterLink>
-
-    <PageHeader
-      :title="t('settings.dataSources.pageTitle')"
-      :description="t('settings.dataSources.pageDescription')"
-    />
-
-    <section
-      class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-accent-wash)] p-5 sm:p-6"
-      aria-labelledby="data-sources-privacy-title"
-    >
-      <h2
-        id="data-sources-privacy-title"
-        class="text-section-title text-balance text-[var(--color-text-primary)]"
+  <PageLayout variant="wide" gap="md">
+    <div class="data-sources-workspace">
+      <RouterLink
+        class="data-sources-back"
+        :to="{ name: 'settings' }"
       >
-        {{ t('settings.dataSources.privacyTitle') }}
-      </h2>
-      <p class="mt-2 max-w-3xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        {{ t('settings.dataSources.privacyDescription') }}
-      </p>
-    </section>
+        {{ t('settings.dataSources.backToSettings') }}
+      </RouterLink>
 
-    <section aria-labelledby="data-sources-active-title">
-      <div class="max-w-3xl">
-        <h2
-          id="data-sources-active-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
-          {{ t('settings.dataSources.section.active') }}
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('settings.dataSources.section.activeDescription') }}
-        </p>
-      </div>
-
-      <dl class="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <div
-          v-for="item in activeConfigurationItems"
-          :key="item.label"
-          class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-4"
-        >
-          <dt class="text-caption text-[var(--color-text-tertiary)]">
-            {{ item.label }}
-          </dt>
-          <dd class="mt-1 text-sm font-medium leading-6 text-[var(--color-text-primary)]">
-            <RouterLink
-              v-if="item.to"
-              class="interactive-surface rounded-[var(--radius-sm)] text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
-              :to="item.to"
-            >
-              {{ item.value }}
+      <section
+        class="data-sources-hero"
+        aria-labelledby="data-sources-title"
+      >
+        <div class="data-sources-hero__copy">
+          <p class="data-sources-hero__eyebrow">
+            {{ t('settings.dataSources.hero.eyebrow') }}
+          </p>
+          <h1 id="data-sources-title" class="data-sources-hero__title">
+            {{ t('settings.dataSources.pageTitle') }}
+          </h1>
+          <p class="data-sources-hero__description">
+            {{ t('settings.dataSources.pageDescription') }}
+          </p>
+          <div class="data-sources-hero__actions">
+            <RouterLink class="data-sources-button data-sources-button--primary" :to="{ name: 'settings' }">
+              {{ t('settings.dataSources.backToSettings') }}
             </RouterLink>
-            <span v-else>{{ item.value }}</span>
-          </dd>
+            <RouterLink class="data-sources-button data-sources-button--secondary" :to="{ name: 'weather' }">
+              {{ t('settings.dataSources.openWeather') }}
+            </RouterLink>
+          </div>
         </div>
-      </dl>
-    </section>
+        <dl class="data-sources-hero__facts" :aria-label="t('settings.dataSources.hero.factsLabel')">
+          <div v-for="fact in heroFacts" :key="fact.label">
+            <dt>{{ fact.label }}</dt>
+            <dd>{{ fact.value }}</dd>
+          </div>
+        </dl>
+      </section>
 
-    <section aria-labelledby="data-sources-forecast-title">
-      <div class="max-w-3xl">
-        <h2
-          id="data-sources-forecast-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
-          {{ t('settings.dataSources.section.forecast') }}
+      <section class="data-sources-privacy" aria-labelledby="data-sources-privacy-title">
+        <h2 id="data-sources-privacy-title">
+          {{ t('settings.dataSources.privacyTitle') }}
         </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('settings.dataSources.section.forecastDescription') }}
+        <p>
+          {{ t('settings.dataSources.privacyDescription') }}
         </p>
+      </section>
+
+      <section class="data-sources-section" aria-labelledby="data-sources-active-title">
+        <div class="data-sources-section__header">
+          <h2 id="data-sources-active-title">
+            {{ t('settings.dataSources.section.active') }}
+          </h2>
+          <p>
+            {{ t('settings.dataSources.section.activeDescription') }}
+          </p>
+        </div>
+
+        <dl class="data-sources-summary">
+          <div
+            v-for="item in activeConfigurationItems"
+            :key="item.label"
+          >
+            <dt>{{ item.label }}</dt>
+            <dd>
+              <RouterLink
+                v-if="item.to"
+                class="data-sources-inline-link"
+                :to="item.to"
+              >
+                {{ item.value }}
+              </RouterLink>
+              <span v-else>{{ item.value }}</span>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="data-sources-section" aria-labelledby="data-sources-forecast-title">
+        <div class="data-sources-section__header">
+          <h2 id="data-sources-forecast-title">
+            {{ t('settings.dataSources.section.forecast') }}
+          </h2>
+          <p>
+            {{ t('settings.dataSources.section.forecastDescription') }}
+          </p>
+        </div>
+
+        <div class="data-sources-stack">
+          <DataSourceRow
+            :title="openMeteoSource.displayName"
+            :description="t('settings.dataSources.openMeteo.description')"
+            :status="providerStatus('openMeteo')"
+            :details="openMeteoDetails"
+            :official-link="{
+              label: t('settings.dataSources.officialSource'),
+              href: openMeteoSource.officialUrl,
+              ariaLabel: externalLabel(openMeteoSource.displayName),
+            }"
+            :licence-link="openMeteoSource.licenceUrl && openMeteoSource.licenceLabel ? {
+              label: openMeteoSource.licenceLabel,
+              href: openMeteoSource.licenceUrl,
+              ariaLabel: licenceLabel(openMeteoSource.licenceLabel),
+            } : null"
+            :secondary-link="longRangeDayCount > 0 && weather?.provider === 'openMeteo' ? {
+              label: t('settings.dataSources.viewLongRange'),
+              to: { name: 'weather-15-day' },
+            } : null"
+          />
+
+          <DataSourceRow
+            :title="caiyunSource.displayName"
+            :description="t('settings.dataSources.caiyun.description')"
+            :status="providerStatus('caiyun')"
+            :details="caiyunDetails"
+            :official-link="{
+              label: t('settings.dataSources.officialSource'),
+              href: caiyunSource.officialUrl,
+              ariaLabel: externalLabel(caiyunSource.displayName),
+            }"
+            :configure-link="{
+              label: t('settings.dataSources.configureService'),
+              to: { name: 'settings' },
+            }"
+            :secondary-link="longRangeDayCount > 0 && weather?.provider === 'caiyun' ? {
+              label: t('settings.dataSources.viewLongRange'),
+              to: { name: 'weather-15-day' },
+            } : null"
+          />
+        </div>
+      </section>
+
+      <div class="data-sources-two-column">
+        <section class="data-sources-section" aria-labelledby="data-sources-air-quality-title">
+          <div class="data-sources-section__header">
+            <h2 id="data-sources-air-quality-title">
+              {{ t('settings.dataSources.section.airQuality') }}
+            </h2>
+            <p>
+              {{ t('settings.dataSources.section.airQualityDescription') }}
+            </p>
+          </div>
+
+          <DataSourceRow
+            :title="`${airQualityApiSource.displayName} / ${airQualityModelSource.displayName}`"
+            :description="t('settings.dataSources.airQuality.description')"
+            :status="airQualityState"
+            :details="airQualityDetails"
+            :official-link="{
+              label: t('settings.dataSources.openMeteoAirQualitySource'),
+              href: airQualityApiSource.officialUrl,
+              ariaLabel: externalLabel(airQualityApiSource.displayName),
+            }"
+            :licence-link="airQualityApiSource.licenceUrl && airQualityApiSource.licenceLabel ? {
+              label: airQualityApiSource.licenceLabel,
+              href: airQualityApiSource.licenceUrl,
+              ariaLabel: licenceLabel(airQualityApiSource.licenceLabel),
+            } : null"
+            :secondary-link="{
+              label: t('settings.dataSources.camsOfficialSource'),
+              to: undefined,
+              href: airQualityModelSource.officialUrl,
+              ariaLabel: externalLabel(airQualityModelSource.displayName),
+            }"
+          />
+        </section>
+
+        <section class="data-sources-section" aria-labelledby="data-sources-location-title">
+          <div class="data-sources-section__header">
+            <h2 id="data-sources-location-title">
+              {{ t('settings.dataSources.section.location') }}
+            </h2>
+            <p>
+              {{ t('settings.dataSources.section.locationDescription') }}
+            </p>
+          </div>
+
+          <DataSourceRow
+            :title="amapSource.displayName"
+            :description="t('settings.dataSources.amap.description')"
+            :status="amapCredentialStatus"
+            :details="locationDetails"
+            :official-link="{
+              label: t('settings.dataSources.officialSource'),
+              href: amapSource.officialUrl,
+              ariaLabel: externalLabel(amapSource.displayName),
+            }"
+            :configure-link="{
+              label: t('settings.dataSources.configureService'),
+              to: { name: 'settings' },
+            }"
+          />
+        </section>
       </div>
 
-      <div class="mt-4 space-y-3">
-        <DataSourceRow
-          :title="openMeteoSource.displayName"
-          :description="t('settings.dataSources.openMeteo.description')"
-          :status="providerStatus('openMeteo')"
-          :details="openMeteoDetails"
-          :official-link="{
-            label: t('settings.dataSources.officialSource'),
-            href: openMeteoSource.officialUrl,
-            ariaLabel: externalLabel(openMeteoSource.displayName),
-          }"
-          :licence-link="openMeteoSource.licenceUrl && openMeteoSource.licenceLabel ? {
-            label: openMeteoSource.licenceLabel,
-            href: openMeteoSource.licenceUrl,
-            ariaLabel: licenceLabel(openMeteoSource.licenceLabel),
-          } : null"
-          :secondary-link="longRangeDayCount > 0 && weather?.provider === 'openMeteo' ? {
-            label: t('settings.dataSources.viewLongRange'),
-            to: { name: 'weather-15-day' },
-          } : null"
-        />
+      <section class="data-sources-section" aria-labelledby="data-sources-alert-title">
+        <div class="data-sources-section__header">
+          <h2 id="data-sources-alert-title">
+            {{ t('settings.dataSources.section.alerts') }}
+          </h2>
+          <p>
+            {{ t('settings.dataSources.section.alertsDescription') }}
+          </p>
+        </div>
 
-        <DataSourceRow
-          :title="caiyunSource.displayName"
-          :description="t('settings.dataSources.caiyun.description')"
-          :status="providerStatus('caiyun')"
-          :details="caiyunDetails"
-          :official-link="{
-            label: t('settings.dataSources.officialSource'),
-            href: caiyunSource.officialUrl,
-            ariaLabel: externalLabel(caiyunSource.displayName),
-          }"
-          :configure-link="{
-            label: t('settings.dataSources.configureService'),
-            to: { name: 'settings' },
-          }"
-          :secondary-link="longRangeDayCount > 0 && weather?.provider === 'caiyun' ? {
-            label: t('settings.dataSources.viewLongRange'),
-            to: { name: 'weather-15-day' },
-          } : null"
-        />
-      </div>
-    </section>
-
-    <section aria-labelledby="data-sources-air-quality-title">
-      <div class="max-w-3xl">
-        <h2
-          id="data-sources-air-quality-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
-          {{ t('settings.dataSources.section.airQuality') }}
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('settings.dataSources.section.airQualityDescription') }}
-        </p>
-      </div>
-
-      <div class="mt-4">
-        <DataSourceRow
-          :title="`${airQualityApiSource.displayName} / ${airQualityModelSource.displayName}`"
-          :description="t('settings.dataSources.airQuality.description')"
-          :status="airQualityState"
-          :details="airQualityDetails"
-          :official-link="{
-            label: t('settings.dataSources.openMeteoAirQualitySource'),
-            href: airQualityApiSource.officialUrl,
-            ariaLabel: externalLabel(airQualityApiSource.displayName),
-          }"
-          :licence-link="airQualityApiSource.licenceUrl && airQualityApiSource.licenceLabel ? {
-            label: airQualityApiSource.licenceLabel,
-            href: airQualityApiSource.licenceUrl,
-            ariaLabel: licenceLabel(airQualityApiSource.licenceLabel),
-          } : null"
-          :secondary-link="{
-            label: t('settings.dataSources.camsOfficialSource'),
-            to: undefined,
-            href: airQualityModelSource.officialUrl,
-            ariaLabel: externalLabel(airQualityModelSource.displayName),
-          }"
-        />
-      </div>
-    </section>
-
-    <section aria-labelledby="data-sources-location-title">
-      <div class="max-w-3xl">
-        <h2
-          id="data-sources-location-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
-          {{ t('settings.dataSources.section.location') }}
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('settings.dataSources.section.locationDescription') }}
-        </p>
-      </div>
-
-      <div class="mt-4">
-        <DataSourceRow
-          :title="amapSource.displayName"
-          :description="t('settings.dataSources.amap.description')"
-          :status="amapCredentialStatus"
-          :details="locationDetails"
-          :official-link="{
-            label: t('settings.dataSources.officialSource'),
-            href: amapSource.officialUrl,
-            ariaLabel: externalLabel(amapSource.displayName),
-          }"
-          :configure-link="{
-            label: t('settings.dataSources.configureService'),
-            to: { name: 'settings' },
-          }"
-        />
-      </div>
-    </section>
-
-    <section aria-labelledby="data-sources-alert-title">
-      <div class="max-w-3xl">
-        <h2
-          id="data-sources-alert-title"
-          class="text-section-title text-balance text-[var(--color-text-primary)]"
-        >
-          {{ t('settings.dataSources.section.alerts') }}
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-          {{ t('settings.dataSources.section.alertsDescription') }}
-        </p>
-      </div>
-
-      <div class="mt-4">
         <DataSourceRow
           :title="t('settings.dataSources.alert.title')"
           :description="t('settings.dataSources.alert.description')"
@@ -575,22 +593,204 @@ onMounted(() => {
             to: { name: 'settings' },
           }"
         />
-      </div>
-    </section>
+      </section>
 
-    <section
-      class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6"
-      aria-labelledby="data-sources-licence-title"
-    >
-      <h2
-        id="data-sources-licence-title"
-        class="text-section-title text-balance text-[var(--color-text-primary)]"
+      <section
+        class="data-sources-licence"
+        aria-labelledby="data-sources-licence-title"
       >
-        {{ t('settings.dataSources.section.licences') }}
-      </h2>
-      <p class="mt-2 max-w-3xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-        {{ t('settings.dataSources.licenceDescription') }}
-      </p>
-    </section>
+        <h2 id="data-sources-licence-title">
+          {{ t('settings.dataSources.section.licences') }}
+        </h2>
+        <p>
+          {{ t('settings.dataSources.licenceDescription') }}
+        </p>
+      </section>
+    </div>
   </PageLayout>
 </template>
+
+<style scoped>
+.data-sources-workspace {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 2rem);
+}
+
+.data-sources-back,
+.data-sources-inline-link {
+  width: fit-content;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-text);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 0.25rem;
+}
+
+.data-sources-back:hover,
+.data-sources-inline-link:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.data-sources-hero,
+.data-sources-privacy,
+.data-sources-licence {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.data-sources-hero {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  background:
+    linear-gradient(135deg, var(--color-surface-raised), var(--color-accent-wash)),
+    var(--color-surface-raised);
+}
+
+.data-sources-hero__copy {
+  max-width: 50rem;
+  min-width: 0;
+}
+
+.data-sources-hero__eyebrow {
+  margin: 0 0 var(--space-3);
+  color: var(--color-accent-text);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.data-sources-hero__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0;
+  line-height: var(--line-height-tight);
+}
+
+.data-sources-hero__description,
+.data-sources-section__header p,
+.data-sources-privacy p,
+.data-sources-licence p {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-small);
+  line-height: 1.7;
+}
+
+.data-sources-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.data-sources-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.data-sources-button--primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.data-sources-button--secondary {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.data-sources-hero__facts,
+.data-sources-summary {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.data-sources-hero__facts div,
+.data-sources-summary div {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: var(--space-3);
+}
+
+.data-sources-hero__facts dt,
+.data-sources-summary dt {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.data-sources-hero__facts dd,
+.data-sources-summary dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.data-sources-section {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.data-sources-section__header {
+  max-width: 50rem;
+}
+
+.data-sources-section__header h2,
+.data-sources-privacy h2,
+.data-sources-licence h2 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.data-sources-stack {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.data-sources-two-column {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+@media (min-width: 48rem) {
+  .data-sources-hero__facts,
+  .data-sources-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 70rem) {
+  .data-sources-hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 0.9fr);
+    align-items: end;
+  }
+
+  .data-sources-two-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .data-sources-summary {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+</style>

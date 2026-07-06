@@ -139,6 +139,62 @@ const importSummary = computed<BackupImportSummaryData | null>(() => {
   }
 })
 
+const currentThemeLabel = computed(() => {
+  if (mode.value === 'light') return t('shell.theme.light')
+  if (mode.value === 'dark') return t('shell.theme.dark')
+  return t('shell.theme.system')
+})
+
+const currentLanguageLabel = computed(() =>
+  locale.value === 'zh-CN'
+    ? t('settings.language.chineseName')
+    : t('settings.language.englishName'),
+)
+
+const providerLabel = computed(() =>
+  provider.value === 'caiyun'
+    ? t('settings.weatherProvider.caiyunLabel')
+    : t('settings.weatherProvider.openMeteoLabel'),
+)
+
+const heroFacts = computed(() => [
+  {
+    label: t('settings.hero.factLocal'),
+    value: t('settings.hero.factLocalValue'),
+  },
+  {
+    label: t('settings.hero.factTheme'),
+    value: currentThemeLabel.value,
+  },
+  {
+    label: t('settings.hero.factLanguage'),
+    value: currentLanguageLabel.value,
+  },
+  {
+    label: t('settings.hero.factBackup'),
+    value: t('settings.hero.factBackupValue'),
+  },
+])
+
+const dataSourceFacts = computed(() => [
+  {
+    label: t('settings.dataSources.summary.preferredForecastProvider'),
+    value: providerLabel.value,
+  },
+  {
+    label: t('settings.dataSources.summary.caiyunConfiguration'),
+    value: hasCaiyunToken.value
+      ? t('settings.dataSources.status.configured')
+      : t('settings.dataSources.status.notConfigured'),
+  },
+  {
+    label: t('settings.dataSources.summary.amapConfiguration'),
+    value: hasAmapKey.value
+      ? t('settings.dataSources.status.configured')
+      : t('settings.dataSources.status.notConfigured'),
+  },
+])
+
 const dialogCopy = computed(() => {
   if (dialogState.value?.kind === 'import') {
     return {
@@ -398,149 +454,189 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="space-y-10">
-    <BaseSection
-      :title="t('settings.section.appearance.title')"
-      :description="t('settings.section.appearance.description')"
+  <div class="settings-workspace">
+    <section
+      class="settings-hero"
+      aria-labelledby="settings-title"
     >
-      <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
-        <ThemeModeControl
-          :model-value="mode"
-          :error="themeError"
-          @update:model-value="changeTheme"
-        />
-      </div>
-    </BaseSection>
-
-    <BaseSection
-      :title="t('settings.section.language.title')"
-      :description="t('settings.section.language.description')"
-    >
-      <div class="space-y-5 rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
-        <LanguageControl />
-        <TranslationExportPanel />
-      </div>
-    </BaseSection>
-
-    <BaseSection
-      :title="t('settings.section.weatherProvider.title')"
-      :description="t('settings.section.weatherProvider.description')"
-    >
-      <WeatherProviderPreferences
-        :error="providerPersistenceError"
-        :has-caiyun-token="hasCaiyunToken"
-        :message="providerMessage"
-        :provider="provider"
-        @clear-message="weatherStore.clearProviderMessage"
-        @clear-token="weatherStore.clearCaiyunToken"
-        @save-token="weatherStore.saveCaiyunToken"
-        @update-provider="changeWeatherProvider"
-      />
-    </BaseSection>
-
-    <BaseSection
-      :title="t('settings.section.locationServices.title')"
-      :description="t('settings.section.locationServices.description')"
-    >
-      <WeatherLocationServices
-        :auto-location-on-home="autoLocationOnHome"
-        :error="amapPersistenceError"
-        :has-amap-key="hasAmapKey"
-        :message="amapMessage"
-        @clear-amap-key="weatherStore.clearAmapKey"
-        @clear-message="weatherStore.clearAmapMessage"
-        @save-amap-key="weatherStore.saveAmapKey"
-        @update-auto-location="weatherStore.setAutoLocationOnHome"
-      />
-    </BaseSection>
-
-    <BaseSection
-      :title="t('settings.section.dataSources.title')"
-      :description="t('settings.section.dataSources.description')"
-    >
-      <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
-        <div class="max-w-2xl">
-          <h3 class="text-base font-semibold text-balance text-[var(--color-text-primary)]">
-            {{ t('settings.dataSources.entryTitle') }}
-          </h3>
-          <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
-            {{ t('settings.dataSources.entryDescription') }}
-          </p>
+      <div class="settings-hero__copy">
+        <p class="settings-hero__eyebrow">
+          {{ t('settings.hero.eyebrow') }}
+        </p>
+        <h1 id="settings-title" class="settings-hero__title">
+          {{ t('settings.page.title') }}
+        </h1>
+        <p class="settings-hero__description">
+          {{ t('settings.page.description') }}
+        </p>
+        <div class="settings-hero__actions" :aria-label="t('settings.hero.actionsLabel')">
+          <a class="settings-button settings-button--primary" href="#settings-preferences">
+            {{ t('settings.hero.primaryAction') }}
+          </a>
+          <RouterLink
+            class="settings-button settings-button--secondary"
+            :to="{ name: 'settings-data-sources' }"
+          >
+            {{ t('settings.hero.secondaryAction') }}
+          </RouterLink>
         </div>
-        <RouterLink
-          class="interactive-surface mt-4 inline-flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
-          :to="{ name: 'settings-data-sources' }"
-        >
-          {{ t('settings.dataSources.entryAction') }}
-        </RouterLink>
       </div>
-    </BaseSection>
+      <dl class="settings-hero__facts" :aria-label="t('settings.hero.factsLabel')">
+        <div v-for="fact in heroFacts" :key="fact.label" class="settings-hero__fact">
+          <dt>{{ fact.label }}</dt>
+          <dd>{{ fact.value }}</dd>
+        </div>
+      </dl>
+    </section>
 
-    <BaseSection
-      :title="t('settings.section.localData.title')"
-      :description="t('settings.section.localData.description')"
-    >
-      <LocalDataStatus
-        :weather-city="weatherCity"
-        :task-count="taskCount"
-        :countdown-count="countdownCount"
-        :bookmark-count="bookmarkCount"
-        :error="localizedStatusError"
-      />
-    </BaseSection>
+    <div class="settings-grid">
+      <main class="settings-grid__main" aria-labelledby="settings-preferences">
+        <BaseSection
+          id="settings-preferences"
+          :title="t('settings.section.preferences.title')"
+          :description="t('settings.section.preferences.description')"
+        >
+          <div class="settings-panel settings-panel--stack">
+            <ThemeModeControl
+              :model-value="mode"
+              :error="themeError"
+              @update:model-value="changeTheme"
+            />
+            <div class="settings-divider" />
+            <LanguageControl />
+            <TranslationExportPanel />
+          </div>
+        </BaseSection>
 
-    <BaseSection
-      :title="t('settings.section.backup.title')"
-      :description="t('settings.section.backup.description')"
-    >
-      <BackupPanel
-        :import-summary="importSummary"
-        :error="localizedBackupError"
-        :success="localizedBackupSuccess"
-        :export-disabled="isBusy || Boolean(statusError)"
-        :import-disabled="isBusy"
-        @export="exportBackup"
-        @file-selected="selectBackupFile"
-        @confirm-import="openImportConfirmation"
-        @discard-import="discardImport"
-      />
-    </BaseSection>
+        <BaseSection
+          :title="t('settings.section.backup.title')"
+          :description="t('settings.section.backup.description')"
+        >
+          <BackupPanel
+            :import-summary="importSummary"
+            :error="localizedBackupError"
+            :success="localizedBackupSuccess"
+            :export-disabled="isBusy || Boolean(statusError)"
+            :import-disabled="isBusy"
+            @export="exportBackup"
+            @file-selected="selectBackupFile"
+            @confirm-import="openImportConfirmation"
+            @discard-import="discardImport"
+          />
+        </BaseSection>
 
-    <BaseSection
-      :title="t('settings.section.exports.title')"
-      :description="t('settings.section.exports.description')"
-    >
-      <PortableExportsPanel
-        :has-todos-rows="hasTodosRows"
-        :has-bookmark-rows="hasBookmarkRows"
-        :error="localizedPortableExportError"
-        :success="localizedPortableExportSuccess"
-        @export-requested="exportPortableData"
-      />
-    </BaseSection>
+        <BaseSection
+          :title="t('settings.section.exports.title')"
+          :description="t('settings.section.exports.description')"
+        >
+          <PortableExportsPanel
+            :has-todos-rows="hasTodosRows"
+            :has-bookmark-rows="hasBookmarkRows"
+            :error="localizedPortableExportError"
+            :success="localizedPortableExportSuccess"
+            @export-requested="exportPortableData"
+          />
+        </BaseSection>
 
-    <BaseSection
-      :title="t('settings.section.privacy.title')"
-      :description="t('settings.section.privacy.description')"
-    >
-      <PrivacyPanel />
-    </BaseSection>
+        <BaseSection
+          :title="t('settings.section.clearData.title')"
+          :description="t('settings.section.clearData.description')"
+        >
+          <DataClearPanel
+            :has-weather="selectedLocation !== null || weatherFavoriteCount > 0"
+            :task-count="taskCount"
+            :countdown-count="countdownCount"
+            :bookmark-count="bookmarkCount"
+            :has-any-data="hasAnyData"
+            :error="localizedClearError"
+            :success="localizedClearSuccess"
+            @request-clear="openClearConfirmation"
+          />
+        </BaseSection>
+      </main>
 
-    <BaseSection
-      :title="t('settings.section.clearData.title')"
-      :description="t('settings.section.clearData.description')"
-    >
-      <DataClearPanel
-        :has-weather="selectedLocation !== null || weatherFavoriteCount > 0"
-        :task-count="taskCount"
-        :countdown-count="countdownCount"
-        :bookmark-count="bookmarkCount"
-        :has-any-data="hasAnyData"
-        :error="localizedClearError"
-        :success="localizedClearSuccess"
-        @request-clear="openClearConfirmation"
-      />
-    </BaseSection>
+      <aside class="settings-grid__side" aria-label="Settings status and data source controls">
+        <BaseSection
+          :title="t('settings.section.localData.title')"
+          :description="t('settings.section.localData.description')"
+        >
+          <LocalDataStatus
+            :weather-city="weatherCity"
+            :task-count="taskCount"
+            :countdown-count="countdownCount"
+            :bookmark-count="bookmarkCount"
+            :error="localizedStatusError"
+          />
+        </BaseSection>
+
+        <BaseSection
+          :title="t('settings.section.dataSources.title')"
+          :description="t('settings.section.dataSources.description')"
+        >
+          <div class="settings-panel settings-panel--compact">
+            <div>
+              <h3 class="settings-card-title">
+                {{ t('settings.dataSources.entryTitle') }}
+              </h3>
+              <p class="settings-card-copy">
+                {{ t('settings.dataSources.entryDescription') }}
+              </p>
+            </div>
+            <dl class="settings-source-facts">
+              <div v-for="fact in dataSourceFacts" :key="fact.label">
+                <dt>{{ fact.label }}</dt>
+                <dd>{{ fact.value }}</dd>
+              </div>
+            </dl>
+            <RouterLink
+              class="settings-button settings-button--secondary settings-button--full"
+              :to="{ name: 'settings-data-sources' }"
+            >
+              {{ t('settings.dataSources.entryAction') }}
+            </RouterLink>
+          </div>
+        </BaseSection>
+
+        <BaseSection
+          :title="t('settings.section.weatherProvider.title')"
+          :description="t('settings.section.weatherProvider.description')"
+        >
+          <WeatherProviderPreferences
+            :error="providerPersistenceError"
+            :has-caiyun-token="hasCaiyunToken"
+            :message="providerMessage"
+            :provider="provider"
+            @clear-message="weatherStore.clearProviderMessage"
+            @clear-token="weatherStore.clearCaiyunToken"
+            @save-token="weatherStore.saveCaiyunToken"
+            @update-provider="changeWeatherProvider"
+          />
+        </BaseSection>
+
+        <BaseSection
+          :title="t('settings.section.locationServices.title')"
+          :description="t('settings.section.locationServices.description')"
+        >
+          <WeatherLocationServices
+            :auto-location-on-home="autoLocationOnHome"
+            :error="amapPersistenceError"
+            :has-amap-key="hasAmapKey"
+            :message="amapMessage"
+            @clear-amap-key="weatherStore.clearAmapKey"
+            @clear-message="weatherStore.clearAmapMessage"
+            @save-amap-key="weatherStore.saveAmapKey"
+            @update-auto-location="weatherStore.setAutoLocationOnHome"
+          />
+        </BaseSection>
+
+        <BaseSection
+          :title="t('settings.section.privacy.title')"
+          :description="t('settings.section.privacy.description')"
+        >
+          <PrivacyPanel />
+        </BaseSection>
+      </aside>
+    </div>
 
     <SettingsConfirmationDialog
       :open="dialogState !== null"
@@ -558,3 +654,178 @@ onMounted(() => {
     </SettingsConfirmationDialog>
   </div>
 </template>
+
+<style scoped>
+.settings-workspace {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.settings-hero {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, var(--color-surface-raised), var(--color-surface)),
+    var(--color-surface-raised);
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.settings-hero__copy {
+  min-width: 0;
+  max-width: 48rem;
+}
+
+.settings-hero__eyebrow {
+  margin: 0 0 var(--space-3);
+  color: var(--color-accent-text);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.settings-hero__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0;
+  line-height: var(--line-height-tight);
+}
+
+.settings-hero__description,
+.settings-card-copy {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-small);
+  line-height: 1.7;
+}
+
+.settings-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.settings-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.settings-button--primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.settings-button--secondary {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+.settings-button--full {
+  width: 100%;
+}
+
+.settings-hero__facts,
+.settings-source-facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.settings-hero__fact,
+.settings-source-facts div {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: var(--space-3);
+}
+
+.settings-hero__fact dt,
+.settings-source-facts dt {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.settings-hero__fact dd,
+.settings-source-facts dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.settings-grid {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.settings-grid__main,
+.settings-grid__side {
+  display: grid;
+  align-content: start;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  min-width: 0;
+}
+
+.settings-panel {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.settings-panel--stack {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.settings-panel--compact {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.settings-divider {
+  height: 1px;
+  background: var(--color-border-soft);
+}
+
+.settings-card-title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (min-width: 48rem) {
+  .settings-hero__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 70rem) {
+  .settings-hero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(24rem, 0.85fr);
+    align-items: end;
+  }
+
+  .settings-hero__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(21rem, 0.8fr);
+  }
+}
+</style>
