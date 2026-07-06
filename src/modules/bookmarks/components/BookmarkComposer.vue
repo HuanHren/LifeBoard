@@ -86,20 +86,21 @@ defineExpose({ focusTitle })
 
 <template>
   <form
-    class="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-4 shadow-[var(--shadow-soft)] sm:p-5"
+    class="bookmark-composer"
+    :aria-label="t('bookmarks.composer.panelLabel')"
     novalidate
     @submit.prevent="submitBookmark"
   >
-    <div class="mb-5">
-      <h2 class="text-section-title text-balance text-[var(--color-text-primary)]">
+    <div class="bookmark-composer__header">
+      <h2 class="bookmark-composer__title">
         {{ t('bookmarks.composer.title') }}
       </h2>
-      <p class="mt-1 max-w-2xl text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+      <p class="bookmark-composer__description">
         {{ t('bookmarks.composer.description') }}
       </p>
     </div>
 
-    <div class="grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)_12rem_auto] lg:items-start">
+    <div class="bookmark-composer__grid">
       <div class="space-y-2">
         <label class="block text-sm font-semibold" for="bookmark-title">
           {{ t('bookmarks.form.titleLabel') }}
@@ -193,34 +194,89 @@ defineExpose({ focusTitle })
       </BaseButton>
     </div>
 
-    <div class="mt-4 space-y-2">
-      <label class="block text-sm font-semibold" for="bookmark-note">
-        {{ t('bookmarks.form.noteLabel') }}
-      </label>
-      <textarea
-        id="bookmark-note"
-        v-model="note"
-        :aria-describedby="noteDescribedBy"
-        :aria-invalid="errors.note ? 'true' : 'false'"
-        class="min-h-24 w-full resize-y rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 py-2 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
-        :maxlength="BOOKMARK_NOTE_MAX_LENGTH"
-        name="bookmark-note"
-        :placeholder="t('bookmarks.form.notePlaceholder')"
-        rows="3"
-      />
-      <p id="bookmark-note-helper" class="text-caption text-[var(--color-text-secondary)]">
-        {{ t('bookmarks.composer.noteHelper', { count: BOOKMARK_NOTE_MAX_LENGTH }) }}
-      </p>
-      <p
-        v-if="errors.note"
-        id="bookmark-note-error"
-        class="text-sm font-medium text-[var(--color-danger)]"
-        role="alert"
-      >
-        {{ localizeBookmarkError(errors.note, t) }}
-      </p>
-    </div>
+    <details class="bookmark-composer__details">
+      <summary>{{ t('bookmarks.composer.noteToggle') }}</summary>
+      <div class="mt-3 space-y-2">
+        <label class="block text-sm font-semibold" for="bookmark-note">
+          {{ t('bookmarks.form.noteLabel') }}
+        </label>
+        <textarea
+          id="bookmark-note"
+          v-model="note"
+          :aria-describedby="noteDescribedBy"
+          :aria-invalid="errors.note ? 'true' : 'false'"
+          class="min-h-24 w-full resize-y rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 py-2 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
+          :maxlength="BOOKMARK_NOTE_MAX_LENGTH"
+          name="bookmark-note"
+          :placeholder="t('bookmarks.form.notePlaceholder')"
+          rows="3"
+        />
+        <p id="bookmark-note-helper" class="text-caption text-[var(--color-text-secondary)]">
+          {{ t('bookmarks.composer.noteHelper', { count: BOOKMARK_NOTE_MAX_LENGTH }) }}
+        </p>
+        <p
+          v-if="errors.note"
+          id="bookmark-note-error"
+          class="text-sm font-medium text-[var(--color-danger)]"
+          role="alert"
+        >
+          {{ localizeBookmarkError(errors.note, t) }}
+        </p>
+      </div>
+    </details>
 
     <p class="sr-only" aria-live="polite">{{ announcement }}</p>
   </form>
 </template>
+
+<style scoped>
+.bookmark-composer {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  padding: var(--space-4);
+}
+
+.bookmark-composer__header {
+  margin-bottom: var(--space-4);
+}
+
+.bookmark-composer__title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+}
+
+.bookmark-composer__description {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  line-height: 1.5;
+}
+
+.bookmark-composer__grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.bookmark-composer__details {
+  margin-top: var(--space-4);
+}
+
+.bookmark-composer__details summary {
+  min-height: 2.75rem;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent-text);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-medium);
+  line-height: 2.75rem;
+}
+
+@media (min-width: 64rem) {
+  .bookmark-composer__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+</style>

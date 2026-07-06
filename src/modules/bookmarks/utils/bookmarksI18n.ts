@@ -27,6 +27,8 @@ const errorKeys: Record<string, TranslationKey> = {
     'bookmarks.error.noteTooLong',
   'Local storage is unavailable. Bookmark data cannot be saved in this browser.':
     'bookmarks.error.storageUnavailable',
+  'Local storage is unavailable. Bookmark changes cannot be saved in this browser.':
+    'bookmarks.error.storageUnavailable',
   'Saved bookmark data contains invalid JSON. It was left unchanged for recovery.':
     'bookmarks.error.invalidJson',
   'Saved bookmark data does not match the supported format. It was left unchanged.':

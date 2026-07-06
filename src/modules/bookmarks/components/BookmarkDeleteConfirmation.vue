@@ -33,11 +33,11 @@ onMounted(() => {
     <span class="mr-auto text-sm font-medium text-[var(--color-danger)]">
       {{ t('bookmarks.delete.description', { title: bookmarkTitle }) }}
     </span>
-    <BaseButton ref="keepButton" size="sm" variant="ghost" @click="emit('cancel')">
+    <BaseButton ref="keepButton" class="min-h-11" size="sm" variant="ghost" @click="emit('cancel')">
       {{ t('bookmarks.delete.cancel') }}
     </BaseButton>
     <BaseButton
-      class="border-[var(--color-danger)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
+      class="min-h-11 border-[var(--color-danger)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
       size="sm"
       variant="secondary"
       @click="emit('confirm')"

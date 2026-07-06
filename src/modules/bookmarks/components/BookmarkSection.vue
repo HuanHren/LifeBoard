@@ -17,26 +17,66 @@ withDefaults(defineProps<Props>(), {
 <template>
   <section
     :class="[
-      'rounded-[var(--radius-lg)] border p-5 sm:p-6',
+      'bookmark-section',
       tone === 'pinned'
-        ? 'border-[var(--color-border)] bg-[var(--color-accent-wash)]'
-        : 'border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]',
+        ? 'bookmark-section--pinned'
+        : 'bookmark-section--standard',
     ]"
     :aria-labelledby="`bookmark-section-${tone}`"
   >
-    <div class="border-b border-[var(--color-border-soft)] pb-4">
+    <div class="bookmark-section__header">
       <h2
         :id="`bookmark-section-${tone}`"
-        class="text-section-title text-balance text-[var(--color-text-primary)]"
+        class="bookmark-section__title"
       >
         {{ title }}
       </h2>
-      <p class="mt-1 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+      <p class="bookmark-section__description">
         {{ description }}
       </p>
     </div>
-    <div class="pt-5">
+    <div class="bookmark-section__body">
       <BookmarkList :bookmarks="bookmarks" />
     </div>
   </section>
 </template>
+
+<style scoped>
+.bookmark-section {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.bookmark-section--standard {
+  background: var(--color-surface-raised);
+}
+
+.bookmark-section--pinned {
+  border-color: var(--color-border);
+  background: var(--color-accent-wash);
+}
+
+.bookmark-section__header {
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: var(--space-4);
+}
+
+.bookmark-section__title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-section-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.bookmark-section__description {
+  margin-top: var(--space-1);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-label);
+  line-height: 1.55;
+}
+
+.bookmark-section__body {
+  padding: 0 var(--space-4);
+}
+</style>

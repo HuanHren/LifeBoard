@@ -10,7 +10,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <ul class="divide-y divide-[var(--color-border-soft)]">
+  <ul class="bookmark-list">
     <BookmarkItem
       v-for="bookmark in bookmarks"
       :key="bookmark.id"
@@ -18,3 +18,9 @@ defineProps<Props>()
     />
   </ul>
 </template>
+
+<style scoped>
+.bookmark-list {
+  min-width: 0;
+}
+</style>

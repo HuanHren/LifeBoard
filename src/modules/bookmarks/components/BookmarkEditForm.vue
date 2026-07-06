@@ -176,10 +176,10 @@ function saveBookmark() {
     </div>
 
     <div class="flex flex-wrap justify-end gap-2">
-      <BaseButton size="sm" variant="ghost" @click="emit('cancel')">
+      <BaseButton class="min-h-11" size="sm" variant="ghost" @click="emit('cancel')">
         {{ t('bookmarks.form.cancelAction') }}
       </BaseButton>
-      <BaseButton size="sm" type="submit" variant="primary">
+      <BaseButton class="min-h-11" size="sm" type="submit" variant="primary">
         {{ t('bookmarks.form.saveAction') }}
       </BaseButton>
     </div>
