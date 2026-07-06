@@ -684,7 +684,7 @@ export const enUSModules = {
   'todos.tasks.summary.weekLabel': 'This week',
   'todos.tasks.summary.weekOne': '1 later this week',
   'todos.tasks.summary.weekMany': '{count} later this week',
-  'todos.tasks.metric.todayClear': 'Today Clear',
+  'todos.tasks.metric.todayClear': 'Clear',
   'todos.tasks.metric.todayClearDetail': 'No tasks due today',
   'todos.tasks.metric.overdueClear': 'None overdue',
   'todos.tasks.metric.overdueClearDetail': 'No past due work',

@@ -29,6 +29,19 @@ const {
 } = storeToRefs(todosStore)
 const { initializeTodos, retryPersistence, setFilter } = todosStore
 
+type MetricValueKind = 'numeric' | 'semantic'
+
+type MetricValueState = {
+  value: string
+  valueKind: MetricValueKind
+}
+
+function createMetricValue(count: number, emptyKey: Parameters<typeof t>[0]): MetricValueState {
+  return count === 0
+    ? { value: t(emptyKey), valueKind: 'semantic' }
+    : { value: formatNumber(count), valueKind: 'numeric' }
+}
+
 const overdueCount = computed(
   () =>
     todayTasks.value.filter((task) => task.dueDate !== null && task.dueDate < localToday.value)
@@ -90,9 +103,7 @@ const visibleTaskCountLabel = computed(() =>
   ),
 )
 const todayMetricValue = computed(() =>
-  todayTasks.value.length === 0
-    ? t('todos.tasks.metric.todayClear')
-    : formatNumber(todayTasks.value.length),
+  createMetricValue(todayTasks.value.length, 'todos.tasks.metric.todayClear'),
 )
 const todayMetricDetail = computed(() =>
   todayTasks.value.length === 0
@@ -102,9 +113,7 @@ const todayMetricDetail = computed(() =>
       }),
 )
 const overdueMetricValue = computed(() =>
-  overdueCount.value === 0
-    ? t('todos.tasks.metric.overdueClear')
-    : formatNumber(overdueCount.value),
+  createMetricValue(overdueCount.value, 'todos.tasks.metric.overdueClear'),
 )
 const overdueMetricDetail = computed(() =>
   overdueCount.value === 0
@@ -114,9 +123,7 @@ const overdueMetricDetail = computed(() =>
       }),
 )
 const weekMetricValue = computed(() =>
-  weekCount.value === 0
-    ? t('todos.tasks.metric.weekClear')
-    : formatNumber(weekCount.value),
+  createMetricValue(weekCount.value, 'todos.tasks.metric.weekClear'),
 )
 const weekMetricDetail = computed(() =>
   weekCount.value === 0
@@ -126,9 +133,7 @@ const weekMetricDetail = computed(() =>
       }),
 )
 const countdownMetricValue = computed(() =>
-  sortedCountdowns.value.length === 0
-    ? t('todos.countdowns.metric.clear')
-    : formatNumber(sortedCountdowns.value.length),
+  createMetricValue(sortedCountdowns.value.length, 'todos.countdowns.metric.clear'),
 )
 const countdownMetricDetail = computed(() =>
   sortedCountdowns.value.length === 0
@@ -172,22 +177,30 @@ onMounted(() => {
       <dl class="todos-workspace__metrics" :aria-label="t('todos.tasks.overview.label')">
         <div class="todos-workspace__metric todos-workspace__metric--primary">
           <dt>{{ t('todos.tasks.filter.today') }}</dt>
-          <dd>{{ todayMetricValue }}</dd>
+          <dd :class="`todos-workspace__metric-value--${todayMetricValue.valueKind}`">
+            {{ todayMetricValue.value }}
+          </dd>
           <p>{{ todayMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric" :class="overdueCount > 0 ? 'todos-workspace__metric--danger' : ''">
           <dt>{{ t('todos.tasks.pastDue') }}</dt>
-          <dd>{{ overdueMetricValue }}</dd>
+          <dd :class="`todos-workspace__metric-value--${overdueMetricValue.valueKind}`">
+            {{ overdueMetricValue.value }}
+          </dd>
           <p>{{ overdueMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric">
           <dt>{{ t('todos.tasks.summary.weekLabel') }}</dt>
-          <dd>{{ weekMetricValue }}</dd>
+          <dd :class="`todos-workspace__metric-value--${weekMetricValue.valueKind}`">
+            {{ weekMetricValue.value }}
+          </dd>
           <p>{{ weekMetricDetail }}</p>
         </div>
         <div class="todos-workspace__metric">
           <dt>{{ t('todos.countdowns.title') }}</dt>
-          <dd>{{ countdownMetricValue }}</dd>
+          <dd :class="`todos-workspace__metric-value--${countdownMetricValue.valueKind}`">
+            {{ countdownMetricValue.value }}
+          </dd>
           <p>{{ countdownMetricDetail }}</p>
         </div>
       </dl>
@@ -334,10 +347,23 @@ onMounted(() => {
 .todos-workspace__metric dd {
   margin-top: 0.35rem;
   color: var(--color-text-primary);
+}
+
+.todos-workspace__metric-value--numeric {
   font-size: clamp(1.45rem, 3vw, 2.1rem);
   font-variant-numeric: tabular-nums;
   font-weight: 730;
   line-height: 1;
+}
+
+.todos-workspace__metric-value--semantic {
+  max-width: 100%;
+  color: color-mix(in srgb, var(--color-text-primary) 88%, var(--color-text-secondary));
+  font-size: clamp(1.08rem, 1.22vw, 1.28rem);
+  font-weight: 680;
+  line-height: 1.12;
+  overflow-wrap: normal;
+  text-wrap: balance;
 }
 
 .todos-workspace__metric p {
@@ -445,6 +471,10 @@ onMounted(() => {
 
   .todos-workspace__metric dd {
     margin-top: 0.28rem;
+  }
+
+  .todos-workspace__metric-value--numeric,
+  .todos-workspace__metric-value--semantic {
     font-size: 1rem;
     line-height: 1.15;
   }
