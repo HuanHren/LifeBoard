@@ -19,7 +19,7 @@ export function transformJson(
   indentation: JsonIndentation,
 ): TransformResult {
   if (input.trim().length === 0) {
-    return { output: '', error: 'Enter JSON to process.' }
+    return { output: '', error: 'Enter JSON to format or minify.' }
   }
 
   try {

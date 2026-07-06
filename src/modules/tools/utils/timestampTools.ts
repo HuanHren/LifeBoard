@@ -65,7 +65,7 @@ export function convertTimestamp(input: string, locale: AppLocale): TimestampRes
       return {
         ok: false,
         error:
-          'This numeric value is ambiguous. Use a typical Unix seconds value or a 12–13 digit millisecond value.',
+          'This numeric value is ambiguous. Use a typical Unix seconds value or a 12-13 digit millisecond value.',
       }
     }
 

@@ -37,7 +37,7 @@ const errorKeys: Record<string, TranslationKey> = {
   'Enter Unix seconds, Unix milliseconds, or an ISO-compatible date value.':
     'tools.timestamp.error.empty',
   'Enter a finite numeric timestamp.': 'tools.timestamp.error.finite',
-  'This numeric value is ambiguous. Use a typical Unix seconds value or a 12–13 digit millisecond value.':
+  'This numeric value is ambiguous. Use a typical Unix seconds value or a 12-13 digit millisecond value.':
     'tools.timestamp.error.ambiguous',
   'The timestamp is outside the supported date range.':
     'tools.timestamp.error.range',

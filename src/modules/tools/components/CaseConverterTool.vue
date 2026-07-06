@@ -29,17 +29,22 @@ function processText() {
 
   output.value = convertCase(input.value, mode.value)
 }
+
+function clearInput() {
+  input.value = ''
+  output.value = ''
+}
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="tool-panel">
     <ToolPanelHeader
       :description="definition.description"
       :title="definition.title"
     />
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-2">
-      <div class="min-w-0 space-y-4">
+    <div class="tool-panel__grid">
+      <div class="tool-panel__input">
         <ToolTextArea
           id="case-input"
           v-model="input"
@@ -50,24 +55,19 @@ function processText() {
           :placeholder="t('tools.case.inputPlaceholder')"
         />
 
-        <fieldset class="space-y-2">
-          <legend class="text-sm font-semibold">
+        <fieldset class="tool-panel__fieldset">
+          <legend>
             {{ t('tools.case.outputStyle') }}
           </legend>
-          <div class="flex flex-wrap gap-2">
+          <div class="case-modes">
             <label
               v-for="caseMode in CASE_MODES"
               :key="caseMode.value"
-              class="flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] border border-[var(--color-border-soft)] px-3 text-sm"
-              :class="
-                mode === caseMode.value
-                  ? 'bg-[var(--color-accent-wash)] text-[var(--color-accent-text)]'
-                  : 'bg-[var(--color-surface)]'
-              "
+              class="case-modes__item"
+              :class="{ 'is-active': mode === caseMode.value }"
             >
               <input
                 v-model="mode"
-                class="size-4 accent-[var(--color-accent)]"
                 name="case-mode"
                 type="radio"
                 :value="caseMode.value"
@@ -77,9 +77,18 @@ function processText() {
           </div>
         </fieldset>
 
-        <BaseButton variant="primary" @click="processText">
-          {{ t('tools.case.action') }}
-        </BaseButton>
+        <div class="tool-panel__actions">
+          <BaseButton variant="primary" @click="processText">
+            {{ t('tools.case.action') }}
+          </BaseButton>
+          <BaseButton
+            :disabled="input.length === 0 && output.length === 0"
+            variant="ghost"
+            @click="clearInput"
+          >
+            {{ t('tools.common.clearInput') }}
+          </BaseButton>
+        </div>
       </div>
 
       <ToolOutput
@@ -91,3 +100,37 @@ function processText() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.case-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.case-modes__item {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-label);
+}
+
+.case-modes__item.is-active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-wash);
+  color: var(--color-accent-text);
+  box-shadow: inset 0 -0.1875rem 0 var(--color-accent);
+}
+
+.case-modes__item input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-accent);
+}
+</style>

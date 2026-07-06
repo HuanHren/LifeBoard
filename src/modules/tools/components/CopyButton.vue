@@ -23,8 +23,9 @@ const buttonLabel = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="copy-button">
     <BaseButton
+      :aria-label="label ?? t('tools.common.copyOutput')"
       :aria-busy="copyStatus === 'copying'"
       :disabled="content.length === 0 || copyStatus === 'copying'"
       size="sm"
@@ -38,10 +39,24 @@ const buttonLabel = computed(() => {
     </p>
     <p
       v-if="copyError"
-      class="mt-2 max-w-sm text-sm leading-6 text-[var(--color-danger)]"
+      class="copy-button__error"
       role="alert"
     >
       {{ localizeToolsError(copyError, t) }}
     </p>
   </div>
 </template>
+
+<style scoped>
+.copy-button {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.copy-button__error {
+  max-width: 18rem;
+  color: var(--color-danger);
+  font-size: var(--font-size-caption);
+  line-height: 1.45;
+}
+</style>

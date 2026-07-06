@@ -11,15 +11,40 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <header class="max-w-3xl">
-    <h2 class="text-section-title text-balance text-[var(--color-text-primary)]">
+  <header class="tool-panel-header">
+    <h3>
       {{ title }}
-    </h2>
-    <p class="mt-2 text-sm leading-6 text-pretty text-[var(--color-text-secondary)]">
+    </h3>
+    <p>
       {{ description }}
     </p>
-    <p class="mt-2 text-caption text-[var(--color-text-tertiary)]">
+    <p class="tool-panel-header__privacy">
       {{ t('tools.privacy') }}
     </p>
   </header>
 </template>
+
+<style scoped>
+.tool-panel-header {
+  max-width: 52rem;
+}
+
+.tool-panel-header h3 {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+}
+
+.tool-panel-header p {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-label);
+  line-height: 1.55;
+}
+
+.tool-panel-header__privacy {
+  color: var(--color-text-tertiary) !important;
+  font-size: var(--font-size-caption) !important;
+}
+</style>

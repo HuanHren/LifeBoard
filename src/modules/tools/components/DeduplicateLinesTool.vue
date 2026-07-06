@@ -36,17 +36,22 @@ function processLines() {
 function clearOutput() {
   result.value = null
 }
+
+function clearInput() {
+  input.value = ''
+  result.value = null
+}
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="tool-panel">
     <ToolPanelHeader
       :description="definition.description"
       :title="definition.title"
     />
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-2">
-      <div class="min-w-0 space-y-4">
+    <div class="tool-panel__grid">
+      <div class="tool-panel__input">
         <ToolTextArea
           id="deduplicate-input"
           v-model="input"
@@ -57,63 +62,71 @@ function clearOutput() {
           :placeholder="t('tools.deduplicate.inputPlaceholder')"
         />
 
-        <fieldset class="space-y-1">
-          <legend class="mb-1 text-sm font-semibold">
+        <fieldset class="tool-panel__fieldset">
+          <legend>
             {{ t('tools.deduplicate.options') }}
           </legend>
-          <label class="flex min-h-11 items-center gap-3 text-sm">
+          <div class="tool-panel__options">
+          <label>
             <input
               v-model="options.caseInsensitive"
-              class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
             {{ t('tools.deduplicate.ignoreCase') }}
           </label>
-          <label class="flex min-h-11 items-center gap-3 text-sm">
+          <label>
             <input
               v-model="options.trimForComparison"
-              class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
             {{ t('tools.deduplicate.ignoreWhitespace') }}
           </label>
-          <label class="flex min-h-11 items-center gap-3 text-sm">
+          <label>
             <input
               v-model="options.removeBlankLines"
-              class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
             {{ t('tools.deduplicate.removeBlank') }}
           </label>
+          </div>
         </fieldset>
 
-        <BaseButton variant="primary" @click="processLines">
-          {{ t('tools.deduplicate.action') }}
-        </BaseButton>
+        <div class="tool-panel__actions">
+          <BaseButton variant="primary" @click="processLines">
+            {{ t('tools.deduplicate.action') }}
+          </BaseButton>
+          <BaseButton
+            :disabled="input.length === 0 && !result"
+            variant="ghost"
+            @click="clearInput"
+          >
+            {{ t('tools.common.clearInput') }}
+          </BaseButton>
+        </div>
       </div>
 
-      <div class="min-w-0 space-y-3">
+      <div class="deduplicate-output">
         <dl
           v-if="result"
-          class="grid grid-cols-3 gap-2 rounded-[var(--radius-md)] bg-[var(--color-surface)] p-3 text-center"
+          class="deduplicate-output__metrics"
         >
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">
+            <dt>
               {{ t('tools.deduplicate.sourceLines') }}
             </dt>
-            <dd class="mt-1 font-semibold tabular-nums">{{ result.sourceLines }}</dd>
+            <dd>{{ result.sourceLines }}</dd>
           </div>
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">
+            <dt>
               {{ t('tools.deduplicate.resultLines') }}
             </dt>
-            <dd class="mt-1 font-semibold tabular-nums">{{ result.resultLines }}</dd>
+            <dd>{{ result.resultLines }}</dd>
           </div>
           <div>
-            <dt class="text-caption text-[var(--color-text-secondary)]">
+            <dt>
               {{ t('tools.deduplicate.removed') }}
             </dt>
-            <dd class="mt-1 font-semibold tabular-nums">{{ result.removedDuplicates }}</dd>
+            <dd>{{ result.removedDuplicates }}</dd>
           </div>
         </dl>
         <ToolOutput
@@ -126,3 +139,40 @@ function clearOutput() {
     </div>
   </div>
 </template>
+
+<style scoped>
+.deduplicate-output {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.deduplicate-output__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.deduplicate-output__metrics div {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: var(--space-3);
+}
+
+.deduplicate-output__metrics dt {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-label);
+}
+
+.deduplicate-output__metrics dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+}
+</style>

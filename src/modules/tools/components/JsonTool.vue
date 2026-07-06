@@ -40,17 +40,23 @@ function processJson(action: JsonAction) {
   output.value = result.output
   processingError.value = result.error
 }
+
+function clearInput() {
+  input.value = ''
+  output.value = ''
+  processingError.value = null
+}
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="tool-panel">
     <ToolPanelHeader
       :description="definition.description"
       :title="definition.title"
     />
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-2">
-      <div class="min-w-0 space-y-4">
+    <div class="tool-panel__grid">
+      <div class="tool-panel__input">
         <ToolTextArea
           id="json-input"
           v-model="input"
@@ -62,25 +68,23 @@ function processJson(action: JsonAction) {
           @update:model-value="processingError = null"
         />
 
-        <fieldset class="space-y-2">
-          <legend class="text-sm font-semibold text-[var(--color-text-primary)]">
+        <fieldset class="tool-panel__fieldset">
+          <legend>
             {{ t('tools.json.indentation') }}
           </legend>
-          <div class="flex flex-wrap gap-4">
-            <label class="flex min-h-11 items-center gap-2 text-sm">
+          <div class="tool-panel__options">
+            <label>
               <input
                 v-model="indentation"
-                class="size-5 accent-[var(--color-accent)]"
                 name="json-indentation"
                 :value="2"
                 type="radio"
               />
               {{ t('tools.json.spaces', { count: 2 }) }}
             </label>
-            <label class="flex min-h-11 items-center gap-2 text-sm">
+            <label>
               <input
                 v-model="indentation"
-                class="size-5 accent-[var(--color-accent)]"
                 name="json-indentation"
                 :value="4"
                 type="radio"
@@ -90,12 +94,19 @@ function processJson(action: JsonAction) {
           </div>
         </fieldset>
 
-        <div class="flex flex-wrap gap-2">
+        <div class="tool-panel__actions">
           <BaseButton variant="primary" @click="processJson('format')">
             {{ t('tools.json.format') }}
           </BaseButton>
           <BaseButton variant="secondary" @click="processJson('minify')">
             {{ t('tools.json.minify') }}
+          </BaseButton>
+          <BaseButton
+            :disabled="input.length === 0 && output.length === 0"
+            variant="ghost"
+            @click="clearInput"
+          >
+            {{ t('tools.common.clearInput') }}
           </BaseButton>
         </div>
       </div>

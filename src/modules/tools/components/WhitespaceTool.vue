@@ -30,17 +30,22 @@ function processText() {
 
   output.value = cleanWhitespace(input.value, options)
 }
+
+function clearInput() {
+  input.value = ''
+  output.value = ''
+}
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="tool-panel">
     <ToolPanelHeader
       :description="definition.description"
       :title="definition.title"
     />
 
-    <div class="grid min-w-0 gap-6 xl:grid-cols-2">
-      <div class="min-w-0 space-y-4">
+    <div class="tool-panel__grid">
+      <div class="tool-panel__input">
         <ToolTextArea
           id="whitespace-input"
           v-model="input"
@@ -51,31 +56,40 @@ function processText() {
           :placeholder="t('tools.whitespace.inputPlaceholder')"
         />
 
-        <fieldset class="space-y-1">
-          <legend class="mb-1 text-sm font-semibold">
+        <fieldset class="tool-panel__fieldset">
+          <legend>
             {{ t('tools.whitespace.options') }}
           </legend>
-          <label class="flex min-h-11 items-center gap-3 text-sm">
+          <div class="tool-panel__options">
+          <label>
             <input
               v-model="options.collapseInlineWhitespace"
-              class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
             {{ t('tools.whitespace.collapseInline') }}
           </label>
-          <label class="flex min-h-11 items-center gap-3 text-sm">
+          <label>
             <input
               v-model="options.collapseBlankLines"
-              class="size-5 accent-[var(--color-accent)]"
               type="checkbox"
             />
             {{ t('tools.whitespace.collapseBlank') }}
           </label>
+          </div>
         </fieldset>
 
-        <BaseButton variant="primary" @click="processText">
-          {{ t('tools.whitespace.action') }}
-        </BaseButton>
+        <div class="tool-panel__actions">
+          <BaseButton variant="primary" @click="processText">
+            {{ t('tools.whitespace.action') }}
+          </BaseButton>
+          <BaseButton
+            :disabled="input.length === 0 && output.length === 0"
+            variant="ghost"
+            @click="clearInput"
+          >
+            {{ t('tools.common.clearInput') }}
+          </BaseButton>
+        </div>
       </div>
 
       <ToolOutput
