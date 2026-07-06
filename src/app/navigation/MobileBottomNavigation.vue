@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import { useI18n } from '@/i18n/useI18n'
@@ -15,6 +15,8 @@ const route = useRoute()
 const moreOpen = ref(false)
 const moreButton = ref<HTMLButtonElement | null>(null)
 const morePanel = ref<HTMLElement | null>(null)
+let desktopNavigationQuery: MediaQueryList | null = null
+let desktopNavigationChangeHandler: ((event: MediaQueryListEvent) => void) | null = null
 
 const activeNavigationKey = computed(() => getNavigationKey(route.meta.navigationKey))
 const isMoreActive = computed(() => isMobileMoreNavigationKey(activeNavigationKey.value))
@@ -79,7 +81,30 @@ watch(
   },
 )
 
+onMounted(() => {
+  if (typeof window === 'undefined') return
+
+  desktopNavigationQuery = window.matchMedia('(min-width: 56.25rem)')
+  desktopNavigationChangeHandler = (event) => {
+    if (event.matches) {
+      closeMore()
+    }
+  }
+
+  if (desktopNavigationQuery.matches) {
+    closeMore()
+  }
+
+  desktopNavigationQuery.addEventListener('change', desktopNavigationChangeHandler)
+})
+
 onBeforeUnmount(() => {
+  if (desktopNavigationQuery && desktopNavigationChangeHandler) {
+    desktopNavigationQuery.removeEventListener('change', desktopNavigationChangeHandler)
+  }
+
+  desktopNavigationQuery = null
+  desktopNavigationChangeHandler = null
   document.body.style.overflow = ''
 })
 </script>
