@@ -555,7 +555,7 @@ onMounted(() => {
         </BaseSection>
       </main>
 
-      <aside class="settings-grid__side" aria-label="Settings status and data source controls">
+      <aside class="settings-grid__side" :aria-label="t('settings.accessibility.sideControls')">
         <BaseSection
           :title="t('settings.section.localData.title')"
           :description="t('settings.section.localData.description')"

@@ -46,6 +46,7 @@ export const enUS = {
   'settings.hero.primaryAction': 'Review preferences',
   'settings.hero.secondaryAction': 'View data sources',
   'settings.hero.factsLabel': 'Settings status',
+  'settings.accessibility.sideControls': 'Settings status and data source controls',
   'settings.hero.factLocal': 'Local data',
   'settings.hero.factLocalValue': 'Stored in this browser',
   'settings.hero.factTheme': 'Theme',
@@ -389,13 +390,13 @@ export const enUS = {
   'settings.dialog.importDescription':
     'This will replace the current theme preference, selected city, favorite cities, tasks, countdowns, and bookmarks with the reviewed backup.',
   'settings.dialog.importConfirm': 'Import and replace',
-  'settings.dialog.weatherTitle': 'Clear Weather data?',
+  'settings.dialog.weatherTitle': 'Clear weather data?',
   'settings.dialog.weatherDescription':
     'This removes the selected city, favorite cities, and current in-memory forecast.',
-  'settings.dialog.todosTitle': 'Clear Todos data?',
+  'settings.dialog.todosTitle': 'Clear todos data?',
   'settings.dialog.todosDescription':
     'This removes every saved task and countdown from this browser.',
-  'settings.dialog.bookmarksTitle': 'Clear Bookmarks data?',
+  'settings.dialog.bookmarksTitle': 'Clear bookmarks data?',
   'settings.dialog.bookmarksDescription':
     'This removes every saved bookmark from this browser.',
   'settings.dialog.allTitle': 'Clear all LifeBoard data?',

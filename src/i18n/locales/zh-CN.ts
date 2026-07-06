@@ -166,6 +166,7 @@ export const zhCN = {
   'settings.hero.primaryAction': '查看偏好',
   'settings.hero.secondaryAction': '查看数据源',
   'settings.hero.factsLabel': '设置状态',
+  'settings.accessibility.sideControls': '设置状态和数据源控件',
   'settings.hero.factLocal': '本地数据',
   'settings.hero.factLocalValue': '保存在此浏览器',
   'settings.hero.factTheme': '主题',

@@ -44,6 +44,7 @@ export const translationKeys = [
   'settings.hero.primaryAction',
   'settings.hero.secondaryAction',
   'settings.hero.factsLabel',
+  'settings.accessibility.sideControls',
   'settings.hero.factLocal',
   'settings.hero.factLocalValue',
   'settings.hero.factTheme',
