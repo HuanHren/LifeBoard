@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import type {
@@ -46,7 +48,7 @@ function saveKey() {
 </script>
 
 <template>
-  <div class="space-y-6 rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5 sm:p-6">
+  <BaseSurface as="div" class="weather-location-services" padding="md" variant="plain">
     <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
       <div>
         <label
@@ -122,16 +124,16 @@ function saveKey() {
     </p>
 
     <div v-if="message || error" class="space-y-2">
-      <p
+      <BaseNotice
         v-if="error"
-        class="rounded-[var(--radius-md)] border border-[var(--color-danger)] bg-[var(--color-danger-soft)] p-3 text-sm font-medium text-[var(--color-text-primary)]"
+        tone="danger"
         role="alert"
       >
         {{ t(errorKeys[error]) }}
-      </p>
-      <p
+      </BaseNotice>
+      <BaseNotice
         v-if="message"
-        class="rounded-[var(--radius-md)] bg-[var(--color-accent-wash)] p-3 text-sm font-medium text-[var(--color-text-primary)]"
+        tone="success"
         aria-live="polite"
       >
         {{ t(messageKeys[message]) }}
@@ -142,7 +144,14 @@ function saveKey() {
         >
           {{ t('settings.weatherProvider.dismiss') }}
         </button>
-      </p>
+      </BaseNotice>
     </div>
-  </div>
+  </BaseSurface>
 </template>
+
+<style scoped>
+.weather-location-services {
+  display: grid;
+  gap: var(--space-6);
+}
+</style>

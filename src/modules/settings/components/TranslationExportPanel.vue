@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { shallowRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
 import { downloadTranslationSource } from '@/i18n/translationExport'
 import { useI18n } from '@/i18n/useI18n'
 
@@ -37,19 +38,21 @@ function exportTranslations() {
       {{ t('settings.translationExport.action') }}
     </BaseButton>
 
-    <p
+    <BaseNotice
       v-if="error"
-      class="mt-3 text-sm font-medium text-[var(--color-danger)]"
+      class="mt-3"
+      tone="danger"
       role="alert"
     >
       {{ error }}
-    </p>
-    <p
+    </BaseNotice>
+    <BaseNotice
       v-if="success"
-      class="mt-3 text-sm text-[var(--color-text-secondary)]"
+      class="mt-3"
+      tone="success"
       aria-live="polite"
     >
       {{ success }}
-    </p>
+    </BaseNotice>
   </div>
 </template>

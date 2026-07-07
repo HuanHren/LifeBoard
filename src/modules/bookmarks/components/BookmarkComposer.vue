@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, shallowRef, useTemplateRef } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import FormField from '@/components/base/FormField.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 import {
   BOOKMARK_CATEGORY_MAX_LENGTH,
@@ -32,7 +37,7 @@ const errors = shallowRef<BookmarkValidation>({
   note: null,
 })
 const announcement = shallowRef('')
-const titleInput = useTemplateRef<HTMLInputElement>('titleInput')
+const titleInput = useTemplateRef<{ focus: () => void }>('titleInput')
 
 const titleDescribedBy = computed(() =>
   errors.value.title ? 'bookmark-title-helper bookmark-title-error' : 'bookmark-title-helper',
@@ -91,103 +96,77 @@ defineExpose({ focusTitle })
     novalidate
     @submit.prevent="submitBookmark"
   >
-    <div class="bookmark-composer__header">
-      <h2 class="bookmark-composer__title">
-        {{ t('bookmarks.composer.title') }}
-      </h2>
-      <p class="bookmark-composer__description">
-        {{ t('bookmarks.composer.description') }}
-      </p>
-    </div>
+    <BaseSurface as="div" class="bookmark-composer__surface" padding="md" variant="raised">
+    <SectionHeader
+      class="bookmark-composer__header"
+      :description="t('bookmarks.composer.description')"
+      :title="t('bookmarks.composer.title')"
+    />
 
     <div class="bookmark-composer__grid">
-      <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-title">
-          {{ t('bookmarks.form.titleLabel') }}
-        </label>
-        <input
+      <FormField
+        id="bookmark-title"
+        :description="t('bookmarks.composer.titleHelper')"
+        :error="localizeBookmarkError(errors.title, t)"
+        :label="t('bookmarks.form.titleLabel')"
+      >
+        <template #default="{ ariaDescribedby, ariaInvalid }">
+        <BaseInput
           id="bookmark-title"
           ref="titleInput"
           v-model="title"
-          :aria-describedby="titleDescribedBy"
-          :aria-invalid="errors.title ? 'true' : 'false'"
+          :aria-describedby="ariaDescribedby || titleDescribedBy"
+          :aria-invalid="ariaInvalid === 'true' ? 'true' : undefined"
           autocomplete="off"
-          class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_TITLE_MAX_LENGTH"
           name="bookmark-title"
           :placeholder="t('bookmarks.form.titlePlaceholder')"
           type="text"
         />
-        <p id="bookmark-title-helper" class="text-caption text-[var(--color-text-secondary)]">
-          {{ t('bookmarks.composer.titleHelper') }}
-        </p>
-        <p
-          v-if="errors.title"
-          id="bookmark-title-error"
-          class="text-sm font-medium text-[var(--color-danger)]"
-          role="alert"
-        >
-          {{ localizeBookmarkError(errors.title, t) }}
-        </p>
-      </div>
+        </template>
+      </FormField>
 
-      <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-url">
-          {{ t('bookmarks.form.urlLabel') }}
-        </label>
-        <input
+      <FormField
+        id="bookmark-url"
+        :description="t('bookmarks.composer.urlHelper')"
+        :error="localizeBookmarkError(errors.url, t)"
+        :label="t('bookmarks.form.urlLabel')"
+      >
+        <template #default="{ ariaDescribedby, ariaInvalid }">
+        <BaseInput
           id="bookmark-url"
           v-model="url"
-          :aria-describedby="urlDescribedBy"
-          :aria-invalid="errors.url ? 'true' : 'false'"
+          :aria-describedby="ariaDescribedby || urlDescribedBy"
+          :aria-invalid="ariaInvalid === 'true' ? 'true' : undefined"
           autocomplete="url"
-          class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_URL_MAX_LENGTH + 1"
           name="bookmark-url"
           :placeholder="t('bookmarks.form.urlPlaceholder')"
           type="url"
         />
-        <p id="bookmark-url-helper" class="text-caption text-[var(--color-text-secondary)]">
-          {{ t('bookmarks.composer.urlHelper') }}
-        </p>
-        <p
-          v-if="errors.url"
-          id="bookmark-url-error"
-          class="text-sm font-medium text-[var(--color-danger)]"
-          role="alert"
-        >
-          {{ localizeBookmarkError(errors.url, t) }}
-        </p>
-      </div>
+        </template>
+      </FormField>
 
-      <div class="space-y-2">
-        <label class="block text-sm font-semibold" for="bookmark-category">
-          {{ t('bookmarks.form.categoryLabel') }}
-        </label>
-        <input
+      <FormField
+        id="bookmark-category"
+        :description="t('bookmarks.composer.categoryHelper')"
+        :error="localizeBookmarkError(errors.category, t)"
+        :label="t('bookmarks.form.categoryLabel')"
+      >
+        <template #default="{ ariaDescribedby, ariaInvalid }">
+        <BaseInput
           id="bookmark-category"
           v-model="category"
-          :aria-describedby="categoryDescribedBy"
-          :aria-invalid="errors.category ? 'true' : 'false'"
+          :aria-describedby="ariaDescribedby || categoryDescribedBy"
+          :aria-invalid="ariaInvalid === 'true' ? 'true' : undefined"
           autocomplete="off"
-          class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
           :maxlength="BOOKMARK_CATEGORY_MAX_LENGTH"
           name="bookmark-category"
           :placeholder="t('bookmarks.form.categoryPlaceholder')"
           type="text"
         />
-        <p id="bookmark-category-helper" class="text-caption text-[var(--color-text-secondary)]">
-          {{ t('bookmarks.composer.categoryHelper') }}
-        </p>
-        <p
-          v-if="errors.category"
-          id="bookmark-category-error"
-          class="text-sm font-medium text-[var(--color-danger)]"
-          role="alert"
-        >
-          {{ localizeBookmarkError(errors.category, t) }}
-        </p>
-      </div>
+        </template>
+      </FormField>
 
       <BaseButton class="w-full lg:mt-7 lg:w-auto" type="submit" variant="primary">
         {{ t('bookmarks.form.addAction') }}
@@ -214,45 +193,30 @@ defineExpose({ focusTitle })
         <p id="bookmark-note-helper" class="text-caption text-[var(--color-text-secondary)]">
           {{ t('bookmarks.composer.noteHelper', { count: BOOKMARK_NOTE_MAX_LENGTH }) }}
         </p>
-        <p
+        <BaseNotice
           v-if="errors.note"
           id="bookmark-note-error"
-          class="text-sm font-medium text-[var(--color-danger)]"
+          tone="danger"
           role="alert"
         >
           {{ localizeBookmarkError(errors.note, t) }}
-        </p>
+        </BaseNotice>
       </div>
     </details>
 
     <p class="sr-only" aria-live="polite">{{ announcement }}</p>
+    </BaseSurface>
   </form>
 </template>
 
 <style scoped>
 .bookmark-composer {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
-  padding: var(--space-4);
+  min-width: 0;
 }
 
+.bookmark-composer__surface,
 .bookmark-composer__header {
   margin-bottom: var(--space-4);
-}
-
-.bookmark-composer__title {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-card-title);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-label);
-}
-
-.bookmark-composer__description {
-  margin-top: var(--space-1);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
-  line-height: 1.5;
 }
 
 .bookmark-composer__grid {

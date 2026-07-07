@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import BookmarkList from '@/modules/bookmarks/components/BookmarkList.vue'
 import type { Bookmark } from '@/modules/bookmarks/types/bookmarks'
 
@@ -15,7 +17,8 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <section
+  <BaseSurface
+    as="section"
     :class="[
       'bookmark-section',
       tone === 'pinned'
@@ -23,57 +26,29 @@ withDefaults(defineProps<Props>(), {
         : 'bookmark-section--standard',
     ]"
     :aria-labelledby="`bookmark-section-${tone}`"
+    padding="none"
+    :variant="tone === 'pinned' ? 'info' : 'plain'"
   >
-    <div class="bookmark-section__header">
-      <h2
-        :id="`bookmark-section-${tone}`"
-        class="bookmark-section__title"
-      >
-        {{ title }}
-      </h2>
-      <p class="bookmark-section__description">
-        {{ description }}
-      </p>
-    </div>
+    <SectionHeader
+      class="bookmark-section__header"
+      :description="description"
+      :title="title"
+      :title-id="`bookmark-section-${tone}`"
+    />
     <div class="bookmark-section__body">
       <BookmarkList :bookmarks="bookmarks" />
     </div>
-  </section>
+  </BaseSurface>
 </template>
 
 <style scoped>
 .bookmark-section {
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   overflow: hidden;
-}
-
-.bookmark-section--standard {
-  background: var(--color-surface-raised);
-}
-
-.bookmark-section--pinned {
-  border-color: var(--color-border);
-  background: var(--color-accent-wash);
 }
 
 .bookmark-section__header {
   border-bottom: 1px solid var(--color-border-soft);
   padding: var(--space-4);
-}
-
-.bookmark-section__title {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-section-title);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-}
-
-.bookmark-section__description {
-  margin-top: var(--space-1);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-label);
-  line-height: 1.55;
 }
 
 .bookmark-section__body {

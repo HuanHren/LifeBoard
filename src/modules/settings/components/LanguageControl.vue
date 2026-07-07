@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { shallowRef } from 'vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import type { AppLocale } from '@/i18n/types'
@@ -98,14 +99,14 @@ function changeLanguage(nextLocale: AppLocale) {
       </label>
     </div>
 
-    <p
+    <BaseNotice
       v-if="persistenceError"
       id="language-error"
-      class="text-sm font-medium text-[var(--color-danger)]"
+      tone="danger"
       role="alert"
     >
       {{ t('settings.language.storageError') }}
-    </p>
+    </BaseNotice>
     <p
       v-else
       id="language-status"

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
 import type { BackupImportSummaryData } from '@/modules/settings/types/settings'
@@ -36,7 +38,7 @@ function handleFileSelection(event: Event) {
 </script>
 
 <template>
-  <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]">
+  <BaseSurface as="div" class="settings-backup-panel" padding="none" variant="plain">
     <div class="grid gap-6 p-5 md:grid-cols-2 md:p-6">
       <div class="space-y-3">
         <div>
@@ -78,20 +80,20 @@ function handleFileSelection(event: Event) {
     </div>
 
     <div v-if="error || success || importSummary" class="space-y-4 border-t border-[var(--color-border-soft)] p-5 md:p-6">
-      <p
+      <BaseNotice
         v-if="error"
-        class="rounded-[var(--radius-md)] border border-[var(--color-danger)] bg-[var(--color-danger-soft)] p-4 text-sm font-medium text-[var(--color-text-primary)]"
+        tone="danger"
         role="alert"
       >
         {{ error }}
-      </p>
-      <p
+      </BaseNotice>
+      <BaseNotice
         v-if="success"
-        class="rounded-[var(--radius-md)] bg-[var(--color-accent-wash)] p-4 text-sm font-medium text-[var(--color-text-primary)]"
+        tone="success"
         aria-live="polite"
       >
         {{ success }}
-      </p>
+      </BaseNotice>
       <template v-if="importSummary">
         <BackupImportSummary :summary="importSummary" />
         <div class="flex flex-wrap gap-2">
@@ -104,5 +106,5 @@ function handleFileSelection(event: Event) {
         </div>
       </template>
     </div>
-  </div>
+  </BaseSurface>
 </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
 import BaseIcon, { type BaseIconName } from '@/components/base/BaseIcon.vue'
 
 interface Props {
@@ -7,6 +8,9 @@ interface Props {
   type?: 'text' | 'search' | 'url' | 'email' | 'password'
   placeholder?: string
   disabled?: boolean
+  autocomplete?: string
+  name?: string
+  maxlength?: number
   leadingIcon?: BaseIconName
   trailingIcon?: BaseIconName
   ariaDescribedby?: string
@@ -21,6 +25,9 @@ withDefaults(defineProps<Props>(), {
   type: 'text',
   placeholder: undefined,
   disabled: false,
+  autocomplete: undefined,
+  name: undefined,
+  maxlength: undefined,
   leadingIcon: undefined,
   trailingIcon: undefined,
   ariaDescribedby: undefined,
@@ -28,6 +35,13 @@ withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<Emits>()
+const input = useTemplateRef<HTMLInputElement>('input')
+
+function focus() {
+  input.value?.focus()
+}
+
+defineExpose({ focus })
 </script>
 
 <template>
@@ -38,10 +52,14 @@ const emit = defineEmits<Emits>()
     <BaseIcon v-if="leadingIcon" :name="leadingIcon" size="sm" class="text-[var(--color-text-tertiary)]" />
     <input
       :id="id"
+      ref="input"
       :aria-describedby="ariaDescribedby"
       :aria-invalid="ariaInvalid"
+      :autocomplete="autocomplete"
       class="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-[var(--color-muted-foreground)] disabled:cursor-not-allowed"
       :disabled="disabled"
+      :maxlength="maxlength"
+      :name="name"
       :placeholder="placeholder"
       :type="type"
       :value="modelValue"

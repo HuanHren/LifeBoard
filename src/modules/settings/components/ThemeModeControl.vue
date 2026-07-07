@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BaseNotice from '@/components/base/BaseNotice.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import type { ThemeMode } from '@/shared/types/theme'
@@ -83,13 +84,13 @@ const options: Array<{
       </label>
     </div>
 
-    <p
+    <BaseNotice
       v-if="error"
       id="theme-mode-error"
-      class="text-sm font-medium text-[var(--color-danger)]"
+      tone="danger"
       role="alert"
     >
       {{ t('settings.theme.storageError') }}
-    </p>
+    </BaseNotice>
   </fieldset>
 </template>

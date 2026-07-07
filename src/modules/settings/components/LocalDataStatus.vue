@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
@@ -39,13 +41,12 @@ const bookmarkStatus = computed(() =>
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-soft)]">
+  <BaseSurface as="div" class="local-data-status" padding="none" variant="plain">
     <div
       v-if="error"
-      class="border-b border-[var(--color-danger)] bg-[var(--color-danger-soft)] p-4"
-      role="alert"
+      class="local-data-status__notice"
     >
-      <p class="text-sm font-medium text-[var(--color-text-primary)]">{{ error }}</p>
+      <BaseNotice tone="danger" role="alert">{{ error }}</BaseNotice>
     </div>
 
     <dl class="divide-y divide-[var(--color-border-soft)] bg-[var(--color-surface-raised)]">
@@ -86,5 +87,16 @@ const bookmarkStatus = computed(() =>
         </dd>
       </div>
     </dl>
-  </div>
+  </BaseSurface>
 </template>
+
+<style scoped>
+.local-data-status {
+  overflow: hidden;
+}
+
+.local-data-status__notice {
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: var(--space-3);
+}
+</style>

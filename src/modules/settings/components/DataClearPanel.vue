@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import type { SettingsClearTarget } from '@/modules/settings/types/settings'
 
@@ -52,7 +54,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]">
+  <BaseSurface as="div" class="data-clear-panel" padding="none" variant="plain">
     <div class="divide-y divide-[var(--color-border-soft)]">
       <div class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
@@ -148,12 +150,12 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
     </div>
 
     <div v-if="error || success" class="space-y-3 border-t border-[var(--color-border-soft)] p-4 sm:p-5">
-      <p v-if="error" class="text-sm font-medium text-[var(--color-danger)]" role="alert">
+      <BaseNotice v-if="error" tone="danger" role="alert">
         {{ error }}
-      </p>
-      <p v-if="success" class="text-sm font-medium text-[var(--color-text-primary)]" aria-live="polite">
+      </BaseNotice>
+      <BaseNotice v-if="success" tone="success" aria-live="polite">
         {{ success }}
-      </p>
+      </BaseNotice>
     </div>
-  </div>
+  </BaseSurface>
 </template>

@@ -5,6 +5,8 @@ import BaseEmpty from '@/components/base/BaseEmpty.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import { useI18n } from '@/i18n/useI18n'
 import BookmarkComposer from '@/modules/bookmarks/components/BookmarkComposer.vue'
 import BookmarkControls from '@/modules/bookmarks/components/BookmarkControls.vue'
@@ -94,7 +96,7 @@ onMounted(() => {
 
 <template>
   <div class="bookmarks-workspace">
-    <section class="bookmarks-hero" aria-labelledby="bookmarks-title">
+    <BaseSurface as="section" class="bookmarks-hero" aria-labelledby="bookmarks-title" padding="lg" variant="raised">
       <div class="bookmarks-hero__copy">
         <p class="bookmarks-hero__eyebrow">{{ t('bookmarks.hero.eyebrow') }}</p>
         <h1 id="bookmarks-title" class="bookmarks-hero__title">
@@ -114,24 +116,29 @@ onMounted(() => {
       </div>
 
       <dl class="bookmarks-hero__metrics" :aria-label="t('bookmarks.hero.metricsLabel')">
-        <div class="bookmarks-hero__metric">
-          <dt>{{ t('bookmarks.hero.totalLabel') }}</dt>
-          <dd>{{ totalLabel }}</dd>
-        </div>
-        <div class="bookmarks-hero__metric">
-          <dt>{{ t('bookmarks.hero.pinnedLabel') }}</dt>
-          <dd>{{ pinnedLabel }}</dd>
-        </div>
-        <div class="bookmarks-hero__metric">
-          <dt>{{ t('bookmarks.hero.categoriesLabel') }}</dt>
-          <dd>{{ categoryLabel }}</dd>
-        </div>
-        <div class="bookmarks-hero__metric">
-          <dt>{{ t('bookmarks.hero.visibleLabel') }}</dt>
-          <dd>{{ visibleLabel }}</dd>
-        </div>
+        <StatCard
+          :label="t('bookmarks.hero.totalLabel')"
+          :value="totalLabel"
+          value-kind="semantic"
+        />
+        <StatCard
+          :label="t('bookmarks.hero.pinnedLabel')"
+          :tone="pinnedCount > 0 ? 'accent' : 'default'"
+          :value="pinnedLabel"
+          value-kind="semantic"
+        />
+        <StatCard
+          :label="t('bookmarks.hero.categoriesLabel')"
+          :value="categoryLabel"
+          value-kind="semantic"
+        />
+        <StatCard
+          :label="t('bookmarks.hero.visibleLabel')"
+          :value="visibleLabel"
+          value-kind="semantic"
+        />
       </dl>
-    </section>
+    </BaseSurface>
 
     <BaseSkeleton v-if="!isInitialized" :label="t('home.bookmarks.loading')" />
 
@@ -219,10 +226,7 @@ onMounted(() => {
 .bookmarks-hero {
   display: grid;
   gap: var(--space-5);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background: var(--color-surface-raised);
-  padding: clamp(1rem, 3vw, 2rem);
 }
 
 .bookmarks-hero__copy {
@@ -263,28 +267,6 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-2);
-}
-
-.bookmarks-hero__metric {
-  min-width: 0;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  background: color-mix(in oklch, var(--color-surface-elevated) 86%, transparent);
-  padding: var(--space-3);
-}
-
-.bookmarks-hero__metric dt {
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-medium);
-}
-
-.bookmarks-hero__metric dd {
-  margin-top: var(--space-1);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-  overflow-wrap: anywhere;
 }
 
 .bookmarks-workspace__grid {
@@ -336,7 +318,6 @@ onMounted(() => {
 
   .bookmarks-hero {
     gap: var(--space-4);
-    padding: var(--space-4);
   }
 
   .bookmarks-hero__title {
@@ -355,14 +336,6 @@ onMounted(() => {
 
   .bookmarks-hero__metrics {
     gap: var(--space-1);
-  }
-
-  .bookmarks-hero__metric {
-    padding: var(--space-2);
-  }
-
-  .bookmarks-hero__metric dd {
-    font-size: var(--font-size-caption);
   }
 
   .bookmarks-workspace__grid,

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 
 interface Props {
@@ -45,19 +48,19 @@ function selectCategory(category: string) {
 </script>
 
 <template>
-  <section
+  <BaseSurface
+    as="section"
     class="bookmarks-controls"
     aria-labelledby="bookmark-controls-title"
+    padding="md"
+    variant="muted"
   >
-    <div class="bookmarks-controls__header">
-      <div>
-        <h2 id="bookmark-controls-title" class="bookmarks-controls__title">
-          {{ t('bookmarks.controls.title') }}
-        </h2>
-        <p class="bookmarks-controls__description">
-          {{ t('bookmarks.controls.description') }}
-        </p>
-      </div>
+    <SectionHeader
+      :description="t('bookmarks.controls.description')"
+      :title="t('bookmarks.controls.title')"
+      title-id="bookmark-controls-title"
+    >
+      <template #actions>
       <button
         class="interactive-surface bookmarks-controls__clear"
         :disabled="!hasActiveFilters"
@@ -66,21 +69,20 @@ function selectCategory(category: string) {
       >
         {{ t('bookmarks.controls.clear') }}
       </button>
-    </div>
+      </template>
+    </SectionHeader>
 
     <div class="bookmarks-controls__search">
       <div class="space-y-2">
         <label class="block text-sm font-semibold" for="bookmark-search">
           {{ t('bookmarks.controls.searchLabel') }}
         </label>
-        <input
+        <BaseInput
           id="bookmark-search"
-          :value="searchQuery"
-          autocomplete="off"
-          class="min-h-11 w-full rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-inset)] px-3 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] hover:border-[var(--color-accent)]"
+          :model-value="searchQuery"
           :placeholder="t('bookmarks.controls.searchPlaceholder')"
           type="search"
-          @input="emit('updateSearch', ($event.target as HTMLInputElement).value)"
+          @update:model-value="emit('updateSearch', $event)"
         />
       </div>
     </div>
@@ -126,38 +128,13 @@ function selectCategory(category: string) {
         {{ category }}
       </button>
     </div>
-  </section>
+  </BaseSurface>
 </template>
 
 <style scoped>
 .bookmarks-controls {
   display: grid;
   gap: var(--space-4);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  padding: var(--space-4);
-}
-
-.bookmarks-controls__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: start;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.bookmarks-controls__title {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-card-title);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-label);
-}
-
-.bookmarks-controls__description {
-  margin-top: var(--space-1);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
 }
 
 .bookmarks-controls__clear {
@@ -210,16 +187,6 @@ function selectCategory(category: string) {
 @media (max-width: 40rem) {
   .bookmarks-controls {
     gap: var(--space-3);
-    padding: var(--space-3);
-  }
-
-  .bookmarks-controls__header {
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .bookmarks-controls__description {
-    display: none;
   }
 
   .bookmarks-controls__clear,

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseNotice from '@/components/base/BaseNotice.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import { useI18n } from '@/i18n/useI18n'
 import type { PortableExportKind } from '@/modules/settings/types/settingsExports'
 
@@ -20,7 +22,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface)]">
+  <BaseSurface as="div" class="portable-exports-panel" padding="none" variant="muted">
     <div class="space-y-3 border-b border-[var(--color-border-soft)] p-5 sm:p-6">
       <p class="max-w-3xl text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ t('settings.exports.description') }}
@@ -102,12 +104,12 @@ const { t } = useI18n()
       v-if="success || error"
       class="border-t border-[var(--color-border-soft)] px-5 py-4 text-sm sm:px-6"
     >
-      <p v-if="success" class="font-medium text-[var(--color-accent-text)]" aria-live="polite">
+      <BaseNotice v-if="success" tone="success" aria-live="polite">
         {{ success }}
-      </p>
-      <p v-if="error" class="font-medium text-[var(--color-danger)]" role="alert">
+      </BaseNotice>
+      <BaseNotice v-if="error" tone="danger" role="alert">
         {{ error }}
-      </p>
+      </BaseNotice>
     </div>
-  </div>
+  </BaseSurface>
 </template>

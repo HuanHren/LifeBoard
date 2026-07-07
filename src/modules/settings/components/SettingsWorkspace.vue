@@ -2,6 +2,8 @@
 import { computed, onMounted, ref, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseSection from '@/components/base/BaseSection.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
@@ -455,9 +457,12 @@ onMounted(() => {
 
 <template>
   <div class="settings-workspace">
-    <section
+    <BaseSurface
+      as="section"
       class="settings-hero"
       aria-labelledby="settings-title"
+      padding="lg"
+      variant="raised"
     >
       <div class="settings-hero__copy">
         <p class="settings-hero__eyebrow">
@@ -470,11 +475,11 @@ onMounted(() => {
           {{ t('settings.page.description') }}
         </p>
         <div class="settings-hero__actions" :aria-label="t('settings.hero.actionsLabel')">
-          <a class="settings-button settings-button--primary" href="#settings-preferences">
+          <a class="control-focus settings-button settings-button--primary" href="#settings-preferences">
             {{ t('settings.hero.primaryAction') }}
           </a>
           <RouterLink
-            class="settings-button settings-button--secondary"
+            class="control-focus settings-button settings-button--secondary"
             :to="{ name: 'settings-data-sources' }"
           >
             {{ t('settings.hero.secondaryAction') }}
@@ -482,12 +487,15 @@ onMounted(() => {
         </div>
       </div>
       <dl class="settings-hero__facts" :aria-label="t('settings.hero.factsLabel')">
-        <div v-for="fact in heroFacts" :key="fact.label" class="settings-hero__fact">
-          <dt>{{ fact.label }}</dt>
-          <dd>{{ fact.value }}</dd>
-        </div>
+        <StatCard
+          v-for="fact in heroFacts"
+          :key="fact.label"
+          :label="fact.label"
+          :value="fact.value"
+          value-kind="semantic"
+        />
       </dl>
-    </section>
+    </BaseSurface>
 
     <div class="settings-grid">
       <main class="settings-grid__main" aria-labelledby="settings-preferences">
@@ -496,7 +504,7 @@ onMounted(() => {
           :title="t('settings.section.preferences.title')"
           :description="t('settings.section.preferences.description')"
         >
-          <div class="settings-panel settings-panel--stack">
+          <BaseSurface as="div" class="settings-panel settings-panel--stack" padding="md" variant="plain">
             <ThemeModeControl
               :model-value="mode"
               :error="themeError"
@@ -505,7 +513,7 @@ onMounted(() => {
             <div class="settings-divider" />
             <LanguageControl />
             <TranslationExportPanel />
-          </div>
+          </BaseSurface>
         </BaseSection>
 
         <BaseSection
@@ -573,7 +581,7 @@ onMounted(() => {
           :title="t('settings.section.dataSources.title')"
           :description="t('settings.section.dataSources.description')"
         >
-          <div class="settings-panel settings-panel--compact">
+          <BaseSurface as="div" class="settings-panel settings-panel--compact" padding="md" variant="plain">
             <div>
               <h3 class="settings-card-title">
                 {{ t('settings.dataSources.entryTitle') }}
@@ -589,12 +597,12 @@ onMounted(() => {
               </div>
             </dl>
             <RouterLink
-              class="settings-button settings-button--secondary settings-button--full"
+              class="control-focus settings-button settings-button--secondary settings-button--full"
               :to="{ name: 'settings-data-sources' }"
             >
               {{ t('settings.dataSources.entryAction') }}
             </RouterLink>
-          </div>
+          </BaseSurface>
         </BaseSection>
 
         <BaseSection
@@ -664,12 +672,9 @@ onMounted(() => {
 .settings-hero {
   display: grid;
   gap: clamp(1rem, 2vw, 1.5rem);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background:
     linear-gradient(135deg, var(--color-surface-raised), var(--color-surface)),
     var(--color-surface-raised);
-  padding: clamp(1rem, 3vw, 2rem);
 }
 
 .settings-hero__copy {
@@ -742,7 +747,6 @@ onMounted(() => {
   margin: 0;
 }
 
-.settings-hero__fact,
 .settings-source-facts div {
   min-width: 0;
   border: 1px solid var(--color-border-soft);
@@ -751,13 +755,11 @@ onMounted(() => {
   padding: var(--space-3);
 }
 
-.settings-hero__fact dt,
 .settings-source-facts dt {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-caption);
 }
 
-.settings-hero__fact dd,
 .settings-source-facts dd {
   margin: var(--space-1) 0 0;
   color: var(--color-text-primary);
@@ -780,10 +782,7 @@ onMounted(() => {
 }
 
 .settings-panel {
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
-  padding: clamp(1rem, 2vw, 1.5rem);
+  min-width: 0;
 }
 
 .settings-panel--stack {

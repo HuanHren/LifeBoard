@@ -62,6 +62,18 @@ After Home, Todos, and Tools adopt the primitive baseline, Stage 15 should conti
 
 Do not use Stage 15 to rewrite Weather internals, start Xiaomi Weather material analysis, migrate all business modules at once, or introduce a new app-wide state architecture.
 
+## Stage 16 Recommended Scope
+
+After Bookmarks and Settings adopt the primitive/status baseline, Stage 16 should be a focused hardening pass:
+
+- Verify status component edge cases across Home, Todos, Tools, Bookmarks, Settings, and NotFound.
+- Polish secondary route states, especially Settings data sources and NotFound, if they lag behind the main app surfaces.
+- Check radio groups, file input, confirmation dialog, route focus, and live-region feedback for accessibility consistency.
+- Run preview smoke at 390px, 768px, and 1440px.
+- Keep Weather frozen and limited to regression fixes.
+
+Do not use Stage 16 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, migrate all modules into a new source architecture, or introduce a new global state layer.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
