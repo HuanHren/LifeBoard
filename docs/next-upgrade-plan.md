@@ -98,6 +98,19 @@ After the Stage 17 route-level accessibility and interaction audit, Stage 18 sho
 
 Do not use Stage 18 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, restart broad visual redesign, or migrate all modules into a new architecture in one pass.
 
+## Stage 19 Recommended Scope
+
+After the Stage 18 QA baseline is in place, Stage 19 should decide how far to formalize accessibility QA:
+
+- Evaluate whether Playwright should become an explicit dev dependency or remain a documented local runtime requirement.
+- Evaluate a small dev-only `axe-core` / `@axe-core/playwright` integration.
+- Add stable QA selectors only for localized dialogs, dangerous actions, or workflows that cannot be targeted reliably through semantic selectors.
+- Consider machine-readable QA output for CI if this baseline will run outside the desktop environment.
+- Keep the Stage 18 route matrix and reduced-motion smoke path intact.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 19 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, restart broad visual redesign, migrate all modules into a new architecture, or change persistence keys for test convenience.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

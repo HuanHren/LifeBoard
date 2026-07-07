@@ -1,0 +1,618 @@
+import { spawn, spawnSync } from 'node:child_process'
+import { createRequire } from 'node:module'
+import net from 'node:net'
+import path from 'node:path'
+import process from 'node:process'
+
+const require = createRequire(import.meta.url)
+const ROUTES = [
+  { name: 'Landing', path: '/' },
+  { name: 'Home', path: '/app' },
+  { name: 'Weather', path: '/weather' },
+  { name: 'Todos', path: '/todos' },
+  { name: 'Tools', path: '/tools' },
+  { name: 'Bookmarks', path: '/bookmarks' },
+  { name: 'Settings', path: '/settings' },
+  { name: 'SettingsDataSources', path: '/settings/data-sources' },
+  { name: 'NotFound', path: '/missing-route-stage-18' },
+]
+const VIEWPORTS = [
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'tablet', width: 768, height: 1024 },
+  { name: 'desktop', width: 1440, height: 900 },
+]
+const PORT = Number(process.env.QA_PREVIEW_PORT || 4173)
+const HOST = process.env.QA_PREVIEW_HOST || '127.0.0.1'
+const EXTERNAL_BASE_URL = process.env.QA_BASE_URL
+const OVERFLOW_TOLERANCE = 1
+
+let previewProcess = null
+
+function loadPlaywright() {
+  const candidates = []
+
+  if (process.env.PLAYWRIGHT_NODE_PATH) {
+    candidates.push(path.join(process.env.PLAYWRIGHT_NODE_PATH, 'playwright'))
+  }
+
+  try {
+    return require('playwright')
+  } catch {
+    // Continue with known local npx cache probing.
+  }
+
+  if (process.env.LOCALAPPDATA) {
+    candidates.push(
+      path.join(
+        process.env.LOCALAPPDATA,
+        'npm-cache',
+        '_npx',
+        'e41f203b7505f1fb',
+        'node_modules',
+        'playwright',
+      ),
+    )
+  }
+
+  for (const candidate of candidates) {
+    try {
+      return require(candidate)
+    } catch {
+      // Try the next known local runtime.
+    }
+  }
+
+  throw new Error(
+    'Playwright is not available. Install project-approved Playwright support or set PLAYWRIGHT_NODE_PATH to an existing node_modules directory.',
+  )
+}
+
+function isPortAvailable(port) {
+  return new Promise((resolve) => {
+    const server = net.createServer()
+    server.once('error', () => resolve(false))
+    server.once('listening', () => {
+      server.close(() => resolve(true))
+    })
+    server.listen(port, HOST)
+  })
+}
+
+async function findPort(startPort) {
+  for (let port = startPort; port < startPort + 30; port += 1) {
+    if (await isPortAvailable(port)) return port
+  }
+
+  throw new Error(`No free preview port found from ${startPort} to ${startPort + 29}.`)
+}
+
+async function waitForPreview(baseUrl) {
+  const started = Date.now()
+  let lastError = null
+
+  while (Date.now() - started < 30_000) {
+    try {
+      const response = await fetch(baseUrl, { method: 'GET' })
+      if (response.ok) return
+      lastError = new Error(`Preview responded with ${response.status}.`)
+    } catch (error) {
+      lastError = error
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+  }
+
+  throw new Error(`Preview did not become ready at ${baseUrl}: ${lastError?.message ?? 'timeout'}`)
+}
+
+async function startPreview() {
+  if (EXTERNAL_BASE_URL) {
+    const baseUrl = EXTERNAL_BASE_URL.replace(/\/$/, '')
+    await waitForPreview(baseUrl)
+    return { baseUrl, owned: false }
+  }
+
+  const port = await findPort(PORT)
+  const previewCommand = process.platform === 'win32' ? process.env.ComSpec || 'cmd.exe' : 'npm'
+  const previewArgs = process.platform === 'win32'
+    ? ['/d', '/s', '/c', `npm run preview -- --host ${HOST} --port ${port}`]
+    : ['run', 'preview', '--', '--host', HOST, '--port', String(port)]
+  previewProcess = spawn(
+    previewCommand,
+    previewArgs,
+    {
+      cwd: process.cwd(),
+      env: { ...process.env, BROWSER: 'none' },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true,
+    },
+  )
+
+  let previewOutput = ''
+  previewProcess.stdout.on('data', (chunk) => {
+    previewOutput += chunk.toString()
+  })
+  previewProcess.stderr.on('data', (chunk) => {
+    previewOutput += chunk.toString()
+  })
+
+  previewProcess.once('exit', (code) => {
+    if (code !== null && code !== 0 && previewProcess) {
+      console.error(`[qa:a11y:routes] preview exited early with code ${code}`)
+      if (previewOutput.trim()) console.error(previewOutput.trim())
+    }
+  })
+
+  const baseUrl = `http://${HOST}:${port}`
+  await waitForPreview(baseUrl)
+  return { baseUrl, owned: true }
+}
+
+function stopPreview() {
+  if (!previewProcess?.pid) return
+
+  if (process.platform === 'win32') {
+    spawnSync('taskkill', ['/PID', String(previewProcess.pid), '/T', '/F'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    })
+  } else {
+    previewProcess.kill('SIGTERM')
+  }
+
+  previewProcess = null
+}
+
+function addFailure(failures, route, viewport, check, reason) {
+  failures.push({
+    route: route.name,
+    path: route.path,
+    viewport: viewport.name,
+    check,
+    reason,
+  })
+}
+
+function createDomAudit() {
+  return () => {
+    function text(element) {
+      return (element.innerText || element.textContent || '').replace(/\s+/g, ' ').trim()
+    }
+
+    function visible(element) {
+      const style = getComputedStyle(element)
+      const rect = element.getBoundingClientRect()
+      return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0
+    }
+
+    function accessibleName(element) {
+      const id = element.getAttribute('id')
+      const labelledBy = element.getAttribute('aria-labelledby')
+      const labelledByText = labelledBy
+        ? labelledBy
+          .split(/\s+/)
+          .map((part) => document.getElementById(part)?.textContent || '')
+          .join(' ')
+          .trim()
+        : ''
+      const explicitLabel = id
+        ? Array.from(document.querySelectorAll(`label[for="${CSS.escape(id)}"]`))
+          .map(text)
+          .join(' ')
+          .trim()
+        : ''
+      const wrappingLabel = element.closest('label') ? text(element.closest('label')) : ''
+
+      return [
+        element.getAttribute('aria-label'),
+        labelledByText,
+        explicitLabel,
+        wrappingLabel,
+        element.getAttribute('title'),
+        text(element),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+    }
+
+    const headings = Array.from(document.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+      .filter(visible)
+      .map((element) => ({
+        level: Number(element.tagName.slice(1)),
+        text: text(element),
+      }))
+    const headingJumps = []
+
+    for (let index = 1; index < headings.length; index += 1) {
+      if (headings[index].level > headings[index - 1].level + 1) {
+        headingJumps.push(`${headings[index - 1].level}->${headings[index].level}: ${headings[index].text}`)
+      }
+    }
+
+    const focusables = Array.from(
+      document.querySelectorAll('a[href],button,input,textarea,select,[tabindex]:not([tabindex="-1"])'),
+    )
+      .filter(visible)
+      .filter((element) => !element.disabled && element.getAttribute('aria-hidden') !== 'true')
+    const unnamedFocusables = focusables
+      .filter((element) => !accessibleName(element))
+      .map((element) => element.tagName.toLowerCase())
+    const formControls = Array.from(document.querySelectorAll('input:not([type="hidden"]),textarea,select'))
+      .filter(visible)
+      .filter((element) => !element.disabled)
+    const unlabeledControls = formControls
+      .filter((element) => !accessibleName(element))
+      .map((element) => `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}`)
+    const invalidWithoutDescription = formControls
+      .filter((element) => element.getAttribute('aria-invalid') === 'true' && !element.getAttribute('aria-describedby'))
+      .map((element) => element.id || element.name || element.tagName.toLowerCase())
+    const tablists = Array.from(document.querySelectorAll('[role="tablist"]'))
+      .filter(visible)
+      .map((list) => {
+        const tabs = Array.from(list.querySelectorAll('[role="tab"]')).filter(visible)
+        return {
+          label: accessibleName(list),
+          tabs: tabs.length,
+          selected: tabs.filter((tab) => tab.getAttribute('aria-selected') === 'true').length,
+          tabbable: tabs.filter((tab) => tab.tabIndex === 0).length,
+        }
+      })
+    const dialogs = Array.from(document.querySelectorAll('dialog,[role="dialog"]'))
+      .filter(visible)
+      .map((dialog) => ({
+        tag: dialog.tagName.toLowerCase(),
+        name: accessibleName(dialog),
+        modal: dialog.getAttribute('aria-modal'),
+      }))
+    const h1s = headings.filter((heading) => heading.level === 1)
+    const skipLink = document.querySelector('a.skip-link[href="#main-content"]')
+    const main = document.querySelector('main')
+
+    return {
+      bodyTextLength: document.body.innerText.trim().length,
+      mainCount: document.querySelectorAll('main').length,
+      mainId: main?.id || '',
+      mainTabIndex: main?.getAttribute('tabindex') || '',
+      h1Count: h1s.length,
+      h1Text: h1s[0]?.text || '',
+      headingJumps,
+      skipLinkExists: Boolean(skipLink),
+      skipTargetExists: Boolean(document.getElementById('main-content')),
+      overflowX:
+        document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 ||
+        document.body.scrollWidth > document.documentElement.clientWidth + 1,
+      scrollWidth: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth),
+      clientWidth: document.documentElement.clientWidth,
+      visibleCurrentPageCount: Array.from(document.querySelectorAll('[aria-current="page"]')).filter(visible).length,
+      unnamedFocusables,
+      unlabeledControls,
+      invalidWithoutDescription,
+      tablists,
+      dialogs,
+      liveRegions: Array.from(document.querySelectorAll('[role="status"],[role="alert"],[aria-live]')).length,
+    }
+  }
+}
+
+async function checkCommon(page, route, viewport, failures) {
+  const response = await page.goto(route.url, { waitUntil: 'networkidle', timeout: 30_000 })
+  await page.waitForTimeout(120)
+
+  if (!response || response.status() >= 400) {
+    addFailure(failures, route, viewport, 'page-open', `Expected HTTP < 400, got ${response?.status() ?? 'no response'}.`)
+  }
+
+  const audit = await page.evaluate(createDomAudit())
+
+  if (audit.bodyTextLength === 0) addFailure(failures, route, viewport, 'page-not-blank', 'Document body has no visible text.')
+  if (audit.mainCount !== 1) addFailure(failures, route, viewport, 'main-landmark', `Expected exactly one main, got ${audit.mainCount}.`)
+  if (audit.mainId !== 'main-content') addFailure(failures, route, viewport, 'main-target', `Expected main id main-content, got "${audit.mainId}".`)
+  if (audit.mainTabIndex !== '-1') addFailure(failures, route, viewport, 'main-focus-target', `Expected main tabindex -1, got "${audit.mainTabIndex}".`)
+  if (audit.h1Count !== 1) addFailure(failures, route, viewport, 'h1-count', `Expected exactly one visible h1, got ${audit.h1Count}.`)
+  if (!audit.h1Text) addFailure(failures, route, viewport, 'h1-text', 'Visible h1 text is empty.')
+  if (!audit.skipLinkExists || !audit.skipTargetExists) addFailure(failures, route, viewport, 'skip-link', 'Skip link or #main-content target is missing.')
+
+  if (audit.skipLinkExists) {
+    await page.locator('a.skip-link').focus()
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(80)
+    const skipFocusOk = await page.evaluate(() => document.activeElement?.id === 'main-content')
+    if (!skipFocusOk) addFailure(failures, route, viewport, 'skip-link-focus', 'Skip link did not move focus to #main-content.')
+  }
+
+  if (audit.overflowX) {
+    addFailure(
+      failures,
+      route,
+      viewport,
+      'horizontal-overflow',
+      `scrollWidth ${audit.scrollWidth} exceeds clientWidth ${audit.clientWidth}.`,
+    )
+  }
+
+  if (audit.unnamedFocusables.length > 0) {
+    addFailure(failures, route, viewport, 'focusable-name', `Unnamed focusables: ${audit.unnamedFocusables.join(', ')}.`)
+  }
+
+  if (audit.unlabeledControls.length > 0) {
+    addFailure(failures, route, viewport, 'form-label', `Unlabeled controls: ${audit.unlabeledControls.join(', ')}.`)
+  }
+
+  if (audit.invalidWithoutDescription.length > 0) {
+    addFailure(
+      failures,
+      route,
+      viewport,
+      'invalid-description',
+      `Invalid controls missing aria-describedby: ${audit.invalidWithoutDescription.join(', ')}.`,
+    )
+  }
+
+  for (const jump of audit.headingJumps) {
+    addFailure(failures, route, viewport, 'heading-jump', jump)
+  }
+
+  for (const tablist of audit.tablists) {
+    if (tablist.tabs > 0 && (tablist.selected !== 1 || tablist.tabbable !== 1)) {
+      addFailure(
+        failures,
+        route,
+        viewport,
+        'tablist-semantics',
+        `${tablist.label || 'unnamed tablist'} has ${tablist.selected} selected tabs and ${tablist.tabbable} tabbable tabs.`,
+      )
+    }
+  }
+
+  for (const dialog of audit.dialogs) {
+    if (!dialog.name) addFailure(failures, route, viewport, 'dialog-name', `${dialog.tag} dialog has no accessible name.`)
+    if (dialog.tag !== 'dialog' && dialog.modal !== 'true') {
+      addFailure(failures, route, viewport, 'dialog-modal', 'Custom dialog is missing aria-modal="true".')
+    }
+  }
+
+  if (!['Landing', 'NotFound'].includes(route.name) && audit.visibleCurrentPageCount === 0) {
+    addFailure(failures, route, viewport, 'active-navigation', 'No visible active navigation item with aria-current="page".')
+  }
+
+  return audit
+}
+
+async function checkHome(page, route, viewport, failures) {
+  const quickActions = await page.locator('main a, main button').evaluateAll((elements) =>
+    elements.filter((element) => {
+      const rect = element.getBoundingClientRect()
+      const style = getComputedStyle(element)
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none'
+    }).length,
+  )
+
+  if (quickActions === 0) addFailure(failures, route, viewport, 'home-actions', 'No visible Home action link or button found.')
+}
+
+async function checkWeather(page, route, viewport, failures) {
+  const result = await page.evaluate(() => {
+    const controls = Array.from(document.querySelectorAll('main button, main input, main a[href]')).filter((element) => {
+      const rect = element.getBoundingClientRect()
+      const style = getComputedStyle(element)
+      return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none'
+    })
+    const blockedControl = controls.find((element) => {
+      const centerX = element.getBoundingClientRect().left + element.getBoundingClientRect().width / 2
+      const centerY = element.getBoundingClientRect().top + element.getBoundingClientRect().height / 2
+      const topElement = document.elementFromPoint(centerX, centerY)
+      return topElement && topElement !== element && !element.contains(topElement) && !topElement.contains(element)
+    })
+    const pointerBlockingCanvas = Array.from(document.querySelectorAll('canvas')).filter(
+      (canvas) => getComputedStyle(canvas).pointerEvents !== 'none',
+    ).length
+
+    return {
+      visibleControls: controls.length,
+      blockedControl: blockedControl?.tagName.toLowerCase() || '',
+      pointerBlockingCanvas,
+    }
+  })
+
+  if (result.visibleControls === 0) addFailure(failures, route, viewport, 'weather-controls', 'No visible Weather controls found.')
+  if (result.blockedControl) addFailure(failures, route, viewport, 'weather-overlay', `A Weather control appears covered by ${result.blockedControl}.`)
+  if (result.pointerBlockingCanvas > 0) {
+    addFailure(failures, route, viewport, 'weather-canvas-pointer-events', `${result.pointerBlockingCanvas} canvas element(s) can receive pointer events.`)
+  }
+}
+
+async function checkTodos(page, route, viewport, failures) {
+  const title = page.locator('#task-title')
+  if (!(await title.count())) {
+    addFailure(failures, route, viewport, 'todos-composer', 'Task title input was not found.')
+    return
+  }
+
+  await title.focus()
+  if (!(await title.evaluate((element) => document.activeElement === element))) {
+    addFailure(failures, route, viewport, 'todos-composer-focus', 'Task title input could not receive focus.')
+  }
+
+  const filterButtons = page.locator('.task-filter-bar button')
+  const filterCount = await filterButtons.count()
+  if (filterCount === 0) addFailure(failures, route, viewport, 'todos-filters', 'No task filter buttons found.')
+
+  const pressedCount = await page.locator('.task-filter-bar button[aria-pressed="true"]').count()
+  if (pressedCount !== 1) {
+    addFailure(failures, route, viewport, 'todos-active-filter', `Expected one active aria-pressed filter, got ${pressedCount}.`)
+  }
+}
+
+async function checkTools(page, route, viewport, failures) {
+  const tabs = page.locator('[role="tab"]')
+  const tabCount = await tabs.count()
+  if (tabCount === 0) {
+    addFailure(failures, route, viewport, 'tools-tabs', 'No tool tabs found.')
+    return
+  }
+
+  const initialSelected = await page.locator('[role="tab"][aria-selected="true"]').first().getAttribute('id')
+  await tabs.first().focus()
+  await page.keyboard.press('ArrowRight')
+  await page.waitForTimeout(120)
+  const activeTab = await page.evaluate(() => document.activeElement?.id || '')
+  const nextSelected = await page.locator('[role="tab"][aria-selected="true"]').first().getAttribute('id')
+  const tabbableCount = await page.locator('[role="tab"][tabindex="0"]').count()
+
+  if (!activeTab || activeTab === initialSelected || nextSelected === initialSelected) {
+    addFailure(failures, route, viewport, 'tools-tab-keyboard', `Arrow key did not move selection from ${initialSelected}.`)
+  }
+
+  if (tabbableCount !== 1) addFailure(failures, route, viewport, 'tools-roving-tabindex', `Expected one tabbable tab, got ${tabbableCount}.`)
+  if (!(await page.locator('[role="tabpanel"]').count())) addFailure(failures, route, viewport, 'tools-tabpanel', 'Active tool panel role="tabpanel" was not found.')
+
+  await page.goto(`${route.baseUrl}/tools?tool=json`, { waitUntil: 'networkidle' })
+  await page.locator('#json-input').fill('{"name":"LifeBoard"}')
+  await page.locator('.tool-panel__actions button').first().click()
+  await page.waitForTimeout(120)
+  const jsonOutput = await page.locator('#json-output').inputValue().catch(() => '')
+  if (!jsonOutput.includes('"name"') || !jsonOutput.includes('LifeBoard')) {
+    addFailure(failures, route, viewport, 'tools-json', 'JSON formatting did not produce expected output.')
+  }
+
+  await page.goto(`${route.baseUrl}/tools?tool=timestamp`, { waitUntil: 'networkidle' })
+  await page.locator('#timestamp-input').fill('not-a-timestamp')
+  await page.locator('.tool-panel__actions button').first().click()
+  await page.waitForTimeout(120)
+  if (!(await page.locator('#timestamp-input-error[role="alert"]').count())) {
+    addFailure(failures, route, viewport, 'tools-timestamp-error', 'Timestamp invalid input did not expose role="alert" error text.')
+  }
+}
+
+async function checkBookmarks(page, route, viewport, failures) {
+  const search = page.locator('#bookmark-search')
+  if (!(await search.count())) {
+    addFailure(failures, route, viewport, 'bookmarks-search', 'Bookmark search input was not found.')
+    return
+  }
+
+  const searchName = await search.evaluate((element) => {
+    const label = document.querySelector(`label[for="${element.id}"]`)
+    return `${element.getAttribute('aria-label') || ''} ${label?.textContent || ''}`.trim()
+  })
+  if (!searchName) addFailure(failures, route, viewport, 'bookmarks-search-label', 'Bookmark search input has no label or aria-label.')
+
+  const filterCount = await page.locator('.bookmarks-controls__filters button').count()
+  if (filterCount === 0) addFailure(failures, route, viewport, 'bookmarks-filters', 'Bookmark filter controls were not found.')
+}
+
+async function checkSettings(page, route, viewport, failures) {
+  const controls = await page.locator('main input[type="radio"], main input[type="file"], main button').count()
+  if (controls === 0) addFailure(failures, route, viewport, 'settings-controls', 'No Settings controls found.')
+
+  const fileInputsWithoutLabel = await page.locator('input[type="file"]').evaluateAll((inputs) =>
+    inputs.filter((input) => {
+      const id = input.getAttribute('id')
+      return !input.closest('label') && !(id && document.querySelector(`label[for="${CSS.escape(id)}"]`))
+    }).length,
+  )
+  if (fileInputsWithoutLabel > 0) addFailure(failures, route, viewport, 'settings-file-label', `${fileInputsWithoutLabel} file input(s) lack a label.`)
+}
+
+async function checkSettingsDataSources(page, route, viewport, failures) {
+  const rows = await page.locator('main a[href^="http"], main [aria-label*="Open"], main [aria-label*="source"], main [aria-label*="licence"]').count()
+  if (rows === 0) addFailure(failures, route, viewport, 'data-source-rows', 'No data source links or labelled rows were found.')
+
+  const labelledStatusCount = await page.locator('main [aria-label]').count()
+  if (labelledStatusCount === 0) addFailure(failures, route, viewport, 'data-source-labels', 'No labelled data source status or link elements found.')
+}
+
+async function checkNotFound(page, route, viewport, failures) {
+  const recoveryActions = await page.locator('main a[href], main button').count()
+  if (recoveryActions === 0) addFailure(failures, route, viewport, 'not-found-recovery', 'No NotFound recovery action found.')
+}
+
+async function runRouteSpecificChecks(page, route, viewport, failures) {
+  if (route.name === 'Home') await checkHome(page, route, viewport, failures)
+  if (route.name === 'Weather') await checkWeather(page, route, viewport, failures)
+  if (route.name === 'Todos') await checkTodos(page, route, viewport, failures)
+  if (route.name === 'Tools') await checkTools(page, route, viewport, failures)
+  if (route.name === 'Bookmarks') await checkBookmarks(page, route, viewport, failures)
+  if (route.name === 'Settings') await checkSettings(page, route, viewport, failures)
+  if (route.name === 'SettingsDataSources') await checkSettingsDataSources(page, route, viewport, failures)
+  if (route.name === 'NotFound') await checkNotFound(page, route, viewport, failures)
+}
+
+async function run() {
+  const { chromium } = loadPlaywright()
+  const preview = await startPreview()
+  const browser = await chromium.launch({ headless: true })
+  const failures = []
+  const passes = []
+
+  try {
+    for (const viewport of VIEWPORTS) {
+      for (const routeConfig of ROUTES) {
+        const route = {
+          ...routeConfig,
+          baseUrl: preview.baseUrl,
+          url: `${preview.baseUrl}${routeConfig.path}`,
+        }
+        const context = await browser.newContext({
+          viewport: { width: viewport.width, height: viewport.height },
+          reducedMotion: 'reduce',
+        })
+        const page = await context.newPage()
+        const consoleErrors = []
+
+        page.on('console', (message) => {
+          if (message.type() === 'error') consoleErrors.push(message.text())
+        })
+        page.on('pageerror', (error) => {
+          consoleErrors.push(error.message)
+        })
+
+        await checkCommon(page, route, viewport, failures)
+        await runRouteSpecificChecks(page, route, viewport, failures)
+
+        for (const error of consoleErrors) {
+          addFailure(failures, route, viewport, 'console-error', error)
+        }
+
+        if (!failures.some((failure) => failure.route === route.name && failure.viewport === viewport.name)) {
+          passes.push(`${route.name} ${viewport.name}`)
+        }
+
+        await context.close()
+      }
+    }
+  } finally {
+    await browser.close()
+    if (preview.owned) stopPreview()
+  }
+
+  if (failures.length > 0) {
+    console.error('\nFAIL route accessibility regression baseline')
+    for (const failure of failures) {
+      console.error(`- [${failure.viewport}] ${failure.route} ${failure.path} :: ${failure.check} :: ${failure.reason}`)
+    }
+    process.exitCode = 1
+    return
+  }
+
+  console.log(`PASS route accessibility regression baseline (${passes.length}/${ROUTES.length * VIEWPORTS.length} route-viewports)`)
+  console.log(`Routes: ${ROUTES.map((route) => route.path).join(', ')}`)
+  console.log(`Viewports: ${VIEWPORTS.map((viewport) => `${viewport.width}x${viewport.height}`).join(', ')}`)
+  console.log('Checks: main, h1, skip link, overflow, console errors, active nav, tablists, forms, dialogs, route-specific smoke, reduced motion.')
+}
+
+process.once('SIGINT', () => {
+  stopPreview()
+  process.exit(130)
+})
+process.once('SIGTERM', () => {
+  stopPreview()
+  process.exit(143)
+})
+
+run().catch((error) => {
+  stopPreview()
+  console.error(`FAIL route accessibility regression baseline: ${error.stack || error.message}`)
+  process.exit(1)
+})

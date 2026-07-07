@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "qa:a11y:routes": "node scripts/qa-route-a11y.mjs",
+    "qa": "npm run build && npm run qa:a11y:routes"
   },
   "dependencies": {
     "gsap": "^3.15.0",
