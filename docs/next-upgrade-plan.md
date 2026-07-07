@@ -27,6 +27,18 @@ Do not continue Weather animation expansion during the whole-site upgrade. Do no
 - Motion system consolidation with reduced-motion support.
 - Weather regression preservation against `docs/weather-module-freeze-baseline.md`.
 
+## Stage 13 Entry Scope
+
+Start with the smallest global baseline that can safely support later page-level visual work:
+
+- App Shell / layout contract cleanup.
+- Design tokens baseline for color, spacing, typography, radius, shadow, motion, z-index, and semantic states.
+- Shared primitives baseline for page shells, section headers, surfaces, empty/error/loading states, buttons, icon buttons, form fields, search input, stats, and module cards.
+- Navigation and page container consistency across desktop and mobile.
+- Weather outer-container compatibility only where required by the global shell.
+
+Do not use Stage 13 to rewrite Weather internals, Weather store state, PixiJS runtime, Weather assets, page business logic, or all modules at once.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
