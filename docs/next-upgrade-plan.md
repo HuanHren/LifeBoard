@@ -86,6 +86,18 @@ After the Stage 16 state and accessibility hardening pass, Stage 17 should remai
 
 Do not use Stage 17 to rewrite Weather internals, resume Xiaomi Weather analysis, add Weather scenes, replace Weather assets, migrate all modules into a new architecture, or redesign pages beyond verified accessibility and state edge-case fixes.
 
+## Stage 18 Recommended Scope
+
+After the Stage 17 route-level accessibility and interaction audit, Stage 18 should turn the verified manual audit into a repeatable regression baseline:
+
+- Add or document a small accessibility audit runner only if a dev-only dependency is explicitly approved.
+- Expand Playwright smoke coverage for route landmarks, headings, skip links, focus return, dialogs, mobile menus, tablists, filters, and form states.
+- Add stable test hooks only where localized text makes important dangerous-action or dialog tests unreliable.
+- Keep 390px, 768px, and 1440px coverage.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 18 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, restart broad visual redesign, or migrate all modules into a new architecture in one pass.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

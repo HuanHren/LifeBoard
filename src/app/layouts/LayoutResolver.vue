@@ -14,7 +14,7 @@ const layoutComponent = computed(() => {
 })
 
 watch(
-  () => route.fullPath,
+  () => route.path,
   async () => {
     await nextTick()
     const main = document.getElementById('main-content')

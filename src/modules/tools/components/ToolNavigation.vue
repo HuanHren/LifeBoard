@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick, ref, type ComponentPublicInstance } from 'vue'
 import { useI18n } from '@/i18n/useI18n'
 import { TOOL_DEFINITIONS } from '@/modules/tools/constants/tools'
 import type { ToolId } from '@/modules/tools/types/tools'
@@ -13,15 +13,51 @@ interface Emits {
   select: [tool: ToolId]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const { t } = useI18n()
+const tabButtons = ref<Partial<Record<ToolId, HTMLButtonElement>>>({})
 const tools = computed(() =>
   TOOL_DEFINITIONS.map((tool) => ({
     ...tool,
     copy: getToolDefinitionCopy(tool.id, t),
   })),
 )
+
+function setTabButtonRef(tool: ToolId, element: Element | ComponentPublicInstance | null) {
+  if (element instanceof HTMLButtonElement) {
+    tabButtons.value[tool] = element
+  }
+}
+
+async function selectAndFocus(tool: ToolId) {
+  emit('select', tool)
+  await nextTick()
+  tabButtons.value[tool]?.focus()
+}
+
+function handleTabKeydown(event: KeyboardEvent, currentTool: ToolId) {
+  const toolIds = tools.value.map((tool) => tool.id)
+  const currentIndex = toolIds.indexOf(currentTool)
+  if (currentIndex === -1) return
+
+  let nextIndex = currentIndex
+
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    nextIndex = (currentIndex + 1) % toolIds.length
+  } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    nextIndex = (currentIndex - 1 + toolIds.length) % toolIds.length
+  } else if (event.key === 'Home') {
+    nextIndex = 0
+  } else if (event.key === 'End') {
+    nextIndex = toolIds.length - 1
+  } else {
+    return
+  }
+
+  event.preventDefault()
+  void selectAndFocus(toolIds[nextIndex])
+}
 </script>
 
 <template>
@@ -34,13 +70,16 @@ const tools = computed(() =>
       v-for="(tool, index) in tools"
       :id="`tool-tab-${tool.id}`"
       :key="tool.id"
+      :ref="(element) => setTabButtonRef(tool.id, element)"
       aria-controls="tools-active-workspace"
       :aria-selected="activeTool === tool.id"
       class="tool-navigation__item interactive-surface"
       :class="{ 'is-active': activeTool === tool.id }"
       role="tab"
+      :tabindex="props.activeTool === tool.id ? 0 : -1"
       type="button"
       @click="emit('select', tool.id)"
+      @keydown="handleTabKeydown($event, tool.id)"
     >
       <span class="tool-navigation__index">{{ index + 1 }}</span>
       <span class="tool-navigation__copy">

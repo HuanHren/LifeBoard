@@ -62,7 +62,7 @@ onMounted(() => {
         v-for="filter in TASK_FILTERS"
         :key="filter.value"
         :ref="(element) => setFilterButtonRef(filter.value, element)"
-        :aria-current="activeFilter === filter.value ? 'page' : undefined"
+        :aria-pressed="activeFilter === filter.value"
         class="interactive-surface task-filter-bar__button"
         :class="activeFilter === filter.value ? 'task-filter-bar__button--active' : ''"
         type="button"

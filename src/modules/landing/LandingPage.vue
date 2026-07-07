@@ -455,6 +455,7 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
               role="tab"
               :aria-selected="activeDemo === item.key"
               :aria-controls="`landing-demo-panel-${item.key}`"
+              :tabindex="activeDemo === item.key ? 0 : -1"
               @click="selectDemo(item.key)"
               @keydown="handleDemoTabKeydown($event, index)"
             >

@@ -133,6 +133,7 @@ onBeforeUnmount(() => {
         :aria-current="isMoreActive ? 'page' : undefined"
         :aria-expanded="moreOpen"
         aria-controls="app-mobile-more"
+        aria-haspopup="dialog"
         @click="toggleMore"
       >
         <span class="mobile-bottom-nav__indicator" aria-hidden="true" />

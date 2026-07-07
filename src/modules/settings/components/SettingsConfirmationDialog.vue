@@ -89,13 +89,18 @@ watch(
 <template>
   <dialog
     ref="dialog"
+    aria-describedby="settings-confirmation-description"
+    aria-labelledby="settings-confirmation-title"
     class="m-auto w-[min(32rem,calc(100%-2rem))] rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-0 text-[var(--color-text-primary)] shadow-[var(--shadow-soft)] backdrop:bg-[color-mix(in_oklch,var(--color-text-primary)_35%,transparent)]"
     @cancel.prevent="cancel"
     @keydown="handleKeydown"
   >
     <div class="p-5 sm:p-6">
-      <h2 class="text-section-title">{{ title }}</h2>
-      <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+      <h2 id="settings-confirmation-title" class="text-section-title">{{ title }}</h2>
+      <p
+        id="settings-confirmation-description"
+        class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]"
+      >
         {{ description }}
       </p>
 

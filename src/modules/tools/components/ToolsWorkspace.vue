@@ -117,7 +117,16 @@ watch(
         <ToolNavigation :active-tool="activeTool" @select="selectTool" />
       </BaseSurface>
 
-      <BaseSurface id="tools-active-workspace" as="div" class="tools-console__main" padding="md" tabindex="-1" variant="plain">
+      <BaseSurface
+        id="tools-active-workspace"
+        as="div"
+        :aria-labelledby="`tool-tab-${activeTool}`"
+        class="tools-console__main"
+        padding="md"
+        role="tabpanel"
+        tabindex="-1"
+        variant="plain"
+      >
         <SectionHeader
           :description="t('tools.workspace.activeLabel')"
           :title="activeDefinition.title"
