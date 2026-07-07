@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 
 interface DetailItem {
   label: string
@@ -29,11 +30,9 @@ defineProps<Props>()
 </script>
 
 <template>
-  <article
-    class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-4 sm:p-5"
-  >
+  <BaseSurface as="article" padding="sm" variant="muted">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-      <div class="max-w-2xl">
+      <div class="min-w-0 max-w-2xl">
         <h3 class="text-base font-semibold text-balance text-[var(--color-text-primary)]">
           {{ title }}
         </h3>
@@ -43,6 +42,7 @@ defineProps<Props>()
       </div>
       <p
         class="inline-flex w-fit shrink-0 rounded-[var(--radius-pill)] border border-[var(--color-border-soft)] bg-[var(--color-accent-wash)] px-3 py-1 text-caption font-medium text-[var(--color-accent-text)]"
+        :aria-label="`${title}: ${status}`"
       >
         {{ status }}
       </p>
@@ -57,7 +57,7 @@ defineProps<Props>()
         <dt class="text-caption text-[var(--color-text-tertiary)]">
           {{ item.label }}
         </dt>
-        <dd class="mt-1 text-sm font-medium leading-6 text-[var(--color-text-primary)]">
+        <dd class="mt-1 text-sm font-medium leading-6 text-[var(--color-text-primary)] break-words">
           <RouterLink
             v-if="item.to"
             class="interactive-surface rounded-[var(--radius-sm)] text-[var(--color-accent-text)] underline decoration-[var(--color-border)] underline-offset-4 hover:decoration-[var(--color-accent)]"
@@ -116,5 +116,5 @@ defineProps<Props>()
         {{ secondaryLink.label }}
       </a>
     </div>
-  </article>
+  </BaseSurface>
 </template>

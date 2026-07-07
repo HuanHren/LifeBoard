@@ -2,12 +2,21 @@
 interface Props {
   tone?: 'info' | 'success' | 'danger' | 'warning'
   role?: 'status' | 'alert' | 'note'
+  title?: string
+  message?: string
 }
 
 withDefaults(defineProps<Props>(), {
   tone: 'info',
   role: 'status',
+  title: undefined,
+  message: undefined,
 })
+
+defineSlots<{
+  default(): unknown
+  actions(): unknown
+}>()
 </script>
 
 <template>
@@ -16,9 +25,23 @@ withDefaults(defineProps<Props>(), {
       'base-notice',
       `base-notice--${tone}`,
     ]"
+    :aria-live="role === 'alert' ? 'assertive' : role === 'status' ? 'polite' : undefined"
     :role="role"
   >
-    <slot />
+    <div class="base-notice__content">
+      <p v-if="title" class="base-notice__title">
+        {{ title }}
+      </p>
+      <p v-if="message" class="base-notice__message">
+        {{ message }}
+      </p>
+      <div v-if="$slots.default" class="base-notice__body">
+        <slot />
+      </div>
+    </div>
+    <div v-if="$slots.actions" class="base-notice__actions">
+      <slot name="actions" />
+    </div>
   </div>
 </template>
 
@@ -31,6 +54,37 @@ withDefaults(defineProps<Props>(), {
   font-size: var(--font-size-label);
   font-weight: var(--font-weight-medium);
   line-height: 1.5;
+}
+
+.base-notice__content {
+  min-width: 0;
+}
+
+.base-notice__title,
+.base-notice__message {
+  margin: 0;
+}
+
+.base-notice__title {
+  font-weight: var(--font-weight-semibold);
+}
+
+.base-notice__message,
+.base-notice__body {
+  overflow-wrap: anywhere;
+}
+
+.base-notice__title + .base-notice__message,
+.base-notice__title + .base-notice__body,
+.base-notice__message + .base-notice__body,
+.base-notice__actions {
+  margin-top: var(--space-2);
+}
+
+.base-notice__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 .base-notice--info {

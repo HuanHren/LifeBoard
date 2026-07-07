@@ -22,6 +22,7 @@ defineProps<Props>()
         error ? `${id}-error` : '',
       ].filter(Boolean).join(' ') || undefined"
       :aria-invalid="error ? 'true' : undefined"
+      :required="required || undefined"
     />
     <p
       v-if="description"
@@ -36,7 +37,7 @@ defineProps<Props>()
       class="text-caption font-medium text-[var(--color-danger)]"
       role="alert"
     >
-      {{ error }}
+      <span class="sr-only">Error: </span>{{ error }}
     </p>
   </div>
 </template>

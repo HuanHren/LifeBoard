@@ -5,14 +5,21 @@ interface Props {
   title: string
   description: string
   actionLabel?: string
+  titleAs?: 'h1' | 'h2' | 'h3'
 }
 
 interface Emits {
   action: []
 }
 
-defineProps<Props>()
+withDefaults(defineProps<Props>(), {
+  titleAs: 'h3',
+})
 const emit = defineEmits<Emits>()
+
+defineSlots<{
+  actions(): unknown
+}>()
 </script>
 
 <template>
@@ -21,15 +28,22 @@ const emit = defineEmits<Emits>()
     role="status"
   >
     <div class="max-w-xl space-y-3">
-      <h3 class="text-section-title text-[var(--color-text-primary)]">
+      <component
+        :is="titleAs"
+        class="text-section-title text-[var(--color-text-primary)]"
+      >
         {{ title }}
-      </h3>
+      </component>
       <p class="text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ description }}
       </p>
-      <BaseButton v-if="actionLabel" size="sm" variant="primary" @click="emit('action')">
-        {{ actionLabel }}
-      </BaseButton>
+      <div v-if="actionLabel || $slots.actions" class="flex flex-wrap gap-2">
+        <slot name="actions">
+          <BaseButton size="sm" variant="primary" @click="emit('action')">
+            {{ actionLabel }}
+          </BaseButton>
+        </slot>
+      </div>
     </div>
   </div>
 </template>

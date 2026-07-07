@@ -9,8 +9,11 @@ interface Props {
   placeholder?: string
   disabled?: boolean
   autocomplete?: string
+  ariaLabel?: string
+  inputmode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
   name?: string
   maxlength?: number
+  required?: boolean
   leadingIcon?: BaseIconName
   trailingIcon?: BaseIconName
   ariaDescribedby?: string
@@ -26,8 +29,11 @@ withDefaults(defineProps<Props>(), {
   placeholder: undefined,
   disabled: false,
   autocomplete: undefined,
+  ariaLabel: undefined,
+  inputmode: undefined,
   name: undefined,
   maxlength: undefined,
+  required: false,
   leadingIcon: undefined,
   trailingIcon: undefined,
   ariaDescribedby: undefined,
@@ -55,12 +61,15 @@ defineExpose({ focus })
       ref="input"
       :aria-describedby="ariaDescribedby"
       :aria-invalid="ariaInvalid"
+      :aria-label="ariaLabel"
       :autocomplete="autocomplete"
       class="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-[var(--color-muted-foreground)] disabled:cursor-not-allowed"
       :disabled="disabled"
+      :inputmode="inputmode"
       :maxlength="maxlength"
       :name="name"
       :placeholder="placeholder"
+      :required="required"
       :type="type"
       :value="modelValue"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"

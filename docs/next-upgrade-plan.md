@@ -74,6 +74,18 @@ After Bookmarks and Settings adopt the primitive/status baseline, Stage 16 shoul
 
 Do not use Stage 16 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, migrate all modules into a new source architecture, or introduce a new global state layer.
 
+## Stage 17 Recommended Scope
+
+After the Stage 16 state and accessibility hardening pass, Stage 17 should remain regression-led:
+
+- Run a deeper route-level accessibility audit, ideally with axe or an equivalent tool if a small dev-only audit dependency is approved.
+- Verify dialog, radio group, file input, toolbar, search, empty, error, loading, and notice semantics across all app routes.
+- Simplify remaining Settings data source local CSS only where it reduces duplication without changing provider behavior.
+- Keep preview smoke at 390px, 768px, and 1440px.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 17 to rewrite Weather internals, resume Xiaomi Weather analysis, add Weather scenes, replace Weather assets, migrate all modules into a new architecture, or redesign pages beyond verified accessibility and state edge-case fixes.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

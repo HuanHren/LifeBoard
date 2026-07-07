@@ -498,7 +498,7 @@ onMounted(() => {
     </BaseSurface>
 
     <div class="settings-grid">
-      <main class="settings-grid__main" aria-labelledby="settings-preferences">
+      <div class="settings-grid__main" aria-labelledby="settings-preferences">
         <BaseSection
           id="settings-preferences"
           :title="t('settings.section.preferences.title')"
@@ -561,7 +561,7 @@ onMounted(() => {
             @request-clear="openClearConfirmation"
           />
         </BaseSection>
-      </main>
+      </div>
 
       <aside class="settings-grid__side" :aria-label="t('settings.accessibility.sideControls')">
         <BaseSection

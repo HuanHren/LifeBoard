@@ -2,6 +2,9 @@
 import { computed, onMounted, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import PageLayout from '@/components/base/PageLayout.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import DataSourceRow from '@/modules/settings/components/DataSourceRow.vue'
@@ -381,9 +384,12 @@ onMounted(() => {
         {{ t('settings.dataSources.backToSettings') }}
       </RouterLink>
 
-      <section
+      <BaseSurface
+        as="header"
         class="data-sources-hero"
         aria-labelledby="data-sources-title"
+        padding="lg"
+        variant="info"
       >
         <div class="data-sources-hero__copy">
           <p class="data-sources-hero__eyebrow">
@@ -405,31 +411,32 @@ onMounted(() => {
           </div>
         </div>
         <dl class="data-sources-hero__facts" :aria-label="t('settings.dataSources.hero.factsLabel')">
-          <div v-for="fact in heroFacts" :key="fact.label">
-            <dt>{{ fact.label }}</dt>
-            <dd>{{ fact.value }}</dd>
-          </div>
+          <StatCard
+            v-for="fact in heroFacts"
+            :key="fact.label"
+            :label="fact.label"
+            :value="fact.value"
+            as="div"
+            value-kind="semantic"
+          />
         </dl>
-      </section>
+      </BaseSurface>
 
-      <section class="data-sources-privacy" aria-labelledby="data-sources-privacy-title">
+      <BaseSurface as="section" aria-labelledby="data-sources-privacy-title" padding="md">
         <h2 id="data-sources-privacy-title">
           {{ t('settings.dataSources.privacyTitle') }}
         </h2>
         <p>
           {{ t('settings.dataSources.privacyDescription') }}
         </p>
-      </section>
+      </BaseSurface>
 
-      <section class="data-sources-section" aria-labelledby="data-sources-active-title">
-        <div class="data-sources-section__header">
-          <h2 id="data-sources-active-title">
-            {{ t('settings.dataSources.section.active') }}
-          </h2>
-          <p>
-            {{ t('settings.dataSources.section.activeDescription') }}
-          </p>
-        </div>
+      <BaseSurface as="section" class="data-sources-section" aria-labelledby="data-sources-active-title" padding="md">
+        <SectionHeader
+          :description="t('settings.dataSources.section.activeDescription')"
+          :title="t('settings.dataSources.section.active')"
+          title-id="data-sources-active-title"
+        />
 
         <dl class="data-sources-summary">
           <div
@@ -449,17 +456,14 @@ onMounted(() => {
             </dd>
           </div>
         </dl>
-      </section>
+      </BaseSurface>
 
-      <section class="data-sources-section" aria-labelledby="data-sources-forecast-title">
-        <div class="data-sources-section__header">
-          <h2 id="data-sources-forecast-title">
-            {{ t('settings.dataSources.section.forecast') }}
-          </h2>
-          <p>
-            {{ t('settings.dataSources.section.forecastDescription') }}
-          </p>
-        </div>
+      <BaseSurface as="section" class="data-sources-section" aria-labelledby="data-sources-forecast-title" padding="md">
+        <SectionHeader
+          :description="t('settings.dataSources.section.forecastDescription')"
+          :title="t('settings.dataSources.section.forecast')"
+          title-id="data-sources-forecast-title"
+        />
 
         <div class="data-sources-stack">
           <DataSourceRow
@@ -503,18 +507,15 @@ onMounted(() => {
             } : null"
           />
         </div>
-      </section>
+      </BaseSurface>
 
       <div class="data-sources-two-column">
-        <section class="data-sources-section" aria-labelledby="data-sources-air-quality-title">
-          <div class="data-sources-section__header">
-            <h2 id="data-sources-air-quality-title">
-              {{ t('settings.dataSources.section.airQuality') }}
-            </h2>
-            <p>
-              {{ t('settings.dataSources.section.airQualityDescription') }}
-            </p>
-          </div>
+        <BaseSurface as="section" class="data-sources-section" aria-labelledby="data-sources-air-quality-title" padding="md">
+          <SectionHeader
+            :description="t('settings.dataSources.section.airQualityDescription')"
+            :title="t('settings.dataSources.section.airQuality')"
+            title-id="data-sources-air-quality-title"
+          />
 
           <DataSourceRow
             :title="`${airQualityApiSource.displayName} / ${airQualityModelSource.displayName}`"
@@ -538,17 +539,14 @@ onMounted(() => {
               ariaLabel: externalLabel(airQualityModelSource.displayName),
             }"
           />
-        </section>
+        </BaseSurface>
 
-        <section class="data-sources-section" aria-labelledby="data-sources-location-title">
-          <div class="data-sources-section__header">
-            <h2 id="data-sources-location-title">
-              {{ t('settings.dataSources.section.location') }}
-            </h2>
-            <p>
-              {{ t('settings.dataSources.section.locationDescription') }}
-            </p>
-          </div>
+        <BaseSurface as="section" class="data-sources-section" aria-labelledby="data-sources-location-title" padding="md">
+          <SectionHeader
+            :description="t('settings.dataSources.section.locationDescription')"
+            :title="t('settings.dataSources.section.location')"
+            title-id="data-sources-location-title"
+          />
 
           <DataSourceRow
             :title="amapSource.displayName"
@@ -565,18 +563,15 @@ onMounted(() => {
               to: { name: 'settings' },
             }"
           />
-        </section>
+        </BaseSurface>
       </div>
 
-      <section class="data-sources-section" aria-labelledby="data-sources-alert-title">
-        <div class="data-sources-section__header">
-          <h2 id="data-sources-alert-title">
-            {{ t('settings.dataSources.section.alerts') }}
-          </h2>
-          <p>
-            {{ t('settings.dataSources.section.alertsDescription') }}
-          </p>
-        </div>
+      <BaseSurface as="section" class="data-sources-section" aria-labelledby="data-sources-alert-title" padding="md">
+        <SectionHeader
+          :description="t('settings.dataSources.section.alertsDescription')"
+          :title="t('settings.dataSources.section.alerts')"
+          title-id="data-sources-alert-title"
+        />
 
         <DataSourceRow
           :title="t('settings.dataSources.alert.title')"
@@ -593,11 +588,12 @@ onMounted(() => {
             to: { name: 'settings' },
           }"
         />
-      </section>
+      </BaseSurface>
 
-      <section
-        class="data-sources-licence"
+      <BaseSurface
+        as="section"
         aria-labelledby="data-sources-licence-title"
+        padding="md"
       >
         <h2 id="data-sources-licence-title">
           {{ t('settings.dataSources.section.licences') }}
@@ -605,7 +601,7 @@ onMounted(() => {
         <p>
           {{ t('settings.dataSources.licenceDescription') }}
         </p>
-      </section>
+      </BaseSurface>
     </div>
   </PageLayout>
 </template>

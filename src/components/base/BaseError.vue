@@ -13,6 +13,10 @@ interface Emits {
 
 defineProps<Props>()
 const emit = defineEmits<Emits>()
+
+defineSlots<{
+  actions(): unknown
+}>()
 </script>
 
 <template>
@@ -27,9 +31,13 @@ const emit = defineEmits<Emits>()
       <p class="text-sm leading-6">
         {{ message }}
       </p>
-      <BaseButton v-if="actionLabel" size="sm" variant="secondary" @click="emit('action')">
-        {{ actionLabel }}
-      </BaseButton>
+      <div v-if="actionLabel || $slots.actions" class="flex flex-wrap gap-2">
+        <slot name="actions">
+          <BaseButton size="sm" variant="secondary" @click="emit('action')">
+            {{ actionLabel }}
+          </BaseButton>
+        </slot>
+      </div>
     </div>
   </div>
 </template>

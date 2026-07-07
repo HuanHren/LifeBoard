@@ -103,7 +103,7 @@ onMounted(() => {
     </BaseSurface>
 
     <div class="home-workspace-grid">
-      <main class="home-workspace-grid__main" :aria-label="t('home.accessibility.todayWorkspace')">
+      <div class="home-workspace-grid__main" :aria-label="t('home.accessibility.todayWorkspace')">
         <TodayFocusPanel
           :initialized="dashboard.todosInitialized.value"
           :local-today="dashboard.localToday.value"
@@ -119,7 +119,7 @@ onMounted(() => {
           :persistence-error="dashboard.todosPersistenceError.value"
           :upcoming-tasks="dashboard.upcomingTaskRows.value"
         />
-      </main>
+      </div>
 
       <aside
         class="home-workspace-grid__side"
