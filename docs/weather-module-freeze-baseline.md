@@ -209,3 +209,38 @@ Not allowed:
 ## Whole-site Upgrade Guard
 
 Future whole-site architecture or commercial-grade visual upgrade work must keep this weather baseline green. Any change that breaks the frozen commands, renderer routing, data semantics, accessibility states, reduced-motion behavior, runtime counters or browser viewport matrix reopens weather only under the allowed reopen conditions above.
+
+## Stage 11 Final Regression
+
+Date: 2026-07-07.
+
+Status: WEATHER_MODULE_FROZEN remains valid.
+
+Regression scope checked:
+
+- Weather routes: `/weather`, `/weather/cities`, `/weather/15-day`.
+- Weather code boundary: `src/modules/weather/**`, `src/modules/home/HomeWeatherSummary.vue`, `src/assets/weather/atmosphere/**`, weather route metadata, weather provider/settings touchpoints, and existing weather documentation.
+- Build and deterministic validators: build, scene validation, runtime stability, P1 closeout, browser state matrix, and LB-3D freeze matrix.
+- Browser smoke: city search, result selection, current weather, hourly forecast, daily forecast, mobile overflow, request-failure handling, and Pixi pointer-event isolation.
+
+Verification results:
+
+- `npm run build`: PASS. Vite still reports the accepted large chunk warning; this remains non-blocking.
+- `node scripts/lb-2a-validate-weather-scenes.mjs`: PASS.
+- `node scripts/lb-2d-validate-weather-scene-runtime-stability.mjs`: PASS.
+- `node scripts/lb-3a-validate-weather-completion-audit.mjs`: PASS.
+- `node scripts/lb-3c-validate-weather-p1-closeout.mjs`: PASS.
+- `node scripts/lb-3c-verify-weather-states.mjs`: PASS.
+- `node scripts/lb-3d-validate-weather-freeze.mjs`: PASS on rerun. An initial run sampled `RESPONSIVE_1896x829` while Pixi was still `loading`; the rerun passed the full matrix and no source change was required.
+
+Known non-blocking issues:
+
+- Large Vite chunk warning remains accepted P2.
+- Expected aborted provider-resource console errors remain allowed in mocked/offline browser harnesses.
+- Pixi initialization can be timing-sensitive in harness sampling, but the current freeze matrix passes without code changes.
+
+Freeze guard:
+
+- Weather is frozen for feature work.
+- Future Weather changes are limited to verified regression fixes, provider breakage, browser compatibility, confirmed accessibility issues, or measured performance regressions.
+- Do not add weather scenes, replace approved assets, rewrite Pixi, extend Xiaomi Weather analysis, or expand weather animation before the whole-site architecture and commercial-grade visual upgrade are complete.
