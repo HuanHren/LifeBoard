@@ -123,6 +123,18 @@ After the Stage 19 QA dependency and CI-output formalization, Stage 20 should de
 
 Do not use Stage 20 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, start another visual redesign, migrate the whole architecture, or change persistence schemas for test convenience.
 
+## Stage 21 Recommended Scope
+
+After the Stage 20 CI workflow and artifact path are in place, Stage 21 should validate the first remote CI run and only tune the workflow if real CI evidence requires it:
+
+- Confirm the GitHub Actions build and route accessibility QA job runs on push or pull request to `main`.
+- Confirm the `route-a11y-summary` artifact is uploaded when the JSON summary exists.
+- If Chromium fails because Ubuntu dependencies are missing, switch the install step to `npx playwright install --with-deps chromium`.
+- If repeated CI runs are too slow, evaluate Playwright browser caching with keys tied to OS, `package-lock.json`, and Playwright version.
+- Keep axe as a separate report-only evaluation unless a dedicated stage approves it.
+
+Do not use Stage 21 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, start page visual redesign, migrate app architecture, or add broad business workflow tests under the CI-tuning scope.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

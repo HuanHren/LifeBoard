@@ -129,13 +129,21 @@ Generate machine-readable JSON output:
 npm run qa:a11y:routes:json
 ```
 
+Write the JSON summary to the artifact path used by CI:
+
+```bash
+npm run qa:a11y:routes:json:file
+```
+
 Run the full local QA baseline:
 
 ```bash
 npm run qa
 ```
 
-`npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, Settings confirmation-dialog hooks, and frozen Weather route smoke. Playwright is a project dev dependency; on a fresh machine, run `npm install` first and run `npx playwright install chromium` if Chromium has not been installed yet. Axe automation is not part of this baseline yet.
+`npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, Settings confirmation-dialog hooks, and frozen Weather route smoke. Playwright is a project dev dependency; on a fresh machine or CI runner, run `npm ci` and `npx playwright install chromium` before QA if Chromium has not been installed yet. Axe automation is not part of this baseline yet.
+
+GitHub Actions runs build plus route accessibility QA on pushes and pull requests targeting `main`. The workflow uploads `.qa/route-a11y-summary.json` as the `route-a11y-summary` artifact when the JSON summary is available.
 
 ## Project Structure
 

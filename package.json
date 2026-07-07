@@ -10,6 +10,7 @@
     "qa:a11y:routes": "node scripts/qa-route-a11y.mjs",
     "qa:a11y:routes:ci": "node scripts/qa-route-a11y.mjs --ci",
     "qa:a11y:routes:json": "node scripts/qa-route-a11y.mjs --json",
+    "qa:a11y:routes:json:file": "node scripts/qa-route-a11y.mjs --json --output .qa/route-a11y-summary.json",
     "qa": "npm run build && npm run qa:a11y:routes"
   },
   "dependencies": {

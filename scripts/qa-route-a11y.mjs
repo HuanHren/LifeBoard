@@ -1,4 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process'
+import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import net from 'node:net'
 import path from 'node:path'
@@ -8,6 +9,7 @@ const require = createRequire(import.meta.url)
 const ARGS = new Set(process.argv.slice(2))
 const JSON_OUTPUT = ARGS.has('--json')
 const CI_OUTPUT = ARGS.has('--ci') || JSON_OUTPUT || process.env.CI === 'true'
+const OUTPUT_PATH = parseOutputPath(process.argv.slice(2))
 const ROUTES = [
   { name: 'Landing', path: '/' },
   { name: 'Home', path: '/app' },
@@ -30,6 +32,16 @@ const EXTERNAL_BASE_URL = process.env.QA_BASE_URL
 const OVERFLOW_TOLERANCE = 1
 
 let previewProcess = null
+
+function parseOutputPath(args) {
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index]
+    if (arg === '--output') return args[index + 1] || null
+    if (arg.startsWith('--output=')) return arg.slice('--output='.length) || null
+  }
+
+  return null
+}
 
 function writeInfo(message) {
   if (!JSON_OUTPUT) console.log(message)
@@ -172,6 +184,15 @@ function addFailure(failures, route, viewport, check, reason, selector = undefin
 
   if (selector) failure.selector = selector
   failures.push(failure)
+}
+
+function writeSummaryFile(summary, outputPath) {
+  if (!outputPath) return
+
+  const resolvedPath = path.resolve(process.cwd(), outputPath)
+  fs.mkdirSync(path.dirname(resolvedPath), { recursive: true })
+  fs.writeFileSync(resolvedPath, `${JSON.stringify(summary, null, 2)}\n`, 'utf8')
+  writeInfo(`Wrote QA summary: ${outputPath}`)
 }
 
 function createDomAudit() {
@@ -731,6 +752,8 @@ async function run() {
     writeInfo(`\nPASS route accessibility regression baseline (${passedCombos}/${total} route-viewports, ${summary.durationMs} ms)`)
     writeInfo(`Console errors: ${consoleErrorCount}`)
   }
+
+  writeSummaryFile(summary, OUTPUT_PATH)
 
   if (failures.length > 0) process.exitCode = 1
 }
