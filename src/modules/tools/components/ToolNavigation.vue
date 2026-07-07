@@ -88,7 +88,7 @@ const tools = computed(() =>
 }
 
 .tool-navigation__item.is-active {
-  box-shadow: inset 0.1875rem 0 0 var(--color-accent);
+  box-shadow: 0 0 0 0.125rem color-mix(in oklch, var(--color-accent) 22%, transparent);
 }
 
 .tool-navigation__index {

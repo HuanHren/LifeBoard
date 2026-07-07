@@ -77,7 +77,7 @@ function handleTitleEnter(event: KeyboardEvent) {
 
 <template>
   <form
-    class="task-composer"
+    class="task-composer surface-card surface-card--elevated"
     novalidate
     @submit.prevent="submitTask"
   >
@@ -198,8 +198,6 @@ function handleTitleEnter(event: KeyboardEvent) {
 .task-composer {
   min-width: 0;
   width: 100%;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--color-surface-elevated) 82%, transparent), transparent),
     var(--color-surface-raised);
@@ -229,7 +227,7 @@ function handleTitleEnter(event: KeyboardEvent) {
 .task-composer__helper {
   margin-top: 0.25rem;
   color: var(--color-text-secondary);
-  font-size: var(--text-caption);
+  font-size: var(--font-size-caption);
   line-height: 1.5;
 }
 

@@ -50,6 +50,18 @@ After the shell, token, and primitive baseline is established, Stage 14 should s
 
 Do not use Stage 14 for Weather runtime work, Xiaomi Weather material analysis, a full-page redesign of every module, or a one-shot source tree migration.
 
+## Stage 15 Recommended Scope
+
+After Home, Todos, and Tools adopt the primitive baseline, Stage 15 should continue the same controlled adoption pattern:
+
+- Apply shared primitives to Bookmarks and Settings.
+- Normalize shared empty, error, loading, search, and form states where they are already present.
+- Keep page business logic and stores unchanged unless a P0/P1 regression is found.
+- Smoke test Home, Weather, Todos, Tools, Bookmarks, Settings, and NotFound after the adoption pass.
+- Keep Weather frozen; only outer shell compatibility or regression fixes are allowed.
+
+Do not use Stage 15 to rewrite Weather internals, start Xiaomi Weather material analysis, migrate all business modules at once, or introduce a new app-wide state architecture.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

@@ -5,6 +5,7 @@ import BaseError from '@/components/base/BaseError.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 import type { Task } from '@/modules/todos/types/todos'
 import { formatReadableDate } from '@/modules/todos/utils/todoDates'
@@ -36,22 +37,21 @@ function toggleTask(task: Task) {
 
 <template>
   <section aria-labelledby="home-focus-title">
-    <div class="home-focus-heading mb-4 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <p class="text-caption font-semibold text-[var(--color-accent-text)]">
-          {{ t('home.focus.eyebrow') }}
-        </p>
-        <h2 id="home-focus-title" class="mt-1 text-section-title text-[var(--color-text-primary)]">
-          {{ t('home.focus.title') }}
-        </h2>
-      </div>
+    <SectionHeader
+      class="home-section-header"
+      :description="t('home.focus.eyebrow')"
+      :title="t('home.focus.title')"
+      title-id="home-focus-title"
+    >
+      <template #actions>
       <RouterLink
         class="interactive-surface inline-flex min-h-10 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'todos' }"
       >
         {{ t('home.focus.openTodos') }}
       </RouterLink>
-    </div>
+      </template>
+    </SectionHeader>
 
     <BaseSkeleton v-if="!initialized" :label="t('home.todos.loading')" />
 
@@ -155,6 +155,15 @@ function toggleTask(task: Task) {
 </template>
 
 <style scoped>
+.home-section-header {
+  margin-bottom: 1rem;
+}
+
+.home-section-header :deep(.section-header__description) {
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-semibold);
+}
+
 .home-focus-summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -188,12 +197,12 @@ function toggleTask(task: Task) {
 }
 
 @media (max-width: 639px) {
-  .home-focus-heading {
+  .home-section-header {
     margin-bottom: 0.7rem;
     gap: 0.5rem;
   }
 
-  .home-focus-heading a {
+  .home-section-header a {
     min-height: 2.25rem;
     padding-inline: 0.6rem;
     font-size: 0.8125rem;

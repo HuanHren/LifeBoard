@@ -2,6 +2,8 @@
 import { computed, onMounted } from 'vue'
 import PageLayout from '@/components/base/PageLayout.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import type { BaseIconName } from '@/components/base/BaseIcon.vue'
 import HomeNextUp from '@/modules/home/HomeNextUp.vue'
 import HomeQuickAccess from '@/modules/home/HomeQuickAccess.vue'
@@ -75,28 +77,30 @@ onMounted(() => {
 
 <template>
   <PageLayout variant="wide" gap="md">
-    <section class="workspace-hero" aria-labelledby="home-title">
+    <BaseSurface as="section" class="workspace-hero" aria-labelledby="home-title" padding="lg" variant="raised">
       <HomeTodayHeader
         :local-today="dashboard.localToday.value"
         :next-countdown="nextCountdown"
         :today-task-count="totalTodayTasks"
       />
 
-      <ul class="workspace-hero__rail" :aria-label="t('home.workspace.railLabel')">
-        <li
+      <dl class="workspace-hero__rail" :aria-label="t('home.workspace.railLabel')">
+        <StatCard
           v-for="item in statusRailItems"
           :key="item.key"
+          :label="item.label"
+          :tone="item.featured ? 'accent' : 'default'"
+          :value="item.value"
+          :value-kind="item.key === 'today' && totalTodayTasks > 0 ? 'numeric' : 'semantic'"
+          as="div"
           class="workspace-metric"
-          :class="{ 'workspace-metric--primary': item.featured }"
         >
-          <BaseIcon :name="item.icon" size="sm" />
-          <span>
-            <strong>{{ item.value }}</strong>
-            <span>{{ item.label }}</span>
-          </span>
-        </li>
-      </ul>
-    </section>
+          <template #media>
+            <BaseIcon :name="item.icon" size="sm" />
+          </template>
+        </StatCard>
+      </dl>
+    </BaseSurface>
 
     <div class="home-workspace-grid">
       <main class="home-workspace-grid__main" :aria-label="t('home.accessibility.todayWorkspace')">
@@ -137,12 +141,9 @@ onMounted(() => {
 .workspace-hero {
   display: grid;
   gap: 1rem;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background:
     radial-gradient(circle at top left, color-mix(in oklch, var(--color-accent-wash) 72%, transparent), transparent 34rem),
     linear-gradient(135deg, var(--color-surface-elevated), var(--color-surface-raised));
-  padding: clamp(1rem, 2.4vw, 1.75rem);
 }
 
 .workspace-hero__rail {
@@ -151,51 +152,10 @@ onMounted(() => {
   gap: 0.75rem;
   margin: 0;
   padding: 0;
-  list-style: none;
 }
 
 .workspace-metric {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 0.75rem;
-  align-items: center;
   min-height: 4.25rem;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  background: color-mix(in oklch, var(--color-surface-raised) 82%, transparent);
-  padding: 0.9rem 1rem;
-}
-
-.workspace-metric > svg {
-  color: var(--color-accent-text);
-}
-
-.workspace-metric strong,
-.workspace-metric span span {
-  display: block;
-  min-width: 0;
-}
-
-.workspace-metric strong {
-  overflow: hidden;
-  color: var(--color-text-primary);
-  font-size: 1rem;
-  font-weight: 650;
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.workspace-metric span span {
-  margin-top: 0.25rem;
-  color: var(--color-text-secondary);
-  font-size: 0.8125rem;
-  line-height: 1.35;
-}
-
-.workspace-metric--primary {
-  border-color: color-mix(in oklch, var(--color-accent) 36%, var(--color-border-soft));
-  background: var(--color-accent-wash);
 }
 
 .home-workspace-grid {
@@ -241,22 +201,10 @@ onMounted(() => {
     border-radius: var(--radius-md);
     margin-inline: calc(var(--page-inline) * -0.25);
     gap: 0.75rem;
-    padding: 0.85rem;
   }
 
   .workspace-metric {
     min-height: 3.45rem;
-    gap: 0.55rem;
-    padding: 0.6rem 0.7rem;
-  }
-
-  .workspace-metric strong {
-    font-size: 0.875rem;
-  }
-
-  .workspace-metric span span {
-    margin-top: 0.125rem;
-    font-size: 0.75rem;
   }
 }
 </style>

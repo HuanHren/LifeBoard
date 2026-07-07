@@ -7,6 +7,7 @@ import BaseError from '@/components/base/BaseError.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import {
@@ -138,22 +139,21 @@ onMounted(() => {
 
 <template>
   <section aria-labelledby="home-weather-title">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <p class="text-caption font-semibold text-[var(--color-accent-text)]">
-          {{ t('home.weather.eyebrow') }}
-        </p>
-        <h2 id="home-weather-title" class="mt-1 text-section-title text-[var(--color-text-primary)]">
-          {{ t('home.weather.title') }}
-        </h2>
-      </div>
+    <SectionHeader
+      class="home-section-header"
+      :description="t('home.weather.eyebrow')"
+      :title="t('home.weather.title')"
+      title-id="home-weather-title"
+    >
+      <template #actions>
       <RouterLink
         class="interactive-surface inline-flex min-h-10 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'weather' }"
       >
         {{ t('home.weather.open') }}
       </RouterLink>
-    </div>
+      </template>
+    </SectionHeader>
 
     <p
       v-if="currentLocationMessage"
@@ -294,3 +294,14 @@ onMounted(() => {
     </BaseSurface>
   </section>
 </template>
+
+<style scoped>
+.home-section-header {
+  margin-bottom: 1rem;
+}
+
+.home-section-header :deep(.section-header__description) {
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-semibold);
+}
+</style>

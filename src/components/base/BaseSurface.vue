@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  as?: 'article' | 'section' | 'div' | 'aside'
+  as?: 'article' | 'section' | 'div' | 'aside' | 'header'
   variant?: 'plain' | 'muted' | 'interactive' | 'raised' | 'danger' | 'info'
   padding?: 'none' | 'sm' | 'md' | 'lg'
 }

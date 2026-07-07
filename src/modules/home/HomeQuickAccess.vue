@@ -5,6 +5,7 @@ import BaseError from '@/components/base/BaseError.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import type { Bookmark } from '@/modules/bookmarks/types/bookmarks'
@@ -41,16 +42,12 @@ function displayBookmarkHost(url: string) {
 
 <template>
   <section aria-labelledby="home-quick-title">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <p class="text-caption font-semibold text-[var(--color-accent-text)]">
-          {{ t('home.quick.eyebrow') }}
-        </p>
-        <h2 id="home-quick-title" class="mt-1 text-section-title text-[var(--color-text-primary)]">
-          {{ t('home.quick.title') }}
-        </h2>
-      </div>
-    </div>
+    <SectionHeader
+      class="home-section-header"
+      :description="t('home.quick.eyebrow')"
+      :title="t('home.quick.title')"
+      title-id="home-quick-title"
+    />
 
     <div class="home-quick-access">
       <div class="home-quick-grid">
@@ -162,6 +159,15 @@ function displayBookmarkHost(url: string) {
 <style scoped>
 .home-quick-access {
   container-type: inline-size;
+}
+
+.home-section-header {
+  margin-bottom: 1rem;
+}
+
+.home-section-header :deep(.section-header__description) {
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-semibold);
 }
 
 .home-quick-grid {

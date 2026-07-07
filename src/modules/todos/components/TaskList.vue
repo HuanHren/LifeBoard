@@ -49,7 +49,7 @@ const emptyCopy = computed<Record<TaskFilter, { title: string; description: stri
   />
   <ul
     v-else
-    class="todos-task-list divide-y divide-[var(--color-border-soft)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]"
+    class="todos-task-list surface-card divide-y divide-[var(--color-border-soft)] overflow-hidden rounded-[var(--radius-md)]"
   >
     <TaskItem
       v-for="task in tasks"

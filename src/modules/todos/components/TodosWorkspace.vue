@@ -4,6 +4,8 @@ import { storeToRefs } from 'pinia'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import { useI18n } from '@/i18n/useI18n'
 import CountdownSection from '@/modules/todos/components/CountdownSection.vue'
 import TaskComposer from '@/modules/todos/components/TaskComposer.vue'
@@ -155,7 +157,7 @@ onMounted(() => {
 
 <template>
   <div class="todos-workspace">
-    <header class="todos-workspace__hero">
+    <BaseSurface as="header" class="todos-workspace__hero" padding="lg" variant="raised">
       <div class="todos-workspace__hero-copy">
         <p class="todos-workspace__eyebrow">{{ t('todos.page.eyebrow') }}</p>
         <h1 class="todos-workspace__title">
@@ -175,36 +177,34 @@ onMounted(() => {
       </BaseButton>
 
       <dl class="todos-workspace__metrics" :aria-label="t('todos.tasks.overview.label')">
-        <div class="todos-workspace__metric todos-workspace__metric--primary">
-          <dt>{{ t('todos.tasks.filter.today') }}</dt>
-          <dd :class="`todos-workspace__metric-value--${todayMetricValue.valueKind}`">
-            {{ todayMetricValue.value }}
-          </dd>
-          <p>{{ todayMetricDetail }}</p>
-        </div>
-        <div class="todos-workspace__metric" :class="overdueCount > 0 ? 'todos-workspace__metric--danger' : ''">
-          <dt>{{ t('todos.tasks.pastDue') }}</dt>
-          <dd :class="`todos-workspace__metric-value--${overdueMetricValue.valueKind}`">
-            {{ overdueMetricValue.value }}
-          </dd>
-          <p>{{ overdueMetricDetail }}</p>
-        </div>
-        <div class="todos-workspace__metric">
-          <dt>{{ t('todos.tasks.summary.weekLabel') }}</dt>
-          <dd :class="`todos-workspace__metric-value--${weekMetricValue.valueKind}`">
-            {{ weekMetricValue.value }}
-          </dd>
-          <p>{{ weekMetricDetail }}</p>
-        </div>
-        <div class="todos-workspace__metric">
-          <dt>{{ t('todos.countdowns.title') }}</dt>
-          <dd :class="`todos-workspace__metric-value--${countdownMetricValue.valueKind}`">
-            {{ countdownMetricValue.value }}
-          </dd>
-          <p>{{ countdownMetricDetail }}</p>
-        </div>
+        <StatCard
+          :description="todayMetricDetail"
+          :label="t('todos.tasks.filter.today')"
+          tone="accent"
+          :value="todayMetricValue.value"
+          :value-kind="todayMetricValue.valueKind"
+        />
+        <StatCard
+          :description="overdueMetricDetail"
+          :label="t('todos.tasks.pastDue')"
+          :tone="overdueCount > 0 ? 'danger' : 'default'"
+          :value="overdueMetricValue.value"
+          :value-kind="overdueMetricValue.valueKind"
+        />
+        <StatCard
+          :description="weekMetricDetail"
+          :label="t('todos.tasks.summary.weekLabel')"
+          :value="weekMetricValue.value"
+          :value-kind="weekMetricValue.valueKind"
+        />
+        <StatCard
+          :description="countdownMetricDetail"
+          :label="t('todos.countdowns.title')"
+          :value="countdownMetricValue.value"
+          :value-kind="countdownMetricValue.valueKind"
+        />
       </dl>
-    </header>
+    </BaseSurface>
 
     <BaseError
       v-if="persistenceError"
@@ -219,18 +219,16 @@ onMounted(() => {
         <TaskComposer />
 
         <BaseSurface as="section" class="todos-workspace__tasks" padding="none" variant="plain">
-          <div class="todos-workspace__section-heading">
-          <div>
-              <p class="todos-workspace__eyebrow">{{ t('todos.tasks.sectionEyebrow') }}</p>
-              <h2 id="task-list-title" class="text-section-title text-[var(--color-text-primary)]">
-              {{ t('todos.tasks.sectionTitle') }}
-            </h2>
-              <p class="mt-1 text-sm leading-6 text-[var(--color-text-secondary)]">
-              {{ t('todos.tasks.sectionDescription') }}
-            </p>
-          </div>
+          <SectionHeader
+            class="todos-workspace__section-heading"
+            :description="t('todos.tasks.sectionDescription')"
+            :title="t('todos.tasks.sectionTitle')"
+            title-id="task-list-title"
+          >
+            <template #actions>
             <p class="todos-workspace__filter-summary">{{ visibleTaskCountLabel }}</p>
-          </div>
+            </template>
+          </SectionHeader>
           <TaskFilterBar
             :active-filter="activeFilter"
             :counts="filterCounts"
@@ -274,12 +272,9 @@ onMounted(() => {
   gap: 1.25rem;
   align-items: end;
   overflow: hidden;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--color-accent-wash) 68%, transparent), transparent 58%),
     var(--color-surface-raised);
-  padding: clamp(1.1rem, 2.5vw, 1.75rem);
 }
 
 .todos-workspace__hero-copy {
@@ -288,7 +283,7 @@ onMounted(() => {
 
 .todos-workspace__eyebrow {
   color: var(--color-accent-text);
-  font-size: var(--text-caption);
+  font-size: var(--font-size-caption);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -320,59 +315,6 @@ onMounted(() => {
   gap: 0.65rem;
 }
 
-.todos-workspace__metric {
-  min-width: 0;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--color-surface-raised) 86%, transparent);
-  padding: 0.85rem;
-}
-
-.todos-workspace__metric--primary {
-  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border-soft));
-  background: var(--color-accent-wash);
-}
-
-.todos-workspace__metric--danger {
-  border-color: color-mix(in srgb, var(--color-danger) 50%, var(--color-border-soft));
-  background: var(--color-danger-soft);
-}
-
-.todos-workspace__metric dt {
-  color: var(--color-text-secondary);
-  font-size: var(--text-caption);
-  font-weight: 650;
-}
-
-.todos-workspace__metric dd {
-  margin-top: 0.35rem;
-  color: var(--color-text-primary);
-}
-
-.todos-workspace__metric-value--numeric {
-  font-size: clamp(1.45rem, 3vw, 2.1rem);
-  font-variant-numeric: tabular-nums;
-  font-weight: 730;
-  line-height: 1;
-}
-
-.todos-workspace__metric-value--semantic {
-  max-width: 100%;
-  color: color-mix(in srgb, var(--color-text-primary) 88%, var(--color-text-secondary));
-  font-size: clamp(1.08rem, 1.22vw, 1.28rem);
-  font-weight: 680;
-  line-height: 1.12;
-  overflow-wrap: normal;
-  text-wrap: balance;
-}
-
-.todos-workspace__metric p {
-  margin-top: 0.35rem;
-  color: var(--color-text-secondary);
-  font-size: var(--text-caption);
-  line-height: 1.45;
-}
-
 .todos-workspace__grid {
   min-width: 0;
   display: grid;
@@ -399,17 +341,13 @@ onMounted(() => {
 }
 
 .todos-workspace__section-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: end;
   padding: 1.1rem 1.1rem 0;
 }
 
 .todos-workspace__filter-summary {
   max-width: 14rem;
   color: var(--color-text-secondary);
-  font-size: var(--text-caption);
+  font-size: var(--font-size-caption);
   font-weight: 650;
   line-height: 1.45;
   text-align: right;
@@ -442,7 +380,6 @@ onMounted(() => {
   .todos-workspace__hero {
     grid-template-columns: 1fr;
     gap: 0.9rem;
-    padding: 1rem;
   }
 
   .todos-workspace__title {
@@ -465,31 +402,7 @@ onMounted(() => {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .todos-workspace__metric {
-    padding: 0.62rem;
-  }
-
-  .todos-workspace__metric dd {
-    margin-top: 0.28rem;
-  }
-
-  .todos-workspace__metric-value--numeric,
-  .todos-workspace__metric-value--semantic {
-    font-size: 1rem;
-    line-height: 1.15;
-  }
-
-  .todos-workspace__metric p {
-    display: none;
-  }
-
-  .todos-workspace__section-heading p:not(.todos-workspace__eyebrow) {
-    display: none;
-  }
-
   .todos-workspace__section-heading {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
     padding: 0.95rem 0.95rem 0;
   }
 

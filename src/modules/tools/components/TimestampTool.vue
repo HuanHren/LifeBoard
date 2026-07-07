@@ -229,9 +229,11 @@ function clearInput() {
 }
 
 .timestamp-input__error {
-  border-left: 0.1875rem solid var(--color-danger);
+  border: 1px solid color-mix(in oklch, var(--color-danger) 54%, var(--color-border-soft));
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
   color: var(--color-danger);
-  padding-left: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   font-size: var(--font-size-label);
   font-weight: var(--font-weight-medium);
   line-height: 1.5;

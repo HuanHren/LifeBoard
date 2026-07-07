@@ -3,6 +3,9 @@ import { computed, shallowRef, watch } from 'vue'
 import type { Component } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
+import StatCard from '@/components/base/StatCard.vue'
 import { useI18n } from '@/i18n/useI18n'
 import CaseConverterTool from '@/modules/tools/components/CaseConverterTool.vue'
 import DeduplicateLinesTool from '@/modules/tools/components/DeduplicateLinesTool.vue'
@@ -66,7 +69,7 @@ watch(
 
 <template>
   <div class="tools-workspace">
-    <section class="tools-hero" aria-labelledby="tools-title">
+    <BaseSurface as="section" class="tools-hero" aria-labelledby="tools-title" padding="lg" variant="raised">
       <div class="tools-hero__copy">
         <h1 id="tools-title" class="tools-hero__title">
           {{ t('tools.page.title') }}
@@ -85,38 +88,44 @@ watch(
       </div>
 
       <dl class="tools-hero__facts" :aria-label="t('tools.hero.statusLabel')">
-        <div class="tools-hero__fact">
-          <dt>{{ t('tools.hero.factLocal') }}</dt>
-          <dd>{{ t('tools.hero.factLocalDetail') }}</dd>
-        </div>
-        <div class="tools-hero__fact">
-          <dt>{{ t('tools.hero.factStored') }}</dt>
-          <dd>{{ t('tools.hero.factStoredDetail') }}</dd>
-        </div>
-        <div class="tools-hero__fact">
-          <dt>{{ t('tools.hero.factUtilities') }}</dt>
-          <dd>{{ t('tools.hero.factUtilitiesDetail', { count: toolCount }) }}</dd>
-        </div>
+        <StatCard
+          :label="t('tools.hero.factLocal')"
+          :value="t('tools.hero.factLocalDetail')"
+          value-kind="semantic"
+        />
+        <StatCard
+          :label="t('tools.hero.factStored')"
+          :value="t('tools.hero.factStoredDetail')"
+          value-kind="semantic"
+        />
+        <StatCard
+          :label="t('tools.hero.factUtilities')"
+          :value="t('tools.hero.factUtilitiesDetail', { count: toolCount })"
+          tone="accent"
+          value-kind="semantic"
+        />
       </dl>
-    </section>
+    </BaseSurface>
 
     <section class="tools-console" aria-labelledby="tools-switcher-title">
-      <div class="tools-console__switcher">
-        <div class="tools-console__switcher-header">
-          <h2 id="tools-switcher-title">{{ t('tools.navigation.label') }}</h2>
-          <p>{{ t('tools.navigation.hint') }}</p>
-        </div>
+      <BaseSurface as="div" class="tools-console__switcher" padding="sm" variant="plain">
+        <SectionHeader
+          :description="t('tools.navigation.hint')"
+          :title="t('tools.navigation.label')"
+          title-id="tools-switcher-title"
+        />
         <ToolNavigation :active-tool="activeTool" @select="selectTool" />
-      </div>
+      </BaseSurface>
 
-      <div id="tools-active-workspace" class="tools-console__main" tabindex="-1">
-        <div class="tools-console__active-header">
-          <div>
-            <p>{{ t('tools.workspace.activeLabel') }}</p>
-            <h2>{{ activeDefinition.title }}</h2>
-          </div>
+      <BaseSurface id="tools-active-workspace" as="div" class="tools-console__main" padding="md" tabindex="-1" variant="plain">
+        <SectionHeader
+          :description="t('tools.workspace.activeLabel')"
+          :title="activeDefinition.title"
+        >
+          <template #actions>
           <span>{{ t('tools.workspace.localBadge') }}</span>
-        </div>
+          </template>
+        </SectionHeader>
 
         <section
           :aria-label="activeDefinition.title"
@@ -126,17 +135,20 @@ watch(
             <component :is="activeComponent" :key="activeTool" />
           </KeepAlive>
         </section>
-      </div>
+      </BaseSurface>
 
-      <aside class="tools-console__guide" aria-labelledby="tools-guide-title">
-        <h2 id="tools-guide-title">{{ t('tools.guide.title') }}</h2>
-        <p>{{ activeDefinition.description }}</p>
+      <BaseSurface as="aside" class="tools-console__guide" aria-labelledby="tools-guide-title" padding="md" variant="muted">
+        <SectionHeader
+          :description="activeDefinition.description"
+          :title="t('tools.guide.title')"
+          title-id="tools-guide-title"
+        />
         <ul>
           <li>{{ t('tools.guide.local') }}</li>
           <li>{{ t('tools.guide.copy') }}</li>
           <li>{{ t('tools.guide.switch') }}</li>
         </ul>
-      </aside>
+      </BaseSurface>
     </section>
   </div>
 </template>
@@ -150,10 +162,7 @@ watch(
 .tools-hero {
   display: grid;
   gap: var(--space-5);
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
   background: var(--color-surface-raised);
-  padding: clamp(1rem, 3vw, 2rem);
 }
 
 .tools-hero__copy {
@@ -188,27 +197,6 @@ watch(
   gap: var(--space-2);
 }
 
-.tools-hero__fact {
-  min-width: 0;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-md);
-  background: color-mix(in oklch, var(--color-surface-elevated) 88%, transparent);
-  padding: var(--space-3);
-}
-
-.tools-hero__fact dt {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-label);
-  font-weight: var(--font-weight-semibold);
-}
-
-.tools-hero__fact dd {
-  margin-top: var(--space-1);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-caption);
-  line-height: var(--line-height-label);
-}
-
 .tools-console {
   display: grid;
   gap: var(--space-4);
@@ -219,31 +207,14 @@ watch(
 .tools-console__main,
 .tools-console__guide {
   min-width: 0;
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
 }
 
 .tools-console__switcher {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-3);
 }
 
-.tools-console__switcher-header {
-  padding: 0 var(--space-1);
-}
-
-.tools-console__switcher-header h2,
-.tools-console__guide h2 {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-card-title);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-label);
-}
-
-.tools-console__switcher-header p,
-.tools-console__guide p,
+.tools-console__guide :deep(.section-header__description),
 .tools-console__guide li {
   color: var(--color-text-secondary);
   font-size: var(--font-size-caption);
@@ -253,34 +224,20 @@ watch(
 .tools-console__main {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-4);
 }
 
-.tools-console__active-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
+.tools-console__main :deep(.section-header) {
   border-bottom: 1px solid var(--color-border-soft);
   padding-bottom: var(--space-4);
 }
 
-.tools-console__active-header p {
+.tools-console__main :deep(.section-header__description) {
   color: var(--color-text-tertiary);
   font-size: var(--font-size-caption);
   font-weight: var(--font-weight-medium);
 }
 
-.tools-console__active-header h2 {
-  margin-top: var(--space-1);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-section-title);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-}
-
-.tools-console__active-header span {
+.tools-console__main :deep(.section-header__actions span) {
   border: 1px solid var(--color-border-soft);
   border-radius: var(--radius-pill);
   background: var(--color-accent-wash);
@@ -297,7 +254,6 @@ watch(
 .tools-console__guide {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-4);
 }
 
 .tools-console__guide ul {
@@ -347,7 +303,6 @@ watch(
 
   .tools-hero {
     gap: var(--space-4);
-    padding: var(--space-4);
   }
 
   .tools-hero__description {
@@ -360,24 +315,9 @@ watch(
     margin-top: var(--space-3);
   }
 
-  .tools-hero__fact {
-    padding: var(--space-2);
-  }
-
   .tools-hero__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-1);
-  }
-
-  .tools-hero__fact dt {
-    font-size: 0.75rem;
-    line-height: 1.2;
-  }
-
-  .tools-hero__fact dd {
-    margin-top: 0.1875rem;
-    font-size: 0.6875rem;
-    line-height: 1.25;
   }
 
   .tools-console,
@@ -385,12 +325,7 @@ watch(
     gap: var(--space-3);
   }
 
-  .tools-console__main,
-  .tools-console__guide {
-    padding: var(--space-3);
-  }
-
-  .tools-console__active-header {
+  .tools-console__main :deep(.section-header) {
     padding-bottom: var(--space-3);
   }
 }

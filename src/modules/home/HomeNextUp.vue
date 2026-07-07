@@ -4,6 +4,7 @@ import BaseError from '@/components/base/BaseError.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
 import BaseSkeleton from '@/components/base/BaseSkeleton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
+import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 import type { CountdownSummaryItem } from '@/modules/home/composables/useHomeDashboard'
 import type { Task } from '@/modules/todos/types/todos'
@@ -22,22 +23,21 @@ const { locale, t, formatNumber } = useI18n()
 
 <template>
   <section aria-labelledby="home-next-title">
-    <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <p class="text-caption font-semibold text-[var(--color-accent-text)]">
-          {{ t('home.next.eyebrow') }}
-        </p>
-        <h2 id="home-next-title" class="mt-1 text-section-title text-[var(--color-text-primary)]">
-          {{ t('home.next.title') }}
-        </h2>
-      </div>
+    <SectionHeader
+      class="home-section-header"
+      :description="t('home.next.eyebrow')"
+      :title="t('home.next.title')"
+      title-id="home-next-title"
+    >
+      <template #actions>
       <RouterLink
         class="interactive-surface inline-flex min-h-10 items-center rounded-[var(--radius-sm)] px-3 text-sm font-medium text-[var(--color-accent-text)] hover:bg-[var(--color-accent-wash)]"
         :to="{ name: 'todos' }"
       >
         {{ t('home.next.manage') }}
       </RouterLink>
-    </div>
+      </template>
+    </SectionHeader>
 
     <BaseSkeleton v-if="!initialized" :label="t('home.todos.loading')" />
 
@@ -132,6 +132,15 @@ const { locale, t, formatNumber } = useI18n()
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.home-section-header {
+  margin-bottom: 1rem;
+}
+
+.home-section-header :deep(.section-header__description) {
+  color: var(--color-accent-text);
+  font-weight: var(--font-weight-semibold);
 }
 
 .home-next-panel-header {
