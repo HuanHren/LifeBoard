@@ -148,6 +148,20 @@ After the Stage 21 remote CI first-run validation and workflow tuning, Stage 22 
 
 Do not use Stage 22 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, or add broad business workflow tests under the CI-verification scope.
 
+## Stage 23 Recommended Scope
+
+After the Stage 22 remote install diagnostics are in place, Stage 23 should use the next remote `QA` run to classify the install failure before changing dependencies or source code:
+
+- Verify `Print tool versions` output for Node, npm, and registry.
+- Verify whether `npm ci --dry-run` passes in the `Validate lockfile` step.
+- If lockfile validation fails, fix only the package/lock/npm-version issue that the log proves.
+- If lockfile validation passes but `npm ci` fails, inspect the exact install stderr before touching cache or dependencies.
+- If install passes, continue to Chromium install, build, route QA, JSON summary, and artifact upload verification.
+- Keep Playwright browser cache deferred until CI reaches the browser install or QA stage and shows a measured need.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 23 to modify Weather internals, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, add axe, add deployment, or introduce a complex CI matrix under the install-diagnostics scope.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

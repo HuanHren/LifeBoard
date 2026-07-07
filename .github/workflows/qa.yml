@@ -23,6 +23,15 @@ jobs:
           node-version: 22.18.0
           cache: npm
 
+      - name: Print tool versions
+        run: |
+          node --version
+          npm --version
+          npm config get registry
+
+      - name: Validate lockfile
+        run: npm ci --dry-run
+
       - name: Install dependencies
         id: install-dependencies
         run: npm ci
