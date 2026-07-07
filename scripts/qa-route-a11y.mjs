@@ -5,6 +5,9 @@ import path from 'node:path'
 import process from 'node:process'
 
 const require = createRequire(import.meta.url)
+const ARGS = new Set(process.argv.slice(2))
+const JSON_OUTPUT = ARGS.has('--json')
+const CI_OUTPUT = ARGS.has('--ci') || JSON_OUTPUT || process.env.CI === 'true'
 const ROUTES = [
   { name: 'Landing', path: '/' },
   { name: 'Home', path: '/app' },
@@ -28,6 +31,14 @@ const OVERFLOW_TOLERANCE = 1
 
 let previewProcess = null
 
+function writeInfo(message) {
+  if (!JSON_OUTPUT) console.log(message)
+}
+
+function writeError(message) {
+  if (!JSON_OUTPUT) console.error(message)
+}
+
 function loadPlaywright() {
   const candidates = []
 
@@ -38,20 +49,7 @@ function loadPlaywright() {
   try {
     return require('playwright')
   } catch {
-    // Continue with known local npx cache probing.
-  }
-
-  if (process.env.LOCALAPPDATA) {
-    candidates.push(
-      path.join(
-        process.env.LOCALAPPDATA,
-        'npm-cache',
-        '_npx',
-        'e41f203b7505f1fb',
-        'node_modules',
-        'playwright',
-      ),
-    )
+    // Continue with explicit override probing for unusual local runtimes.
   }
 
   for (const candidate of candidates) {
@@ -63,7 +61,7 @@ function loadPlaywright() {
   }
 
   throw new Error(
-    'Playwright is not available. Install project-approved Playwright support or set PLAYWRIGHT_NODE_PATH to an existing node_modules directory.',
+    'Playwright is not available. Run npm install, then run npx playwright install chromium if the browser binary is missing.',
   )
 }
 
@@ -138,8 +136,8 @@ async function startPreview() {
 
   previewProcess.once('exit', (code) => {
     if (code !== null && code !== 0 && previewProcess) {
-      console.error(`[qa:a11y:routes] preview exited early with code ${code}`)
-      if (previewOutput.trim()) console.error(previewOutput.trim())
+      writeError(`[qa:a11y:routes] preview exited early with code ${code}`)
+      if (previewOutput.trim()) writeError(previewOutput.trim())
     }
   })
 
@@ -163,14 +161,17 @@ function stopPreview() {
   previewProcess = null
 }
 
-function addFailure(failures, route, viewport, check, reason) {
-  failures.push({
+function addFailure(failures, route, viewport, check, reason, selector = undefined) {
+  const failure = {
     route: route.name,
     path: route.path,
     viewport: viewport.name,
     check,
     reason,
-  })
+  }
+
+  if (selector) failure.selector = selector
+  failures.push(failure)
 }
 
 function createDomAudit() {
@@ -513,6 +514,81 @@ async function checkSettings(page, route, viewport, failures) {
     }).length,
   )
   if (fileInputsWithoutLabel > 0) addFailure(failures, route, viewport, 'settings-file-label', `${fileInputsWithoutLabel} file input(s) lack a label.`)
+
+  const clearAllButton = page.locator('[data-qa="settings-clear-all-button"]')
+  if (!(await clearAllButton.count())) {
+    addFailure(
+      failures,
+      route,
+      viewport,
+      'settings-clear-selector',
+      'Clear-all action is missing the stable QA selector.',
+      '[data-qa="settings-clear-all-button"]',
+    )
+    return
+  }
+
+  await clearAllButton.evaluate((button) => {
+    window.localStorage.setItem(
+      'lifeboard.bookmarks',
+      JSON.stringify({
+        version: 1,
+        bookmarks: [
+          {
+            id: 'qa-settings-dialog-bookmark',
+            title: 'QA dialog bookmark',
+            url: 'https://example.com',
+            category: null,
+            note: null,
+            pinned: false,
+            createdAt: '2026-07-07T00:00:00.000Z',
+            updatedAt: '2026-07-07T00:00:00.000Z',
+          },
+        ],
+      }),
+    )
+    button.dispatchEvent(new CustomEvent('qa-storage-seeded'))
+  })
+  await page.reload({ waitUntil: 'networkidle' })
+  await page.locator('[data-qa="settings-clear-all-button"]').click()
+  const dialog = page.locator('[data-qa="settings-confirmation-dialog"]')
+
+  if (!(await dialog.count()) || !(await dialog.evaluate((element) => element.open).catch(() => false))) {
+    addFailure(
+      failures,
+      route,
+      viewport,
+      'settings-dialog-open',
+      'Clear-all action did not open the confirmation dialog.',
+      '[data-qa="settings-confirmation-dialog"]',
+    )
+    return
+  }
+
+  const dialogAudit = await dialog.evaluate((element) => ({
+    labelledBy: element.getAttribute('aria-labelledby') || '',
+    describedBy: element.getAttribute('aria-describedby') || '',
+    activeSelector: document.activeElement?.getAttribute('data-qa') || '',
+    acknowledgementExists: Boolean(document.querySelector('[data-qa="settings-confirmation-acknowledgement"]')),
+    confirmDisabled: document.querySelector('[data-qa="settings-confirmation-confirm-button"]')?.hasAttribute('disabled') ?? false,
+  }))
+
+  if (!dialogAudit.labelledBy || !dialogAudit.describedBy) {
+    addFailure(failures, route, viewport, 'settings-dialog-name', 'Confirmation dialog is missing label or description references.')
+  }
+  if (dialogAudit.activeSelector !== 'settings-confirmation-cancel-button') {
+    addFailure(failures, route, viewport, 'settings-dialog-focus', `Expected cancel button focus, got "${dialogAudit.activeSelector}".`)
+  }
+  if (!dialogAudit.acknowledgementExists || !dialogAudit.confirmDisabled) {
+    addFailure(failures, route, viewport, 'settings-dialog-acknowledgement', 'Clear-all dialog must require acknowledgement before confirming.')
+  }
+
+  await page.locator('[data-qa="settings-confirmation-cancel-button"]').click()
+  const dialogClosed = await dialog.evaluate((element) => !element.open).catch(() => true)
+  const focusReturned = await clearAllButton.evaluate((button) => document.activeElement === button).catch(() => false)
+
+  if (!dialogClosed) addFailure(failures, route, viewport, 'settings-dialog-close', 'Cancel did not close the confirmation dialog.')
+  if (!focusReturned) addFailure(failures, route, viewport, 'settings-dialog-focus-return', 'Cancel did not return focus to the triggering clear-all action.')
 }
 
 async function checkSettingsDataSources(page, route, viewport, failures) {
@@ -540,11 +616,19 @@ async function runRouteSpecificChecks(page, route, viewport, failures) {
 }
 
 async function run() {
+  const startedAt = Date.now()
   const { chromium } = loadPlaywright()
   const preview = await startPreview()
   const browser = await chromium.launch({ headless: true })
   const failures = []
-  const passes = []
+  const results = []
+  let consoleErrorCount = 0
+
+  writeInfo('QA route accessibility regression baseline')
+  writeInfo(`Mode: ${CI_OUTPUT ? 'ci' : 'local'}`)
+  writeInfo(`Routes: ${ROUTES.map((route) => route.path).join(', ')}`)
+  writeInfo(`Viewports: ${VIEWPORTS.map((viewport) => `${viewport.name}:${viewport.width}x${viewport.height}`).join(', ')}`)
+  writeInfo('Checks: landmarks, h1, skip link, overflow, console errors, active nav, tablists, forms, dialogs, route-specific smoke, reduced motion.')
 
   try {
     for (const viewport of VIEWPORTS) {
@@ -560,6 +644,7 @@ async function run() {
         })
         const page = await context.newPage()
         const consoleErrors = []
+        const failuresBeforeRoute = failures.length
 
         page.on('console', (message) => {
           if (message.type() === 'error') consoleErrors.push(message.text())
@@ -574,10 +659,18 @@ async function run() {
         for (const error of consoleErrors) {
           addFailure(failures, route, viewport, 'console-error', error)
         }
+        consoleErrorCount += consoleErrors.length
 
-        if (!failures.some((failure) => failure.route === route.name && failure.viewport === viewport.name)) {
-          passes.push(`${route.name} ${viewport.name}`)
-        }
+        const routeFailures = failures.slice(failuresBeforeRoute)
+        const status = routeFailures.length > 0 ? 'FAIL' : 'PASS'
+        results.push({
+          status,
+          route: route.name,
+          path: route.path,
+          viewport: viewport.name,
+          checksFailed: routeFailures.length,
+        })
+        writeInfo(`${status} [${viewport.name}] ${route.name} ${route.path}${routeFailures.length ? ` (${routeFailures.length} failure(s))` : ''}`)
 
         await context.close()
       }
@@ -587,19 +680,59 @@ async function run() {
     if (preview.owned) stopPreview()
   }
 
-  if (failures.length > 0) {
-    console.error('\nFAIL route accessibility regression baseline')
-    for (const failure of failures) {
-      console.error(`- [${failure.viewport}] ${failure.route} ${failure.path} :: ${failure.check} :: ${failure.reason}`)
-    }
-    process.exitCode = 1
-    return
+  const total = ROUTES.length * VIEWPORTS.length
+  const failedCombos = results.filter((result) => result.status === 'FAIL').length
+  const passedCombos = total - failedCombos
+  const summary = {
+    status: failures.length > 0 ? 'FAIL' : 'PASS',
+    totalRouteViewports: total,
+    passedRouteViewports: passedCombos,
+    failedRouteViewports: failedCombos,
+    failureCount: failures.length,
+    consoleErrorCount,
+    durationMs: Date.now() - startedAt,
+    routes: ROUTES.map((route) => route.path),
+    viewports: VIEWPORTS.map((viewport) => ({
+      name: viewport.name,
+      width: viewport.width,
+      height: viewport.height,
+    })),
+    checks: [
+      'main',
+      'h1',
+      'skip-link',
+      'horizontal-overflow',
+      'console-errors',
+      'active-navigation',
+      'tablists',
+      'forms',
+      'dialogs',
+      'route-specific-smoke',
+      'reduced-motion',
+    ],
+    limitations: [
+      'axe is intentionally not integrated in Stage 19',
+      'business workflows remain smoke-level only',
+      'Vite chunk-size warnings are build-time P2 follow-up items',
+    ],
+    results,
+    failures,
   }
 
-  console.log(`PASS route accessibility regression baseline (${passes.length}/${ROUTES.length * VIEWPORTS.length} route-viewports)`)
-  console.log(`Routes: ${ROUTES.map((route) => route.path).join(', ')}`)
-  console.log(`Viewports: ${VIEWPORTS.map((viewport) => `${viewport.width}x${viewport.height}`).join(', ')}`)
-  console.log('Checks: main, h1, skip link, overflow, console errors, active nav, tablists, forms, dialogs, route-specific smoke, reduced motion.')
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify(summary, null, 2))
+  } else if (failures.length > 0) {
+    writeError(`\nFAIL route accessibility regression baseline (${passedCombos}/${total} route-viewports passed, ${failures.length} failure(s))`)
+    for (const failure of failures) {
+      const selector = failure.selector ? ` :: ${failure.selector}` : ''
+      writeError(`- [${failure.viewport}] ${failure.route} ${failure.path} :: ${failure.check} :: ${failure.reason}${selector}`)
+    }
+  } else {
+    writeInfo(`\nPASS route accessibility regression baseline (${passedCombos}/${total} route-viewports, ${summary.durationMs} ms)`)
+    writeInfo(`Console errors: ${consoleErrorCount}`)
+  }
+
+  if (failures.length > 0) process.exitCode = 1
 }
 
 process.once('SIGINT', () => {

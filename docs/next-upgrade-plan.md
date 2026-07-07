@@ -111,6 +111,18 @@ After the Stage 18 QA baseline is in place, Stage 19 should decide how far to fo
 
 Do not use Stage 19 to rewrite Weather internals, resume Xiaomi Weather analysis, replace Weather assets, add Weather scenes, restart broad visual redesign, migrate all modules into a new architecture, or change persistence keys for test convenience.
 
+## Stage 20 Recommended Scope
+
+After the Stage 19 QA dependency and CI-output formalization, Stage 20 should decide how to run the baseline in repository automation:
+
+- Add or document a lightweight CI path for `npm ci`, `npm run build`, and `npm run qa:a11y:routes:ci`.
+- Define the Playwright Chromium install/cache strategy for CI.
+- Decide whether `npm run qa:a11y:routes:json` should be uploaded as a CI artifact.
+- Keep axe evaluation separate unless a dedicated report-only stage is approved.
+- Keep route QA focused on regression signals instead of expanding into broad product workflow testing.
+
+Do not use Stage 20 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, start another visual redesign, migrate the whole architecture, or change persistence schemas for test convenience.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

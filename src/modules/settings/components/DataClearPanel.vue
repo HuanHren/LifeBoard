@@ -67,6 +67,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         </div>
         <BaseButton
           v-if="hasWeather"
+          data-qa="settings-clear-weather-button"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('weather', $event)"
         >
@@ -88,6 +89,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         </div>
         <BaseButton
           v-if="taskCount + countdownCount > 0"
+          data-qa="settings-clear-todos-button"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('todos', $event)"
         >
@@ -109,6 +111,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         </div>
         <BaseButton
           v-if="bookmarkCount > 0"
+          data-qa="settings-clear-bookmarks-button"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('bookmarks', $event)"
         >
@@ -140,6 +143,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
           </p>
         </div>
         <BaseButton
+          data-qa="settings-clear-all-button"
           :disabled="!hasAnyData"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('all', $event)"

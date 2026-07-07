@@ -91,6 +91,7 @@ watch(
     ref="dialog"
     aria-describedby="settings-confirmation-description"
     aria-labelledby="settings-confirmation-title"
+    data-qa="settings-confirmation-dialog"
     class="m-auto w-[min(32rem,calc(100%-2rem))] rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-0 text-[var(--color-text-primary)] shadow-[var(--shadow-soft)] backdrop:bg-[color-mix(in_oklch,var(--color-text-primary)_35%,transparent)]"
     @cancel.prevent="cancel"
     @keydown="handleKeydown"
@@ -115,6 +116,7 @@ watch(
         <input
           v-model="acknowledged"
           class="mt-1 size-4 shrink-0 accent-[var(--color-danger)]"
+          data-qa="settings-confirmation-acknowledgement"
           type="checkbox"
         />
         <span>{{ acknowledgementLabel }}</span>
@@ -124,6 +126,7 @@ watch(
         <button
           ref="cancelButton"
           class="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
+          data-qa="settings-confirmation-cancel-button"
           type="button"
           @click="cancel"
         >
@@ -135,6 +138,7 @@ watch(
             'inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border px-4 text-sm font-medium',
             'disabled:cursor-not-allowed disabled:opacity-55',
           ]"
+          data-qa="settings-confirmation-confirm-button"
           :disabled="Boolean(acknowledgementLabel) && !acknowledged"
           type="button"
           @click="emit('confirm')"

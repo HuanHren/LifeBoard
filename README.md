@@ -117,13 +117,25 @@ Run the route accessibility smoke baseline:
 npm run qa:a11y:routes
 ```
 
+Run the same route baseline with CI-oriented text output:
+
+```bash
+npm run qa:a11y:routes:ci
+```
+
+Generate machine-readable JSON output:
+
+```bash
+npm run qa:a11y:routes:json
+```
+
 Run the full local QA baseline:
 
 ```bash
 npm run qa
 ```
 
-`npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, and frozen Weather route smoke. It uses the local Playwright runtime available on this workstation; axe automation is not part of this baseline yet.
+`npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, Settings confirmation-dialog hooks, and frozen Weather route smoke. Playwright is a project dev dependency; on a fresh machine, run `npm install` first and run `npx playwright install chromium` if Chromium has not been installed yet. Axe automation is not part of this baseline yet.
 
 ## Project Structure
 
