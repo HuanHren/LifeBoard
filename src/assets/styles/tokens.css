@@ -37,6 +37,12 @@
   --panel-padding: clamp(1rem, 2vw, 1.5rem);
   --control-gap: 0.75rem;
   --compact-gap: 0.5rem;
+  --page-shell-inline: var(--page-inline);
+  --page-shell-block: var(--page-block);
+  --page-shell-gap: var(--section-gap);
+  --page-shell-gap-compact: 1.5rem;
+  --card-gap: 1rem;
+  --control-cluster-gap: var(--control-gap);
   --content-max-width: 76rem;
   --content-wide-max-width: 90rem;
   --sidebar-width: 16.5rem;
@@ -56,20 +62,35 @@
   --motion-standard: 220ms;
   --motion-slow: 320ms;
   --motion-ease: ease-out;
+  --motion-duration-fast: var(--motion-fast);
+  --motion-duration-normal: var(--motion-base);
+  --motion-duration-slow: var(--motion-slow);
+  --motion-ease-standard: var(--motion-ease);
 
   --shadow-none: none;
   --shadow-soft: 0 0.25rem 0.5rem oklch(0.42 0.018 260 / 0.08);
   --shadow-raised: 0 0.5rem 1rem oklch(0.42 0.018 260 / 0.1);
   --shadow-overlay: 0 1rem 2rem oklch(0.32 0.018 260 / 0.16);
+  --shadow-card: var(--shadow-soft);
+  --shadow-panel: var(--shadow-raised);
+  --shadow-floating: var(--shadow-overlay);
   --focus-ring-width: 0.1875rem;
   --focus-ring-offset: 0.1875rem;
   --z-sticky: 20;
   --z-navigation: 30;
   --z-bottom-navigation: 40;
   --z-skip-link: 50;
+  --z-dropdown: 55;
   --z-drawer-backdrop: 60;
   --z-drawer: 70;
+  --z-modal-backdrop: 80;
+  --z-modal: 90;
+  --z-toast: 100;
+  --z-tooltip: 110;
+  --z-weather-background: 0;
 
+  --color-app-background: oklch(0.982 0.004 255);
+  --color-page-background: oklch(0.982 0.004 255);
   --color-background: oklch(0.982 0.004 255);
   --color-foreground: oklch(0.24 0.018 258);
   --color-canvas: oklch(0.982 0.004 255);
@@ -79,6 +100,11 @@
   --color-surface-elevated: oklch(0.998 0.002 255);
   --color-surface-interactive: oklch(0.965 0.008 245);
   --color-surface-inset: oklch(0.935 0.006 255);
+  --color-surface-solid: var(--color-surface-raised);
+  --color-surface-card: var(--color-surface-raised);
+  --color-surface-card-muted: var(--color-surface-muted);
+  --color-surface-card-elevated: var(--color-surface-elevated);
+  --color-surface-card-interactive: var(--color-surface-interactive);
   --color-border: oklch(0.82 0.012 255);
   --color-border-soft: oklch(0.88 0.008 255);
   --color-border-strong: oklch(0.68 0.016 255);
@@ -108,7 +134,10 @@
   --color-warning-soft: oklch(0.94 0.055 78);
   --color-danger: oklch(0.5 0.13 28);
   --color-danger-soft: oklch(0.94 0.035 28);
+  --color-info: oklch(0.52 0.075 245);
+  --color-info-soft: oklch(0.93 0.035 245);
   --color-overlay: oklch(0.18 0.014 258 / 0.52);
+  --surface-blur: 10px;
 }
 
 :root[data-theme="dark"] {
@@ -117,6 +146,11 @@
   --shadow-soft: 0 0.25rem 0.5rem oklch(0.12 0.018 260 / 0.35);
   --shadow-raised: 0 0.5rem 1rem oklch(0.1 0.018 260 / 0.42);
   --shadow-overlay: 0 1rem 2rem oklch(0.08 0.018 260 / 0.55);
+  --shadow-card: var(--shadow-soft);
+  --shadow-panel: var(--shadow-raised);
+  --shadow-floating: var(--shadow-overlay);
+  --color-app-background: oklch(0.18 0.018 260);
+  --color-page-background: oklch(0.18 0.018 260);
   --color-background: oklch(0.18 0.018 260);
   --color-foreground: oklch(0.94 0.008 118);
   --color-canvas: oklch(0.18 0.018 260);
@@ -126,6 +160,11 @@
   --color-surface-elevated: oklch(0.3 0.022 260);
   --color-surface-interactive: oklch(0.285 0.024 252);
   --color-surface-inset: oklch(0.16 0.018 260);
+  --color-surface-solid: var(--color-surface-raised);
+  --color-surface-card: var(--color-surface-raised);
+  --color-surface-card-muted: var(--color-surface-muted);
+  --color-surface-card-elevated: var(--color-surface-elevated);
+  --color-surface-card-interactive: var(--color-surface-interactive);
   --color-border: oklch(0.35 0.02 260);
   --color-border-soft: oklch(0.29 0.018 260);
   --color-border-strong: oklch(0.48 0.025 260);
@@ -155,6 +194,8 @@
   --color-warning-soft: oklch(0.31 0.06 78);
   --color-danger: oklch(0.72 0.12 28);
   --color-danger-soft: oklch(0.29 0.045 28);
+  --color-info: oklch(0.74 0.075 245);
+  --color-info-soft: oklch(0.29 0.045 245);
   --color-overlay: oklch(0.08 0.018 260 / 0.68);
 }
 

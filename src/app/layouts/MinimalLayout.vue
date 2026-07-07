@@ -6,7 +6,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-dvh bg-[var(--color-background)] text-[var(--color-foreground)]">
+  <div class="min-h-dvh bg-[var(--color-app-background)] text-[var(--color-foreground)]">
     <a class="skip-link" href="#main-content">{{ t('shell.skipToMain') }}</a>
     <header class="safe-top border-b border-[var(--color-border-soft)] px-[var(--page-inline)]">
       <div class="mx-auto flex min-h-[var(--top-nav-height)] w-full max-w-[var(--content-wide-max-width)] items-center justify-between gap-4">
@@ -30,7 +30,7 @@ const { t } = useI18n()
     </header>
     <main
       id="main-content"
-      class="mx-auto w-full max-w-[var(--content-max-width)] px-[var(--page-inline)] py-[var(--space-12)]"
+      class="mx-auto w-full max-w-[var(--content-max-width)] px-[var(--page-shell-inline)] py-[var(--space-12)]"
       tabindex="-1"
     >
       <slot />

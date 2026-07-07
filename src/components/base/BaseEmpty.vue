@@ -17,7 +17,7 @@ const emit = defineEmits<Emits>()
 
 <template>
   <div
-    class="rounded-[var(--radius-lg)] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-left"
+    class="surface-card border-dashed border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-left"
     role="status"
   >
     <div class="max-w-xl space-y-3">

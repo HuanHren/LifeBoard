@@ -12,7 +12,7 @@ withDefaults(defineProps<Props>(), {
   <div
     aria-busy="true"
     :aria-label="label"
-    class="overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-4"
+    class="surface-card surface-card--muted overflow-hidden rounded-[var(--radius-md)] p-4"
     role="status"
   >
     <div class="space-y-3">

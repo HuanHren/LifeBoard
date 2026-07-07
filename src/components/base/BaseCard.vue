@@ -14,8 +14,8 @@ withDefaults(defineProps<Props>(), {
   <component
     :is="as"
     :class="[
-      'rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-5',
-      elevated ? 'shadow-[var(--shadow-soft)]' : '',
+      'surface-card p-5',
+      elevated ? 'surface-card--elevated' : '',
     ]"
   >
     <slot />

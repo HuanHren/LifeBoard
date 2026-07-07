@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import PageLayout from '@/components/base/PageLayout.vue'
 import { useI18n } from '@/i18n/useI18n'
 
@@ -8,8 +9,9 @@ const { t } = useI18n()
 
 <template>
   <PageLayout variant="narrow">
-    <section
-      class="rounded-[var(--radius-lg)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] p-6 sm:p-8"
+    <BaseSurface
+      as="section"
+      padding="lg"
       aria-labelledby="not-found-title"
     >
       <p class="text-sm font-medium text-[var(--color-accent-text)]">
@@ -38,6 +40,6 @@ const { t } = useI18n()
           {{ t('notFound.workspaceAction') }}
         </RouterLink>
       </div>
-    </section>
+    </BaseSurface>
   </PageLayout>
 </template>

@@ -6,7 +6,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-dvh bg-[var(--color-background)] text-[var(--color-foreground)]">
+  <div class="min-h-dvh bg-[var(--color-app-background)] text-[var(--color-foreground)]">
     <a class="skip-link" href="#main-content">{{ t('shell.skipToMain') }}</a>
     <LandingNavigation />
     <main id="main-content" class="landing-main" tabindex="-1">

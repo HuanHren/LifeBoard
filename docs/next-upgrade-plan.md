@@ -39,6 +39,17 @@ Start with the smallest global baseline that can safely support later page-level
 
 Do not use Stage 13 to rewrite Weather internals, Weather store state, PixiJS runtime, Weather assets, page business logic, or all modules at once.
 
+## Stage 14 Recommended Scope
+
+After the shell, token, and primitive baseline is established, Stage 14 should start page-level adoption in a controlled order:
+
+- Apply PageShell header/action slots, SectionHeader, and Surface primitives to Home, Todos, and Tools first.
+- Convert only repeated hero, stat, panel, and form patterns that clearly benefit from shared primitives.
+- Keep page business logic, stores, and service behavior unchanged.
+- Keep Weather frozen; only maintain outer-shell compatibility and regression fixes.
+
+Do not use Stage 14 for Weather runtime work, Xiaomi Weather material analysis, a full-page redesign of every module, or a one-shot source tree migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

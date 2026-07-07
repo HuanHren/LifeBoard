@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   as?: 'article' | 'section' | 'div' | 'aside'
-  variant?: 'plain' | 'muted' | 'interactive' | 'raised' | 'danger'
+  variant?: 'plain' | 'muted' | 'interactive' | 'raised' | 'danger' | 'info'
   padding?: 'none' | 'sm' | 'md' | 'lg'
 }
 
@@ -16,12 +16,12 @@ withDefaults(defineProps<Props>(), {
   <component
     :is="as"
     :class="[
-      'rounded-[var(--radius-lg)] border',
-      variant === 'plain' ? 'border-[var(--color-border-soft)] bg-[var(--color-surface-raised)]' : '',
-      variant === 'muted' ? 'border-[var(--color-border-soft)] bg-[var(--color-surface-muted)]' : '',
-      variant === 'interactive' ? 'interactive-surface border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] hover:border-[var(--color-control-border)] hover:bg-[var(--color-surface-interactive)]' : '',
-      variant === 'raised' ? 'border-[var(--color-border-soft)] bg-[var(--color-surface-elevated)] shadow-[var(--shadow-raised)]' : '',
-      variant === 'danger' ? 'border-[var(--color-danger)] bg-[var(--color-danger-soft)]' : '',
+      'surface-card',
+      variant === 'muted' ? 'surface-card--muted' : '',
+      variant === 'interactive' ? 'interactive-surface surface-card--interactive' : '',
+      variant === 'raised' ? 'surface-card--elevated' : '',
+      variant === 'danger' ? 'surface-card--danger' : '',
+      variant === 'info' ? 'surface-card--info' : '',
       padding === 'none' ? 'p-0' : '',
       padding === 'sm' ? 'p-4' : '',
       padding === 'md' ? 'p-[var(--panel-padding)]' : '',

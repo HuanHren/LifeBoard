@@ -7,12 +7,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="min-h-dvh bg-[var(--color-background)] text-[var(--color-foreground)]">
+  <div class="app-shell min-h-dvh bg-[var(--color-app-background)] text-[var(--color-foreground)]">
     <a class="skip-link" href="#main-content">{{ t('shell.skipToMain') }}</a>
     <AppTopNavigation />
     <main
       id="main-content"
-      class="app-main mx-auto w-full px-[var(--page-inline)] pt-[var(--page-block)]"
+      class="app-main mx-auto w-full px-[var(--page-shell-inline)] pt-[var(--page-shell-block)]"
       tabindex="-1"
     >
       <slot />
