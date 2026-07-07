@@ -135,6 +135,19 @@ After the Stage 20 CI workflow and artifact path are in place, Stage 21 should v
 
 Do not use Stage 21 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, start page visual redesign, migrate app architecture, or add broad business workflow tests under the CI-tuning scope.
 
+## Stage 22 Recommended Scope
+
+After the Stage 21 remote CI first-run validation and workflow tuning, Stage 22 should verify the next remote run before expanding QA scope:
+
+- Confirm the adjusted `QA` workflow reaches dependency install, Playwright Chromium install, build, route accessibility QA, JSON summary generation, and artifact upload.
+- If install still fails, capture the exact remote error before changing dependencies or scripts.
+- If browser install is the new bottleneck, decide whether Playwright browser caching is warranted using OS, `package-lock.json`, and Playwright version as cache key inputs.
+- Keep `route-a11y-summary` as the only CI artifact unless a separate reporting stage approves richer output.
+- Keep axe evaluation separate and report-only unless explicitly approved.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 22 to rewrite Weather internals, change Weather store/services/assets/scenes, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, or add broad business workflow tests under the CI-verification scope.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

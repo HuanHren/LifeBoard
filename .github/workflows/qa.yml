@@ -24,10 +24,11 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        id: install-dependencies
         run: npm ci
 
       - name: Install Playwright Chromium
-        run: npx playwright install chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Build
         run: npm run build
@@ -36,7 +37,7 @@ jobs:
         run: npm run qa:a11y:routes:ci
 
       - name: Write route accessibility summary
-        if: always()
+        if: always() && steps.install-dependencies.outcome == 'success'
         run: npm run qa:a11y:routes:json:file
 
       - name: Upload route accessibility summary
