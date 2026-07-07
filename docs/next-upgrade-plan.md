@@ -162,6 +162,21 @@ After the Stage 22 remote install diagnostics are in place, Stage 23 should use 
 
 Do not use Stage 23 to modify Weather internals, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, add axe, add deployment, or introduce a complex CI matrix under the install-diagnostics scope.
 
+## Stage 24 Recommended Scope
+
+After the Stage 23 diagnostic run confirms the remote workflow stops at `npm ci --dry-run`, Stage 24 should retrieve the missing remote stderr and apply only the smallest proven fix:
+
+- Capture authenticated/manual GitHub Actions logs for `Print tool versions` and `Validate lockfile`.
+- Record the exact remote Node, npm, registry, and `npm ci --dry-run` error output.
+- If the log proves package/lock mismatch, update only the package metadata or lockfile required by `npm ci`.
+- If the log proves npm or Node incompatibility, align the CI runtime or package metadata with the smallest targeted change.
+- If the log proves registry, network, or cache behavior, adjust only that CI concern.
+- Rerun the remote `QA` workflow until it reaches dependency install, Chromium install, build, route QA, JSON summary generation, and artifact upload.
+- Keep Playwright browser cache, axe integration, deployment, and CI matrix expansion deferred until the single baseline workflow passes.
+- Keep Weather frozen and smoke it only as a regression boundary.
+
+Do not use Stage 24 to modify Weather internals, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, expand route QA coverage, add axe, add deployment, or introduce a complex CI matrix before the install failure is resolved.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
