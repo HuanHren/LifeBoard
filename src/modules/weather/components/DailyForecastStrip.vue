@@ -23,8 +23,8 @@ const { locale, t } = useI18n()
 </script>
 
 <template>
-  <section aria-labelledby="daily-forecast-title">
-    <div class="max-w-2xl">
+  <section class="min-w-0 max-w-full" aria-labelledby="daily-forecast-title">
+    <div class="min-w-0 max-w-2xl">
       <h2
         id="daily-forecast-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
@@ -37,10 +37,10 @@ const { locale, t } = useI18n()
     </div>
 
     <div
-      class="mt-4 rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2"
+      class="mt-4 min-w-0 max-w-full rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2"
       :aria-label="props.scrollLabel ?? t('weather.daily.scrollLabel')"
     >
-      <ol class="daily-forecast-grid grid gap-2">
+      <ol class="daily-forecast-grid grid min-w-0 max-w-full gap-2">
         <li
           v-for="(item, index) in items"
           :key="item.date"

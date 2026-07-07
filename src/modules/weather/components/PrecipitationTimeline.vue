@@ -29,8 +29,8 @@ function barWidth(item: HourlyForecastItem) {
 </script>
 
 <template>
-  <section class="min-w-0" aria-labelledby="precipitation-timeline-title">
-    <div class="max-w-2xl">
+  <section class="min-w-0 max-w-full" aria-labelledby="precipitation-timeline-title">
+    <div class="min-w-0 max-w-2xl">
       <h2
         id="precipitation-timeline-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
@@ -43,7 +43,7 @@ function barWidth(item: HourlyForecastItem) {
     </div>
 
     <div
-      class="mt-4 rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-4"
+      class="mt-4 min-w-0 max-w-full rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-4"
     >
       <p class="text-sm font-medium text-pretty text-[var(--color-text-primary)]">
         {{ summary }}
@@ -51,7 +51,7 @@ function barWidth(item: HourlyForecastItem) {
 
       <div
         v-if="hasUsableData"
-        class="mt-4 scroll-mb-[var(--mobile-nav-clearance)] overflow-x-auto rounded-[var(--radius-md)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+        class="mt-4 min-w-0 max-w-full scroll-mb-[var(--mobile-nav-clearance)] overflow-x-auto rounded-[var(--radius-md)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
         :aria-label="t('weather.precipitation.listLabel')"
         role="region"
         tabindex="0"

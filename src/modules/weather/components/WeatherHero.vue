@@ -137,6 +137,8 @@ watch(announcementSerial, () => {
     var(--color-accent)
   );
 
+  max-width: 100%;
+  min-width: 0;
   min-height: clamp(16rem, 26vw, 18.75rem);
   background: var(--color-surface-raised);
   transition:
@@ -172,6 +174,8 @@ watch(announcementSerial, () => {
 
 .weather-hero__viewport {
   position: relative;
+  max-width: 100%;
+  min-width: 0;
   min-height: inherit;
   overflow: hidden;
 }

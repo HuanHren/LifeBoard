@@ -177,6 +177,17 @@ After the Stage 23 diagnostic run confirms the remote workflow stops at `npm ci 
 
 Do not use Stage 24 to modify Weather internals, resume Xiaomi Weather material analysis, redesign pages, migrate app architecture, expand route QA coverage, add axe, add deployment, or introduce a complex CI matrix before the install failure is resolved.
 
+## Stage 26 Recommended Scope
+
+After the Stage 25 Weather horizontal overflow regression fix, Stage 26 should verify the next remote `QA` workflow run and confirm the expanded Weather route overflow checks stay green:
+
+- Confirm dependency install, Chromium install, build, route QA, JSON summary generation, and artifact upload complete remotely.
+- Confirm the Weather route passes the loaded-state overflow checks at the standard route viewports plus the Weather-only 1600px and 1920px viewports.
+- If remote CI fails, classify the exact failing step from logs before changing dependencies, workflows, or source.
+- Keep the Stage 25 layout fix intact and avoid broad shell or Weather refactors unless the logs prove a regression.
+
+Do not use Stage 26 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather analysis, add new Weather scenes, expand Weather animation, or start a visual redesign.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

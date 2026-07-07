@@ -20,8 +20,8 @@ const { locale, t } = useI18n()
 </script>
 
 <template>
-  <section class="min-w-0" aria-labelledby="hourly-forecast-title">
-    <div class="max-w-2xl">
+  <section class="min-w-0 max-w-full" aria-labelledby="hourly-forecast-title">
+    <div class="min-w-0 max-w-2xl">
       <h2
         id="hourly-forecast-title"
         class="text-section-title text-balance text-[var(--color-text-primary)]"
@@ -34,11 +34,11 @@ const { locale, t } = useI18n()
     </div>
 
     <div
-      class="forecast-scroll mt-4 overflow-x-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-offset-4"
+      class="forecast-scroll mt-4 min-w-0 max-w-full overflow-x-auto rounded-[var(--radius-lg)] bg-[var(--color-surface-inset)] p-2 focus-visible:outline-offset-4"
       :aria-label="t('weather.hourly.scrollLabel')"
       tabindex="0"
     >
-      <ol class="flex min-w-max snap-x snap-proximity gap-2">
+      <ol class="flex w-max snap-x snap-proximity gap-2">
         <li
           v-for="(item, index) in items"
           :key="item.time"

@@ -91,9 +91,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 pb-[var(--mobile-nav-clearance)] lg:pb-0">
-    <header class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-      <div class="max-w-3xl space-y-3">
+  <div class="flex min-w-0 max-w-full flex-col gap-6 pb-[var(--mobile-nav-clearance)] lg:pb-0">
+    <header class="flex min-w-0 max-w-full flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div class="min-w-0 max-w-3xl space-y-3">
         <p class="text-sm font-medium text-[var(--color-text-secondary)]">
           {{ t('weather.page.cityContext', { city: activeLocationLabel }) }}
         </p>
@@ -105,7 +105,7 @@ onMounted(() => {
         </p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
+      <div class="flex min-w-0 max-w-full flex-wrap items-center gap-2">
         <RouterLink
           class="control-focus interactive-surface inline-flex min-h-9 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-raised)] px-3 text-sm font-medium text-[var(--color-text-primary)] transition hover:border-[var(--color-accent)] hover:bg-[var(--color-surface-interactive)]"
           :to="{ name: 'weather-15-day' }"
@@ -188,7 +188,7 @@ onMounted(() => {
       />
     </section>
 
-    <div v-else-if="weather" class="order-1 space-y-6">
+    <div v-else-if="weather" class="order-1 min-w-0 max-w-full space-y-6">
       <p class="sr-only" role="status">
         {{ t('weather.state.loaded', { city: weather.location.name }) }}
       </p>
@@ -197,9 +197,9 @@ onMounted(() => {
         :air-quality="displayAirQuality"
         :weather="weather"
       />
-      <div class="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+      <div class="grid min-w-0 max-w-full gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <WeatherAdvicePanel :advice="weather.advice" />
-        <div class="space-y-3">
+        <div class="min-w-0 max-w-full space-y-3">
           <p
             v-if="cacheStatusMessage"
             class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
@@ -223,7 +223,7 @@ onMounted(() => {
       />
     </div>
 
-    <div v-if="weather" class="order-4 space-y-8">
+    <div v-if="weather" class="order-4 min-w-0 max-w-full space-y-8">
       <HourlyForecastStrip :items="weather.hourly" :units="weather.units" />
 
       <DailyForecastStrip
@@ -253,7 +253,7 @@ onMounted(() => {
         {{ t('weather.daily.caiyunUnavailable') }}
       </p>
 
-      <div class="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)]">
+      <div class="grid min-w-0 max-w-full items-start gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)]">
         <WeatherDetailsGrid :weather="weather" />
         <AirQualityPanel
           :air-quality="displayAirQuality"
@@ -263,7 +263,7 @@ onMounted(() => {
         />
       </div>
 
-      <div class="grid min-w-0 items-start gap-4 xl:grid-cols-2">
+      <div class="grid min-w-0 max-w-full items-start gap-4 xl:grid-cols-2">
         <ShortTermPrecipitationPanel
           :provider="weather.provider"
           :short-term="weather.shortTermPrecipitation"
@@ -272,7 +272,7 @@ onMounted(() => {
         <PrecipitationTimeline :items="weather.hourly" :units="weather.units" />
       </div>
 
-      <div class="space-y-3">
+      <div class="min-w-0 max-w-full space-y-3">
         <WeatherProviderNotice
           :has-caiyun-token="hasCaiyunToken"
           :provider="weather.provider"

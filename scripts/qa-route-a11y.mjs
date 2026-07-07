@@ -26,6 +26,10 @@ const VIEWPORTS = [
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'desktop', width: 1440, height: 900 },
 ]
+const WEATHER_OVERFLOW_VIEWPORTS = [
+  { name: 'weather-wide', width: 1600, height: 900 },
+  { name: 'weather-full', width: 1920, height: 1080 },
+]
 const PORT = Number(process.env.QA_PREVIEW_PORT || 4173)
 const HOST = process.env.QA_PREVIEW_HOST || '127.0.0.1'
 const EXTERNAL_BASE_URL = process.env.QA_BASE_URL
@@ -315,6 +319,198 @@ function createDomAudit() {
       liveRegions: Array.from(document.querySelectorAll('[role="status"],[role="alert"],[aria-live]')).length,
     }
   }
+}
+
+function createWeatherLoadedRouteSeed() {
+  const now = Date.now()
+  const iso = (hours = 0) => new Date(now + hours * 60 * 60 * 1000).toISOString()
+  const date = (days = 0) => new Date(now + days * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10)
+  const location = {
+    id: 'qa-weather-loaded-beijing',
+    name: 'Beijing',
+    kind: 'Capital city',
+    admin1: 'Beijing',
+    country: 'China',
+    countryCode: 'CN',
+    latitude: 39.9075,
+    longitude: 116.39723,
+    elevation: 49,
+    timezone: 'Asia/Shanghai',
+    displayLabel: 'Beijing, China',
+    source: 'openMeteo',
+  }
+  const condition = {
+    code: 3,
+    label: 'Overcast',
+    shortLabel: 'Overcast',
+  }
+  const units = {
+    temperature: '°C',
+    precipitation: 'mm',
+    probability: '%',
+    windSpeed: 'km/h',
+    humidity: '%',
+    uvIndex: '',
+    pressure: 'hPa',
+    visibility: 'km',
+  }
+  const hourly = Array.from({ length: 24 }, (_, index) => ({
+    time: iso(index),
+    temperature: 22 + (index % 6),
+    apparentTemperature: 23 + (index % 5),
+    precipitationProbability: (index * 7) % 100,
+    precipitation: index % 4 === 0 ? 0.4 : 0,
+    windSpeed: 8 + index,
+    windGusts: 18 + index,
+    uvIndex: index > 7 && index < 18 ? 4 : 0,
+    isDay: index > 6 && index < 19,
+    condition,
+  }))
+  const daily = Array.from({ length: 7 }, (_, index) => ({
+    date: date(index),
+    temperatureMax: 28 + index,
+    temperatureMin: 17 + index,
+    apparentTemperatureMax: 29 + index,
+    apparentTemperatureMin: 18 + index,
+    precipitationSum: index % 3,
+    precipitationProbabilityMax: 30 + index * 8,
+    windSpeedMax: 24 + index,
+    windDirectionDominant: 120,
+    windGustsMax: 36 + index,
+    uvIndexMax: 6,
+    sunrise: `${date(index)}T05:12:00+08:00`,
+    sunset: `${date(index)}T19:41:00+08:00`,
+    condition,
+  }))
+  const forecast = {
+    provider: 'openMeteo',
+    location,
+    timezone: 'Asia/Shanghai',
+    timezoneAbbreviation: 'GMT+8',
+    fetchedAt: new Date(now).toISOString(),
+    current: {
+      time: iso(0),
+      temperature: 24,
+      apparentTemperature: 25,
+      relativeHumidity: 62,
+      precipitation: 0.2,
+      rain: 0.2,
+      showers: 0,
+      snowfall: 0,
+      cloudCover: 86,
+      windSpeed: 18,
+      windDirection: 110,
+      windGusts: 32,
+      uvIndex: 4,
+      pressure: 1008,
+      visibility: 11,
+      isDay: true,
+      condition,
+    },
+    hourly,
+    daily,
+    shortTermPrecipitation: {
+      provider: 'openMeteo',
+      summary: null,
+      items: [],
+    },
+    alerts: [],
+    providerCapabilities: {
+      alerts: false,
+      airQuality: true,
+      visibility: true,
+      shortTermPrecipitation: false,
+    },
+    units,
+    advice: {
+      items: [
+        {
+          kind: 'umbrella',
+          title: 'Carry an umbrella',
+          summary: 'Light rain may pass through.',
+          detail: 'A compact umbrella is enough for brief showers.',
+          level: 'consider',
+        },
+        {
+          kind: 'clothing',
+          title: 'Light layers',
+          summary: 'Mild afternoon with a cooler evening.',
+          detail: 'A thin outer layer should cover the day.',
+          level: 'clear',
+        },
+        {
+          kind: 'outdoor',
+          title: 'Outdoor plans are workable',
+          summary: 'Wind stays moderate.',
+          detail: 'Check again if showers increase.',
+          level: 'clear',
+        },
+      ],
+      notes: ['Forecast cached for route QA.'],
+    },
+  }
+  const locationKey = 'openMeteo|openMeteo|CN|39.9075|116.3972'
+
+  return {
+    location,
+    forecastCache: {
+      version: 1,
+      locationKey,
+      location,
+      forecast,
+      fetchedAt: now,
+      expiresAt: now + 10 * 60 * 1000,
+    },
+  }
+}
+
+async function seedWeatherLoadedRoute(page) {
+  const seed = createWeatherLoadedRouteSeed()
+  await page.route('https://air-quality-api.open-meteo.com/**', async (route) => {
+    const observedAt = new Date().toISOString()
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        latitude: seed.location.latitude,
+        longitude: seed.location.longitude,
+        timezone: seed.location.timezone,
+        current_units: {
+          time: 'iso8601',
+          us_aqi: 'USA AQI',
+          european_aqi: 'European AQI',
+          pm2_5: 'μg/m³',
+          pm10: 'μg/m³',
+          ozone: 'μg/m³',
+          nitrogen_dioxide: 'μg/m³',
+          sulphur_dioxide: 'μg/m³',
+          carbon_monoxide: 'μg/m³',
+        },
+        current: {
+          time: observedAt,
+          us_aqi: 42,
+          european_aqi: 28,
+          pm2_5: 8,
+          pm10: 18,
+          ozone: 54,
+          nitrogen_dioxide: 16,
+          sulphur_dioxide: 3,
+          carbon_monoxide: 170,
+        },
+      }),
+    })
+  })
+  await page.addInitScript((data) => {
+    window.localStorage.setItem('lifeboard-weather-location', JSON.stringify(data.location))
+    window.localStorage.setItem('lifeboard.weather.provider', 'openMeteo')
+    window.localStorage.setItem(
+      'lifeboard.weather.forecastCache.v1',
+      JSON.stringify(data.forecastCache),
+    )
+  }, seed)
 }
 
 async function checkCommon(page, route, viewport, failures) {
@@ -649,11 +845,21 @@ async function run() {
   writeInfo(`Mode: ${CI_OUTPUT ? 'ci' : 'local'}`)
   writeInfo(`Routes: ${ROUTES.map((route) => route.path).join(', ')}`)
   writeInfo(`Viewports: ${VIEWPORTS.map((viewport) => `${viewport.name}:${viewport.width}x${viewport.height}`).join(', ')}`)
+  writeInfo(`Weather overflow viewports: ${WEATHER_OVERFLOW_VIEWPORTS.map((viewport) => `${viewport.name}:${viewport.width}x${viewport.height}`).join(', ')}`)
   writeInfo('Checks: landmarks, h1, skip link, overflow, console errors, active nav, tablists, forms, dialogs, route-specific smoke, reduced motion.')
 
   try {
-    for (const viewport of VIEWPORTS) {
+    const allViewports = [...VIEWPORTS, ...WEATHER_OVERFLOW_VIEWPORTS]
+
+    for (const viewport of allViewports) {
       for (const routeConfig of ROUTES) {
+        const isWeatherExtraViewport =
+          WEATHER_OVERFLOW_VIEWPORTS.some((extraViewport) => extraViewport.name === viewport.name)
+
+        if (isWeatherExtraViewport && routeConfig.name !== 'Weather') {
+          continue
+        }
+
         const route = {
           ...routeConfig,
           baseUrl: preview.baseUrl,
@@ -673,6 +879,10 @@ async function run() {
         page.on('pageerror', (error) => {
           consoleErrors.push(error.message)
         })
+
+        if (route.name === 'Weather') {
+          await seedWeatherLoadedRoute(page)
+        }
 
         await checkCommon(page, route, viewport, failures)
         await runRouteSpecificChecks(page, route, viewport, failures)
@@ -701,7 +911,7 @@ async function run() {
     if (preview.owned) stopPreview()
   }
 
-  const total = ROUTES.length * VIEWPORTS.length
+  const total = (ROUTES.length * VIEWPORTS.length) + WEATHER_OVERFLOW_VIEWPORTS.length
   const failedCombos = results.filter((result) => result.status === 'FAIL').length
   const passedCombos = total - failedCombos
   const summary = {
@@ -718,6 +928,13 @@ async function run() {
       width: viewport.width,
       height: viewport.height,
     })),
+    routeSpecificViewports: {
+      Weather: WEATHER_OVERFLOW_VIEWPORTS.map((viewport) => ({
+        name: viewport.name,
+        width: viewport.width,
+        height: viewport.height,
+      })),
+    },
     checks: [
       'main',
       'h1',
