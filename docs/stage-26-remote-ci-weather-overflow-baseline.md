@@ -2,7 +2,7 @@
 
 Date: 2026-07-08
 
-Status: in progress until the final Stage 26 QA cleanup commit is pushed and the latest remote `QA` workflow is verified.
+Status: blocked for remote freeze. Local validation is green, package-lock and Weather overflow fixes are pushed, but the remote `QA` workflow has not produced a passing final run because an older run remains stuck in `Route accessibility QA`.
 
 ## 1. Baseline
 
@@ -108,9 +108,17 @@ Stage 26 documentation commit was pushed as `9d80532 docs(qa): freeze weather ov
 
 That run exposed a CI-only Route QA hang after build. A minimal QA runner cleanup fix is being applied so Linux/macOS preview child processes are terminated by process group instead of only signaling the npm parent process.
 
-Final local HEAD: pending final QA cleanup commit.
+Final pushed QA cleanup commit:
 
-Final remote `main`: pending final QA cleanup commit.
+- `4d09e49 fix(qa): clean up preview process group in ci`
+
+Final local HEAD after the QA cleanup push:
+
+- `4d09e4915ca95ec33b6b3ada0d80e42a3c9a2c21`
+
+Final remote `main` after the QA cleanup push:
+
+- `4d09e4915ca95ec33b6b3ada0d80e42a3c9a2c21`
 
 ## 8. Remote QA Run
 
@@ -133,7 +141,15 @@ Because the latest `775eac2` run was cancelled, Stage 26 pushed a documentation 
 
 That run reached and passed dependency install, Chromium install, and build, then stayed in progress in `Route accessibility QA` far longer than the local 40 second baseline. The available unauthenticated API exposed step status but not logs after rate limiting. The likely CI-only cause is preview child-process cleanup on Linux, because the runner previously signaled only the npm preview parent process outside Windows.
 
-Final remote QA run: pending.
+After the QA cleanup fix was pushed, GitHub listed the new run as:
+
+- Workflow run: `QA #8`.
+- Commit: `4d09e49`.
+- Status: queued.
+
+The new run could not be verified because run `28938924284` remained in progress and occupied the available execution slot.
+
+Final remote QA run: not confirmed.
 
 ## 9. Remote CI Step Results
 
@@ -148,11 +164,11 @@ Observed on run `28938924284` before the QA cleanup fix:
 - `Write route accessibility summary`: pending.
 - `Upload route accessibility summary`: pending.
 
-Required final pass criteria remain unchanged after the QA cleanup fix.
+Required final pass criteria remain unchanged after the QA cleanup fix. They could not be confirmed before this document was closed because the newer run remained queued behind the stuck run.
 
 ## 10. Artifact Status
 
-Pending final remote run.
+Remote artifact was not available for the final QA cleanup commit because its run remained queued.
 
 Expected artifact:
 
@@ -169,7 +185,7 @@ Local baseline is green:
 - No global page horizontal overflow was reported by route QA.
 - Console errors remained `0`.
 
-Remote baseline is pending final run verification after the QA cleanup fix.
+Remote baseline is not frozen yet. The final QA cleanup commit must get a fresh completed `QA` run before the remote Weather overflow baseline can be tagged.
 
 ## 12. Weather Freeze Boundary
 
@@ -202,12 +218,13 @@ This does not change the route matrix, Weather checks, app source, or Weather be
 - Axe is not integrated.
 - Playwright browser cache is not enabled.
 - Route QA remains smoke-level and does not replace full visual review.
-- The final remote CI result must be recorded after pushing the Stage 26 QA cleanup commit.
+- The final remote CI result remains blocked by the stuck run `28938924284`.
+- The Stage 26 tag must not be created until a fresh remote run for `4d09e49` or a later commit completes successfully.
 
 ## 14. Stage 27 Recommendation
 
-If the final Stage 26 remote `QA` run passes, Stage 27 can move to a small closeout or hardening stage focused on QA baseline stability and documentation cleanup.
+If the final Stage 26 remote `QA` run passes after the stuck run is cancelled or times out, Stage 27 can move to a small closeout or hardening stage focused on QA baseline stability and documentation cleanup.
 
-If the final remote `QA` run fails, Stage 27 should only address the failed CI step with evidence from logs. Do not start new features or broad refactors.
+If the final remote `QA` run fails or remains queued, Stage 27 should only address the CI run management / failed step with evidence from logs. Do not start new features or broad refactors.
 
 Do not use Stage 27 to reopen Weather animation work, Xiaomi Weather material analysis, PixiJS rewrites, Weather asset replacement, new Weather scenes, deployment setup, axe integration, or complex CI matrix expansion unless a separate stage explicitly authorizes it.
