@@ -378,7 +378,7 @@ onMounted(() => {
   <PageLayout variant="wide" gap="md">
     <div class="data-sources-workspace">
       <RouterLink
-        class="data-sources-back"
+        class="control-focus data-sources-back"
         :to="{ name: 'settings' }"
       >
         {{ t('settings.dataSources.backToSettings') }}
@@ -402,10 +402,10 @@ onMounted(() => {
             {{ t('settings.dataSources.pageDescription') }}
           </p>
           <div class="data-sources-hero__actions">
-            <RouterLink class="data-sources-button data-sources-button--primary" :to="{ name: 'settings' }">
+            <RouterLink class="control-focus interactive-surface data-sources-button data-sources-button--primary" :to="{ name: 'settings' }">
               {{ t('settings.dataSources.backToSettings') }}
             </RouterLink>
-            <RouterLink class="data-sources-button data-sources-button--secondary" :to="{ name: 'weather' }">
+            <RouterLink class="control-focus interactive-surface data-sources-button data-sources-button--secondary" :to="{ name: 'weather' }">
               {{ t('settings.dataSources.openWeather') }}
             </RouterLink>
           </div>
@@ -422,7 +422,7 @@ onMounted(() => {
         </dl>
       </BaseSurface>
 
-      <BaseSurface as="section" aria-labelledby="data-sources-privacy-title" padding="md">
+      <BaseSurface as="section" class="data-sources-note" aria-labelledby="data-sources-privacy-title" padding="md">
         <h2 id="data-sources-privacy-title">
           {{ t('settings.dataSources.privacyTitle') }}
         </h2>
@@ -447,7 +447,7 @@ onMounted(() => {
             <dd>
               <RouterLink
                 v-if="item.to"
-                class="data-sources-inline-link"
+                class="control-focus data-sources-inline-link"
                 :to="item.to"
               >
                 {{ item.value }}
@@ -592,6 +592,7 @@ onMounted(() => {
 
       <BaseSurface
         as="section"
+        class="data-sources-note"
         aria-labelledby="data-sources-licence-title"
         padding="md"
       >
@@ -629,15 +630,6 @@ onMounted(() => {
   text-decoration-color: var(--color-accent);
 }
 
-.data-sources-hero,
-.data-sources-privacy,
-.data-sources-licence {
-  border: 1px solid var(--color-border-soft);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
-  padding: clamp(1rem, 3vw, 2rem);
-}
-
 .data-sources-hero {
   display: grid;
   gap: clamp(1rem, 2vw, 1.5rem);
@@ -669,8 +661,7 @@ onMounted(() => {
 
 .data-sources-hero__description,
 .data-sources-section__header p,
-.data-sources-privacy p,
-.data-sources-licence p {
+.data-sources-note p {
   margin: var(--space-3) 0 0;
   color: var(--color-text-secondary);
   font-size: var(--font-size-body-small);
@@ -705,6 +696,10 @@ onMounted(() => {
 .data-sources-button--secondary {
   background: var(--color-surface-raised);
   color: var(--color-text-primary);
+}
+
+.data-sources-button:hover {
+  border-color: var(--color-border);
 }
 
 .data-sources-hero__facts,
@@ -744,13 +739,18 @@ onMounted(() => {
   min-width: 0;
 }
 
+.data-sources-note {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
 .data-sources-section__header {
   max-width: 50rem;
 }
 
 .data-sources-section__header h2,
-.data-sources-privacy h2,
-.data-sources-licence h2 {
+.data-sources-note h2 {
   margin: 0;
   color: var(--color-text-primary);
   font-size: var(--font-size-section-title);

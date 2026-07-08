@@ -37,7 +37,7 @@ defineSlots<{
       <p class="text-sm leading-6 text-[var(--color-text-secondary)]">
         {{ description }}
       </p>
-      <div v-if="actionLabel || $slots.actions" class="flex flex-wrap gap-2">
+      <div v-if="actionLabel || $slots.actions" class="flex flex-wrap gap-[var(--control-cluster-gap)]">
         <slot name="actions">
           <BaseButton size="sm" variant="primary" @click="emit('action')">
             {{ actionLabel }}

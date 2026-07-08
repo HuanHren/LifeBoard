@@ -691,6 +691,10 @@
     gap: var(--space-4);
   }
 
+  .page-shell__header-copy {
+    min-width: 0;
+  }
+
   .page-shell__eyebrow {
     color: var(--color-accent-text);
     font-size: var(--font-size-label);

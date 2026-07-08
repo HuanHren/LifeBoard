@@ -35,7 +35,7 @@ withDefaults(defineProps<Props>(), {
           {{ eyebrow }}
         </p>
         <div class="page-shell__header-row">
-          <div>
+          <div class="page-shell__header-copy">
             <h1 v-if="title" class="page-shell__title">
               {{ title }}
             </h1>

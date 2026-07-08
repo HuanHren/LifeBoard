@@ -1,6 +1,6 @@
 # Next Upgrade Plan
 
-Date: 2026-07-07
+Date: 2026-07-08
 
 Status: planning only. No source implementation is authorized by this document.
 
@@ -201,6 +201,18 @@ After the Stage 26 remote CI and Weather overflow baseline is green, Stage 27 sh
 If the Stage 26 remote CI is not green, Stage 27 should only address the exact failed CI step using logs and should not start new feature, visual, or architecture work.
 
 Do not use Stage 27 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, add axe, add deployment, or introduce a complex CI matrix.
+
+## Stage 28 Recommended Scope
+
+After the Stage 27 non-Weather visual consistency closeout, Stage 28 should stay focused on the remaining shared UI contract gaps instead of starting another redesign:
+
+- Evaluate a small shared link-button primitive for RouterLink and external-link actions that currently duplicate button styling in Landing, Settings, Settings Data Sources, and NotFound.
+- Review responsive navigation visibility and active-route semantics, especially mobile/tablet states where multiple navigation surfaces can be present.
+- Continue token cleanup only where repeated local hero, action, or link styles clearly duplicate the shared primitives.
+- Preserve the current route QA baseline before and after any polish.
+- Keep Weather frozen and treat `/weather` only as a regression boundary.
+
+Do not use Stage 28 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, change package or workflow files without a proven blocker, or start a full architecture migration.
 
 ## Weather Follow-up Queue
 
