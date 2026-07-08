@@ -138,6 +138,7 @@ async function startPreview() {
       cwd: process.cwd(),
       env: { ...process.env, BROWSER: 'none' },
       stdio: ['ignore', 'pipe', 'pipe'],
+      detached: process.platform !== 'win32',
       windowsHide: true,
     },
   )
@@ -171,7 +172,11 @@ function stopPreview() {
       windowsHide: true,
     })
   } else {
-    previewProcess.kill('SIGTERM')
+    try {
+      process.kill(-previewProcess.pid, 'SIGTERM')
+    } catch {
+      previewProcess.kill('SIGTERM')
+    }
   }
 
   previewProcess = null

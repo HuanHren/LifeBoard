@@ -2,7 +2,7 @@
 
 Date: 2026-07-08
 
-Status: in progress until the final Stage 26 documentation commit is pushed and the latest remote `QA` workflow is verified.
+Status: in progress until the final Stage 26 QA cleanup commit is pushed and the latest remote `QA` workflow is verified.
 
 ## 1. Baseline
 
@@ -104,11 +104,13 @@ Build warnings:
 
 Baseline local HEAD already matched `origin/main` at `775eac2f26fe7d3bf7d4cf8d3f16fd5ebe277a92`.
 
-Stage 26 documentation will be committed and pushed after this report is finalized. The final pushed commit and matching remote hash should be recorded below after push.
+Stage 26 documentation commit was pushed as `9d80532 docs(qa): freeze weather overflow ci baseline`.
 
-Final local HEAD: pending.
+That run exposed a CI-only Route QA hang after build. A minimal QA runner cleanup fix is being applied so Linux/macOS preview child processes are terminated by process group instead of only signaling the npm parent process.
 
-Final remote `main`: pending.
+Final local HEAD: pending final QA cleanup commit.
+
+Final remote `main`: pending final QA cleanup commit.
 
 ## 8. Remote QA Run
 
@@ -121,24 +123,32 @@ Before the Stage 26 documentation push, the latest remote `QA` run for `775eac2`
 - Conclusion: `cancelled`.
 - URL: `https://github.com/HuanHren/LifeBoard/actions/runs/28882378350`.
 
-Because the latest `775eac2` run was cancelled, Stage 26 requires a new remote run from the final documentation commit before creating the Stage 26 tag.
+Because the latest `775eac2` run was cancelled, Stage 26 pushed a documentation commit to trigger a fresh run:
+
+- Run ID: `28938924284`.
+- Head SHA: `9d805320ac605bded71b030e584be1f1f43b4658`.
+- Event: `push`.
+- Status during inspection: `in_progress`.
+- URL: `https://github.com/HuanHren/LifeBoard/actions/runs/28938924284`.
+
+That run reached and passed dependency install, Chromium install, and build, then stayed in progress in `Route accessibility QA` far longer than the local 40 second baseline. The available unauthenticated API exposed step status but not logs after rate limiting. The likely CI-only cause is preview child-process cleanup on Linux, because the runner previously signaled only the npm preview parent process outside Windows.
 
 Final remote QA run: pending.
 
 ## 9. Remote CI Step Results
 
-Pending final remote run.
-
-Required pass criteria:
+Observed on run `28938924284` before the QA cleanup fix:
 
 - `Print tool versions`: pass.
 - `Validate lockfile`: pass.
 - `Install dependencies`: pass.
 - `Install Playwright Chromium`: pass.
 - `Build`: pass.
-- `Route accessibility QA`: pass.
-- `Write route accessibility summary`: pass.
-- `Upload route accessibility summary`: pass.
+- `Route accessibility QA`: in progress / hung during inspection.
+- `Write route accessibility summary`: pending.
+- `Upload route accessibility summary`: pending.
+
+Required final pass criteria remain unchanged after the QA cleanup fix.
 
 ## 10. Artifact Status
 
@@ -159,7 +169,7 @@ Local baseline is green:
 - No global page horizontal overflow was reported by route QA.
 - Console errors remained `0`.
 
-Remote baseline is pending final run verification.
+Remote baseline is pending final run verification after the QA cleanup fix.
 
 ## 12. Weather Freeze Boundary
 
@@ -178,13 +188,21 @@ Stage 26 did not modify:
 
 Weather is only covered as a regression boundary in build and route QA.
 
+Stage 26 did modify `scripts/qa-route-a11y.mjs` after remote CI exposed a Route QA hang. The change is limited to preview process cleanup for non-Windows CI runners:
+
+- Spawn the preview process as a detached process group on non-Windows platforms.
+- Stop the process group with `process.kill(-pid, 'SIGTERM')`.
+- Keep the existing Windows `taskkill /T /F` cleanup path.
+
+This does not change the route matrix, Weather checks, app source, or Weather behavior.
+
 ## 13. Known Limitations
 
 - Vite large chunk warning remains accepted P2.
 - Axe is not integrated.
 - Playwright browser cache is not enabled.
 - Route QA remains smoke-level and does not replace full visual review.
-- The final remote CI result must be recorded after pushing the Stage 26 documentation commit.
+- The final remote CI result must be recorded after pushing the Stage 26 QA cleanup commit.
 
 ## 14. Stage 27 Recommendation
 
