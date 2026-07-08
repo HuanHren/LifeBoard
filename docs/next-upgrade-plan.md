@@ -188,6 +188,20 @@ After the Stage 25 Weather horizontal overflow regression fix, Stage 26 should v
 
 Do not use Stage 26 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather analysis, add new Weather scenes, expand Weather animation, or start a visual redesign.
 
+## Stage 27 Recommended Scope
+
+After the Stage 26 remote CI and Weather overflow baseline is green, Stage 27 should stay small and closeout-focused:
+
+- Preserve the `29/29` route QA baseline as the current regression contract.
+- Review whether the remote artifact and local `.qa/route-a11y-summary.json` are sufficient for routine CI diagnosis.
+- Document any recurring CI timing, cancellation, or artifact limitations without changing source code.
+- Keep Vite large chunk warnings, axe integration, Playwright browser cache, and deployment work as separate future decisions unless there is new measured evidence.
+- Keep Weather frozen and treat `/weather` only as a regression boundary.
+
+If the Stage 26 remote CI is not green, Stage 27 should only address the exact failed CI step using logs and should not start new feature, visual, or architecture work.
+
+Do not use Stage 27 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, add axe, add deployment, or introduce a complex CI matrix.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
