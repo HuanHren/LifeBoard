@@ -135,6 +135,24 @@ Write the JSON summary to the artifact path used by CI:
 npm run qa:a11y:routes:json:file
 ```
 
+Generate the route screenshot and design QA baseline:
+
+```bash
+npm run qa:screenshots
+```
+
+Run the same screenshot baseline with CI-oriented settings:
+
+```bash
+npm run qa:screenshots:ci
+```
+
+Run build plus the screenshot baseline:
+
+```bash
+npm run qa:design
+```
+
 Run the full local QA baseline:
 
 ```bash
@@ -142,6 +160,8 @@ npm run qa
 ```
 
 `npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, Settings confirmation-dialog hooks, and frozen Weather route smoke. Playwright is a project dev dependency; on a fresh machine or CI runner, run `npm ci` and `npx playwright install chromium` before QA if Chromium has not been installed yet. Axe automation is not part of this baseline yet.
+
+`npm run qa:screenshots` captures 29 route screenshots into `.qa/route-screenshots/`, writes `.qa/route-screenshots/manifest.json`, and writes `.qa/route-screenshots-summary.json`. The `.qa/` directory is ignored by git, so generated screenshots are local QA artifacts and should not be committed.
 
 GitHub Actions runs build plus route accessibility QA on pushes and pull requests targeting `main`. The workflow uploads `.qa/route-a11y-summary.json` as the `route-a11y-summary` artifact when the JSON summary is available.
 

@@ -204,15 +204,28 @@ Do not use Stage 27 to modify Weather internals, rewrite PixiJS, replace Weather
 
 ## Stage 28 Recommended Scope
 
-After the Stage 27 non-Weather visual consistency closeout, Stage 28 should stay focused on the remaining shared UI contract gaps instead of starting another redesign:
+After the Stage 27 non-Weather visual consistency closeout, Stage 28 should establish a route-level screenshot and design QA evidence baseline before more polish work:
 
-- Evaluate a small shared link-button primitive for RouterLink and external-link actions that currently duplicate button styling in Landing, Settings, Settings Data Sources, and NotFound.
-- Review responsive navigation visibility and active-route semantics, especially mobile/tablet states where multiple navigation surfaces can be present.
-- Continue token cleanup only where repeated local hero, action, or link styles clearly duplicate the shared primitives.
-- Preserve the current route QA baseline before and after any polish.
+- Add a repeatable Playwright route screenshot script that captures Landing, Home, Weather, Todos, Tools, Bookmarks, Settings, Settings data sources, and NotFound.
+- Preserve the current route accessibility QA baseline and use screenshots only as design QA evidence.
+- Generate ignored local artifacts under `.qa/route-screenshots/`, including a manifest and summary.
+- Keep CI unchanged until screenshot artifact usefulness, runtime, and size are reviewed.
 - Keep Weather frozen and treat `/weather` only as a regression boundary.
 
-Do not use Stage 28 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, change package or workflow files without a proven blocker, or start a full architecture migration.
+Do not use Stage 28 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, start another visual redesign, or start a full architecture migration.
+
+## Stage 29 Recommended Scope
+
+After the Stage 28 screenshot baseline is available, Stage 29 should review the generated visual evidence before making more UI changes:
+
+- Review all 29 route screenshots across mobile, tablet, desktop, and Weather extra-wide viewports.
+- Classify visual findings as P0/P1/P2 by route and viewport.
+- Identify the smallest non-Weather polish candidates that are backed by screenshot evidence.
+- Decide whether screenshot artifacts should be added to CI uploads or kept as local QA output.
+- Re-check route accessibility QA before and after any approved polish.
+- Keep Weather frozen and use `/weather` only as a regression boundary.
+
+Do not use Stage 29 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, introduce visual diff infrastructure before manual baseline usefulness is proven, or start a broad redesign without a prioritized issue list.
 
 ## Weather Follow-up Queue
 

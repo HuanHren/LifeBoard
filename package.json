@@ -11,6 +11,9 @@
     "qa:a11y:routes:ci": "node scripts/qa-route-a11y.mjs --ci",
     "qa:a11y:routes:json": "node scripts/qa-route-a11y.mjs --json",
     "qa:a11y:routes:json:file": "node scripts/qa-route-a11y.mjs --json --output .qa/route-a11y-summary.json",
+    "qa:screenshots": "node scripts/qa-route-screenshots.mjs",
+    "qa:screenshots:ci": "node scripts/qa-route-screenshots.mjs --ci",
+    "qa:design": "npm run build && npm run qa:screenshots",
     "qa": "npm run build && npm run qa:a11y:routes"
   },
   "dependencies": {
