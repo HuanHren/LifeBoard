@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
 import SectionHeader from '@/components/base/SectionHeader.vue'
-import StatCard from '@/components/base/StatCard.vue'
 import { useI18n } from '@/i18n/useI18n'
 import CaseConverterTool from '@/modules/tools/components/CaseConverterTool.vue'
 import DeduplicateLinesTool from '@/modules/tools/components/DeduplicateLinesTool.vue'
@@ -88,22 +87,18 @@ watch(
       </div>
 
       <dl class="tools-hero__facts" :aria-label="t('tools.hero.statusLabel')">
-        <StatCard
-          :label="t('tools.hero.factLocal')"
-          :value="t('tools.hero.factLocalDetail')"
-          value-kind="semantic"
-        />
-        <StatCard
-          :label="t('tools.hero.factStored')"
-          :value="t('tools.hero.factStoredDetail')"
-          value-kind="semantic"
-        />
-        <StatCard
-          :label="t('tools.hero.factUtilities')"
-          :value="t('tools.hero.factUtilitiesDetail', { count: toolCount })"
-          tone="accent"
-          value-kind="semantic"
-        />
+        <div>
+          <dt>{{ t('tools.hero.factLocal') }}</dt>
+          <dd>{{ t('tools.hero.factLocalDetail') }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('tools.hero.factStored') }}</dt>
+          <dd>{{ t('tools.hero.factStoredDetail') }}</dd>
+        </div>
+        <div>
+          <dt>{{ t('tools.hero.factUtilities') }}</dt>
+          <dd>{{ t('tools.hero.factUtilitiesDetail', { count: toolCount }) }}</dd>
+        </div>
       </dl>
     </BaseSurface>
 
@@ -204,6 +199,29 @@ watch(
 .tools-hero__facts {
   display: grid;
   gap: var(--space-2);
+  margin: 0;
+}
+
+.tools-hero__facts div {
+  min-width: 0;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  padding: var(--space-3);
+}
+
+.tools-hero__facts dt {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+}
+
+.tools-hero__facts dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+  overflow-wrap: anywhere;
 }
 
 .tools-console {
@@ -325,8 +343,21 @@ watch(
   }
 
   .tools-hero__facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-1);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--color-border-soft);
+    gap: var(--space-2);
+    padding-top: var(--space-3);
+  }
+
+  .tools-hero__facts div {
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: color-mix(in oklch, var(--color-surface) 78%, transparent);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .tools-hero__facts div:last-child {
+    grid-column: 1 / -1;
   }
 
   .tools-console,

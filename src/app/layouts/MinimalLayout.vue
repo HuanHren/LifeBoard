@@ -30,7 +30,7 @@ const { t } = useI18n()
     </header>
     <main
       id="main-content"
-      class="mx-auto w-full max-w-[var(--content-max-width)] px-[var(--page-shell-inline)] py-[var(--space-12)]"
+      class="minimal-main mx-auto w-full max-w-[var(--content-max-width)] px-[var(--page-shell-inline)] py-[var(--space-12)]"
       tabindex="-1"
     >
       <slot />

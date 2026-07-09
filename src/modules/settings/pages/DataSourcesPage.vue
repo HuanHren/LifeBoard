@@ -4,7 +4,6 @@ import { storeToRefs } from 'pinia'
 import PageLayout from '@/components/base/PageLayout.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
 import SectionHeader from '@/components/base/SectionHeader.vue'
-import StatCard from '@/components/base/StatCard.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import DataSourceRow from '@/modules/settings/components/DataSourceRow.vue'
@@ -411,14 +410,13 @@ onMounted(() => {
           </div>
         </div>
         <dl class="data-sources-hero__facts" :aria-label="t('settings.dataSources.hero.factsLabel')">
-          <StatCard
+          <div
             v-for="fact in heroFacts"
             :key="fact.label"
-            :label="fact.label"
-            :value="fact.value"
-            as="div"
-            value-kind="semantic"
-          />
+          >
+            <dt>{{ fact.label }}</dt>
+            <dd>{{ fact.value }}</dd>
+          </div>
         </dl>
       </BaseSurface>
 
@@ -709,7 +707,19 @@ onMounted(() => {
   margin: 0;
 }
 
-.data-sources-hero__facts div,
+.data-sources-hero__facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: var(--space-4);
+}
+
+.data-sources-hero__facts div {
+  min-width: 0;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--color-surface) 78%, transparent);
+  padding: var(--space-2) var(--space-3);
+}
+
 .data-sources-summary div {
   min-width: 0;
   border: 1px solid var(--color-border-soft);
@@ -769,7 +779,10 @@ onMounted(() => {
 }
 
 @media (min-width: 48rem) {
-  .data-sources-hero__facts,
+  .data-sources-hero__facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .data-sources-summary {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -787,6 +800,30 @@ onMounted(() => {
 
   .data-sources-summary {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 40rem) {
+  .data-sources-workspace {
+    gap: var(--space-4);
+  }
+
+  .data-sources-hero {
+    gap: var(--space-4);
+    padding: var(--space-5);
+  }
+
+  .data-sources-hero__eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .data-sources-hero__description {
+    line-height: 1.55;
+  }
+
+  .data-sources-hero__actions {
+    gap: var(--space-2);
+    margin-top: var(--space-4);
   }
 }
 </style>

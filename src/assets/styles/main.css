@@ -603,6 +603,11 @@
     outline: none;
   }
 
+  .minimal-main:focus,
+  .minimal-main:focus-visible {
+    outline: none;
+  }
+
   .text-page-title {
     font-size: var(--font-size-page-title);
     line-height: var(--line-height-tight);

@@ -188,4 +188,18 @@ function handleTabKeydown(event: KeyboardEvent, currentTool: ToolId) {
     display: block;
   }
 }
+
+@media (max-width: 40rem) {
+  .tool-navigation__item {
+    min-width: min(10.5rem, 64vw);
+    min-height: 3rem;
+    gap: var(--space-1);
+    padding: var(--space-2);
+  }
+
+  .tool-navigation__index {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
 </style>

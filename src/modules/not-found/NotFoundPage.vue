@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import BaseEmpty from '@/components/base/BaseEmpty.vue'
+import BaseSurface from '@/components/base/BaseSurface.vue'
 import PageLayout from '@/components/base/PageLayout.vue'
 import { useI18n } from '@/i18n/useI18n'
 
@@ -9,30 +9,106 @@ const { t } = useI18n()
 
 <template>
   <PageLayout variant="narrow">
-    <section aria-labelledby="not-found-title">
-      <p class="mb-3 text-sm font-medium text-[var(--color-accent-text)]">
+    <BaseSurface
+      as="section"
+      class="not-found-panel"
+      aria-labelledby="not-found-title"
+      padding="lg"
+      variant="plain"
+    >
+      <p class="not-found-panel__eyebrow">
         {{ t('notFound.eyebrow') }}
       </p>
-      <BaseEmpty
-        :description="t('notFound.description')"
-        :title="t('notFound.title')"
-        title-as="h1"
-      >
-        <template #actions>
-          <RouterLink
-            :to="{ name: 'landing' }"
-            class="control-focus interactive-surface inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-accent)] bg-[var(--color-accent)] px-4 text-sm font-medium text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)]"
-          >
-            {{ t('notFound.landingAction') }}
-          </RouterLink>
-          <RouterLink
-            :to="{ name: 'workspace' }"
-            class="control-focus interactive-surface inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:bg-[var(--color-surface-interactive)]"
-          >
-            {{ t('notFound.workspaceAction') }}
-          </RouterLink>
-        </template>
-      </BaseEmpty>
-    </section>
+      <h1 id="not-found-title" class="not-found-panel__title">
+        {{ t('notFound.title') }}
+      </h1>
+      <p class="not-found-panel__description">
+        {{ t('notFound.description') }}
+      </p>
+      <div class="not-found-panel__actions">
+        <RouterLink
+          :to="{ name: 'landing' }"
+          class="control-focus interactive-surface not-found-panel__button not-found-panel__button--primary"
+        >
+          {{ t('notFound.landingAction') }}
+        </RouterLink>
+        <RouterLink
+          :to="{ name: 'workspace' }"
+          class="control-focus interactive-surface not-found-panel__button not-found-panel__button--secondary"
+        >
+          {{ t('notFound.workspaceAction') }}
+        </RouterLink>
+      </div>
+    </BaseSurface>
   </PageLayout>
 </template>
+
+<style scoped>
+.not-found-panel {
+  display: grid;
+  max-width: 42rem;
+  gap: var(--space-4);
+  margin-inline: auto;
+  background:
+    linear-gradient(135deg, var(--color-surface-raised), var(--color-surface)),
+    var(--color-surface);
+}
+
+.not-found-panel__eyebrow {
+  margin: 0;
+  color: var(--color-accent-text);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.not-found-panel__title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-page-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.not-found-panel__description {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-body-small);
+  line-height: 1.7;
+}
+
+.not-found-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.not-found-panel__button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-control-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+}
+
+.not-found-panel__button--primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.not-found-panel__button--secondary {
+  background: var(--color-surface-raised);
+  color: var(--color-text-primary);
+}
+
+@media (min-width: 64rem) {
+  .not-found-panel {
+    margin-top: var(--space-8);
+  }
+}
+</style>

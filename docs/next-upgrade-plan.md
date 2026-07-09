@@ -241,6 +241,18 @@ After the Stage 29 screenshot review, Stage 30 should make the first limited non
 
 Do not use Stage 30 to modify Weather internals, Weather store/services/cache/runtime, PixiJS, Weather assets, Xiaomi Weather material analysis, package files, CI workflow, visual diff infrastructure, or a broad all-route redesign.
 
+## Stage 31 Recommended Scope
+
+After the Stage 30 limited P1 visual fixes, Stage 31 should close the loop before any broader polish:
+
+- Re-review the refreshed screenshots for the four Stage 29 P1 issues only.
+- Confirm the full local QA matrix remains green after the Stage 30 commit.
+- Decide whether remaining P2 screenshot findings should be batched, deferred, or left as accepted limitations.
+- Keep `.qa` screenshots as local QA evidence unless a separate CI artifact stage approves uploading them.
+- Keep Weather frozen and treat `/weather` only as a regression boundary.
+
+Do not use Stage 31 to modify Weather internals, resume Xiaomi Weather material analysis, add new dependencies, add visual diff infrastructure, change package metadata, migrate architecture, or start a broad all-route redesign.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

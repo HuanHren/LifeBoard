@@ -3,7 +3,6 @@ import { computed, onMounted, ref, shallowRef } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseSection from '@/components/base/BaseSection.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
-import StatCard from '@/components/base/StatCard.vue'
 import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
@@ -487,13 +486,13 @@ onMounted(() => {
         </div>
       </div>
       <dl class="settings-hero__facts" :aria-label="t('settings.hero.factsLabel')">
-        <StatCard
+        <div
           v-for="fact in heroFacts"
           :key="fact.label"
-          :label="fact.label"
-          :value="fact.value"
-          value-kind="semantic"
-        />
+        >
+          <dt>{{ fact.label }}</dt>
+          <dd>{{ fact.value }}</dd>
+        </div>
       </dl>
     </BaseSurface>
 
@@ -747,6 +746,34 @@ onMounted(() => {
   margin: 0;
 }
 
+.settings-hero__facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: var(--space-4);
+}
+
+.settings-hero__facts div {
+  min-width: 0;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklch, var(--color-surface) 78%, transparent);
+  padding: var(--space-2) var(--space-3);
+}
+
+.settings-hero__facts dt {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-label);
+}
+
+.settings-hero__facts dd {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-label);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-label);
+  overflow-wrap: anywhere;
+}
+
 .settings-source-facts div {
   min-width: 0;
   border: 1px solid var(--color-border-soft);
@@ -825,6 +852,26 @@ onMounted(() => {
 
   .settings-grid {
     grid-template-columns: minmax(0, 1.45fr) minmax(21rem, 0.8fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .settings-hero {
+    gap: var(--space-4);
+    padding: var(--space-5);
+  }
+
+  .settings-hero__eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .settings-hero__description {
+    line-height: 1.55;
+  }
+
+  .settings-hero__actions {
+    gap: var(--space-2);
+    margin-top: var(--space-4);
   }
 }
 </style>
