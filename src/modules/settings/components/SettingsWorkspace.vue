@@ -841,17 +841,42 @@ onMounted(() => {
 }
 
 @media (min-width: 70rem) {
+  .settings-workspace {
+    gap: var(--space-8);
+  }
+
   .settings-hero {
     grid-template-columns: minmax(0, 1.15fr) minmax(24rem, 0.85fr);
-    align-items: end;
+    align-items: center;
+    padding: var(--space-6) var(--space-8);
   }
 
   .settings-hero__facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-1);
+    padding-top: var(--space-3);
+  }
+
+  .settings-hero__facts div {
+    background: transparent;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .settings-hero__actions {
+    margin-top: var(--space-5);
+  }
+
+  .settings-grid__main,
+  .settings-grid__side {
+    gap: var(--space-6);
   }
 
   .settings-grid {
-    grid-template-columns: minmax(0, 1.45fr) minmax(21rem, 0.8fr);
+    grid-template-columns: minmax(0, 1.35fr) minmax(23rem, 0.82fr);
+  }
+
+  .settings-panel--stack {
+    gap: var(--space-4);
   }
 }
 

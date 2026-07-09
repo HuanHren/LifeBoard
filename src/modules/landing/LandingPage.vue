@@ -1589,6 +1589,71 @@ function handleDemoTabKeydown(event: KeyboardEvent, currentIndex: number) {
   }
 }
 
+@media (min-width: 40.01rem) and (max-width: 49rem) {
+  .landing-hero {
+    gap: var(--space-6);
+    padding-block: var(--space-12);
+  }
+
+  .landing-hero__actions {
+    margin-top: var(--space-6);
+  }
+
+  .landing-hero__visual {
+    min-height: 21rem;
+    overflow: hidden;
+  }
+
+  .landing-weather-card {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(36rem, 94%);
+  }
+
+  .landing-workspace-preview {
+    position: absolute;
+    right: 3%;
+    bottom: 0;
+    width: min(34rem, 90%);
+    max-height: 12.5rem;
+    margin-top: 0;
+  }
+
+  .landing-weather-card__sky {
+    min-height: 7rem;
+  }
+
+  .landing-weather-card__body {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .landing-workspace-preview__grid {
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+
+  .preview-panel {
+    min-height: 4.75rem;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .preview-panel--weather {
+    min-height: 7.25rem;
+  }
+
+  .preview-panel--focus {
+    grid-row: span 2;
+  }
+
+  .preview-panel--tools,
+  .preview-panel--bookmarks {
+    min-height: 3.75rem;
+  }
+}
+
 @media (max-width: 40rem) {
   .landing-hero,
   .landing-story,

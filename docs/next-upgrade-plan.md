@@ -318,6 +318,27 @@ If the user explicitly chooses to continue UI work instead, keep Stage 35 limite
 
 Do not use Stage 35 to modify Weather internals, Weather assets, Weather runtime, Weather store or services, Xiaomi weather analysis, PixiJS, package files, CI workflows, axe, pixel diff, dark mode screenshot expansion, Vite chunk splitting, or broad architecture migration.
 
+## Stage 36 Result
+
+Stage 36 closed the two remaining non-Weather P2 visual polish candidates:
+
+- `DQA-P2-001`: Landing tablet preview height at `768x1024`.
+- `DQA-P2-005`: Settings desktop first-screen density at `1440x900`.
+
+Weather remained frozen and was used only as a route QA and screenshot regression boundary. `DQA-P2-006` remains a Weather freeze note, not a visual refactor target.
+
+## Stage 37 Recommended Scope
+
+After the Stage 36 limited polish pass, Stage 37 should close the loop before any new visual or architecture work:
+
+- Re-review the regenerated screenshots for `DQA-P2-001` and `DQA-P2-005`.
+- Confirm `npm run build`, route accessibility QA, screenshot QA, and design QA remain green.
+- Freeze the current non-Weather visual baseline if no new P0/P1 issue appears.
+- Keep `.qa` screenshots as ignored local evidence unless a separate artifact stage approves uploading them.
+- Keep Weather frozen and use `/weather` only as a regression boundary.
+
+Do not use Stage 37 to modify Weather internals, resume Xiaomi Weather analysis, add new dependencies, add pixel-diff infrastructure, expand dark-mode screenshots, split Vite chunks, change package or workflow files, or begin broad architecture migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
