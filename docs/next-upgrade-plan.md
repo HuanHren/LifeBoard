@@ -339,6 +339,33 @@ After the Stage 36 limited polish pass, Stage 37 should close the loop before an
 
 Do not use Stage 37 to modify Weather internals, resume Xiaomi Weather analysis, add new dependencies, add pixel-diff infrastructure, expand dark-mode screenshots, split Vite chunks, change package or workflow files, or begin broad architecture migration.
 
+## Stage 37 Final Freeze Result
+
+Stage 37 freezes the current non-Weather visual baseline after re-reviewing the refreshed 29-route screenshot matrix.
+
+- `DQA-P2-001` is closed.
+- `DQA-P2-005` is closed.
+- P0 open count remains 0.
+- Stage 30 P1 items remain closed.
+- Stage 32 P2 items remain closed.
+- Screenshot QA remains 29/29.
+- Route accessibility QA remains 29/29.
+- Weather remains frozen and `DQA-P2-006` remains a freeze note, not a visual refactor target.
+
+## Stage 38 Recommended Scope
+
+Preferred Stage 38 is repository synchronization and remote confidence for the final non-Weather visual freeze:
+
+- Push the Stage 37 freeze commit if it is not already remote.
+- Add a final freeze tag after push, for example `non-weather-visual-freeze-stage-37`.
+- Verify the remote `QA` workflow after synchronization.
+
+Alternative Stage 38 only if the user explicitly changes direction:
+
+- Return to product feature work or architecture planning.
+
+Do not use Stage 38 for more UI small fixes, Weather visual refactor, Weather animation expansion, Xiaomi weather material analysis, Vite chunk splitting, axe integration, dark-mode screenshot expansion, pixel-diff infrastructure, package changes, workflow changes, or broad architecture migration unless the user explicitly opens that scope.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
