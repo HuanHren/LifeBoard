@@ -278,6 +278,17 @@ After the Stage 32 limited P2 polish batch, Stage 33 should close the loop befor
 
 Do not use Stage 33 to modify Weather internals, resume Xiaomi Weather analysis, expand the Weather scene system, change package files, tune CI, address Landing or Settings P2 items, or begin a broad app architecture migration.
 
+## Stage 34 Recommended Scope
+
+After Stage 33 closes the Stage 32 P2 screenshot review, Stage 34 should choose one narrow path:
+
+- Preferred: freeze the current screenshot/design QA baseline in documentation without more UI changes.
+- Alternative: address at most the two remaining non-Weather P2 candidates, `DQA-P2-001` Landing tablet preview height and `DQA-P2-005` Settings desktop first-screen density.
+
+Keep `DQA-P2-006` Weather wide as a frozen Weather regression baseline, not a visual refactor target.
+
+Do not use Stage 34 to modify Weather internals, resume Xiaomi Weather analysis, expand Weather animation, change package files, modify CI workflows, add axe, add pixel diff infrastructure, expand dark-mode screenshots, split Vite chunks, or begin broad architecture migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
