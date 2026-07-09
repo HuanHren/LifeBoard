@@ -289,6 +289,35 @@ Keep `DQA-P2-006` Weather wide as a frozen Weather regression baseline, not a vi
 
 Do not use Stage 34 to modify Weather internals, resume Xiaomi Weather analysis, expand Weather animation, change package files, modify CI workflows, add axe, add pixel diff infrastructure, expand dark-mode screenshots, split Vite chunks, or begin broad architecture migration.
 
+## Stage 34 Freeze Result
+
+Stage 34 freezes the current screenshot/design QA baseline in `docs/stage-34-screenshot-design-baseline-freeze.md`.
+
+- Screenshot QA remains green at 29/29.
+- Route accessibility QA remains green at 29/29.
+- `npm run build`, `npm run qa:design`, and `npm run qa` pass locally.
+- The Vite large chunk warning remains an accepted non-blocking P2.
+- `.qa` screenshots, manifest, summary, and contact sheet remain local ignored artifacts.
+- P0: 0 open.
+- P1: all four Stage 29 P1 items remain closed.
+- P2: `DQA-P2-002`, `DQA-P2-003`, and `DQA-P2-004` remain closed; `DQA-P2-001` and `DQA-P2-005` are deferred non-blocking items.
+- `DQA-P2-006` remains a Weather freeze note, not a visual refactor target.
+
+## Stage 35 Recommended Scope
+
+After the Stage 34 screenshot/design baseline freeze, Stage 35 should prefer repository synchronization over more UI work:
+
+- Push the Stage 34 freeze commit.
+- Verify the remote `QA` workflow.
+- Add a baseline tag after remote CI is green, for example `screenshot-design-baseline-freeze-stage-34`.
+
+If the user explicitly chooses to continue UI work instead, keep Stage 35 limited to the two remaining non-Weather P2 candidates:
+
+- `DQA-P2-001`: Landing tablet preview height.
+- `DQA-P2-005`: Settings desktop first-screen density.
+
+Do not use Stage 35 to modify Weather internals, Weather assets, Weather runtime, Weather store or services, Xiaomi weather analysis, PixiJS, package files, CI workflows, axe, pixel diff, dark mode screenshot expansion, Vite chunk splitting, or broad architecture migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
