@@ -227,6 +227,20 @@ After the Stage 28 screenshot baseline is available, Stage 29 should review the 
 
 Do not use Stage 29 to modify Weather internals, rewrite PixiJS, replace Weather assets, resume Xiaomi Weather material analysis, add new Weather scenes, expand Weather animation, introduce visual diff infrastructure before manual baseline usefulness is proven, or start a broad redesign without a prioritized issue list.
 
+## Stage 30 Recommended Scope
+
+After the Stage 29 screenshot review, Stage 30 should make the first limited non-Weather visual fixes backed by the issue list:
+
+- Fix `DQA-P1-001`: compress the Settings Data Sources mobile/tablet hero and provider-status summary.
+- Fix `DQA-P1-002`: simplify the Tools mobile hero/status strip and make the current tool selector the primary mobile control.
+- Fix `DQA-P1-003`: remove the NotFound desktop nested-frame look and keep one clear recovery surface.
+- Fix `DQA-P1-004`: reduce Settings mobile overview density before the preference sections.
+- Rerun `npm run qa:screenshots:ci` and `npm run qa:a11y:routes:ci` after the changes.
+- Keep P2 polish as a later batch unless no P1 work remains.
+- Keep Weather frozen and use `/weather` only as a regression boundary.
+
+Do not use Stage 30 to modify Weather internals, Weather store/services/cache/runtime, PixiJS, Weather assets, Xiaomi Weather material analysis, package files, CI workflow, visual diff infrastructure, or a broad all-route redesign.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
