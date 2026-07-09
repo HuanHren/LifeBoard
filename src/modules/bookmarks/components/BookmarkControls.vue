@@ -52,8 +52,8 @@ function selectCategory(category: string) {
     as="section"
     class="bookmarks-controls"
     aria-labelledby="bookmark-controls-title"
-    padding="md"
-    variant="muted"
+    padding="sm"
+    variant="plain"
   >
     <SectionHeader
       :description="t('bookmarks.controls.description')"
@@ -134,7 +134,23 @@ function selectCategory(category: string) {
 <style scoped>
 .bookmarks-controls {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
+  border-color: color-mix(in srgb, var(--color-border-soft) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 78%, var(--color-canvas));
+  box-shadow: none;
+}
+
+.bookmarks-controls :deep(.section-header) {
+  gap: var(--space-2);
+}
+
+.bookmarks-controls :deep(.section-header__title) {
+  font-size: 1.25rem;
+}
+
+.bookmarks-controls :deep(.section-header__description) {
+  max-width: 32rem;
+  font-size: var(--font-size-caption);
 }
 
 .bookmarks-controls__clear {
@@ -159,7 +175,7 @@ function selectCategory(category: string) {
   display: flex;
   gap: var(--space-2);
   overflow-x: auto;
-  padding-bottom: var(--space-1);
+  padding-bottom: 0.125rem;
   scrollbar-width: thin;
 }
 

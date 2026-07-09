@@ -333,11 +333,21 @@ onMounted(() => {
 .todos-workspace__tasks {
   min-width: 0;
   overflow: hidden;
+  border-color: color-mix(in srgb, var(--color-border) 72%, var(--color-border-soft));
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-soft);
 }
 
 .todos-workspace__side {
   position: sticky;
   top: calc(var(--app-top-navigation-height, 4.5rem) + 1rem);
+}
+
+.todos-workspace__side-card {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--color-border-soft) 72%, transparent);
+  background: color-mix(in srgb, var(--color-surface-muted) 58%, var(--color-canvas));
+  box-shadow: none;
 }
 
 .todos-workspace__section-heading {

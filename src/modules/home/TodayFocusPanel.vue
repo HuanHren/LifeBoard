@@ -194,6 +194,10 @@ function toggleTask(task: Task) {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 1rem;
   align-items: start;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--color-border-soft) 72%, transparent);
+  background: color-mix(in srgb, var(--color-surface-raised) 74%, var(--color-canvas));
+  box-shadow: none;
 }
 
 @media (max-width: 639px) {

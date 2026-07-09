@@ -266,6 +266,18 @@ After Stage 31 closes all four Stage 29 P1 issues, Stage 32 may handle a small P
 
 Do not use Stage 32 to modify Weather internals, resume Xiaomi Weather material analysis, address Vite chunk warnings, add axe, add visual diff infrastructure, change package files, modify CI workflows, or start broad architecture migration.
 
+## Stage 33 Recommended Scope
+
+After the Stage 32 limited P2 polish batch, Stage 33 should close the loop before any new visual or architecture work:
+
+- Re-review regenerated screenshots for `DQA-P2-002`, `DQA-P2-003`, and `DQA-P2-004`.
+- Confirm Home desktop empty-state weight, Todos desktop surface hierarchy, and Bookmarks desktop search/filter priority are improved.
+- Run the existing build, route accessibility, and screenshot QA matrix without adding dependencies or workflows.
+- Keep `.qa` screenshots as ignored local evidence unless a separate artifact stage approves committing or uploading them.
+- Keep Weather frozen and use `/weather` only as a regression boundary, including the wide overflow screenshots.
+
+Do not use Stage 33 to modify Weather internals, resume Xiaomi Weather analysis, expand the Weather scene system, change package files, tune CI, address Landing or Settings P2 items, or begin a broad app architecture migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

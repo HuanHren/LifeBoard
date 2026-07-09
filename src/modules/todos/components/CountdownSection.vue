@@ -84,6 +84,8 @@ const secondaryCountdowns = computed(() =>
 <style scoped>
 .countdown-section {
   min-width: 0;
+  background: color-mix(in srgb, var(--color-surface-card) 82%, var(--color-canvas));
+  box-shadow: none;
 }
 
 .countdown-section__header {
