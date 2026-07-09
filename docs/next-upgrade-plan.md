@@ -253,6 +253,19 @@ After the Stage 30 limited P1 visual fixes, Stage 31 should close the loop befor
 
 Do not use Stage 31 to modify Weather internals, resume Xiaomi Weather material analysis, add new dependencies, add visual diff infrastructure, change package metadata, migrate architecture, or start a broad all-route redesign.
 
+## Stage 32 Recommended Scope
+
+After Stage 31 closes all four Stage 29 P1 issues, Stage 32 may handle a small P2 batch:
+
+- `DQA-P2-002`: reduce Home desktop empty-state surface weight.
+- `DQA-P2-003`: clarify Todos desktop surface hierarchy.
+- `DQA-P2-004`: rebalance Bookmarks desktop search/filter priority against the empty content state.
+- Keep the batch capped at these three items unless a new P0/P1 regression appears.
+- Rerun route screenshot QA and route accessibility QA after the changes.
+- Keep Weather frozen and use `/weather` only as a regression boundary.
+
+Do not use Stage 32 to modify Weather internals, resume Xiaomi Weather material analysis, address Vite chunk warnings, add axe, add visual diff infrastructure, change package files, modify CI workflows, or start broad architecture migration.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
