@@ -366,6 +366,31 @@ Alternative Stage 38 only if the user explicitly changes direction:
 
 Do not use Stage 38 for more UI small fixes, Weather visual refactor, Weather animation expansion, Xiaomi weather material analysis, Vite chunk splitting, axe integration, dark-mode screenshot expansion, pixel-diff infrastructure, package changes, workflow changes, or broad architecture migration unless the user explicitly opens that scope.
 
+## Stage 38 Remote Sync Result
+
+Stage 38 verifies the final non-Weather visual freeze against remote repository evidence:
+
+- Local `main`, `origin/main`, and GitHub API `main` resolve to Stage 37 commit `b59018d`.
+- `non-weather-visual-freeze-stage-37` exists locally and remotely as a lightweight tag targeting `b59018d`; it was not moved or recreated.
+- GitHub Actions run `29035725355` exactly targets `b59018d` and completed successfully.
+- Lockfile validation, dependency install, Playwright Chromium install, build, route QA, summary generation, and artifact upload all passed.
+- The downloaded remote summary reports 29/29 route-viewports, zero failures, and zero console errors.
+- Local build, route QA, and screenshot QA also pass; `.qa` artifacts remain ignored and uncommitted.
+- No source, Weather, package, workflow, or QA script file changed.
+
+The Stage 38 documentation-only commit is pushed after this record is written. Its exact remote QA run is verified in the final Stage 38 handoff without amending the documentation and creating a self-referential run loop.
+
+## Stage 39 Recommended Scope
+
+After the Stage 38 documentation commit is confirmed green remotely:
+
+- End the continuous non-Weather UI polish sequence.
+- Return to an explicitly approved product feature or architecture workstream.
+- Use the frozen route, accessibility, and screenshot baselines as regression contracts.
+- Keep Weather regression-only.
+
+Do not automatically open Weather visual work, Xiaomi weather material analysis, Vite chunk splitting, axe integration, dark-mode screenshot expansion, or pixel-diff infrastructure. Each requires a separate scope decision.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
