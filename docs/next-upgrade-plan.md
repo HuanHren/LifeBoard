@@ -416,6 +416,28 @@ Stage 39 completes the post-visual-freeze product and architecture audit in `doc
 
 Each stage requires separate authorization. Weather remains regression-only and excluded from persistence migration, visual work, animation expansion, runtime rewrite, asset changes, and Xiaomi Weather material analysis.
 
+## Stage 40 Contract Result
+
+Stage 40 freezes the data-portability architecture contract in `docs/stage-40-data-portability-architecture-audit-contract.md`.
+
+Accepted decisions:
+
+- `DP-ADR-001` through `DP-ADR-010` establish one typed product persistence registry, a discriminated portable root schema with independent module versions, explicit legacy adapters, strict validation, Language portability, Weather cache/credential exclusions, Replace-only import, in-memory rollback, distinct content/factory-reset policies, and human-readable CSV/Markdown exports that are not restore formats.
+- The inventory contains 11 product LocalStorage keys plus one developer-only Weather debug flag. The product registry covers the 11 product keys; the debug flag remains outside portability/reset/sync.
+- Portable backup format v1 includes Theme, Language, selected/favorite Weather locations, Todos/Countdowns, and Bookmarks. Provider/device preferences, credentials, caches, runtime state, and QA data remain excluded.
+- Current legacy backup root versions 1 and 2 remain import candidates through explicit adapters. Unknown or future versions are rejected before writes.
+- Merge, persistent rollback journals, backend sync, encryption/signatures, and new Weather work remain deferred.
+
+## Stage 41-45 Contract Overview
+
+- Stage 41: Persistence Registry / Schema Version Foundation. Add typed registry/schema/validator/migration contracts and the minimal unit fixture harness while preserving behavior.
+- Stage 42: JSON Backup Export Hardening. Emit the new portable format and include Language without changing import.
+- Stage 43: Validated JSON Import and Rollback Hardening. Support current plus legacy formats through Replace, read-back verification, and rollback; no Merge.
+- Stage 44: CSV / Markdown Export Contract and Test Closeout. Harden existing formats; do not rebuild them.
+- Stage 45: Data Portability Closeout and QA. Align registry-driven factory reset, Language coverage, store synchronization, and the support matrix.
+
+The only recommended next stage is **Stage 41: Persistence Registry / Schema Version Foundation**. It requires a separate handoff and must not modify Weather internals or reopen visual work.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
