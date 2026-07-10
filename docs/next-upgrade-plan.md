@@ -436,7 +436,16 @@ Accepted decisions:
 - Stage 44: CSV / Markdown Export Contract and Test Closeout. Harden existing formats; do not rebuild them.
 - Stage 45: Data Portability Closeout and QA. Align registry-driven factory reset, Language coverage, store synchronization, and the support matrix.
 
-The only recommended next stage is **Stage 41: Persistence Registry / Schema Version Foundation**. It requires a separate handoff and must not modify Weather internals or reopen visual work.
+## Stage 41 Foundation Result
+
+Stage 41 is implemented and documented in `docs/stage-41-persistence-registry-schema-version-foundation.md`.
+
+- A pure TypeScript registry classifies exactly 11 product LocalStorage keys; the Weather runtime debug flag remains excluded.
+- Root/module portable schema constants, envelope types, validation/migration/serializer/storage interfaces, readonly selectors, metadata-only plans, and registry integrity checks are established.
+- Vitest `4.1.10` is the only new dev dependency. The Node-only suite passes 45/45 tests, and the existing build, route accessibility, and screenshot QA baselines remain green.
+- No current export, import, clear, store, service, UI, router, workflow, QA script, or Weather production path is wired to the foundation.
+
+The only recommended next stage is **Stage 42: JSON Backup Export Hardening**, under a separate authorization. Stage 42 may emit the approved portable format from validated serializers, but must not implement import writes, rollback, Merge, clear/reset rewiring, CSV/Markdown changes, or Weather internal changes.
 
 ## Weather Follow-up Queue
 
