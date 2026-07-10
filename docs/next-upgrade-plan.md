@@ -391,6 +391,31 @@ After the Stage 38 documentation commit is confirmed green remotely:
 
 Do not automatically open Weather visual work, Xiaomi weather material analysis, Vite chunk splitting, axe integration, dark-mode screenshot expansion, or pixel-diff infrastructure. Each requires a separate scope decision.
 
+## Stage 39 Audit Result
+
+Stage 39 completes the post-visual-freeze product and architecture audit in `docs/stage-39-post-visual-freeze-product-architecture-roadmap.md`.
+
+- The current route/module architecture is suitable for incremental feature growth; a repository-wide migration is not recommended.
+- Local persistence, JSON backup/restore, and portable exports already work, but ownership, export classifications, schema versions, migrations, and corrupt-data recovery are not unified.
+- Existing Todo/Bookmark CSV and Markdown exports should be hardened and tested, not reimplemented.
+- Calendar is the first recommended new product module after data portability closes. Notes follows; Habits waits for proven date/rollover semantics.
+- Command registry/palette waits until new module routes stabilize. Backend/account/sync remains trigger-based and deferred.
+- The only recommended Stage 40 is **Data Portability Architecture Audit and Contract**. It is a specification stage, not feature or UI implementation.
+
+## Stage 40-48 Roadmap Overview
+
+- Stage 40: Data Portability Architecture Audit and Contract.
+- Stage 41: Persistence Registry / Schema Version Foundation.
+- Stage 42: JSON Backup Export Hardening.
+- Stage 43: Validated JSON Import and Rollback Hardening.
+- Stage 44: Portable Todo / Bookmark CSV and Markdown Export Closeout.
+- Stage 45: Data Portability Closeout and QA.
+- Stage 46: Calendar Product / Architecture Spec.
+- Stage 47: Calendar MVP.
+- Stage 48: Calendar Integration / Closeout.
+
+Each stage requires separate authorization. Weather remains regression-only and excluded from persistence migration, visual work, animation expansion, runtime rewrite, asset changes, and Xiaomi Weather material analysis.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
