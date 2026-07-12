@@ -1,5 +1,8 @@
 export * from './constants'
 export * from './contracts'
 export * from './plans'
+export * from './portableExport'
+export * from './portableExportValidation'
+export * from './portableSerialization'
 export * from './registry'
 export type * from './types'

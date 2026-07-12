@@ -8,6 +8,10 @@ export const WEATHER_PORTABLE_SCHEMA_VERSION = 1 as const
 export const TODOS_PORTABLE_SCHEMA_VERSION = 1 as const
 export const BOOKMARKS_PORTABLE_SCHEMA_VERSION = 1 as const
 
+export const MAX_PORTABLE_BACKUP_BYTES = 1_048_576
+export const PORTABLE_BACKUP_MIME_TYPE = 'application/json;charset=utf-8' as const
+export const PORTABLE_BACKUP_FILENAME_PREFIX = 'lifeboard-backup-v1' as const
+
 export const PORTABLE_MODULE_IDS = Object.freeze([
   'settings',
   'weather',

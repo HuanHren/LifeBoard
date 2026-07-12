@@ -72,12 +72,6 @@ export type PersistenceRegistryEntry = PersistenceRegistryEntryBase &
   PortablePolicy &
   ClearPolicy
 
-export type JsonPrimitive = string | number | boolean | null
-export type JsonValue = JsonPrimitive | JsonObject | readonly JsonValue[]
-export interface JsonObject {
-  readonly [key: string]: JsonValue
-}
-
 export type LifeBoardLocale = 'zh-CN' | 'en-US'
 export type ThemeMode = 'system' | 'light' | 'dark'
 
@@ -86,18 +80,88 @@ export interface PortableSettingsPayloadV1 {
   readonly language: LifeBoardLocale
 }
 
+export type PortableWeatherLocationKindV1 =
+  | 'Capital city'
+  | 'Regional capital'
+  | 'Country'
+  | 'Administrative area'
+  | 'Locality'
+  | 'Location'
+
+export type PortableWeatherLocationSourceV1 =
+  | 'openMeteo'
+  | 'amap'
+  | 'amap-geolocation'
+
+export interface PortableWeatherLocationV1 {
+  readonly id: number | string
+  readonly name: string
+  readonly kind: PortableWeatherLocationKindV1
+  readonly admin1: string | null
+  readonly country: string
+  readonly countryCode: string
+  readonly latitude: number
+  readonly longitude: number
+  readonly elevation: number | null
+  readonly timezone: string
+  readonly displayLabel?: string
+  readonly source?: PortableWeatherLocationSourceV1
+}
+
+export interface PortableWeatherFavoriteCityV1 {
+  readonly id: string
+  readonly name: string
+  readonly region: string | null
+  readonly country: string
+  readonly latitude: number
+  readonly longitude: number
+  readonly displayLabel: string
+  readonly createdAt: string
+  readonly updatedAt: string
+}
+
 export interface PortableWeatherPayloadV1 {
-  readonly selectedLocation: JsonObject | null
-  readonly favoriteCities: readonly JsonObject[]
+  readonly selectedLocation: PortableWeatherLocationV1 | null
+  readonly favoriteCities: readonly PortableWeatherFavoriteCityV1[]
+}
+
+export interface PortableTaskV1 {
+  readonly id: string
+  readonly title: string
+  readonly dueDate: string | null
+  readonly label: string | null
+  readonly completedAt: string | null
+  readonly deletedAt: string | null
+  readonly createdAt: string
+  readonly updatedAt: string
+}
+
+export interface PortableCountdownV1 {
+  readonly id: string
+  readonly title: string
+  readonly targetDate: string
+  readonly createdAt: string
+  readonly updatedAt: string
 }
 
 export interface PortableTodosPayloadV1 {
-  readonly tasks: readonly JsonObject[]
-  readonly countdowns: readonly JsonObject[]
+  readonly tasks: readonly PortableTaskV1[]
+  readonly countdowns: readonly PortableCountdownV1[]
+}
+
+export interface PortableBookmarkV1 {
+  readonly id: string
+  readonly title: string
+  readonly url: string
+  readonly category: string | null
+  readonly note: string | null
+  readonly pinned: boolean
+  readonly createdAt: string
+  readonly updatedAt: string
 }
 
 export interface PortableBookmarksPayloadV1 {
-  readonly bookmarks: readonly JsonObject[]
+  readonly bookmarks: readonly PortableBookmarkV1[]
 }
 
 export interface PortableModuleEnvelope<TPayload, TVersion extends number = number> {

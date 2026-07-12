@@ -447,6 +447,18 @@ Stage 41 is implemented and documented in `docs/stage-41-persistence-registry-sc
 
 The only recommended next stage is **Stage 42: JSON Backup Export Hardening**, under a separate authorization. Stage 42 may emit the approved portable format from validated serializers, but must not implement import writes, rollback, Merge, clear/reset rewiring, CSV/Markdown changes, or Weather internal changes.
 
+## Stage 42 Export Hardening Result
+
+Stage 42 is implemented and documented in `docs/stage-42-json-backup-export-hardening.md`.
+
+- A pure TypeScript, registry-driven `PortableBackupV1` exporter, strict DTO validation, deterministic UTF-8 serialization, fixed filename/MIME metadata, a 1 MiB limit, and redacted structured errors are ready.
+- Language is included in the portable foundation. Weather remains limited to selected and favorite locations; caches, credentials, provider/device preferences, runtime state, debug data, assets, and rendering code remain excluded.
+- The current production importer accepts only legacy backup roots v1/v2 and rejects the new portable envelope. A compatibility-gate test proves this boundary.
+- The new exporter is therefore not wired into Settings. Production download remains legacy v2 until the same release can restore `PortableBackupV1`.
+- The persistence unit suite passes 76/76 tests, and existing build, route accessibility, and screenshot QA baselines remain green.
+
+The only recommended next stage is **Stage 43: Validated JSON Import and Rollback Hardening**. Stage 43 must complete portable importer compatibility, legacy adapters, Replace-only writes, read-back verification, rollback, and store synchronization before production export cutover. It must not add Merge, persistent rollback journals, CSV/Markdown changes, or Weather internal changes.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.
