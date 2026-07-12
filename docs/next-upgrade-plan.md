@@ -467,7 +467,17 @@ Stage 43 is implemented and documented in `docs/stage-43-validated-json-import-r
 - Clear-all, CSV/Markdown exports, non-portable Weather data, Weather internals, dependencies, workflows, and QA scripts remain unchanged.
 - Unit, build, accessibility, screenshot, design, and targeted browser QA baselines are green; the existing Vite chunk warning remains non-blocking.
 
-The only recommended next stage is **Stage 44: Portable Todo / Bookmark CSV and Markdown Export Closeout**, under separate authorization. Stage 44 should harden the existing human-readable export contracts and tests without reopening JSON import, adding Merge, or changing Weather internals.
+## Stage 44 Text Export Closeout Result
+
+Stage 44 is implemented and documented in `docs/stage-44-csv-markdown-export-contract-test-closeout.md`.
+
+- Todo exports include active/completed non-deleted tasks plus all Countdowns; soft-deleted tasks remain JSON-backup-only. Bookmark exports include all saved fields, categories, notes, and pin state.
+- CSV is frozen as UTF-8 with BOM, CRLF, stable English columns, deterministic order, RFC-style quoting, and formula-injection protection for user text.
+- Markdown is frozen as UTF-8 without BOM, LF, localized stable sections, safe HTTP/HTTPS links, Markdown escaping, and raw HTML neutralization.
+- Summary Markdown retains Todo/Countdown/Bookmark content but no longer reads or exports Weather data.
+- Unit tests pass 168/168. Production download, bilingual, empty-data, mobile keyboard, route, screenshot, and design QA remain green.
+
+The only recommended next stage is **Stage 45: Factory Reset / Language Coverage / Data Portability Closeout and QA**, under separate authorization. Stage 45 may align registry-driven reset coverage and Language handling, but must not add Merge, reopen CSV/Markdown features, change JSON schemas, redesign Settings, or modify Weather internals.
 
 ## Weather Follow-up Queue
 

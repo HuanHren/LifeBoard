@@ -441,7 +441,7 @@ export const zhCN = {
     '导出已保存链接为 Markdown 或 CSV，并保留标题、URL、备注和分类。',
   'settings.exports.summaryTitle': 'LifeBoard 摘要',
   'settings.exports.summaryDescription':
-    '创建简洁的 Markdown 概览，包含已选城市、进行中的任务、即将到来的倒计时和置顶书签。',
+    '创建简洁的 Markdown 概览，包含进行中的任务、即将到来的倒计时和置顶书签。',
   'settings.exports.markdownAction': '导出 Markdown',
   'settings.exports.csvAction': '导出 CSV',
   'settings.exports.emptyTodosCsv':
@@ -450,6 +450,14 @@ export const zhCN = {
     '保存至少一个书签后可导出 CSV。Markdown 仍会包含如实的空状态。',
   'settings.exports.success': '导出文件已准备好，浏览器应会开始下载。',
   'settings.exports.error': '无法在此浏览器中创建或下载导出文件。',
+  'settings.exports.errorInvalidData':
+    '已保存的计划或书签数据无效，因此未创建导出文件。',
+  'settings.exports.errorSerialization':
+    '无法序列化导出文件。已保存的数据没有被修改。',
+  'settings.exports.errorTooLarge': '导出内容过大，无法创建为一个完整文件。',
+  'settings.exports.errorDownload':
+    '浏览器无法准备下载。请重试或检查下载权限。',
+  'settings.exports.errorUnsupported': '不支持此导出格式。',
   'settings.exports.markdown.todosTitle': '待办与倒计时',
   'settings.exports.markdown.bookmarksTitle': '书签',
   'settings.exports.markdown.summaryTitle': 'LifeBoard 摘要',

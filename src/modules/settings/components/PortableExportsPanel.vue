@@ -8,6 +8,7 @@ import type { PortableExportKind } from '@/modules/settings/types/settingsExport
 interface Props {
   hasTodosRows: boolean
   hasBookmarkRows: boolean
+  disabled: boolean
   error: string | null
   success: string | null
 }
@@ -43,12 +44,16 @@ const { t } = useI18n()
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <BaseButton variant="secondary" @click="emit('exportRequested', 'todosMarkdown')">
+          <BaseButton
+            variant="secondary"
+            :disabled="disabled"
+            @click="emit('exportRequested', 'todosMarkdown')"
+          >
             {{ t('settings.exports.markdownAction') }}
           </BaseButton>
           <BaseButton
             variant="secondary"
-            :disabled="!hasTodosRows"
+            :disabled="disabled || !hasTodosRows"
             @click="emit('exportRequested', 'todosCsv')"
           >
             {{ t('settings.exports.csvAction') }}
@@ -69,12 +74,16 @@ const { t } = useI18n()
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <BaseButton variant="secondary" @click="emit('exportRequested', 'bookmarksMarkdown')">
+          <BaseButton
+            variant="secondary"
+            :disabled="disabled"
+            @click="emit('exportRequested', 'bookmarksMarkdown')"
+          >
             {{ t('settings.exports.markdownAction') }}
           </BaseButton>
           <BaseButton
             variant="secondary"
-            :disabled="!hasBookmarkRows"
+            :disabled="disabled || !hasBookmarkRows"
             @click="emit('exportRequested', 'bookmarksCsv')"
           >
             {{ t('settings.exports.csvAction') }}
@@ -94,7 +103,11 @@ const { t } = useI18n()
             {{ t('settings.exports.summaryDescription') }}
           </p>
         </div>
-        <BaseButton variant="secondary" @click="emit('exportRequested', 'summaryMarkdown')">
+        <BaseButton
+          variant="secondary"
+          :disabled="disabled"
+          @click="emit('exportRequested', 'summaryMarkdown')"
+        >
           {{ t('settings.exports.markdownAction') }}
         </BaseButton>
       </section>

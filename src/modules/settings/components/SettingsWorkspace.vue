@@ -85,6 +85,7 @@ const backupError = shallowRef<string | null>(null)
 const backupSuccess = shallowRef<TranslationKey | null>(null)
 const portableExportError = shallowRef<TranslationKey | null>(null)
 const portableExportSuccess = shallowRef<TranslationKey | null>(null)
+const isPortableExportBusy = shallowRef(false)
 const clearError = shallowRef<string | null>(null)
 const clearSuccess = shallowRef<TranslationKey | null>(null)
 const pendingBackup = shallowRef<PreparedPortableImport | null>(null)
@@ -355,24 +356,35 @@ function exportBackup() {
 }
 
 function exportPortableData(kind: PortableExportKind) {
+  if (isPortableExportBusy.value) return
   portableExportError.value = null
   portableExportSuccess.value = null
+  isPortableExportBusy.value = true
 
   try {
     const exportResult = createPortableExport(kind, {
       tasks: [...tasks.value],
       countdowns: [...countdowns.value],
       bookmarks: [...bookmarks.value],
-      weatherLocation: selectedLocation.value,
       locale: locale.value,
       generatedAt: new Date(),
     })
 
-    downloadPortableExport(exportResult)
+    if (!exportResult.ok) {
+      portableExportError.value = exportResult.error.userMessageKey
+      return
+    }
+    const downloadResult = downloadPortableExport(exportResult.data)
+    if (!downloadResult.ok) {
+      portableExportError.value = downloadResult.error.userMessageKey
+      return
+    }
     portableExportSuccess.value = 'settings.exports.success'
   } catch {
     portableExportSuccess.value = null
-    portableExportError.value = 'settings.exports.error'
+    portableExportError.value = 'settings.exports.errorSerialization'
+  } finally {
+    isPortableExportBusy.value = false
   }
 }
 
@@ -592,6 +604,7 @@ onMounted(() => {
           <PortableExportsPanel
             :has-todos-rows="hasTodosRows"
             :has-bookmark-rows="hasBookmarkRows"
+            :disabled="isPortableExportBusy"
             :error="localizedPortableExportError"
             :success="localizedPortableExportSuccess"
             @export-requested="exportPortableData"

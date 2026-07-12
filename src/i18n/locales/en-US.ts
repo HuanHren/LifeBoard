@@ -329,7 +329,7 @@ export const enUS = {
     'Export saved links as Markdown or CSV while preserving titles, URLs, notes, and categories.',
   'settings.exports.summaryTitle': 'LifeBoard Summary',
   'settings.exports.summaryDescription':
-    'Create a compact Markdown overview with selected city, active tasks, upcoming countdowns, and pinned bookmarks.',
+    'Create a compact Markdown overview with active tasks, upcoming countdowns, and pinned bookmarks.',
   'settings.exports.markdownAction': 'Export Markdown',
   'settings.exports.csvAction': 'Export CSV',
   'settings.exports.emptyTodosCsv':
@@ -339,6 +339,15 @@ export const enUS = {
   'settings.exports.success': 'Export file prepared. Your browser should start the download.',
   'settings.exports.error':
     'The export file could not be created or downloaded in this browser.',
+  'settings.exports.errorInvalidData':
+    'Saved planning or bookmark data is invalid. The export was not created.',
+  'settings.exports.errorSerialization':
+    'The export could not be serialized. Your saved data was not changed.',
+  'settings.exports.errorTooLarge':
+    'The export is too large to create as one complete file.',
+  'settings.exports.errorDownload':
+    'The browser could not prepare the download. Try again or check download permissions.',
+  'settings.exports.errorUnsupported': 'This export format is not supported.',
   'settings.exports.markdown.todosTitle': 'Todos and Countdowns',
   'settings.exports.markdown.bookmarksTitle': 'Bookmarks',
   'settings.exports.markdown.summaryTitle': 'LifeBoard Summary',

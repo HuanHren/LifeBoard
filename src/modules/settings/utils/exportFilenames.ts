@@ -1,4 +1,7 @@
 function getDateStamp(date: Date) {
+  if (Object.getPrototypeOf(date) !== Date.prototype || !Number.isFinite(date.getTime())) {
+    throw new Error('Export date is invalid.')
+  }
   return date.toISOString().slice(0, 10)
 }
 
