@@ -1,6 +1,7 @@
 import { translationKeys } from '@/i18n/keys'
 import type { TranslationKey } from '@/i18n/keys'
 import type { TranslationParameters } from '@/i18n/types'
+import type { DataPortabilityErrorCode } from '@/shared/persistence'
 
 type SettingsTranslate = (
   key: TranslationKey,
@@ -51,6 +52,35 @@ const errorKeys: Record<string, TranslationKey> = {
   'Saved bookmark data does not match the supported format. It was left unchanged.':
     'settings.error.bookmarkFormatInvalid',
 }
+
+const importErrorKeys: Record<DataPortabilityErrorCode, TranslationKey> = {
+  FILE_NOT_SELECTED: 'settings.importError.fileNotSelected',
+  FILE_TOO_LARGE: 'settings.importError.fileTooLarge',
+  FILE_TYPE_UNSUPPORTED: 'settings.importError.fileTypeUnsupported',
+  FILE_READ_FAILED: 'settings.importError.fileReadFailed',
+  INVALID_UTF8: 'settings.importError.invalidUtf8',
+  JSON_PARSE_FAILED: 'settings.importError.invalidJson',
+  DANGEROUS_OBJECT_KEY: 'settings.importError.unsafeData',
+  TREE_LIMIT_EXCEEDED: 'settings.importError.treeLimit',
+  INVALID_ROOT: 'settings.importError.validationFailed',
+  INVALID_FORMAT: 'settings.importError.unsupportedBackup',
+  UNSUPPORTED_FUTURE_VERSION: 'settings.importError.futureVersion',
+  UNSUPPORTED_LEGACY_VERSION: 'settings.importError.unsupportedBackup',
+  LEGACY_ADAPTER_FAILED: 'settings.importError.validationFailed',
+  MODULE_VALIDATION_FAILED: 'settings.importError.validationFailed',
+  SEMANTIC_VALIDATION_FAILED: 'settings.importError.validationFailed',
+  IMPORT_CANCELLED: 'settings.importError.cancelled',
+  SNAPSHOT_FAILED: 'settings.importError.snapshotFailed',
+  WRITE_FAILED: 'settings.importError.importRestored',
+  QUOTA_EXCEEDED: 'settings.importError.quotaRestored',
+  VERIFY_FAILED: 'settings.importError.importRestored',
+  HYDRATION_FAILED: 'settings.importError.importRestored',
+  ROLLBACK_FAILED: 'settings.importError.rollbackFailed',
+  ROLLBACK_VERIFY_FAILED: 'settings.importError.rollbackFailed',
+}
+
+export const getSettingsImportErrorKey = (code: DataPortabilityErrorCode) =>
+  importErrorKeys[code]
 
 export function localizeSettingsError(
   error: string | null,

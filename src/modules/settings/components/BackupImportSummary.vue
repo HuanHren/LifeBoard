@@ -45,6 +45,23 @@ const planningCountsLabel = computed(() =>
     countdowns: countdownLabel.value,
   }),
 )
+
+const sourceLabel = computed(() => {
+  if (props.summary.sourceFormat === 'legacy-v1') return t('settings.backupSummary.sourceLegacyV1')
+  if (props.summary.sourceFormat === 'legacy-v2') return t('settings.backupSummary.sourceLegacyV2')
+  return t('settings.backupSummary.sourcePortableV1')
+})
+
+const languageLabel = computed(() =>
+  props.summary.language === 'zh-CN'
+    ? t('settings.language.chineseName')
+    : t('settings.language.englishName'),
+)
+
+const settingValue = (value: string, changes: boolean) =>
+  `${value} - ${changes
+    ? t('settings.backupSummary.settingWillChange')
+    : t('settings.backupSummary.settingUnchanged')}`
 </script>
 
 <template>
@@ -53,6 +70,14 @@ const planningCountsLabel = computed(() =>
       {{ t('settings.backupSummary.title') }}
     </h3>
     <dl class="mt-3 grid gap-x-5 gap-y-3 text-sm sm:grid-cols-2">
+      <div>
+        <dt class="text-[var(--color-text-tertiary)]">
+          {{ t('settings.backupSummary.source') }}
+        </dt>
+        <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
+          {{ sourceLabel }}
+        </dd>
+      </div>
       <div>
         <dt class="text-[var(--color-text-tertiary)]">
           {{ t('settings.backupSummary.exported') }}
@@ -66,7 +91,15 @@ const planningCountsLabel = computed(() =>
           {{ t('settings.backupSummary.theme') }}
         </dt>
         <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
-          {{ formatTheme(summary.themeMode) }}
+          {{ settingValue(formatTheme(summary.themeMode), summary.themeWillChange) }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-[var(--color-text-tertiary)]">
+          {{ t('settings.backupSummary.language') }}
+        </dt>
+        <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
+          {{ settingValue(languageLabel, summary.languageWillChange) }}
         </dd>
       </div>
       <div>
@@ -74,7 +107,15 @@ const planningCountsLabel = computed(() =>
           {{ t('settings.backupSummary.weatherCity') }}
         </dt>
         <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
-          {{ summary.weatherCity ?? t('settings.backupSummary.none') }}
+          {{ summary.hasSavedLocation ? t('settings.backupSummary.present') : t('settings.backupSummary.none') }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-[var(--color-text-tertiary)]">
+          {{ t('settings.backupSummary.favoriteCities') }}
+        </dt>
+        <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
+          {{ summary.favoriteCityCount }}
         </dd>
       </div>
       <div>
@@ -93,6 +134,20 @@ const planningCountsLabel = computed(() =>
           {{ summary.bookmarkCount }}
         </dd>
       </div>
+      <div>
+        <dt class="text-[var(--color-text-tertiary)]">
+          {{ t('settings.backupSummary.mode') }}
+        </dt>
+        <dd class="mt-0.5 font-medium text-[var(--color-text-primary)]">
+          {{ t('settings.backupSummary.replaceMode') }}
+        </dd>
+      </div>
     </dl>
+    <p class="mt-4 text-sm leading-6 text-[var(--color-text-secondary)]">
+      {{ t('settings.backupSummary.replaceWarning') }}
+    </p>
+    <p class="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+      {{ t('settings.backupSummary.exclusions') }}
+    </p>
   </div>
 </template>

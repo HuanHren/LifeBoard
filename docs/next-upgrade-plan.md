@@ -457,7 +457,17 @@ Stage 42 is implemented and documented in `docs/stage-42-json-backup-export-hard
 - The new exporter is therefore not wired into Settings. Production download remains legacy v2 until the same release can restore `PortableBackupV1`.
 - The persistence unit suite passes 76/76 tests, and existing build, route accessibility, and screenshot QA baselines remain green.
 
-The only recommended next stage is **Stage 43: Validated JSON Import and Rollback Hardening**. Stage 43 must complete portable importer compatibility, legacy adapters, Replace-only writes, read-back verification, rollback, and store synchronization before production export cutover. It must not add Merge, persistent rollback journals, CSV/Markdown changes, or Weather internal changes.
+## Stage 43 Import Hardening Result
+
+Stage 43 is implemented and documented in `docs/stage-43-validated-json-import-rollback-hardening.md`.
+
+- Production Settings export and import now share the validated `PortableBackupV1` contract.
+- Strict current-format import and explicit legacy v1/v2 adapters feed one canonical Replace-only transaction.
+- Exact raw snapshots, deterministic writes, per-key read-back, reverse rollback, rollback verification, and public store synchronization are covered by the persistence suite.
+- Clear-all, CSV/Markdown exports, non-portable Weather data, Weather internals, dependencies, workflows, and QA scripts remain unchanged.
+- Unit, build, accessibility, screenshot, design, and targeted browser QA baselines are green; the existing Vite chunk warning remains non-blocking.
+
+The only recommended next stage is **Stage 44: Portable Todo / Bookmark CSV and Markdown Export Closeout**, under separate authorization. Stage 44 should harden the existing human-readable export contracts and tests without reopening JSON import, adding Merge, or changing Weather internals.
 
 ## Weather Follow-up Queue
 

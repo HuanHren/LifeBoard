@@ -282,7 +282,7 @@ export const enUS = {
   'settings.localData.toolsNotSaved': 'Tool input is not saved.',
   'settings.backup.exportTitle': 'Export backup',
   'settings.backup.exportDescription':
-    'Download theme, selected city, favorite cities, tasks, countdowns, and bookmarks as JSON.',
+    'Download theme, language, selected city, favorite cities, tasks, countdowns, and bookmarks as JSON.',
   'settings.backup.exportAction': 'Export LifeBoard data',
   'settings.backup.importTitle': 'Import backup',
   'settings.backup.importDescription':
@@ -291,9 +291,18 @@ export const enUS = {
   'settings.backup.reviewAction': 'Review replacement',
   'settings.backup.discardAction': 'Discard file',
   'settings.backupSummary.title': 'Backup ready to review',
+  'settings.backupSummary.source': 'Source format',
+  'settings.backupSummary.sourcePortableV1': 'Portable backup v1',
+  'settings.backupSummary.sourceLegacyV1': 'Legacy backup v1',
+  'settings.backupSummary.sourceLegacyV2': 'Legacy backup v2',
   'settings.backupSummary.exported': 'Exported',
   'settings.backupSummary.theme': 'Theme',
-  'settings.backupSummary.weatherCity': 'Weather city',
+  'settings.backupSummary.language': 'Language',
+  'settings.backupSummary.settingWillChange': 'will change',
+  'settings.backupSummary.settingUnchanged': 'unchanged',
+  'settings.backupSummary.weatherCity': 'Saved weather location',
+  'settings.backupSummary.present': 'Included',
+  'settings.backupSummary.favoriteCities': 'Favorite cities',
   'settings.backupSummary.none': 'None',
   'settings.backupSummary.planningData': 'Planning data',
   'settings.backupSummary.bookmarks': 'Bookmarks',
@@ -302,6 +311,12 @@ export const enUS = {
   'settings.backupSummary.countdownOne': '1 countdown',
   'settings.backupSummary.countdownMany': '{count} countdowns',
   'settings.backupSummary.planningCounts': '{tasks}, {countdowns}',
+  'settings.backupSummary.mode': 'Import mode',
+  'settings.backupSummary.replaceMode': 'Replace',
+  'settings.backupSummary.replaceWarning':
+    'Import replaces all portable LifeBoard data together. Merge and partial import are not supported.',
+  'settings.backupSummary.exclusions':
+    'Weather provider, credentials, cache, and automatic-location settings are not changed.',
   'settings.exports.description':
     'Export selected LifeBoard data as Markdown or CSV without changing your backup file format.',
   'settings.exports.privacy':
@@ -388,8 +403,8 @@ export const enUS = {
   'settings.clearData.allAction': 'Clear all data',
   'settings.dialog.importTitle': 'Replace local LifeBoard data?',
   'settings.dialog.importDescription':
-    'This will replace the current theme preference, selected city, favorite cities, tasks, countdowns, and bookmarks with the reviewed backup.',
-  'settings.dialog.importConfirm': 'Import and replace',
+    'This replaces theme, language, saved weather locations, tasks, countdowns, and bookmarks. If a write or verification fails, LifeBoard attempts to restore the previous data.',
+  'settings.dialog.importConfirm': 'Replace and restore',
   'settings.dialog.weatherTitle': 'Clear weather data?',
   'settings.dialog.weatherDescription':
     'This removes the selected city, favorite cities, and current in-memory forecast.',
@@ -448,6 +463,22 @@ export const enUS = {
     'The backup contains invalid Todos data.',
   'settings.error.backupBookmarksInvalid':
     'The backup contains invalid Bookmarks data.',
+  'settings.importError.fileNotSelected': 'Choose a LifeBoard JSON backup first.',
+  'settings.importError.fileTooLarge': 'This backup exceeds 1MB. Choose a smaller JSON backup.',
+  'settings.importError.fileTypeUnsupported': 'Choose a file with a .json extension and JSON file type.',
+  'settings.importError.fileReadFailed': 'The selected backup could not be read. Choose it again or use another file.',
+  'settings.importError.invalidUtf8': 'This backup is not valid UTF-8 text.',
+  'settings.importError.invalidJson': 'This file does not contain valid JSON.',
+  'settings.importError.unsafeData': 'This backup contains an unsafe object structure and was rejected.',
+  'settings.importError.treeLimit': 'This backup exceeds the supported structure limits.',
+  'settings.importError.futureVersion': 'This backup requires a newer version of LifeBoard.',
+  'settings.importError.unsupportedBackup': 'This file is not a supported LifeBoard backup.',
+  'settings.importError.validationFailed': 'The backup failed validation. No local data was changed.',
+  'settings.importError.cancelled': 'Import cancelled. No local data was changed.',
+  'settings.importError.snapshotFailed': 'LifeBoard could not protect the current local data, so import did not start.',
+  'settings.importError.importRestored': 'Import failed. The previous local data was restored.',
+  'settings.importError.quotaRestored': 'Browser storage is full. Import failed and the previous data was restored.',
+  'settings.importError.rollbackFailed': 'Import failed and LifeBoard could not verify recovery. Reload and restore from a known backup.',
   'settings.error.planningStorageUnavailable':
     'Local storage is unavailable. Planning data cannot be read in this browser.',
   'settings.error.planningInvalidJson':

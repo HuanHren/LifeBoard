@@ -3,19 +3,11 @@ import {
   BOOKMARKS_STORAGE_VERSION,
 } from '@/modules/bookmarks/constants/bookmarks'
 import { loadBookmarksStorage } from '@/modules/bookmarks/services/bookmarksStorage'
-import {
-  SETTINGS_BACKUP_FILENAME_PREFIX,
-  SETTINGS_BACKUP_VERSION,
-  SETTINGS_MAX_IMPORT_BYTES,
-} from '@/modules/settings/constants/settings'
 import type {
-  LifeBoardBackup,
-  LifeBoardBackupV2,
   SettingsClearTarget,
   SettingsDataSnapshot,
   SettingsResult,
 } from '@/modules/settings/types/settings'
-import { validateLifeBoardBackup } from '@/modules/settings/utils/settingsBackupValidation'
 import {
   TODOS_STORAGE_KEY,
   TODOS_STORAGE_VERSION,
@@ -27,13 +19,27 @@ import {
   WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY,
   WEATHER_FORECAST_CACHE_STORAGE_KEY,
   WEATHER_FAVORITES_STORAGE_KEY,
-  WEATHER_FAVORITES_STORAGE_VERSION,
   WEATHER_PROVIDER_STORAGE_KEY,
   WEATHER_STORAGE_KEY,
 } from '@/modules/weather/constants/weather'
 import { loadWeatherFavoritesStorage } from '@/modules/weather/services/weatherFavoritesStorage'
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 import type { ThemeMode } from '@/shared/types/theme'
+import {
+  createDataPortabilityError,
+  createPortableBackupExport,
+  createPortableExportError,
+  createRawStorageAdapter,
+  executeReplaceImport,
+  preparePortableImportFile,
+  type ImportHydrationHooks,
+  type LifeBoardLocale,
+  type PortableBackupDownloadDescriptor,
+  type PortableBackupExport,
+  type PortableExportResult,
+  type PortableImportResult,
+  type PreparedPortableImport,
+} from '@/shared/persistence'
 import { THEME_STORAGE_KEY } from '@/stores/theme'
 
 const OWNED_STORAGE_KEYS = [
@@ -159,32 +165,38 @@ export function loadSettingsSnapshot(): SettingsResult<SettingsDataSnapshot> {
   }
 }
 
-export function createLifeBoardBackup(
-  snapshot: SettingsDataSnapshot,
-): LifeBoardBackupV2 {
-  return {
-    version: SETTINGS_BACKUP_VERSION,
-    exportedAt: new Date().toISOString(),
-    preferences: {
-      themeMode: snapshot.themeMode,
-    },
-    weather: {
-      selectedLocation: snapshot.weatherLocation,
-      favoriteCities: snapshot.weatherFavoriteCities,
-    },
-    todos: snapshot.todos,
-    bookmarks: snapshot.bookmarks,
+export function createLifeBoardBackup(defaults: {
+  readonly themeMode: ThemeMode
+  readonly language: LifeBoardLocale
+}): PortableExportResult<PortableBackupExport> {
+  const storageResult = getStorage()
+  if (!storageResult.ok) {
+    return {
+      ok: false,
+      error: createPortableExportError(
+        'PORTABLE_STORAGE_READ_FAILED',
+        'root',
+        null,
+        'Browser storage is unavailable for portable export.',
+        { recoverable: true },
+      ),
+    }
   }
+  return createPortableBackupExport({
+    storage: createRawStorageAdapter(storageResult.data),
+    appVersion: '0.0.0',
+    defaults,
+  })
 }
 
-export function downloadLifeBoardBackup(backup: LifeBoardBackup) {
-  const blob = new Blob([JSON.stringify(backup, null, 2)], {
-    type: 'application/json',
+export function downloadLifeBoardBackup(download: PortableBackupDownloadDescriptor) {
+  const blob = new Blob([download.text], {
+    type: download.mimeType,
   })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `${SETTINGS_BACKUP_FILENAME_PREFIX}-${backup.exportedAt.slice(0, 10)}.json`
+  link.download = download.filename
   document.body.append(link)
   link.click()
   link.remove()
@@ -193,31 +205,12 @@ export function downloadLifeBoardBackup(backup: LifeBoardBackup) {
 
 export async function readBackupFile(
   file: File,
-): Promise<SettingsResult<LifeBoardBackup>> {
-  if (file.size > SETTINGS_MAX_IMPORT_BYTES) {
-    return {
-      ok: false,
-      error: 'settings.error.backupTooLarge',
-    }
-  }
-
-  let text: string
-
-  try {
-    text = await file.text()
-  } catch {
-    return { ok: false, error: 'settings.error.fileUnreadable' }
-  }
-
-  let parsed: unknown
-
-  try {
-    parsed = JSON.parse(text) as unknown
-  } catch {
-    return { ok: false, error: 'settings.error.fileInvalidJson' }
-  }
-
-  return validateLifeBoardBackup(parsed)
+  current: { readonly language: LifeBoardLocale; readonly themeMode: ThemeMode },
+): Promise<PortableImportResult<PreparedPortableImport>> {
+  return preparePortableImportFile(file, {
+    currentLanguage: current.language,
+    currentThemeMode: current.themeMode,
+  })
 }
 
 function captureStorage(storage: Storage) {
@@ -269,28 +262,27 @@ function runStorageTransaction(
   }
 }
 
-export function applyLifeBoardBackup(backup: LifeBoardBackup): SettingsResult {
-  return runStorageTransaction((storage) => {
-    storage.setItem(THEME_STORAGE_KEY, backup.preferences.themeMode)
-
-    if (backup.weather.selectedLocation === null) {
-      storage.removeItem(WEATHER_STORAGE_KEY)
-    } else {
-      storage.setItem(
-        WEATHER_STORAGE_KEY,
-        JSON.stringify(backup.weather.selectedLocation),
-      )
+export function applyLifeBoardBackup(
+  prepared: PreparedPortableImport,
+  hydration: ImportHydrationHooks,
+) {
+  const storageResult = getStorage()
+  if (!storageResult.ok) {
+    return {
+      ok: false as const,
+      error: createDataPortabilityError(
+        'SNAPSHOT_FAILED',
+        'transaction',
+        null,
+        'Browser storage is unavailable for portable import.',
+        { recoverable: true, severity: 'error' },
+      ),
     }
-
-    storage.setItem(
-      WEATHER_FAVORITES_STORAGE_KEY,
-      JSON.stringify({
-        version: WEATHER_FAVORITES_STORAGE_VERSION,
-        favoriteCities: backup.version === 2 ? backup.weather.favoriteCities : [],
-      }),
-    )
-    storage.setItem(TODOS_STORAGE_KEY, JSON.stringify(backup.todos))
-    storage.setItem(BOOKMARKS_STORAGE_KEY, JSON.stringify(backup.bookmarks))
+  }
+  return executeReplaceImport({
+    storage: createRawStorageAdapter(storageResult.data),
+    prepared,
+    hydration,
   })
 }
 

@@ -68,7 +68,7 @@ function handleFileSelection(event: Event) {
         >
           {{ t('settings.backup.fileAction') }}
           <input
-            accept=".json,application/json"
+            accept=".json,application/json,text/json"
             aria-describedby="backup-file-help"
             class="sr-only"
             :disabled="importDisabled"

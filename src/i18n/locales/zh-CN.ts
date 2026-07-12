@@ -394,7 +394,7 @@ export const zhCN = {
   'settings.localData.toolsNotSaved': '工具输入不会被保存。',
   'settings.backup.exportTitle': '导出备份',
   'settings.backup.exportDescription':
-    '将主题、已选城市、常用城市、任务、倒计时和书签下载为 JSON 文件。',
+    '将主题、语言、已选城市、常用城市、任务、倒计时和书签下载为 JSON 文件。',
   'settings.backup.exportAction': '导出 LifeBoard 数据',
   'settings.backup.importTitle': '导入备份',
   'settings.backup.importDescription':
@@ -403,9 +403,18 @@ export const zhCN = {
   'settings.backup.reviewAction': '检查替换内容',
   'settings.backup.discardAction': '舍弃文件',
   'settings.backupSummary.title': '备份已可供检查',
+  'settings.backupSummary.source': '来源格式',
+  'settings.backupSummary.sourcePortableV1': 'Portable 备份 v1',
+  'settings.backupSummary.sourceLegacyV1': '旧版备份 v1',
+  'settings.backupSummary.sourceLegacyV2': '旧版备份 v2',
   'settings.backupSummary.exported': '导出时间',
   'settings.backupSummary.theme': '主题',
-  'settings.backupSummary.weatherCity': '天气城市',
+  'settings.backupSummary.language': '语言',
+  'settings.backupSummary.settingWillChange': '将更改',
+  'settings.backupSummary.settingUnchanged': '保持不变',
+  'settings.backupSummary.weatherCity': '天气位置',
+  'settings.backupSummary.present': '已包含',
+  'settings.backupSummary.favoriteCities': '常用城市',
   'settings.backupSummary.none': '无',
   'settings.backupSummary.planningData': '计划数据',
   'settings.backupSummary.bookmarks': '书签',
@@ -414,6 +423,12 @@ export const zhCN = {
   'settings.backupSummary.countdownOne': '1 个倒计时',
   'settings.backupSummary.countdownMany': '{count} 个倒计时',
   'settings.backupSummary.planningCounts': '{tasks}，{countdowns}',
+  'settings.backupSummary.mode': '导入模式',
+  'settings.backupSummary.replaceMode': '替换',
+  'settings.backupSummary.replaceWarning':
+    '导入会一次性替换全部可移植 LifeBoard 数据，不支持合并或部分导入。',
+  'settings.backupSummary.exclusions':
+    '天气服务商、凭据、缓存和自动定位设置不会被修改。',
   'settings.exports.description':
     '将选定的 LifeBoard 数据导出为 Markdown 或 CSV，不改变现有备份文件格式。',
   'settings.exports.privacy':
@@ -497,8 +512,8 @@ export const zhCN = {
   'settings.clearData.allAction': '清除全部数据',
   'settings.dialog.importTitle': '替换本地 LifeBoard 数据？',
   'settings.dialog.importDescription':
-    '这会使用已检查的备份替换当前主题偏好、已选城市、常用城市、任务、倒计时和书签。',
-  'settings.dialog.importConfirm': '导入并替换',
+    '这会替换主题、语言、天气位置、任务、倒计时和书签。若写入或验证失败，LifeBoard 会尝试恢复原数据。',
+  'settings.dialog.importConfirm': '替换并恢复',
   'settings.dialog.weatherTitle': '清除天气数据？',
   'settings.dialog.weatherDescription':
     '这会移除已选择城市、常用城市和当前内存中的天气预报。',
@@ -548,6 +563,22 @@ export const zhCN = {
   'settings.error.backupWeatherInvalid': '备份中的天气位置无效。',
   'settings.error.backupTodosInvalid': '备份中的待办数据无效。',
   'settings.error.backupBookmarksInvalid': '备份中的书签数据无效。',
+  'settings.importError.fileNotSelected': '请先选择 LifeBoard JSON 备份。',
+  'settings.importError.fileTooLarge': '此备份超过 1MB，请选择较小的 JSON 备份。',
+  'settings.importError.fileTypeUnsupported': '请选择扩展名和文件类型均为 JSON 的文件。',
+  'settings.importError.fileReadFailed': '无法读取所选备份，请重新选择或使用其他文件。',
+  'settings.importError.invalidUtf8': '此备份不是有效的 UTF-8 文本。',
+  'settings.importError.invalidJson': '此文件不包含有效 JSON。',
+  'settings.importError.unsafeData': '此备份包含不安全的对象结构，已被拒绝。',
+  'settings.importError.treeLimit': '此备份超过支持的结构限制。',
+  'settings.importError.futureVersion': '此备份需要更新版本的 LifeBoard。',
+  'settings.importError.unsupportedBackup': '此文件不是受支持的 LifeBoard 备份。',
+  'settings.importError.validationFailed': '备份验证失败，本地数据未被修改。',
+  'settings.importError.cancelled': '已取消导入，本地数据未被修改。',
+  'settings.importError.snapshotFailed': 'LifeBoard 无法保护当前本地数据，因此未开始导入。',
+  'settings.importError.importRestored': '导入失败，原有本地数据已恢复。',
+  'settings.importError.quotaRestored': '浏览器存储空间已满。导入失败，原数据已恢复。',
+  'settings.importError.rollbackFailed': '导入失败且无法确认恢复结果。请刷新页面并使用可信备份恢复。',
   'settings.error.planningStorageUnavailable':
     '本地存储不可用，无法在此浏览器中读取计划数据。',
   'settings.error.planningInvalidJson':

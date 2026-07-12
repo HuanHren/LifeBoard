@@ -3,6 +3,7 @@ import type { TodosStorageEnvelope } from '@/modules/todos/types/todos'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import type { WeatherFavoriteCity } from '@/modules/weather/types/weatherFavorites'
 import type { ThemeMode } from '@/shared/types/theme'
+import type { DetectedBackupFormat, LifeBoardLocale } from '@/shared/persistence'
 
 export interface LifeBoardBackupV1 {
   version: 1
@@ -43,11 +44,19 @@ export interface SettingsDataSnapshot {
 
 export interface BackupImportSummaryData {
   exportedAt: string
+  sourceFormat: DetectedBackupFormat
+  mode: 'replace'
   themeMode: ThemeMode
-  weatherCity: string | null
+  language: LifeBoardLocale
+  themeWillChange: boolean
+  languageWillChange: boolean
+  hasSavedLocation: boolean
+  favoriteCityCount: number
   taskCount: number
   countdownCount: number
   bookmarkCount: number
+  nonPortableWeatherPreserved: true
+  mergeSupported: false
 }
 
 export type SettingsClearTarget = 'weather' | 'todos' | 'bookmarks' | 'all'

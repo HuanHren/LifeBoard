@@ -32,17 +32,23 @@ import {
 } from '@/modules/settings/services/settingsBackup'
 import type {
   BackupImportSummaryData,
-  LifeBoardBackup,
   SettingsClearTarget,
   SettingsDataSnapshot,
 } from '@/modules/settings/types/settings'
-import { localizeSettingsError } from '@/modules/settings/utils/settingsMessages'
-import { BOOKMARKS_STORAGE_VERSION } from '@/modules/bookmarks/constants/bookmarks'
+import {
+  getSettingsImportErrorKey,
+  localizeSettingsError,
+} from '@/modules/settings/utils/settingsMessages'
 import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
-import { TODOS_STORAGE_VERSION } from '@/modules/todos/constants/todos'
 import { useTodosStore } from '@/modules/todos/stores/todos'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
+import type {
+  LifeBoardLocale,
+  PortableBackupV1,
+  PreparedPortableImport,
+} from '@/shared/persistence'
 import type { ThemeMode } from '@/shared/types/theme'
+import { useLanguageStore } from '@/stores/language'
 import { useThemeStore } from '@/stores/theme'
 
 type DialogState =
@@ -51,6 +57,7 @@ type DialogState =
   | null
 
 const themeStore = useThemeStore()
+const languageStore = useLanguageStore()
 const weatherStore = useWeatherStore()
 const todosStore = useTodosStore()
 const bookmarksStore = useBookmarksStore()
@@ -80,7 +87,7 @@ const portableExportError = shallowRef<TranslationKey | null>(null)
 const portableExportSuccess = shallowRef<TranslationKey | null>(null)
 const clearError = shallowRef<string | null>(null)
 const clearSuccess = shallowRef<TranslationKey | null>(null)
-const pendingBackup = shallowRef<LifeBoardBackup | null>(null)
+const pendingBackup = shallowRef<PreparedPortableImport | null>(null)
 const dialogState = shallowRef<DialogState>(null)
 const isBusy = ref(false)
 
@@ -130,14 +137,7 @@ const hasAnyData = computed(
 const importSummary = computed<BackupImportSummaryData | null>(() => {
   if (!pendingBackup.value) return null
 
-  return {
-    exportedAt: pendingBackup.value.exportedAt,
-    themeMode: pendingBackup.value.preferences.themeMode,
-    weatherCity: pendingBackup.value.weather.selectedLocation?.name ?? null,
-    taskCount: pendingBackup.value.todos.tasks.length,
-    countdownCount: pendingBackup.value.todos.countdowns.length,
-    bookmarkCount: pendingBackup.value.bookmarks.bookmarks.length,
-  }
+  return pendingBackup.value.preview
 })
 
 const currentThemeLabel = computed(() => {
@@ -259,21 +259,69 @@ function applySnapshotToStores(snapshot: SettingsDataSnapshot, replaceWeather = 
   bookmarksStore.synchronizeFromSettings(snapshot.bookmarks.bookmarks)
 }
 
-function currentSnapshot(): SettingsDataSnapshot {
+interface SettingsMemorySnapshot extends SettingsDataSnapshot {
+  language: LifeBoardLocale
+}
+
+function captureMemorySnapshot(): SettingsMemorySnapshot {
   return {
     themeMode: mode.value,
+    language: locale.value,
     weatherLocation: selectedLocation.value,
     weatherFavoriteCities: [...favoriteCities.value],
     todos: {
-      version: TODOS_STORAGE_VERSION,
+      version: 1,
       tasks: [...tasks.value],
       countdowns: [...countdowns.value],
     },
     bookmarks: {
-      version: BOOKMARKS_STORAGE_VERSION,
+      version: 1,
       bookmarks: [...bookmarks.value],
     },
   }
+}
+
+function hydratePortableBackup(backup: PortableBackupV1) {
+  todosStore.synchronizeFromSettings(
+    [...backup.data.todos.payload.tasks],
+    [...backup.data.todos.payload.countdowns],
+  )
+  bookmarksStore.synchronizeFromSettings([...backup.data.bookmarks.payload.bookmarks])
+  weatherStore.synchronizeLocation(backup.data.weather.payload.selectedLocation)
+  weatherStore.synchronizeFavoriteCities([...backup.data.weather.payload.favoriteCities])
+  themeStore.synchronizeMode(backup.data.settings.payload.themeMode)
+  languageStore.synchronizeLanguage(backup.data.settings.payload.language)
+}
+
+function restoreMemorySnapshot(snapshot: SettingsMemorySnapshot) {
+  todosStore.synchronizeFromSettings(snapshot.todos.tasks, snapshot.todos.countdowns)
+  bookmarksStore.synchronizeFromSettings(snapshot.bookmarks.bookmarks)
+  weatherStore.synchronizeLocation(snapshot.weatherLocation)
+  weatherStore.synchronizeFavoriteCities(snapshot.weatherFavoriteCities)
+  themeStore.synchronizeMode(snapshot.themeMode)
+  languageStore.synchronizeLanguage(snapshot.language)
+}
+
+const sameData = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right)
+
+function verifyPortableHydration(backup: PortableBackupV1) {
+  return mode.value === backup.data.settings.payload.themeMode &&
+    locale.value === backup.data.settings.payload.language &&
+    sameData(selectedLocation.value, backup.data.weather.payload.selectedLocation) &&
+    sameData(favoriteCities.value, backup.data.weather.payload.favoriteCities) &&
+    sameData(tasks.value, backup.data.todos.payload.tasks) &&
+    sameData(countdowns.value, backup.data.todos.payload.countdowns) &&
+    sameData(bookmarks.value, backup.data.bookmarks.payload.bookmarks)
+}
+
+function verifyMemorySnapshot(snapshot: SettingsMemorySnapshot) {
+  return mode.value === snapshot.themeMode &&
+    locale.value === snapshot.language &&
+    sameData(selectedLocation.value, snapshot.weatherLocation) &&
+    sameData(favoriteCities.value, snapshot.weatherFavoriteCities) &&
+    sameData(tasks.value, snapshot.todos.tasks) &&
+    sameData(countdowns.value, snapshot.todos.countdowns) &&
+    sameData(bookmarks.value, snapshot.bookmarks.bookmarks)
 }
 
 function changeTheme(nextMode: ThemeMode) {
@@ -293,8 +341,12 @@ function exportBackup() {
   backupSuccess.value = null
 
   try {
-    const backup = createLifeBoardBackup(currentSnapshot())
-    downloadLifeBoardBackup(backup)
+    const backup = createLifeBoardBackup({ themeMode: mode.value, language: locale.value })
+    if (!backup.ok) {
+      backupError.value = 'settings.message.backupDownloadFailed'
+      return
+    }
+    downloadLifeBoardBackup(backup.data.download)
     backupSuccess.value = 'settings.message.backupDownloaded'
   } catch {
     backupSuccess.value = null
@@ -332,11 +384,14 @@ async function selectBackupFile(file: File) {
   pendingBackup.value = null
   isBusy.value = true
 
-  const result = await readBackupFile(file)
+  const result = await readBackupFile(file, {
+    language: locale.value,
+    themeMode: mode.value,
+  })
   isBusy.value = false
 
   if (!result.ok) {
-    backupError.value = result.error
+    backupError.value = getSettingsImportErrorKey(result.error.code)
     return
   }
 
@@ -365,27 +420,25 @@ function closeDialog() {
 function confirmImport() {
   if (!pendingBackup.value) return
 
-  const result = applyLifeBoardBackup(pendingBackup.value)
+  const previous = captureMemorySnapshot()
+  const result = applyLifeBoardBackup(pendingBackup.value, {
+    hydrate(backup) {
+      hydratePortableBackup(backup)
+    },
+    verify: verifyPortableHydration,
+    restore() {
+      restoreMemorySnapshot(previous)
+    },
+    verifyRestore() {
+      return verifyMemorySnapshot(previous)
+    },
+  })
 
   if (!result.ok) {
-    backupError.value = result.error
+    backupError.value = getSettingsImportErrorKey(result.error.code)
     closeDialog()
     return
   }
-
-  applySnapshotToStores(
-    {
-      themeMode: pendingBackup.value.preferences.themeMode,
-      weatherLocation: pendingBackup.value.weather.selectedLocation,
-      weatherFavoriteCities:
-        pendingBackup.value.version === 2
-          ? pendingBackup.value.weather.favoriteCities
-          : [],
-      todos: pendingBackup.value.todos,
-      bookmarks: pendingBackup.value.bookmarks,
-    },
-    true,
-  )
   pendingBackup.value = null
   clearError.value = null
   clearSuccess.value = null

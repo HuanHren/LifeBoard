@@ -252,3 +252,62 @@ export const createOversizedPortableExportStorage = (): Readonly<Record<string, 
     'lifeboard.bookmarks': JSON.stringify({ version: 1, bookmarks }),
   })
 }
+
+const portableLocation = validPortableBackupV1.data.weather.payload.selectedLocation
+
+export const validLegacyBackupV1 = Object.freeze({
+  version: LEGACY_BACKUP_ROOT_VERSION_1,
+  exportedAt: '2026-07-10T11:00:00.000Z',
+  preferences: Object.freeze({ themeMode: 'light' }),
+  weather: Object.freeze({ selectedLocation: portableLocation }),
+  todos: Object.freeze({
+    version: 1,
+    tasks: validPortableBackupV1.data.todos.payload.tasks,
+    countdowns: validPortableBackupV1.data.todos.payload.countdowns,
+  }),
+  bookmarks: Object.freeze({
+    version: 1,
+    bookmarks: validPortableBackupV1.data.bookmarks.payload.bookmarks,
+  }),
+} as const)
+
+export const validLegacyBackupV2 = Object.freeze({
+  ...validLegacyBackupV1,
+  version: LEGACY_BACKUP_ROOT_VERSION_2,
+  exportedAt: '2026-07-10T11:30:00.000Z',
+  weather: Object.freeze({
+    selectedLocation: portableLocation,
+    favoriteCities: Object.freeze([
+      Object.freeze({
+        id: 'legacy-favorite',
+        name: 'Fixture City',
+        region: 'Fixture Region',
+        country: 'Fixture Country',
+        latitude: 0,
+        longitude: 0,
+        displayLabel: 'Fixture City, Fixture Country',
+        createdAt: '2026-07-10T08:00:00.000Z',
+        updatedAt: '2026-07-10T08:00:00.000Z',
+      }),
+    ]),
+  }),
+} as const)
+
+export const nonPortableSentinelStorage = Object.freeze({
+  'lifeboard.weather.forecastCache.v1': 'SENTINEL_FORECAST_CACHE',
+  'lifeboard.weather.provider': 'SENTINEL_PROVIDER',
+  'lifeboard.weather.caiyunToken': 'SENTINEL_CAIYUN_TOKEN',
+  'lifeboard.weather.amapKey': 'SENTINEL_AMAP_KEY',
+  'lifeboard.weather.autoLocationOnHome': 'SENTINEL_AUTO_LOCATION',
+  __lifeboard_weather_runtime_debug: 'SENTINEL_DEBUG',
+})
+
+export const originalPortableStorage = Object.freeze({
+  'lifeboard-theme': 'system',
+  'lifeboard.language': 'en-US',
+  'lifeboard-weather-location': '{"old":"location"}',
+  'lifeboard-weather-favorite-cities': '{"old":"favorites"}',
+  'lifeboard.todos': '{"old":"todos"}',
+  'lifeboard.bookmarks': '{"old":"bookmarks"}',
+  ...nonPortableSentinelStorage,
+})

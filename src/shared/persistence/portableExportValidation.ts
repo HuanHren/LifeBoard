@@ -489,10 +489,12 @@ const mapUniqueCollection = <T extends { readonly id: string }>(
 
 export const mapPortableWeatherFavoritesEnvelope = (
   value: unknown,
+  strict = false,
 ): PortableExportResult<readonly PortableWeatherFavoriteCityV1[]> => {
   if (
     !isSafeObject(value) ||
     !hasSafeTree(value) ||
+    (strict && !hasExactKeys(value, ['version', 'favoriteCities'])) ||
     value.version !== 1 ||
     !Array.isArray(value.favoriteCities)
   ) {
@@ -504,16 +506,18 @@ export const mapPortableWeatherFavoritesEnvelope = (
     MAX_FAVORITE_CITIES,
     '/data/weather/payload/favoriteCities',
     'weather',
-    (item, path) => mapFavoriteCity(item, path, false),
+    (item, path) => mapFavoriteCity(item, path, strict),
   )
 }
 
 export const mapPortableTodosEnvelope = (
   value: unknown,
+  strict = false,
 ): PortableExportResult<PortableTodosPayloadV1> => {
   if (
     !isSafeObject(value) ||
     !hasSafeTree(value) ||
+    (strict && !hasExactKeys(value, ['version', 'tasks', 'countdowns'])) ||
     value.version !== 1 ||
     !Array.isArray(value.tasks) ||
     !Array.isArray(value.countdowns)
@@ -526,7 +530,7 @@ export const mapPortableTodosEnvelope = (
     MAX_TASKS,
     '/data/todos/payload/tasks',
     'todos',
-    (item, path) => mapTask(item, path, false),
+    (item, path) => mapTask(item, path, strict),
   )
   if (!tasks.ok) return tasks
 
@@ -535,7 +539,7 @@ export const mapPortableTodosEnvelope = (
     MAX_COUNTDOWNS,
     '/data/todos/payload/countdowns',
     'todos',
-    (item, path) => mapCountdown(item, path, false),
+    (item, path) => mapCountdown(item, path, strict),
   )
   if (!countdowns.ok) return countdowns
 
@@ -544,10 +548,12 @@ export const mapPortableTodosEnvelope = (
 
 export const mapPortableBookmarksEnvelope = (
   value: unknown,
+  strict = false,
 ): PortableExportResult<PortableBookmarksPayloadV1> => {
   if (
     !isSafeObject(value) ||
     !hasSafeTree(value) ||
+    (strict && !hasExactKeys(value, ['version', 'bookmarks'])) ||
     value.version !== 1 ||
     !Array.isArray(value.bookmarks)
   ) {
@@ -559,7 +565,7 @@ export const mapPortableBookmarksEnvelope = (
     MAX_BOOKMARKS,
     '/data/bookmarks/payload/bookmarks',
     'bookmarks',
-    (item, path) => mapBookmark(item, path, false),
+    (item, path) => mapBookmark(item, path, strict),
   )
   return bookmarks.ok
     ? success(Object.freeze({ bookmarks: bookmarks.data }))

@@ -1,6 +1,6 @@
 import type { PersistenceModuleId } from './types'
 
-export type ValidationSeverity = 'fatal' | 'error' | 'warning'
+export type ValidationSeverity = 'fatal' | 'error' | 'warning' | 'info'
 export type ValidationModule =
   | 'file'
   | 'root'
