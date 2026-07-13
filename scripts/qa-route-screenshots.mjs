@@ -20,6 +20,7 @@ const MANIFEST_PATH = path.join(OUTPUT_DIR, 'manifest.json')
 const ROUTES = [
   { key: 'landing', path: '/' },
   { key: 'home', path: '/app' },
+  { key: 'calendar', path: '/calendar' },
   { key: 'weather', path: '/weather' },
   { key: 'todos', path: '/todos' },
   { key: 'tools', path: '/tools' },
@@ -260,6 +261,81 @@ async function seedWeatherLoadedRoute(page) {
   })
 }
 
+function createCalendarRouteSeed() {
+  const now = new Date()
+  const localDate = (offset = 0) => {
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, 12)
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0'),
+    ].join('-')
+  }
+  const createdAt = '2026-07-01T08:00:00.000Z'
+
+  return {
+    version: 1,
+    tasks: [
+      {
+        id: 'qa-calendar-active',
+        title: 'Review the weekly plan',
+        dueDate: localDate(),
+        label: 'Planning',
+        completedAt: null,
+        deletedAt: null,
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'qa-calendar-completed',
+        title: 'Prepare calendar baseline',
+        dueDate: localDate(),
+        label: null,
+        completedAt: '2026-07-02T08:00:00.000Z',
+        deletedAt: null,
+        createdAt: '2026-07-01T09:00:00.000Z',
+        updatedAt: '2026-07-02T08:00:00.000Z',
+      },
+      {
+        id: 'qa-calendar-upcoming',
+        title: 'Check next planning milestone',
+        dueDate: localDate(1),
+        label: null,
+        completedAt: null,
+        deletedAt: null,
+        createdAt: '2026-07-01T10:00:00.000Z',
+        updatedAt: '2026-07-01T10:00:00.000Z',
+      },
+    ],
+    countdowns: [
+      {
+        id: 'qa-calendar-countdown-today',
+        title: 'Calendar review day',
+        targetDate: localDate(),
+        createdAt: '2026-07-01T11:00:00.000Z',
+        updatedAt: '2026-07-01T11:00:00.000Z',
+      },
+      {
+        id: 'qa-calendar-countdown-future',
+        title: 'Next release checkpoint',
+        targetDate: localDate(5),
+        createdAt: '2026-07-01T12:00:00.000Z',
+        updatedAt: '2026-07-01T12:00:00.000Z',
+      },
+    ],
+  }
+}
+
+async function seedCalendarRoute(page) {
+  const seed = createCalendarRouteSeed()
+  await page.addInitScript((data) => {
+    window.localStorage.setItem('lifeboard.todos', JSON.stringify(data))
+    if (window.localStorage.getItem('lifeboard.language') === null) {
+      window.localStorage.setItem('lifeboard.language', 'en-US')
+    }
+  }, seed)
+}
+
 function buildScreenshotPlan() {
   const plan = []
 
@@ -325,6 +401,9 @@ async function captureRoute(browser, baseUrl, route, viewport) {
 
   if (route.key === 'weather') {
     await seedWeatherLoadedRoute(page)
+  }
+  if (route.key === 'calendar') {
+    await seedCalendarRoute(page)
   }
 
   const url = `${baseUrl}${route.path}`
@@ -458,6 +537,7 @@ async function main() {
     limitations: [
       'Screenshots are deterministic route baselines, not visual diff assertions.',
       'Weather is seeded for stable regression coverage and does not exercise live provider variance.',
+      'Calendar is seeded from the production Todo storage contract and remains read-only.',
       'The script checks horizontal overflow and console errors; manual design review still classifies visual polish severity.',
     ],
   }

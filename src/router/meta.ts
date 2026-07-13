@@ -4,6 +4,7 @@ export type LifeBoardLayoutKind = 'landing' | 'app' | 'minimal'
 
 export type NavigationKey =
   | 'workspace'
+  | 'calendar'
   | 'weather'
   | 'todos'
   | 'bookmarks'

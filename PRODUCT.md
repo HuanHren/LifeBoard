@@ -11,6 +11,7 @@ LifeBoard is designed for an individual who wants practical daily information an
 ## Implemented Product
 
 - Home overview connected to real module state
+- Read-only Calendar aggregation for Todo due dates and Countdown targets
 - Weather assistant using Open-Meteo for city search and forecasts
 - Locally persisted todos and countdowns
 - Private in-browser text and data tools

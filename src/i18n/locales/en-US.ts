@@ -24,6 +24,8 @@ export const enUS = {
   'navigation.landing.description': 'LifeBoard introduction',
   'navigation.workspace.label': 'Workspace',
   'navigation.workspace.description': 'Daily overview',
+  'navigation.calendar.label': 'Calendar',
+  'navigation.calendar.description': 'Plans by date',
   'navigation.weather.label': 'Weather',
   'navigation.weather.description': 'Local conditions',
   'navigation.todos.label': 'Todos',

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 export type BaseIconName =
   | 'home'
+  | 'calendar'
   | 'weather'
   | 'todos'
   | 'tools'
@@ -37,6 +38,10 @@ withDefaults(defineProps<Props>(), {
     viewBox="0 0 24 24"
   >
     <path v-if="name === 'home'" d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />
+    <g v-else-if="name === 'calendar'">
+      <rect height="16" rx="2" width="18" x="3" y="5" />
+      <path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" />
+    </g>
     <g v-else-if="name === 'weather'">
       <path d="M8.8 18h7.4a3.8 3.8 0 0 0 .6-7.55A5.3 5.3 0 0 0 6.5 11.7 3.2 3.2 0 0 0 8.8 18Z" />
       <path d="M7.8 5.2 6.9 3.5M3.7 9.4 2 8.8M12 4V2" />

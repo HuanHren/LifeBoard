@@ -17,6 +17,7 @@ Live demo: https://life-board-two.vercel.app/
 ## Features
 
 - **Home**: calm summaries and direct entry points for connected modules
+- **Calendar**: a read-only month and agenda view derived from Todo due dates and Countdown targets
 - **Weather**: city search, current conditions, 24-hour forecast, 7-day outlook, practical daily advice, and optional Caiyun Weather provider support
 - **Todos and Countdowns**: create, edit, complete, filter, and locally persist tasks and important dates
 - **Tools**: JSON formatting, timestamp conversion, text cleanup, line deduplication, case conversion, and text counting
@@ -161,7 +162,7 @@ npm run qa
 
 `npm run qa:a11y:routes` starts a local production preview, checks the main routes at 390x844, 768x1024, and 1440x900, and verifies core landmarks, headings, skip link behavior, overflow, console errors, navigation, tablists, form labels, dialog semantics, Settings confirmation-dialog hooks, and frozen Weather route smoke. Playwright is a project dev dependency; on a fresh machine or CI runner, run `npm ci` and `npx playwright install chromium` before QA if Chromium has not been installed yet. Axe automation is not part of this baseline yet.
 
-`npm run qa:screenshots` captures 29 route screenshots into `.qa/route-screenshots/`, writes `.qa/route-screenshots/manifest.json`, and writes `.qa/route-screenshots-summary.json`. The `.qa/` directory is ignored by git, so generated screenshots are local QA artifacts and should not be committed.
+`npm run qa:screenshots` captures 32 route screenshots into `.qa/route-screenshots/`, writes `.qa/route-screenshots/manifest.json`, and writes `.qa/route-screenshots-summary.json`. The `.qa/` directory is ignored by git, so generated screenshots are local QA artifacts and should not be committed.
 
 GitHub Actions runs build plus route accessibility QA on pushes and pull requests targeting `main`. The workflow uploads `.qa/route-a11y-summary.json` as the `route-a11y-summary` artifact when the JSON summary is available.
 
@@ -176,6 +177,7 @@ src/
     layout/            App shell, sidebar, topbar, and mobile navigation
   modules/
     home/              Daily overview
+    calendar/          Read-only Todo and Countdown date aggregation
     weather/           Weather providers, store, advice, and forecast UI
     todos/             Tasks, countdowns, and local persistence
     tools/             Isolated browser utility workspaces
@@ -200,7 +202,7 @@ LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 5. Use `dist` as the output directory.
 6. Leave environment variables empty; LifeBoard does not require deployment secrets.
 
-`vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather`, `/api/amap-geocode`, and `/api/amap-reverse-geocode` routes.
+`vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/calendar`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather`, `/api/amap-geocode`, and `/api/amap-reverse-geocode` routes.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 
@@ -213,6 +215,7 @@ GitHub Pages is possible but is not configured in this repository. A project-sit
 After local preview or deployment, verify these routes load:
 
 - `/`
+- `/calendar`
 - `/weather`
 - `/todos`
 - `/tools`

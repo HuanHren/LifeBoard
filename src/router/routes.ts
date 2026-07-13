@@ -33,6 +33,16 @@ export const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/calendar',
+    name: 'calendar',
+    component: () => import('@/modules/calendar/CalendarPage.vue'),
+    meta: {
+      layout: 'app',
+      navigationKey: 'calendar',
+      titleKey: 'navigation.calendar.label',
+    },
+  },
+  {
     path: '/weather/cities',
     name: 'weather-cities',
     component: () => import('@/modules/weather/pages/WeatherCityManagementPage.vue'),

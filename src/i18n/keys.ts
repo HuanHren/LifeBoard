@@ -23,6 +23,8 @@ export const translationKeys = [
   'navigation.landing.description',
   'navigation.workspace.label',
   'navigation.workspace.description',
+  'navigation.calendar.label',
+  'navigation.calendar.description',
   'navigation.weather.label',
   'navigation.weather.description',
   'navigation.todos.label',

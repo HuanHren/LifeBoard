@@ -11,6 +11,8 @@ export const zhCN = {
   'navigation.landing.description': 'LifeBoard 介绍页',
   'navigation.workspace.label': '工作台',
   'navigation.workspace.description': '每日概览',
+  'navigation.calendar.label': '日历',
+  'navigation.calendar.description': '按日期查看计划',
   'navigation.more.label': '更多',
   'navigation.more.appearanceLanguage': '外观与语言',
   'navigation.more.dataManagement': '数据管理',

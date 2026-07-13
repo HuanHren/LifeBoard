@@ -508,3 +508,17 @@ Stage 45 Data Portability is frozen and regression-only. Stage 46 accepts **Opti
 - Stage 47 derives Calendar entries from existing Todo due dates and Countdown target dates; source records remain authoritative.
 - Native Calendar Events, `lifeboard.calendar`, registry 11-to-12 expansion, PortableBackupV2, clear/reset expansion, and bounded Home integration are deferred to Stage 48.
 - Weather remains frozen and regression-only.
+
+## Stage 47 Read-only Calendar Aggregation Result
+
+Stage 47 implements the accepted read-only MVP at `/calendar`:
+
+- Todo due dates and Countdown target dates are aggregated without changing source records.
+- Date-only arithmetic remains local and timezone-safe; `zh-CN` starts weeks on Monday and `en-US` starts weeks on Sunday.
+- The route provides a semantic month grid, keyboard navigation, selected-day agenda, source/status labels, and source navigation back to Todos.
+- Route accessibility and screenshot baselines expand from 29 to 32 route-viewports/screenshots, including Calendar at 390x844, 768x1024, and 1440x900.
+- No Calendar storage key, store, service, persistence registry entry, backup/import/reset contract, dependency, workflow, Home change, or Weather change is introduced.
+- Native Calendar Events remain deferred.
+- Weather remains frozen and regression-only.
+
+The only recommended next stage is **Stage 48: Native Calendar Events / Persistence Integration and Closeout**, under separate authorization. Stage 48 may add the accepted Calendar persistence and portability contracts, but must not add recurrence, reminders, notifications, external calendar sync, Merge import, Weather work, or a whole-site redesign.

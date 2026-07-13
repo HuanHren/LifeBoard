@@ -12,7 +12,7 @@ export interface NavigationItem {
 }
 
 export interface MobilePrimaryNavigationItem extends NavigationItem {
-  key: 'workspace' | 'weather' | 'todos' | 'bookmarks'
+  key: 'workspace' | 'calendar' | 'weather' | 'todos'
 }
 
 export const appDesktopNavigationItems: NavigationItem[] = [
@@ -22,6 +22,13 @@ export const appDesktopNavigationItems: NavigationItem[] = [
     descriptionKey: 'navigation.workspace.description',
     icon: 'home',
     to: { name: 'workspace' },
+  },
+  {
+    key: 'calendar',
+    labelKey: 'navigation.calendar.label',
+    descriptionKey: 'navigation.calendar.description',
+    icon: 'calendar',
+    to: { name: 'calendar' },
   },
   {
     key: 'weather',
@@ -64,6 +71,13 @@ export const appMobilePrimaryNavigationItems: MobilePrimaryNavigationItem[] = [
     to: { name: 'workspace' },
   },
   {
+    key: 'calendar',
+    labelKey: 'navigation.calendar.label',
+    descriptionKey: 'navigation.calendar.description',
+    icon: 'calendar',
+    to: { name: 'calendar' },
+  },
+  {
     key: 'weather',
     labelKey: 'navigation.weather.label',
     descriptionKey: 'navigation.weather.description',
@@ -77,17 +91,11 @@ export const appMobilePrimaryNavigationItems: MobilePrimaryNavigationItem[] = [
     icon: 'todos',
     to: { name: 'todos' },
   },
-  {
-    key: 'bookmarks',
-    labelKey: 'navigation.bookmarks.label',
-    descriptionKey: 'navigation.bookmarks.description',
-    icon: 'bookmarks',
-    to: { name: 'bookmarks' },
-  },
 ]
 
 export const appMobileMoreNavigationItems: NavigationItem[] = [
   appDesktopNavigationItems[4],
+  appDesktopNavigationItems[5],
   {
     key: 'settings',
     labelKey: 'navigation.settings.label',
@@ -106,5 +114,9 @@ export function getNavigationKey(routeNavigationKey: unknown) {
 }
 
 export function isMobileMoreNavigationKey(navigationKey: NavigationKey | undefined) {
-  return navigationKey === 'tools' || navigationKey === 'settings'
+  return (
+    navigationKey === 'bookmarks' ||
+    navigationKey === 'tools' ||
+    navigationKey === 'settings'
+  )
 }

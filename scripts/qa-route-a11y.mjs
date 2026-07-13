@@ -13,6 +13,7 @@ const OUTPUT_PATH = parseOutputPath(process.argv.slice(2))
 const ROUTES = [
   { name: 'Landing', path: '/' },
   { name: 'Home', path: '/app' },
+  { name: 'Calendar', path: '/calendar' },
   { name: 'Weather', path: '/weather' },
   { name: 'Todos', path: '/todos' },
   { name: 'Tools', path: '/tools' },
@@ -518,6 +519,81 @@ async function seedWeatherLoadedRoute(page) {
   }, seed)
 }
 
+function createCalendarRouteSeed() {
+  const now = new Date()
+  const localDate = (offset = 0) => {
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset, 12)
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(date.getDate()).padStart(2, '0'),
+    ].join('-')
+  }
+  const createdAt = '2026-07-01T08:00:00.000Z'
+
+  return {
+    version: 1,
+    tasks: [
+      {
+        id: 'qa-calendar-active',
+        title: 'Review the weekly plan',
+        dueDate: localDate(),
+        label: 'Planning',
+        completedAt: null,
+        deletedAt: null,
+        createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 'qa-calendar-completed',
+        title: 'Prepare calendar baseline',
+        dueDate: localDate(),
+        label: null,
+        completedAt: '2026-07-02T08:00:00.000Z',
+        deletedAt: null,
+        createdAt: '2026-07-01T09:00:00.000Z',
+        updatedAt: '2026-07-02T08:00:00.000Z',
+      },
+      {
+        id: 'qa-calendar-upcoming',
+        title: 'Check next planning milestone',
+        dueDate: localDate(1),
+        label: null,
+        completedAt: null,
+        deletedAt: null,
+        createdAt: '2026-07-01T10:00:00.000Z',
+        updatedAt: '2026-07-01T10:00:00.000Z',
+      },
+    ],
+    countdowns: [
+      {
+        id: 'qa-calendar-countdown-today',
+        title: 'Calendar review day',
+        targetDate: localDate(),
+        createdAt: '2026-07-01T11:00:00.000Z',
+        updatedAt: '2026-07-01T11:00:00.000Z',
+      },
+      {
+        id: 'qa-calendar-countdown-future',
+        title: 'Next release checkpoint',
+        targetDate: localDate(5),
+        createdAt: '2026-07-01T12:00:00.000Z',
+        updatedAt: '2026-07-01T12:00:00.000Z',
+      },
+    ],
+  }
+}
+
+async function seedCalendarRoute(page) {
+  const seed = createCalendarRouteSeed()
+  await page.addInitScript((data) => {
+    window.localStorage.setItem('lifeboard.todos', JSON.stringify(data))
+    if (window.localStorage.getItem('lifeboard.language') === null) {
+      window.localStorage.setItem('lifeboard.language', 'en-US')
+    }
+  }, seed)
+}
+
 async function checkCommon(page, route, viewport, failures) {
   const response = await page.goto(route.url, { waitUntil: 'networkidle', timeout: 30_000 })
   await page.waitForTimeout(120)
@@ -664,6 +740,93 @@ async function checkTodos(page, route, viewport, failures) {
   const pressedCount = await page.locator('.task-filter-bar button[aria-pressed="true"]').count()
   if (pressedCount !== 1) {
     addFailure(failures, route, viewport, 'todos-active-filter', `Expected one active aria-pressed filter, got ${pressedCount}.`)
+  }
+}
+
+async function checkCalendar(page, route, viewport, failures) {
+  const grid = page.locator('[role="grid"][aria-labelledby="calendar-month-title"]')
+  if (!(await grid.count())) {
+    addFailure(failures, route, viewport, 'calendar-grid', 'Calendar grid was not found.')
+    return
+  }
+
+  const dayButtons = grid.locator('[data-calendar-date]')
+  const dayCount = await dayButtons.count()
+  if (dayCount !== 35 && dayCount !== 42) {
+    addFailure(failures, route, viewport, 'calendar-grid-size', `Expected 35 or 42 day buttons, got ${dayCount}.`)
+  }
+
+  const tabbableCount = await grid.locator('[data-calendar-date][tabindex="0"]').count()
+  if (tabbableCount !== 1) {
+    addFailure(failures, route, viewport, 'calendar-roving-tabindex', `Expected one tabbable day, got ${tabbableCount}.`)
+  }
+
+  const today = grid.locator('[data-calendar-date][aria-current="date"]')
+  if ((await today.count()) !== 1) {
+    addFailure(failures, route, viewport, 'calendar-today', 'Expected one aria-current="date" day.')
+    return
+  }
+
+  if ((await page.locator('.calendar-agenda__item').count()) !== 3) {
+    addFailure(failures, route, viewport, 'calendar-aggregation', 'Seeded selected day did not show three aggregate items.')
+  }
+
+  const initialMonth = await page.locator('#calendar-month-title').textContent()
+  await page.locator('[data-qa="calendar-next"]').click()
+  const nextMonth = await page.locator('#calendar-month-title').textContent()
+  if (!initialMonth || nextMonth === initialMonth) {
+    addFailure(failures, route, viewport, 'calendar-next-month', 'Next month control did not change the visible month.')
+  }
+  await page.locator('[data-qa="calendar-previous"]').click()
+  const restoredMonth = await page.locator('#calendar-month-title').textContent()
+  if (restoredMonth !== initialMonth) {
+    addFailure(failures, route, viewport, 'calendar-previous-month', 'Previous month control did not restore the visible month.')
+  }
+  await page.locator('[data-qa="calendar-today"]').click()
+
+  await today.focus()
+  const initialDate = await today.getAttribute('data-calendar-date')
+  await page.keyboard.press('ArrowRight')
+  const focusedDate = await page.locator('[data-calendar-date]:focus').getAttribute('data-calendar-date').catch(() => null)
+  if (!focusedDate || focusedDate === initialDate) {
+    addFailure(failures, route, viewport, 'calendar-keyboard-arrow', 'ArrowRight did not move calendar focus.')
+  }
+
+  await page.keyboard.press('Enter')
+  const selectedDate = await page.locator('[data-calendar-date][aria-selected="true"]').getAttribute('data-calendar-date').catch(() => null)
+  if (selectedDate !== focusedDate) {
+    addFailure(failures, route, viewport, 'calendar-keyboard-select', 'Enter did not select the focused day.')
+  }
+
+  if (viewport.name === 'desktop') {
+    await page.evaluate(() => window.localStorage.setItem('lifeboard.language', 'zh-CN'))
+    await page.reload({ waitUntil: 'networkidle' })
+    const chineseFirstDate = await page.locator('[data-calendar-date]').first().getAttribute('data-calendar-date')
+    const chineseWeekday = await page.evaluate((date) => new Date(`${date}T12:00:00`).getDay(), chineseFirstDate)
+    if (chineseWeekday !== 1) {
+      addFailure(failures, route, viewport, 'calendar-zh-week-start', `Expected Monday-first zh-CN grid, got weekday ${chineseWeekday}.`)
+    }
+
+    await page.evaluate(() => window.localStorage.setItem('lifeboard.language', 'en-US'))
+    await page.reload({ waitUntil: 'networkidle' })
+    const englishFirstDate = await page.locator('[data-calendar-date]').first().getAttribute('data-calendar-date')
+    const englishWeekday = await page.evaluate((date) => new Date(`${date}T12:00:00`).getDay(), englishFirstDate)
+    if (englishWeekday !== 0) {
+      addFailure(failures, route, viewport, 'calendar-en-week-start', `Expected Sunday-first en-US grid, got weekday ${englishWeekday}.`)
+    }
+  }
+
+  const sourceLink = page.locator('.calendar-agenda__item').first()
+  if ((await sourceLink.getAttribute('href')) !== '/todos') {
+    addFailure(failures, route, viewport, 'calendar-source-link', 'Agenda source link does not target /todos.')
+  } else {
+    await Promise.all([
+      page.waitForURL('**/todos'),
+      sourceLink.click(),
+    ])
+    if (new URL(page.url()).pathname !== '/todos') {
+      addFailure(failures, route, viewport, 'calendar-source-navigation', 'Agenda source link did not open Todos.')
+    }
   }
 }
 
@@ -828,6 +991,7 @@ async function checkNotFound(page, route, viewport, failures) {
 
 async function runRouteSpecificChecks(page, route, viewport, failures) {
   if (route.name === 'Home') await checkHome(page, route, viewport, failures)
+  if (route.name === 'Calendar') await checkCalendar(page, route, viewport, failures)
   if (route.name === 'Weather') await checkWeather(page, route, viewport, failures)
   if (route.name === 'Todos') await checkTodos(page, route, viewport, failures)
   if (route.name === 'Tools') await checkTools(page, route, viewport, failures)
@@ -887,6 +1051,9 @@ async function run() {
 
         if (route.name === 'Weather') {
           await seedWeatherLoadedRoute(page)
+        }
+        if (route.name === 'Calendar') {
+          await seedCalendarRoute(page)
         }
 
         await checkCommon(page, route, viewport, failures)
