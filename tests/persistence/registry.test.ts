@@ -100,8 +100,8 @@ describe('selectors and metadata plans', () => {
     expect(createContentClearPlan().entries.map((entry) => entry.id)).toEqual([
       'todos',
       'bookmarks',
-      'weather-location',
       'weather-favorite-cities',
+      'weather-location',
     ])
   })
 

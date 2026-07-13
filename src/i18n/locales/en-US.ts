@@ -406,10 +406,26 @@ export const enUS = {
   'settings.clearData.clearTodos': 'Clear Todos',
   'settings.clearData.clearBookmarks': 'Clear Bookmarks',
   'settings.clearData.nothingSaved': 'Nothing saved',
-  'settings.clearData.allTitle': 'Clear all LifeBoard data',
-  'settings.clearData.allDescription':
-    'Remove the theme preference, selected city, favorite cities, tasks, countdowns, and bookmarks stored by LifeBoard.',
-  'settings.clearData.allAction': 'Clear all data',
+  'settings.clearData.userContentTitle': 'Clear user content',
+  'settings.clearData.userContentDescription':
+    'Remove saved cities, tasks, countdowns, and bookmarks while preserving appearance, language, Weather provider, credentials, and auto-location settings.',
+  'settings.clearData.userContentAction': 'Clear user content',
+  'settings.clearData.factoryResetTitle': 'Factory reset',
+  'settings.clearData.factoryResetDescription':
+    'Remove all LifeBoard product data and preferences from this browser. Developer debug and unrelated website storage are preserved.',
+  'settings.clearData.factoryResetAction': 'Factory reset',
+  'settings.clearPreview.title': 'Removal preview',
+  'settings.clearPreview.tasks': 'Tasks',
+  'settings.clearPreview.countdowns': 'Countdowns',
+  'settings.clearPreview.bookmarks': 'Bookmarks',
+  'settings.clearPreview.favoriteCities': 'Favorite cities',
+  'settings.clearPreview.savedLocation': 'Saved location',
+  'settings.clearPreview.storageKeys': 'Storage keys',
+  'settings.clearPreview.present': 'Present',
+  'settings.clearPreview.none': 'None',
+  'settings.clearPreview.preferencesPreserved': 'Theme, language, Weather service settings, credentials, and auto-location will be preserved.',
+  'settings.clearPreview.preferencesReset': 'Theme, language, Weather service settings, credentials, auto-location, and forecast cache will reset to defaults.',
+  'settings.clearPreview.noAutomaticBackup': 'No backup is created automatically. Export a JSON backup first if needed.',
   'settings.dialog.importTitle': 'Replace local LifeBoard data?',
   'settings.dialog.importDescription':
     'This replaces theme, language, saved weather locations, tasks, countdowns, and bookmarks. If a write or verification fails, LifeBoard attempts to restore the previous data.',
@@ -423,12 +439,16 @@ export const enUS = {
   'settings.dialog.bookmarksTitle': 'Clear bookmarks data?',
   'settings.dialog.bookmarksDescription':
     'This removes every saved bookmark from this browser.',
-  'settings.dialog.allTitle': 'Clear all LifeBoard data?',
-  'settings.dialog.allDescription':
-    'This removes the theme preference, selected city, favorite cities, current forecast, tasks, countdowns, and bookmarks. Tools input is not saved.',
-  'settings.dialog.allConfirm': 'Clear all data',
-  'settings.dialog.allAcknowledgement':
-    'I understand that this removes all LifeBoard data stored in this browser.',
+  'settings.dialog.userContentTitle': 'Clear user content?',
+  'settings.dialog.userContentDescription':
+    'This removes saved cities, tasks, countdowns, and bookmarks. Product preferences and Weather credentials remain unchanged.',
+  'settings.dialog.userContentAcknowledgement':
+    'I understand that this permanently removes my saved content from this browser.',
+  'settings.dialog.factoryResetTitle': 'Factory reset LifeBoard?',
+  'settings.dialog.factoryResetDescription':
+    'This removes all registered LifeBoard product content, preferences, Weather cache, and credentials from this browser.',
+  'settings.dialog.factoryResetAcknowledgement':
+    'I understand that this permanently resets LifeBoard to its browser defaults.',
   'settings.message.backupDownloaded': 'Backup downloaded to this device.',
   'settings.message.backupDownloadFailed':
     'The backup could not be created or downloaded.',
@@ -437,8 +457,13 @@ export const enUS = {
   'settings.message.weatherCleared': 'Weather data cleared.',
   'settings.message.todosCleared': 'Todos and countdowns cleared.',
   'settings.message.bookmarksCleared': 'Bookmarks cleared.',
-  'settings.message.allCleared':
-    'All LifeBoard local data cleared. Theme mode reset to System.',
+  'settings.message.userContentCleared': 'User content cleared. Product preferences were preserved.',
+  'settings.message.factoryResetComplete': 'Factory reset complete. LifeBoard now uses browser defaults.',
+  'settings.error.clearPlanInvalid': 'The removal plan is invalid. No LifeBoard data was changed.',
+  'settings.error.clearSnapshotFailed': 'LifeBoard could not safely read local data. No removal was completed.',
+  'settings.error.clearOperationRestored': 'The operation failed. Previous LifeBoard data and state were restored.',
+  'settings.error.clearRollbackFailed': 'The operation failed and LifeBoard could not verify a complete restore. Reload before making more changes.',
+  'settings.error.clearConcurrent': 'Another data operation is already running. Try again after it finishes.',
   'settings.error.storageUnavailable':
     'Browser storage is unavailable. No LifeBoard data was changed.',
   'settings.error.themeInvalid':

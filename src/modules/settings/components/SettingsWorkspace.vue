@@ -7,6 +7,7 @@ import type { TranslationKey } from '@/i18n/keys'
 import { useI18n } from '@/i18n/useI18n'
 import BackupImportSummary from '@/modules/settings/components/BackupImportSummary.vue'
 import BackupPanel from '@/modules/settings/components/BackupPanel.vue'
+import ClearOperationSummary from '@/modules/settings/components/ClearOperationSummary.vue'
 import DataClearPanel from '@/modules/settings/components/DataClearPanel.vue'
 import LocalDataStatus from '@/modules/settings/components/LocalDataStatus.vue'
 import LanguageControl from '@/modules/settings/components/LanguageControl.vue'
@@ -25,6 +26,7 @@ import type { PortableExportKind } from '@/modules/settings/types/settingsExport
 import {
   applyLifeBoardBackup,
   clearLifeBoardData,
+  clearLifeBoardOperation,
   createLifeBoardBackup,
   downloadLifeBoardBackup,
   loadSettingsSnapshot,
@@ -34,8 +36,10 @@ import type {
   BackupImportSummaryData,
   SettingsClearTarget,
   SettingsDataSnapshot,
+  SettingsSelectiveClearTarget,
 } from '@/modules/settings/types/settings'
 import {
+  getSettingsClearErrorKey,
   getSettingsImportErrorKey,
   localizeSettingsError,
 } from '@/modules/settings/utils/settingsMessages'
@@ -43,12 +47,14 @@ import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
 import { useTodosStore } from '@/modules/todos/stores/todos'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import type {
+  ClearOperationKind,
   LifeBoardLocale,
   PortableBackupV1,
   PreparedPortableImport,
 } from '@/shared/persistence'
+import { createClearOperationPreview } from '@/shared/persistence'
 import type { ThemeMode } from '@/shared/types/theme'
-import { useLanguageStore } from '@/stores/language'
+import { resolveDefaultLanguage, useLanguageStore } from '@/stores/language'
 import { useThemeStore } from '@/stores/theme'
 
 type DialogState =
@@ -99,6 +105,13 @@ const weatherFavoriteCount = computed(() => favoriteCities.value.length)
 const weatherCity = computed(() => selectedLocation.value?.name ?? null)
 const hasTodosRows = computed(() => taskCount.value + countdownCount.value > 0)
 const hasBookmarkRows = computed(() => bookmarkCount.value > 0)
+const hasUserContent = computed(() =>
+  selectedLocation.value !== null ||
+  weatherFavoriteCount.value > 0 ||
+  taskCount.value > 0 ||
+  countdownCount.value > 0 ||
+  bookmarkCount.value > 0,
+)
 const localizedStatusError = computed(() =>
   localizeSettingsError(statusError.value, t),
 )
@@ -120,20 +133,19 @@ const localizedClearError = computed(() =>
 const localizedClearSuccess = computed(() =>
   clearSuccess.value ? t(clearSuccess.value) : null,
 )
-const hasAnyData = computed(
-  () =>
-    mode.value !== 'system' ||
-    provider.value !== 'openMeteo' ||
-    hasCaiyunToken.value ||
-    hasAmapKey.value ||
-    autoLocationOnHome.value ||
-    selectedLocation.value !== null ||
-    weatherFavoriteCount.value > 0 ||
-    taskCount.value > 0 ||
-    countdownCount.value > 0 ||
-    bookmarkCount.value > 0 ||
-    statusError.value !== null,
-)
+const pendingClearPreview = computed(() => {
+  const target = dialogState.value?.kind === 'clear' ? dialogState.value.target : null
+  if (target !== 'user-content' && target !== 'factory-reset') return null
+
+  const result = createClearOperationPreview(target, {
+    taskCount: taskCount.value,
+    countdownCount: countdownCount.value,
+    bookmarkCount: bookmarkCount.value,
+    favoriteCityCount: weatherFavoriteCount.value,
+    hasSavedLocation: selectedLocation.value !== null,
+  })
+  return result.ok ? result.data : null
+})
 
 const importSummary = computed<BackupImportSummaryData | null>(() => {
   if (!pendingBackup.value) return null
@@ -236,11 +248,20 @@ const dialogCopy = computed(() => {
     }
   }
 
+  if (target === 'user-content') {
+    return {
+      title: t('settings.dialog.userContentTitle'),
+      description: t('settings.dialog.userContentDescription'),
+      confirmLabel: t('settings.clearData.userContentAction'),
+      acknowledgementLabel: t('settings.dialog.userContentAcknowledgement'),
+    }
+  }
+
   return {
-    title: t('settings.dialog.allTitle'),
-    description: t('settings.dialog.allDescription'),
-    confirmLabel: t('settings.dialog.allConfirm'),
-    acknowledgementLabel: t('settings.dialog.allAcknowledgement'),
+    title: t('settings.dialog.factoryResetTitle'),
+    description: t('settings.dialog.factoryResetDescription'),
+    confirmLabel: t('settings.clearData.factoryResetAction'),
+    acknowledgementLabel: t('settings.dialog.factoryResetAcknowledgement'),
   }
 })
 
@@ -262,12 +283,20 @@ function applySnapshotToStores(snapshot: SettingsDataSnapshot, replaceWeather = 
 
 interface SettingsMemorySnapshot extends SettingsDataSnapshot {
   language: LifeBoardLocale
+  provider: 'openMeteo' | 'caiyun'
+  hasCaiyunToken: boolean
+  hasAmapKey: boolean
+  autoLocationOnHome: boolean
 }
 
 function captureMemorySnapshot(): SettingsMemorySnapshot {
   return {
     themeMode: mode.value,
     language: locale.value,
+    provider: provider.value,
+    hasCaiyunToken: hasCaiyunToken.value,
+    hasAmapKey: hasAmapKey.value,
+    autoLocationOnHome: autoLocationOnHome.value,
     weatherLocation: selectedLocation.value,
     weatherFavoriteCities: [...favoriteCities.value],
     todos: {
@@ -301,6 +330,8 @@ function restoreMemorySnapshot(snapshot: SettingsMemorySnapshot) {
   weatherStore.synchronizeFavoriteCities(snapshot.weatherFavoriteCities)
   themeStore.synchronizeMode(snapshot.themeMode)
   languageStore.synchronizeLanguage(snapshot.language)
+  weatherStore.initializeProviderPreferences()
+  weatherStore.initializeAmapPreferences()
 }
 
 const sameData = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right)
@@ -322,7 +353,50 @@ function verifyMemorySnapshot(snapshot: SettingsMemorySnapshot) {
     sameData(favoriteCities.value, snapshot.weatherFavoriteCities) &&
     sameData(tasks.value, snapshot.todos.tasks) &&
     sameData(countdowns.value, snapshot.todos.countdowns) &&
-    sameData(bookmarks.value, snapshot.bookmarks.bookmarks)
+    sameData(bookmarks.value, snapshot.bookmarks.bookmarks) &&
+    provider.value === snapshot.provider &&
+    hasCaiyunToken.value === snapshot.hasCaiyunToken &&
+    hasAmapKey.value === snapshot.hasAmapKey &&
+    autoLocationOnHome.value === snapshot.autoLocationOnHome
+}
+
+function hydrateClearOperation(kind: ClearOperationKind) {
+  todosStore.synchronizeFromSettings([], [])
+  bookmarksStore.synchronizeFromSettings([])
+  weatherStore.synchronizeLocation(null)
+  weatherStore.synchronizeFavoriteCities([])
+
+  if (kind === 'factory-reset') {
+    themeStore.synchronizeMode('system')
+    languageStore.synchronizeDefaultLanguage()
+    weatherStore.synchronizeProviderPreferences('openMeteo')
+    weatherStore.initializeAmapPreferences()
+  }
+}
+
+function verifyClearOperation(kind: ClearOperationKind, previous: SettingsMemorySnapshot) {
+  const contentCleared = selectedLocation.value === null &&
+    favoriteCities.value.length === 0 &&
+    tasks.value.length === 0 &&
+    countdowns.value.length === 0 &&
+    bookmarks.value.length === 0
+
+  if (!contentCleared) return false
+  if (kind === 'factory-reset') {
+    return mode.value === 'system' &&
+      locale.value === resolveDefaultLanguage() &&
+      provider.value === 'openMeteo' &&
+      !hasCaiyunToken.value &&
+      !hasAmapKey.value &&
+      !autoLocationOnHome.value
+  }
+
+  return mode.value === previous.themeMode &&
+    locale.value === previous.language &&
+    provider.value === previous.provider &&
+    hasCaiyunToken.value === previous.hasCaiyunToken &&
+    hasAmapKey.value === previous.hasAmapKey &&
+    autoLocationOnHome.value === previous.autoLocationOnHome
 }
 
 function changeTheme(nextMode: ThemeMode) {
@@ -461,7 +535,44 @@ function confirmImport() {
 function confirmClear() {
   if (dialogState.value?.kind !== 'clear') return
   const target = dialogState.value.target
-  const result = clearLifeBoardData(target)
+  if (isBusy.value) return
+  isBusy.value = true
+
+  if (target === 'user-content' || target === 'factory-reset') {
+    const previous = captureMemorySnapshot()
+    const result = clearLifeBoardOperation(target, {
+      hydrate: hydrateClearOperation,
+      verify(kind) {
+        return verifyClearOperation(kind, previous)
+      },
+      restore() {
+        restoreMemorySnapshot(previous)
+      },
+      verifyRestore() {
+        return verifyMemorySnapshot(previous)
+      },
+    })
+    isBusy.value = false
+
+    if (!result.ok) {
+      clearError.value = getSettingsClearErrorKey(result.error.code)
+      closeDialog()
+      return
+    }
+
+    backupError.value = null
+    backupSuccess.value = null
+    pendingBackup.value = null
+    clearSuccess.value = target === 'user-content'
+      ? 'settings.message.userContentCleared'
+      : 'settings.message.factoryResetComplete'
+    closeDialog()
+    return
+  }
+
+  const selectiveTarget: SettingsSelectiveClearTarget = target
+  const result = clearLifeBoardData(selectiveTarget)
+  isBusy.value = false
 
   if (!result.ok) {
     clearError.value = result.error
@@ -469,35 +580,28 @@ function confirmClear() {
     return
   }
 
-  if (target === 'weather' || target === 'all') {
+  if (target === 'weather') {
     weatherStore.synchronizeLocation(null)
     weatherStore.synchronizeFavoriteCities([])
   }
 
-  if (target === 'todos' || target === 'all') {
+  if (target === 'todos') {
     todosStore.synchronizeFromSettings([], [])
   }
 
-  if (target === 'bookmarks' || target === 'all') {
+  if (target === 'bookmarks') {
     bookmarksStore.synchronizeFromSettings([])
-  }
-
-  if (target === 'all') {
-    themeStore.synchronizeMode('system')
-    weatherStore.synchronizeProviderPreferences('openMeteo')
-    weatherStore.initializeAmapPreferences()
   }
 
   backupError.value = null
   backupSuccess.value = null
   pendingBackup.value = null
-  const labels: Record<SettingsClearTarget, TranslationKey> = {
+  const labels: Record<SettingsSelectiveClearTarget, TranslationKey> = {
     weather: 'settings.message.weatherCleared',
     todos: 'settings.message.todosCleared',
     bookmarks: 'settings.message.bookmarksCleared',
-    all: 'settings.message.allCleared',
   }
-  clearSuccess.value = labels[target]
+  clearSuccess.value = labels[selectiveTarget]
   closeDialog()
 }
 
@@ -620,7 +724,8 @@ onMounted(() => {
             :task-count="taskCount"
             :countdown-count="countdownCount"
             :bookmark-count="bookmarkCount"
-            :has-any-data="hasAnyData"
+            :has-user-content="hasUserContent"
+            :busy="isBusy"
             :error="localizedClearError"
             :success="localizedClearSuccess"
             @request-clear="openClearConfirmation"
@@ -717,12 +822,17 @@ onMounted(() => {
       :description="dialogCopy.description"
       :confirm-label="dialogCopy.confirmLabel"
       :acknowledgement-label="dialogCopy.acknowledgementLabel"
+      :busy="isBusy"
       @confirm="confirmDialogAction"
       @cancel="closeDialog"
     >
       <BackupImportSummary
         v-if="dialogState?.kind === 'import' && importSummary"
         :summary="importSummary"
+      />
+      <ClearOperationSummary
+        v-else-if="pendingClearPreview"
+        :summary="pendingClearPreview"
       />
     </SettingsConfirmationDialog>
   </div>

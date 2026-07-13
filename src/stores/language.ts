@@ -4,7 +4,7 @@ import type { AppLocale } from '@/i18n/types'
 
 export const LANGUAGE_STORAGE_KEY = 'lifeboard.language'
 
-function getBrowserLocale(): AppLocale {
+export function resolveDefaultLanguage(): AppLocale {
   if (typeof navigator === 'undefined') return 'en-US'
 
   return navigator.languages.some((locale) =>
@@ -19,7 +19,7 @@ function isAppLocale(value: string | null): value is AppLocale {
 }
 
 export const useLanguageStore = defineStore('language', () => {
-  const locale = shallowRef<AppLocale>(getBrowserLocale())
+  const locale = shallowRef<AppLocale>(resolveDefaultLanguage())
   const isInitialized = shallowRef(false)
   const persistenceError = shallowRef<string | null>(null)
 
@@ -75,6 +75,11 @@ export const useLanguageStore = defineStore('language', () => {
     persistenceError.value = null
   }
 
+  function synchronizeDefaultLanguage() {
+    locale.value = resolveDefaultLanguage()
+    persistenceError.value = null
+  }
+
   return {
     locale,
     isInitialized,
@@ -82,6 +87,7 @@ export const useLanguageStore = defineStore('language', () => {
     initializeLanguage,
     setLanguage,
     synchronizeLanguage,
+    synchronizeDefaultLanguage,
   }
 })
 

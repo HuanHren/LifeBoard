@@ -514,10 +514,26 @@ export const zhCN = {
   'settings.clearData.clearTodos': '清除待办',
   'settings.clearData.clearBookmarks': '清除书签',
   'settings.clearData.nothingSaved': '没有已保存内容',
-  'settings.clearData.allTitle': '清除全部 LifeBoard 数据',
-  'settings.clearData.allDescription':
-    '移除 LifeBoard 保存的主题偏好、已选城市、常用城市、任务、倒计时和书签。',
-  'settings.clearData.allAction': '清除全部数据',
+  'settings.clearData.userContentTitle': '清除用户内容',
+  'settings.clearData.userContentDescription':
+    '移除已保存城市、任务、倒计时和书签，同时保留外观、语言、天气服务、凭据和自动定位设置。',
+  'settings.clearData.userContentAction': '清除用户内容',
+  'settings.clearData.factoryResetTitle': '恢复出厂设置',
+  'settings.clearData.factoryResetDescription':
+    '移除此浏览器中的全部 LifeBoard 产品数据和偏好。开发调试数据及其他网站存储不会被移除。',
+  'settings.clearData.factoryResetAction': '恢复出厂设置',
+  'settings.clearPreview.title': '移除预览',
+  'settings.clearPreview.tasks': '任务',
+  'settings.clearPreview.countdowns': '倒计时',
+  'settings.clearPreview.bookmarks': '书签',
+  'settings.clearPreview.favoriteCities': '常用城市',
+  'settings.clearPreview.savedLocation': '已保存位置',
+  'settings.clearPreview.storageKeys': '存储键数量',
+  'settings.clearPreview.present': '存在',
+  'settings.clearPreview.none': '无',
+  'settings.clearPreview.preferencesPreserved': '主题、语言、天气服务设置、凭据和自动定位将保留。',
+  'settings.clearPreview.preferencesReset': '主题、语言、天气服务设置、凭据、自动定位和预报缓存将恢复默认。',
+  'settings.clearPreview.noAutomaticBackup': '系统不会自动创建备份。如有需要，请先导出 JSON 备份。',
   'settings.dialog.importTitle': '替换本地 LifeBoard 数据？',
   'settings.dialog.importDescription':
     '这会替换主题、语言、天气位置、任务、倒计时和书签。若写入或验证失败，LifeBoard 会尝试恢复原数据。',
@@ -531,20 +547,29 @@ export const zhCN = {
   'settings.dialog.bookmarksTitle': '清除书签数据？',
   'settings.dialog.bookmarksDescription':
     '这会移除此浏览器中保存的所有书签。',
-  'settings.dialog.allTitle': '清除全部 LifeBoard 数据？',
-  'settings.dialog.allDescription':
-    '这会移除主题偏好、已选城市、常用城市、当前天气预报、任务、倒计时和书签。工具输入不会被保存。',
-  'settings.dialog.allConfirm': '清除全部数据',
-  'settings.dialog.allAcknowledgement':
-    '我了解此操作会移除此浏览器中保存的全部 LifeBoard 数据。',
+  'settings.dialog.userContentTitle': '清除用户内容？',
+  'settings.dialog.userContentDescription':
+    '这会移除已保存城市、任务、倒计时和书签，产品偏好与天气服务凭据保持不变。',
+  'settings.dialog.userContentAcknowledgement':
+    '我了解此操作会永久移除此浏览器中的已保存内容。',
+  'settings.dialog.factoryResetTitle': '将 LifeBoard 恢复出厂设置？',
+  'settings.dialog.factoryResetDescription':
+    '这会移除此浏览器中已注册的全部 LifeBoard 产品内容、偏好、天气缓存和凭据。',
+  'settings.dialog.factoryResetAcknowledgement':
+    '我了解此操作会永久将 LifeBoard 恢复为浏览器默认状态。',
   'settings.message.backupDownloaded': '备份已下载到此设备。',
   'settings.message.backupDownloadFailed': '无法创建或下载备份。',
   'settings.message.backupImported': '备份已导入，当前本地 LifeBoard 数据已被替换。',
   'settings.message.weatherCleared': '天气数据已清除。',
   'settings.message.todosCleared': '待办和倒计时已清除。',
   'settings.message.bookmarksCleared': '书签已清除。',
-  'settings.message.allCleared':
-    '全部 LifeBoard 本地数据已清除，主题模式已重置为跟随系统。',
+  'settings.message.userContentCleared': '用户内容已清除，产品偏好已保留。',
+  'settings.message.factoryResetComplete': '恢复出厂设置完成，LifeBoard 已使用浏览器默认值。',
+  'settings.error.clearPlanInvalid': '移除计划无效，未更改任何 LifeBoard 数据。',
+  'settings.error.clearSnapshotFailed': 'LifeBoard 无法安全读取本地数据，未完成移除。',
+  'settings.error.clearOperationRestored': '操作失败，原有 LifeBoard 数据和状态已恢复。',
+  'settings.error.clearRollbackFailed': '操作失败，且 LifeBoard 无法验证完整恢复。重新加载前请勿继续修改。',
+  'settings.error.clearConcurrent': '另一项数据操作正在运行，请在完成后重试。',
   'settings.error.storageUnavailable':
     '浏览器存储不可用，未更改任何 LifeBoard 数据。',
   'settings.error.themeInvalid':

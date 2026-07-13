@@ -3,7 +3,11 @@ import type { TodosStorageEnvelope } from '@/modules/todos/types/todos'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import type { WeatherFavoriteCity } from '@/modules/weather/types/weatherFavorites'
 import type { ThemeMode } from '@/shared/types/theme'
-import type { DetectedBackupFormat, LifeBoardLocale } from '@/shared/persistence'
+import type {
+  ClearOperationKind,
+  DetectedBackupFormat,
+  LifeBoardLocale,
+} from '@/shared/persistence'
 
 export interface LifeBoardBackupV1 {
   version: 1
@@ -59,7 +63,8 @@ export interface BackupImportSummaryData {
   mergeSupported: false
 }
 
-export type SettingsClearTarget = 'weather' | 'todos' | 'bookmarks' | 'all'
+export type SettingsSelectiveClearTarget = 'weather' | 'todos' | 'bookmarks'
+export type SettingsClearTarget = SettingsSelectiveClearTarget | ClearOperationKind
 
 export type SettingsResult<T = undefined> =
   | { ok: true; data: T }

@@ -479,6 +479,20 @@ Stage 44 is implemented and documented in `docs/stage-44-csv-markdown-export-con
 
 The only recommended next stage is **Stage 45: Factory Reset / Language Coverage / Data Portability Closeout and QA**, under separate authorization. Stage 45 may align registry-driven reset coverage and Language handling, but must not add Merge, reopen CSV/Markdown features, change JSON schemas, redesign Settings, or modify Weather internals.
 
+## Stage 45 Data Portability Closeout Result
+
+Stage 45 is implemented and documented in `docs/stage-45-factory-reset-language-data-portability-closeout.md`.
+
+- `Clear user content` is a registry-driven four-key transaction that removes saved user content while preserving Theme, Language, Weather cache/provider/credentials, and auto-location.
+- `Factory reset` is a registry-driven 11-key transaction that removes every registered product key and synchronizes runtime stores to browser defaults.
+- Both paths use exact raw snapshots, deterministic remove plans, immediate absence verification, reverse rollback, rollback verification, store hydration verification, and a shared concurrency guard.
+- Developer debug and unregistered storage remain excluded; `localStorage.clear()` is never used.
+- Bilingual previews and confirmations state counts, preference impact, and that no automatic backup is created.
+- The Node-only persistence unit suite is promoted into the QA workflow before Playwright installation, with no package or lockfile change.
+- Weather internals, JSON/CSV/Markdown contracts, routes, QA scripts, dependencies, and the frozen visual baseline remain unchanged.
+
+After the Stage 45 validation matrix is green, data portability is closed and becomes regression-only. The only recommended next stage is **Stage 46: Calendar Product / Architecture Spec**, under separate authorization. Stage 46 must remain specification-only and must not reopen portability or Weather scope.
+
 ## Weather Follow-up Queue
 
 - Weather regression fixes only during the whole-site upgrade.

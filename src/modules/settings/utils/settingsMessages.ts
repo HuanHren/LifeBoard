@@ -1,7 +1,10 @@
 import { translationKeys } from '@/i18n/keys'
 import type { TranslationKey } from '@/i18n/keys'
 import type { TranslationParameters } from '@/i18n/types'
-import type { DataPortabilityErrorCode } from '@/shared/persistence'
+import type {
+  ClearOperationErrorCode,
+  DataPortabilityErrorCode,
+} from '@/shared/persistence'
 
 type SettingsTranslate = (
   key: TranslationKey,
@@ -81,6 +84,22 @@ const importErrorKeys: Record<DataPortabilityErrorCode, TranslationKey> = {
 
 export const getSettingsImportErrorKey = (code: DataPortabilityErrorCode) =>
   importErrorKeys[code]
+
+const clearErrorKeys: Record<ClearOperationErrorCode, TranslationKey> = {
+  CLEAR_OPERATION_CANCELLED: 'settings.error.clearOperationRestored',
+  CLEAR_PLAN_INVALID: 'settings.error.clearPlanInvalid',
+  CLEAR_SNAPSHOT_FAILED: 'settings.error.clearSnapshotFailed',
+  CLEAR_REMOVE_FAILED: 'settings.error.clearOperationRestored',
+  CLEAR_VERIFY_FAILED: 'settings.error.clearOperationRestored',
+  CLEAR_HYDRATION_FAILED: 'settings.error.clearOperationRestored',
+  CLEAR_ROLLBACK_FAILED: 'settings.error.clearRollbackFailed',
+  CLEAR_ROLLBACK_VERIFY_FAILED: 'settings.error.clearRollbackFailed',
+  CLEAR_CONCURRENT_OPERATION: 'settings.error.clearConcurrent',
+  FACTORY_RESET_RELOAD_FAILED: 'settings.error.clearRollbackFailed',
+}
+
+export const getSettingsClearErrorKey = (code: ClearOperationErrorCode) =>
+  clearErrorKeys[code]
 
 export function localizeSettingsError(
   error: string | null,

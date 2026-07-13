@@ -11,7 +11,8 @@ interface Props {
   taskCount: number
   countdownCount: number
   bookmarkCount: number
-  hasAnyData: boolean
+  hasUserContent: boolean
+  busy: boolean
   error: string | null
   success: string | null
 }
@@ -68,6 +69,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         <BaseButton
           v-if="hasWeather"
           data-qa="settings-clear-weather-button"
+          :disabled="busy"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('weather', $event)"
         >
@@ -90,6 +92,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         <BaseButton
           v-if="taskCount + countdownCount > 0"
           data-qa="settings-clear-todos-button"
+          :disabled="busy"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('todos', $event)"
         >
@@ -112,6 +115,7 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
         <BaseButton
           v-if="bookmarkCount > 0"
           data-qa="settings-clear-bookmarks-button"
+          :disabled="busy"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
           @click="requestClear('bookmarks', $event)"
         >
@@ -132,23 +136,42 @@ function requestClear(target: SettingsClearTarget, event: MouseEvent) {
       </div>
     </div>
 
-    <div class="border-t border-[var(--color-danger)] bg-[var(--color-danger-soft)] p-4 sm:p-5">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="divide-y divide-[var(--color-danger)] border-t border-[var(--color-danger)] bg-[var(--color-danger-soft)]">
+      <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div>
           <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
-            {{ t('settings.clearData.allTitle') }}
+            {{ t('settings.clearData.userContentTitle') }}
           </h3>
           <p class="mt-1 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">
-            {{ t('settings.clearData.allDescription') }}
+            {{ t('settings.clearData.userContentDescription') }}
+          </p>
+        </div>
+        <BaseButton
+          data-qa="settings-clear-user-content-button"
+          :disabled="!hasUserContent || busy"
+          class="border-[var(--color-danger)] text-[var(--color-danger)]"
+          @click="requestClear('user-content', $event)"
+        >
+          {{ t('settings.clearData.userContentAction') }}
+        </BaseButton>
+      </div>
+
+      <div class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div>
+          <h3 class="text-sm font-semibold text-[var(--color-text-primary)]">
+            {{ t('settings.clearData.factoryResetTitle') }}
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">
+            {{ t('settings.clearData.factoryResetDescription') }}
           </p>
         </div>
         <BaseButton
           data-qa="settings-clear-all-button"
-          :disabled="!hasAnyData"
+          :disabled="busy"
           class="border-[var(--color-danger)] text-[var(--color-danger)]"
-          @click="requestClear('all', $event)"
+          @click="requestClear('factory-reset', $event)"
         >
-          {{ t('settings.clearData.allAction') }}
+          {{ t('settings.clearData.factoryResetAction') }}
         </BaseButton>
       </div>
     </div>

@@ -1,36 +1,29 @@
-import {
-  BOOKMARKS_STORAGE_KEY,
-  BOOKMARKS_STORAGE_VERSION,
-} from '@/modules/bookmarks/constants/bookmarks'
+import { BOOKMARKS_STORAGE_VERSION } from '@/modules/bookmarks/constants/bookmarks'
 import { loadBookmarksStorage } from '@/modules/bookmarks/services/bookmarksStorage'
 import type {
-  SettingsClearTarget,
+  SettingsSelectiveClearTarget,
   SettingsDataSnapshot,
   SettingsResult,
 } from '@/modules/settings/types/settings'
-import {
-  TODOS_STORAGE_KEY,
-  TODOS_STORAGE_VERSION,
-} from '@/modules/todos/constants/todos'
+import { TODOS_STORAGE_VERSION } from '@/modules/todos/constants/todos'
 import { loadTodosStorage } from '@/modules/todos/services/todosStorage'
-import {
-  WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
-  WEATHER_AMAP_KEY_STORAGE_KEY,
-  WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY,
-  WEATHER_FORECAST_CACHE_STORAGE_KEY,
-  WEATHER_FAVORITES_STORAGE_KEY,
-  WEATHER_PROVIDER_STORAGE_KEY,
-  WEATHER_STORAGE_KEY,
-} from '@/modules/weather/constants/weather'
+import { WEATHER_STORAGE_KEY } from '@/modules/weather/constants/weather'
 import { loadWeatherFavoritesStorage } from '@/modules/weather/services/weatherFavoritesStorage'
 import { parseWeatherLocation } from '@/modules/weather/utils/weatherLocationValidation'
 import type { ThemeMode } from '@/shared/types/theme'
 import {
   createDataPortabilityError,
+  createClearOperationCoordinator,
+  createClearOperationError,
   createPortableBackupExport,
   createPortableExportError,
   createRawStorageAdapter,
   executeReplaceImport,
+  getPersistenceEntryById,
+  type ClearOperationHydrationHooks,
+  type ClearOperationKind,
+  type ClearOperationResult,
+  type ClearOperationSuccess,
   preparePortableImportFile,
   type ImportHydrationHooks,
   type LifeBoardLocale,
@@ -42,20 +35,17 @@ import {
 } from '@/shared/persistence'
 import { THEME_STORAGE_KEY } from '@/stores/theme'
 
-const OWNED_STORAGE_KEYS = [
-  THEME_STORAGE_KEY,
-  WEATHER_STORAGE_KEY,
-  WEATHER_FORECAST_CACHE_STORAGE_KEY,
-  WEATHER_FAVORITES_STORAGE_KEY,
-  WEATHER_PROVIDER_STORAGE_KEY,
-  WEATHER_CAIYUN_TOKEN_STORAGE_KEY,
-  WEATHER_AMAP_KEY_STORAGE_KEY,
-  WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY,
-  TODOS_STORAGE_KEY,
-  BOOKMARKS_STORAGE_KEY,
-] as const
+const clearOperationCoordinator = createClearOperationCoordinator()
 
-type OwnedStorageKey = (typeof OWNED_STORAGE_KEYS)[number]
+const selectiveClearEntryIds = Object.freeze({
+  weather: Object.freeze([
+    'weather-location',
+    'weather-forecast-cache',
+    'weather-favorite-cities',
+  ] as const),
+  todos: Object.freeze(['todos'] as const),
+  bookmarks: Object.freeze(['bookmarks'] as const),
+})
 
 function storageErrorMessage() {
   return 'settings.error.storageUnavailable'
@@ -213,15 +203,15 @@ export async function readBackupFile(
   })
 }
 
-function captureStorage(storage: Storage) {
-  return new Map<OwnedStorageKey, string | null>(
-    OWNED_STORAGE_KEYS.map((key) => [key, storage.getItem(key)]),
+function captureStorage(storage: Storage, keys: readonly string[]) {
+  return new Map<string, string | null>(
+    keys.map((key) => [key, storage.getItem(key)]),
   )
 }
 
 function restoreStorage(
   storage: Storage,
-  snapshot: Map<OwnedStorageKey, string | null>,
+  snapshot: Map<string, string | null>,
 ) {
   for (const [key, value] of snapshot) {
     if (value === null) storage.removeItem(key)
@@ -230,15 +220,16 @@ function restoreStorage(
 }
 
 function runStorageTransaction(
+  keys: readonly string[],
   operation: (storage: Storage) => void,
 ): SettingsResult {
   const storageResult = getStorage()
   if (!storageResult.ok) return storageResult
 
-  let snapshot: Map<OwnedStorageKey, string | null>
+  let snapshot: Map<string, string | null>
 
   try {
-    snapshot = captureStorage(storageResult.data)
+    snapshot = captureStorage(storageResult.data, keys)
   } catch {
     return { ok: false, error: storageErrorMessage() }
   }
@@ -286,28 +277,37 @@ export function applyLifeBoardBackup(
   })
 }
 
-export function clearLifeBoardData(target: SettingsClearTarget): SettingsResult {
-  return runStorageTransaction((storage) => {
-    if (target === 'weather' || target === 'all') {
-      storage.removeItem(WEATHER_STORAGE_KEY)
-      storage.removeItem(WEATHER_FORECAST_CACHE_STORAGE_KEY)
-      storage.removeItem(WEATHER_FAVORITES_STORAGE_KEY)
-    }
+export function clearLifeBoardData(target: SettingsSelectiveClearTarget): SettingsResult {
+  const entries = selectiveClearEntryIds[target].map((id) => getPersistenceEntryById(id))
+  if (entries.some((entry) => !entry)) {
+    return { ok: false, error: 'settings.error.clearPlanInvalid' }
+  }
 
-    if (target === 'todos' || target === 'all') {
-      storage.removeItem(TODOS_STORAGE_KEY)
-    }
+  const keys = entries.map((entry) => entry?.storageKey).filter((key): key is string => Boolean(key))
+  return runStorageTransaction(keys, (storage) => {
+    for (const key of keys) storage.removeItem(key)
+  })
+}
 
-    if (target === 'bookmarks' || target === 'all') {
-      storage.removeItem(BOOKMARKS_STORAGE_KEY)
+export function clearLifeBoardOperation(
+  kind: ClearOperationKind,
+  hydration: ClearOperationHydrationHooks,
+): ClearOperationResult<ClearOperationSuccess> {
+  const storageResult = getStorage()
+  if (!storageResult.ok) {
+    return {
+      ok: false,
+      error: createClearOperationError(
+        'CLEAR_SNAPSHOT_FAILED',
+        'Browser storage is unavailable for this clear operation.',
+        { severity: 'error', recoverable: true, details: { kind } },
+      ),
     }
+  }
 
-    if (target === 'all') {
-      storage.removeItem(THEME_STORAGE_KEY)
-      storage.removeItem(WEATHER_PROVIDER_STORAGE_KEY)
-      storage.removeItem(WEATHER_CAIYUN_TOKEN_STORAGE_KEY)
-      storage.removeItem(WEATHER_AMAP_KEY_STORAGE_KEY)
-      storage.removeItem(WEATHER_AUTO_LOCATION_HOME_STORAGE_KEY)
-    }
+  return clearOperationCoordinator.execute({
+    kind,
+    storage: createRawStorageAdapter(storageResult.data),
+    hydration,
   })
 }

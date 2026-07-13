@@ -8,6 +8,7 @@ interface Props {
   description: string
   confirmLabel: string
   acknowledgementLabel?: string
+  busy?: boolean
 }
 
 interface Emits {
@@ -24,6 +25,7 @@ const acknowledged = ref(false)
 let returnFocus: HTMLElement | null = null
 
 function cancel() {
+  if (props.busy) return
   emit('cancel')
 }
 
@@ -93,6 +95,7 @@ watch(
     aria-labelledby="settings-confirmation-title"
     data-qa="settings-confirmation-dialog"
     class="m-auto w-[min(32rem,calc(100%-2rem))] rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-0 text-[var(--color-text-primary)] shadow-[var(--shadow-soft)] backdrop:bg-[color-mix(in_oklch,var(--color-text-primary)_35%,transparent)]"
+    :aria-busy="busy || undefined"
     @cancel.prevent="cancel"
     @keydown="handleKeydown"
   >
@@ -128,6 +131,7 @@ watch(
           class="inline-flex min-h-11 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--color-control-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-medium text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
           data-qa="settings-confirmation-cancel-button"
           type="button"
+          :disabled="busy"
           @click="cancel"
         >
           {{ t('settings.common.cancel') }}
@@ -139,7 +143,7 @@ watch(
             'disabled:cursor-not-allowed disabled:opacity-55',
           ]"
           data-qa="settings-confirmation-confirm-button"
-          :disabled="Boolean(acknowledgementLabel) && !acknowledged"
+          :disabled="busy || (Boolean(acknowledgementLabel) && !acknowledged)"
           type="button"
           @click="emit('confirm')"
         >
