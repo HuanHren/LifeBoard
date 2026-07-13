@@ -498,3 +498,13 @@ After the Stage 45 validation matrix is green, data portability is closed and be
 - Weather regression fixes only during the whole-site upgrade.
 - Weather animation rewrite planning after the whole-site upgrade.
 - Xiaomi Weather material analysis after the whole-site upgrade.
+
+## Stage 46 Calendar Architecture Result
+
+Stage 45 Data Portability is frozen and regression-only. Stage 46 accepts **Option B: Read-only Calendar Aggregation MVP** and records the complete product/data contract in `docs/stage-46-calendar-product-architecture-spec.md`.
+
+- The only next stage is **Stage 47: Read-only Calendar Aggregation MVP**.
+- Stage 47 adds no storage key and does not change the persistence registry, PortableBackup, import, clear/reset, Home, or Weather.
+- Stage 47 derives Calendar entries from existing Todo due dates and Countdown target dates; source records remain authoritative.
+- Native Calendar Events, `lifeboard.calendar`, registry 11-to-12 expansion, PortableBackupV2, clear/reset expansion, and bounded Home integration are deferred to Stage 48.
+- Weather remains frozen and regression-only.
