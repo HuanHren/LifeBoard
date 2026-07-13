@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+*.har
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -17,6 +18,7 @@ dist-ssr
 /docs/weather-visual-local/
 /docs/frontend-audit-local/
 /docs/weather-xiaomi-audit-local/
+/docs/weather-w1-local/
 
 # Editor directories and files
 .vscode/*

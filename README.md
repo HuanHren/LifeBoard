@@ -90,7 +90,7 @@ Start the development server:
 npm run dev
 ```
 
-`npm run dev` runs the Vite frontend only. It does not serve Vercel API routes such as `/api/caiyun-weather`, `/api/amap-geocode`, or `/api/amap-reverse-geocode`.
+`npm run dev` runs the Vite frontend only. It does not serve Vercel API routes such as `/api/caiyun-weather`, `/api/amap-geocode`, `/api/amap-reverse-geocode`, or the optional server-only Xiaomi proxy under `/api/weather/xiaomi/*`.
 
 To test same-origin API routes locally, use Vercel's local runtime:
 
@@ -200,9 +200,16 @@ LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 3. Use the Vite framework preset.
 4. Use `npm run build` as the build command.
 5. Use `dist` as the output directory.
-6. Leave environment variables empty; LifeBoard does not require deployment secrets.
+6. Leave environment variables empty for the default Open-Meteo experience. The optional Xiaomi Weather proxy requires server-only `XIAOMI_WEATHER_*` variables in Development or Preview; W1 does not enable them for Production. Never use `VITE_` variables for Xiaomi credentials.
 
 `vercel.json` keeps `/api/*` available for Vercel Functions and rewrites other direct requests to `index.html`, allowing Vue Router to preserve clean history-mode routes. After deployment, test direct access to `/`, `/calendar`, `/weather`, `/todos`, `/tools`, `/bookmarks`, `/settings`, `/missing-route`, and the POST-only `/api/caiyun-weather`, `/api/amap-geocode`, and `/api/amap-reverse-geocode` routes.
+
+For a Development or Preview environment with the optional Xiaomi variables configured,
+also validate `GET /api/weather/xiaomi/search?q=尉氏县` and
+`GET /api/weather/xiaomi/all?locationKey=...&latitude=...&longitude=...&locale=zh-CN&days=15`.
+These routes establish a server contract only; Xiaomi is not yet a user-facing selectable
+provider. See `docs/weather-w1-xiaomi-proxy-contract.md` for the bounded W1 contract and
+Preview-only safety policy.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 

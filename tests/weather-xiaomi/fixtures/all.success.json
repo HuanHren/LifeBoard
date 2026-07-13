@@ -1,0 +1,185 @@
+{
+  "alerts": [],
+  "aqi": {
+    "aqi": "42",
+    "brandInfo": { "brands": [] },
+    "pubTime": "2026-01-01T00:00:00Z",
+    "status": 0
+  },
+  "brandInfo": {
+    "brands": [
+      {
+        "brandId": "sanitized-brand",
+        "logo": "https://example.invalid/sanitized-logo.png",
+        "names": {
+          "en_US": "Sanitized Source",
+          "zh_CN": "已脱敏来源",
+          "zh_TW": "已脫敏來源"
+        },
+        "url": "https://example.invalid/"
+      }
+    ]
+  },
+  "chs": [],
+  "current": {
+    "feelsLike": { "unit": "C", "value": "20" },
+    "humidity": { "unit": "%", "value": "50" },
+    "pressure": { "unit": "hPa", "value": "1000" },
+    "pubTime": "2026-01-01T00:00:00Z",
+    "temperature": { "unit": "C", "value": "20" },
+    "uvIndex": "1",
+    "visibility": { "unit": "km", "value": "10" },
+    "weather": "0",
+    "wind": {
+      "direction": { "unit": "degree", "value": "0" },
+      "speed": { "unit": "km/h", "value": "0" }
+    }
+  },
+  "forecastDaily": {
+    "aqi": {
+      "brandInfo": { "brands": [] },
+      "pubTime": "2026-01-01T00:00:00Z",
+      "status": 0,
+      "value": [42]
+    },
+    "moonPhase": null,
+    "precipitationProbability": { "status": 0, "value": ["0"] },
+    "pubTime": "2026-01-01T00:00:00Z",
+    "status": 0,
+    "sunRiseSet": {
+      "status": 0,
+      "value": [{ "from": "2026-01-01T06:00:00Z", "to": "2026-01-01T18:00:00Z" }]
+    },
+    "temperature": {
+      "status": 0,
+      "unit": "C",
+      "value": [{ "from": "10", "to": "20" }]
+    },
+    "weather": {
+      "status": 0,
+      "value": [{ "from": "0", "to": "0" }]
+    },
+    "wind": {
+      "direction": {
+        "status": 0,
+        "unit": "degree",
+        "value": [{ "from": "0", "to": "0" }]
+      },
+      "speed": {
+        "status": 0,
+        "unit": "km/h",
+        "value": [{ "from": "0", "to": "0" }]
+      }
+    }
+  },
+  "forecastHourly": {
+    "aqi": {
+      "brandInfo": { "brands": [] },
+      "pubTime": "2026-01-01T00:00:00Z",
+      "status": 0,
+      "value": [42]
+    },
+    "desc": "Sanitized hourly description",
+    "precipitationProbability": {
+      "desc": "Sanitized precipitation description",
+      "pubTime": "2026-01-01T00:00:00Z",
+      "status": 0,
+      "value": [0]
+    },
+    "status": 0,
+    "temperature": {
+      "pubTime": "2026-01-01T00:00:00Z",
+      "status": 0,
+      "unit": "C",
+      "value": [20]
+    },
+    "weather": {
+      "pubTime": "2026-01-01T00:00:00Z",
+      "status": 0,
+      "value": [0]
+    },
+    "wind": {
+      "status": 0,
+      "value": [{ "datetime": "2026-01-01T00:00:00Z", "direction": "0", "speed": "0" }]
+    }
+  },
+  "indices": {
+    "indices": [{ "type": "sanitized-index", "value": "sanitized-value" }],
+    "pubTime": "2026-01-01T00:00:00Z",
+    "status": 0
+  },
+  "minutely": {
+    "new": "true",
+    "precipitation": {
+      "description": "Sanitized precipitation description",
+      "firstRainOrSnow": false,
+      "headDescription": "Sanitized heading",
+      "headIconType": "none",
+      "isModify": false,
+      "isRadarHideToast": false,
+      "isRainOrSnow": 0,
+      "isShow": true,
+      "kmNum": 0,
+      "modifyInHour": false,
+      "probability": [0],
+      "pubTime": "2026-01-01T00:00:00Z",
+      "shortDescription": "Sanitized summary",
+      "status": 0,
+      "subtitle": "Sanitized subtitle",
+      "value": [0],
+      "weather": "0"
+    },
+    "probability": {
+      "maxProbability": "0",
+      "probabilityDesc": "Sanitized probability",
+      "probabilityDescV2": "Sanitized probability"
+    },
+    "status": 0
+  },
+  "preHour": [
+    {
+      "pubTime": "2026-01-01T00:00:00Z",
+      "temperature": { "unit": "C", "value": "19" },
+      "weather": "0"
+    }
+  ],
+  "sourceMaps": {
+    "clientInfo": {
+      "isGlobal": false,
+      "isLocated": false,
+      "locale": "zh_cn"
+    },
+    "current": { "temperature": "sanitized-source" },
+    "daily": { "temperature": "sanitized-source" },
+    "hourly": { "temperature": "sanitized-source" },
+    "indices": { "uvIndexV1": "sanitized-source" }
+  },
+  "typhoon": [
+    {
+      "centWindSpeed": 0,
+      "lat": 0.0,
+      "lon": 0.0,
+      "typhoonCname": "已脱敏台风",
+      "typhoonCode": "sanitized-code",
+      "typhoonEname": "Sanitized Typhoon",
+      "typhoonType": "sanitized-type"
+    }
+  ],
+  "updateTime": 1767225600000,
+  "url": {},
+  "yesterday": {
+    "aqi": "42",
+    "date": "2025-12-31",
+    "status": 0,
+    "sunRise": "06:00",
+    "sunSet": "18:00",
+    "tempMax": "20",
+    "tempMin": "10",
+    "weatherEnd": "0",
+    "weatherStart": "0",
+    "windDircEnd": "0",
+    "windDircStart": "0",
+    "windSpeedEnd": "0",
+    "windSpeedStart": "0"
+  }
+}

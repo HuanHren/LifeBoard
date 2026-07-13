@@ -1,0 +1,11 @@
+[
+  {
+    "affiliation": "Sanitized Region,Sanitized Country",
+    "key": "sanitized-city-key",
+    "latitude": "0.000000",
+    "locationKey": "sanitized-location-key",
+    "longitude": "0.000000",
+    "name": "Sanitized City",
+    "timeZoneShift": 0
+  }
+]
