@@ -42,6 +42,9 @@ jobs:
       - name: Run Xiaomi Weather contract tests
         run: npm run test:weather-xiaomi:ci
 
+      - name: Run Xiaomi Weather provider tests
+        run: npm run test:weather-xiaomi-provider:ci
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 

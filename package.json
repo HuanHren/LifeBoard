@@ -10,6 +10,7 @@
     "test:unit": "vitest",
     "test:unit:ci": "vitest run",
     "test:weather-xiaomi:ci": "vitest run --config vitest.xiaomi.config.js",
+    "test:weather-xiaomi-provider:ci": "vitest run --config vitest.xiaomi-provider.config.ts",
     "verify:weather-xiaomi": "node scripts/verify-xiaomi-weather-proxy.mjs",
     "qa:a11y:routes": "node scripts/qa-route-a11y.mjs",
     "qa:a11y:routes:ci": "node scripts/qa-route-a11y.mjs --ci",
