@@ -17,7 +17,9 @@ import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.
 import WeatherHero from '@/modules/weather/components/WeatherHero.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
+import XiaomiExtendedWeatherRegion from '@/modules/weather/components/XiaomiExtendedWeatherRegion.vue'
 import { COMPACT_DAILY_FORECAST_LENGTH } from '@/modules/weather/constants/weather'
+import { buildXiaomiExtendedWeatherViewModel } from '@/modules/weather/extended/xiaomiExtendedWeatherAdapters'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import {
   formatFullLocalTime,
@@ -32,6 +34,7 @@ const { locale, t } = useI18n()
 const {
   selectedLocation,
   weather,
+  providerSnapshot,
   forecastStatus,
   forecastError,
   displayAirQuality,
@@ -62,6 +65,14 @@ const showPreviousForecastError = computed(
   () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
 )
 const weatherAlertStatus = computed(() => resolveWeatherAlertStatus(weather.value))
+const xiaomiExtendedWeather = computed(() => {
+  if (effectiveProvider.value !== 'xiaomi') return undefined
+
+  return buildXiaomiExtendedWeatherViewModel(
+    providerSnapshot.value,
+    locale.value,
+  ).viewModel
+})
 const cacheStatusMessage = computed(() => {
   if (!weather.value) return null
 
@@ -280,6 +291,11 @@ watch(locale, setLocale, { immediate: true })
         />
         <PrecipitationTimeline :items="weather.hourly" :units="weather.units" />
       </div>
+
+      <XiaomiExtendedWeatherRegion
+        v-if="xiaomiExtendedWeather"
+        :model="xiaomiExtendedWeather"
+      />
 
       <div class="min-w-0 max-w-full space-y-3">
         <WeatherProviderNotice

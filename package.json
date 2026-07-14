@@ -12,6 +12,7 @@
     "test:weather-xiaomi:ci": "vitest run --config vitest.xiaomi.config.js",
     "test:weather-xiaomi-provider:ci": "vitest run --config vitest.xiaomi-provider.config.ts",
     "test:weather-w3:ci": "vitest run --config vitest.weather-w3.config.ts",
+    "test:weather-w4:ci": "vitest run --config vitest.weather-w4.config.ts",
     "verify:weather-xiaomi": "node scripts/verify-xiaomi-weather-proxy.mjs",
     "qa:a11y:routes": "node scripts/qa-route-a11y.mjs",
     "qa:a11y:routes:ci": "node scripts/qa-route-a11y.mjs --ci",
@@ -19,6 +20,8 @@
     "qa:a11y:routes:json:file": "node scripts/qa-route-a11y.mjs --json --output .qa/route-a11y-summary.json",
     "qa:screenshots": "node scripts/qa-route-screenshots.mjs",
     "qa:screenshots:ci": "node scripts/qa-route-screenshots.mjs --ci",
+    "qa:weather-w4": "node scripts/qa-weather-w4.mjs",
+    "verify:weather-w4:preview": "node scripts/verify-weather-w4-preview.mjs",
     "qa:design": "npm run build && npm run qa:screenshots",
     "qa": "npm run build && npm run qa:a11y:routes"
   },

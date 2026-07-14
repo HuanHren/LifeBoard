@@ -1,0 +1,80 @@
+{
+  "alerts": [],
+  "brandInfo": {
+    "brands": [
+      {
+        "brandId": "sanitized-brand",
+        "logo": "https://example.invalid/sanitized-logo.png",
+        "names": {
+          "en_US": "Sanitized Weather Source",
+          "zh_CN": "已脱敏天气来源",
+          "zh_TW": "已脫敏天氣來源"
+        },
+        "url": "https://example.invalid/"
+      }
+    ]
+  },
+  "indices": {
+    "indices": [
+      { "type": "carWash", "value": "1" },
+      { "type": "sports", "value": "2" },
+      { "type": "uvIndex", "value": "3" }
+    ],
+    "pubTime": "2026-01-01T01:00:00Z",
+    "status": 0
+  },
+  "minutely": {
+    "new": "true",
+    "precipitation": {
+      "description": "Sanitized precipitation detail",
+      "headDescription": "Sanitized precipitation summary",
+      "isShow": true,
+      "probability": [0, 0, 0, 0],
+      "pubTime": "2026-01-01T01:00:00Z",
+      "shortDescription": "Sanitized short summary",
+      "status": 0,
+      "subtitle": "Sanitized precipitation advice",
+      "value": [0, 0, 0]
+    },
+    "status": 0
+  },
+  "preHour": [
+    {
+      "feelsLike": { "unit": "C", "value": "18" },
+      "humidity": { "unit": "%", "value": "52" },
+      "pressure": { "unit": "hPa", "value": "999" },
+      "pubTime": "2026-01-01T00:00:00Z",
+      "temperature": { "unit": "C", "value": "19" },
+      "visibility": { "unit": "km", "value": "9" },
+      "weather": "0",
+      "wind": {
+        "direction": { "unit": "degree", "value": "0" },
+        "speed": { "unit": "km/h", "value": "2" }
+      }
+    }
+  ],
+  "sourceMaps": {
+    "clientInfo": {
+      "isGlobal": false,
+      "isLocated": false,
+      "locale": "zh_cn"
+    }
+  },
+  "typhoon": [
+    {
+      "centWindSpeed": 0,
+      "lat": 0,
+      "lon": 0,
+      "typhoonCname": "已脱敏台风",
+      "typhoonCode": "sanitized-code",
+      "typhoonEname": "Sanitized Typhoon",
+      "typhoonType": "sanitized-type"
+    }
+  ],
+  "yesterday": {
+    "date": "2025-12-31",
+    "status": 0,
+    "tempMax": "20",
+    "tempMin": "10"
+  }
+}
