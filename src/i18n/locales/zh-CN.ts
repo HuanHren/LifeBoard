@@ -231,12 +231,23 @@ export const zhCN = {
   'settings.weatherProvider.legend': '天气预报数据源偏好',
   'settings.weatherProvider.helper':
     '选择此浏览器中天气模块使用 Open-Meteo 还是 Caiyun Weather 加载预报。',
+  'settings.weatherProvider.helperWithXiaomi':
+    '选择此浏览器天气模块使用的预报数据源。小米天气仅限受支持的开发与预览验证环境。',
   'settings.weatherProvider.openMeteoLabel': 'Open-Meteo',
   'settings.weatherProvider.openMeteoDescription':
     '不需要 Token。城市搜索和天气预报可以使用 Open-Meteo。',
   'settings.weatherProvider.caiyunLabel': '彩云天气',
   'settings.weatherProvider.caiyunDescription':
     '需要你提供 Token。预报请求会使用当前选择城市的坐标。',
+  'settings.weatherProvider.xiaomiLabel': '小米天气',
+  'settings.weatherProvider.xiaomiDescription':
+    '仅用于开发和预览环境。请先选择一个小米城市搜索结果，再加载已经验证的中文天气合同。',
+  'settings.weatherProvider.xiaomiUnsupportedLocale':
+    '英文模式暂不可用，因为小米 en-US 上游合同尚未验证。',
+  'settings.weatherProvider.xiaomiLocationRequired':
+    '请在天气城市搜索中重新选择城市，以绑定小米位置标识。在此之前由 Open-Meteo 提供天气。',
+  'settings.weatherProvider.xiaomiEffectiveOpenMeteo':
+    '偏好数据源为小米天气，但当前不满足运行条件。有效数据源为 Open-Meteo，并且不会发送小米请求。',
   'settings.weatherProvider.tokenLabel': '彩云天气 Token',
   'settings.weatherProvider.tokenHelper':
     '仅在你已经拥有 Token 时填写。它只保存在此浏览器中，并且不会完整显示。',

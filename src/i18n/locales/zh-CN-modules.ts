@@ -154,6 +154,10 @@ export const zhCNModules = {
     '尚未保存 AMap Key，LifeBoard 正在使用 Open-Meteo 城市搜索。',
   'weather.search.amapUnavailable':
     'AMap 地理编码不可用或未返回匹配结果，LifeBoard 正在尝试 Open-Meteo。',
+  'weather.search.xiaomiUnsupportedLocale':
+    '小米天气尚未验证英文合同。LifeBoard 将使用 Open-Meteo 搜索城市，并且不会请求小米接口。',
+  'weather.search.xiaomiFeatureDisabled':
+    '当前环境未启用小米天气。LifeBoard 将使用 Open-Meteo 搜索城市。',
   'weather.results.chooseTitle': '选择地点',
   'weather.results.emptyTitle': '未找到匹配城市',
   'weather.results.matches': '找到 {count} 个与“{query}”匹配的地点。',
@@ -182,6 +186,14 @@ export const zhCNModules = {
     '已选择 Caiyun Weather，但还没有保存 Token。请先在设置中添加 Token，再加载 Caiyun Weather 预报。',
   'weather.providerNotice.caiyunActive':
     '当前所选城市的预报由 Caiyun Weather 提供。城市搜索仍使用 Open-Meteo。',
+  'weather.providerNotice.xiaomiActive':
+    '当前所选城市的预报由 LifeBoard 受保护的小米天气代理提供。',
+  'weather.providerNotice.xiaomiUnsupportedLocale':
+    '偏好数据源为小米天气，但英文上游合同尚未验证。当前有效数据源为 Open-Meteo，并且不会请求小米接口。',
+  'weather.providerNotice.xiaomiLocationRequired':
+    '偏好数据源为小米天气，但当前城市还没有已验证的小米位置标识。请选择一个小米搜索结果；在此之前由 Open-Meteo 提供天气。',
+  'weather.providerNotice.xiaomiDisabled':
+    '偏好数据源为小米天气，但当前环境未启用它。当前有效数据源为 Open-Meteo。',
   'weather.location.capitalCity': '首都',
   'weather.location.regionalCapital': '地区首府',
   'weather.location.country': '国家',
@@ -196,6 +208,7 @@ export const zhCNModules = {
   'weather.hero.low': '最低 {temperature}',
   'weather.hero.provider.openMeteo': 'Open-Meteo 预报',
   'weather.hero.provider.caiyun': 'Caiyun Weather 预报',
+  'weather.hero.provider.xiaomi': '小米天气预报',
   'weather.hero.summary':
     '{location}：{temperature}，{condition}。最高 {high}，最低 {low}。',
   'weather.hero.updatedForCity': '{city} 的天气已更新。',

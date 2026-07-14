@@ -47,8 +47,19 @@ import {
 import {
   createLongRangeForecastFromSnapshot,
   fetchLongRangeForecastForProvider,
-  fetchWeatherForecastForProvider,
 } from '@/modules/weather/services/weatherForecastProvider'
+import type { ProviderWeatherSnapshot } from '@/modules/weather/providers/types'
+import { xiaomiWeatherEnabled } from '@/modules/weather/providers/weatherFeatureFlags'
+import {
+  getEffectiveWeatherProvider,
+  getWeatherProviderAvailability,
+  isWeatherProviderCacheEnabled,
+} from '@/modules/weather/providers/weatherProviderEligibility'
+import {
+  WeatherProviderRuntimeError,
+  weatherProviderRuntime,
+} from '@/modules/weather/providers/weatherProviderRuntime'
+import { adaptProviderSnapshotForDisplay } from '@/modules/weather/providers/weatherSnapshotAdapters'
 import type {
   AirQualityErrorKind,
   AirQualitySnapshot,
@@ -63,6 +74,8 @@ import type {
 } from '@/modules/weather/types/weatherFavorites'
 import type {
   WeatherProviderId,
+  WeatherProviderAvailability,
+  WeatherLocationResolutionState,
   WeatherProviderMessage,
   WeatherProviderStorageError,
 } from '@/modules/weather/types/weatherProvider'
@@ -99,9 +112,16 @@ type ForecastCacheUiState =
 
 interface SearchCacheEntry {
   expiresAt: number
-  notice: 'amapMissing' | 'amapUnavailable' | null
+  notice: SearchNotice
   results: WeatherLocation[]
 }
+
+type SearchNotice =
+  | 'amapMissing'
+  | 'amapUnavailable'
+  | 'xiaomiUnsupportedLocale'
+  | 'xiaomiFeatureDisabled'
+  | null
 
 interface LongRangeCacheEntry {
   expiresAt: number
@@ -155,6 +175,7 @@ export const useWeatherStore = defineStore('weather', () => {
   const searchQuery = shallowRef('')
   const searchResults = shallowRef<WeatherLocation[]>([])
   const weather = shallowRef<WeatherSnapshot | null>(null)
+  const providerSnapshot = shallowRef<ProviderWeatherSnapshot | null>(null)
   const searchStatus = shallowRef<WeatherRequestStatus>('idle')
   const forecastStatus = shallowRef<WeatherRequestStatus>('idle')
   const searchError = shallowRef<string | null>(null)
@@ -168,6 +189,8 @@ export const useWeatherStore = defineStore('weather', () => {
   const favoriteCities = shallowRef<WeatherFavoriteCity[]>([])
   const favoriteMessage = shallowRef<WeatherFavoriteMessage | null>(null)
   const provider = shallowRef<WeatherProviderId>('openMeteo')
+  const activeLocale = shallowRef<AppLocale>('en-US')
+  const providerError = shallowRef<WeatherProviderRuntimeError | null>(null)
   const hasCaiyunToken = shallowRef(false)
   const providerMessage = shallowRef<WeatherProviderMessage | null>(null)
   const providerPersistenceError = shallowRef<WeatherProviderStorageError | null>(null)
@@ -175,7 +198,7 @@ export const useWeatherStore = defineStore('weather', () => {
   const autoLocationOnHome = shallowRef(false)
   const amapMessage = shallowRef<WeatherAmapMessage | null>(null)
   const amapPersistenceError = shallowRef<WeatherAmapStorageError | null>(null)
-  const searchNotice = shallowRef<'amapMissing' | 'amapUnavailable' | null>(null)
+  const searchNotice = shallowRef<SearchNotice>(null)
   const lastUpdatedAt = shallowRef<string | null>(null)
   const forecastCacheState = shallowRef<ForecastCacheUiState>('error-no-data')
   const forecastCacheUpdatedAt = shallowRef<string | null>(null)
@@ -190,6 +213,7 @@ export const useWeatherStore = defineStore('weather', () => {
   let airQualityController: AbortController | null = null
   let longRangeController: AbortController | null = null
   let forecastRequestId = 0
+  let searchRequestId = 0
   let airQualityRequestId = 0
   let longRangeRequestId = 0
   let activeForecastKey: string | null = null
@@ -214,6 +238,31 @@ export const useWeatherStore = defineStore('weather', () => {
   )
   const needsCaiyunToken = computed(
     () => provider.value === 'caiyun' && !hasCaiyunToken.value,
+  )
+  const providerAvailability = computed<WeatherProviderAvailability>(() =>
+    getWeatherProviderAvailability({
+      provider: provider.value,
+      locale: activeLocale.value,
+      location: selectedLocation.value ?? pendingForecastLocation.value,
+      xiaomiEnabled: xiaomiWeatherEnabled,
+      hasCaiyunToken: hasCaiyunToken.value,
+    }),
+  )
+  const effectiveProvider = computed<WeatherProviderId>(() =>
+    getEffectiveWeatherProvider({
+      provider: provider.value,
+      locale: activeLocale.value,
+      location: selectedLocation.value ?? pendingForecastLocation.value,
+      xiaomiEnabled: xiaomiWeatherEnabled,
+      hasCaiyunToken: hasCaiyunToken.value,
+    }),
+  )
+  const locationResolutionState = computed<WeatherLocationResolutionState>(() =>
+    provider.value === 'xiaomi' &&
+    !providerAvailability.value.available &&
+    providerAvailability.value.reason === 'missing-provider-location'
+      ? 'required'
+      : 'ready',
   )
   const displayWeatherLocationId = computed(() =>
     weather.value ? createAirQualityLocationId(weather.value.location) : null,
@@ -319,10 +368,12 @@ export const useWeatherStore = defineStore('weather', () => {
       cacheState = 'live',
       commitSelectedLocation = true,
       cached = null,
+      normalizedSnapshot = null,
     }: {
       cacheState?: ForecastCacheUiState
       commitSelectedLocation?: boolean
       cached?: PersistedWeatherSnapshot | null
+      normalizedSnapshot?: ProviderWeatherSnapshot | null
     } = {},
   ) {
     if (commitSelectedLocation) {
@@ -330,6 +381,7 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     weather.value = snapshot
+    providerSnapshot.value = normalizedSnapshot ?? null
     lastUpdatedAt.value = snapshot.fetchedAt
     forecastStatus.value = 'success'
     pendingForecastLocation.value = null
@@ -479,13 +531,23 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     const commitSelectedLocation = options.commitSelectedLocation ?? true
-    const cacheKey = createWeatherForecastCacheKey(provider.value, targetLocation)
+    const runtimeProvider = getEffectiveWeatherProvider({
+      provider: provider.value,
+      locale: activeLocale.value,
+      location: targetLocation,
+      xiaomiEnabled: xiaomiWeatherEnabled,
+      hasCaiyunToken: hasCaiyunToken.value,
+    })
+    const cacheKey = createWeatherForecastCacheKey(runtimeProvider, targetLocation)
+    const cacheEnabled = isWeatherProviderCacheEnabled(runtimeProvider)
 
     if (activeForecastKey === cacheKey && activeForecastPromise) {
       return activeForecastPromise
     }
 
-    const cachedResult = readWeatherForecastCache(cacheKey)
+    const cachedResult = cacheEnabled
+      ? readWeatherForecastCache(cacheKey)
+      : { ok: true as const, data: null }
     const cached = cachedResult.ok ? cachedResult.data : null
     const cacheFreshness = cached ? classifyWeatherCacheFreshness(cached) : null
 
@@ -524,49 +586,58 @@ export const useWeatherStore = defineStore('weather', () => {
       forecastStatus.value = 'loading'
     }
     forecastError.value = null
+    providerError.value = null
 
     activeForecastKey = cacheKey
     activeForecastPromise = (async () => {
       try {
-      const snapshot = await fetchWeatherForecastForProvider({
-        provider: provider.value,
-        location: targetLocation,
-        signal,
-      })
+        const normalizedSnapshot = await weatherProviderRuntime.fetchSnapshot({
+          provider: runtimeProvider,
+          location: targetLocation,
+          locale: activeLocale.value,
+          signal,
+        })
+        const snapshot = adaptProviderSnapshotForDisplay(normalizedSnapshot)
 
-      if (requestId !== forecastRequestId) {
-        return false
-      }
+        if (requestId !== forecastRequestId) {
+          return false
+        }
 
-      if (options.persistLocationOnSuccess && !persistLocation(snapshot.location)) {
-        forecastStatus.value = 'error'
-        return false
-      }
+        if (options.persistLocationOnSuccess && !persistLocation(snapshot.location)) {
+          forecastStatus.value = 'error'
+          return false
+        }
 
-      const nextCacheKey = createWeatherForecastCacheKey(provider.value, snapshot.location)
-      writeWeatherForecastCache(nextCacheKey, snapshot)
-      commitSnapshot(snapshot, { commitSelectedLocation })
-      return true
+        if (cacheEnabled) {
+          const nextCacheKey = createWeatherForecastCacheKey(runtimeProvider, snapshot.location)
+          writeWeatherForecastCache(nextCacheKey, snapshot)
+        }
+        commitSnapshot(snapshot, { commitSelectedLocation, normalizedSnapshot })
+        return true
       } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          return false
+        }
+
+        if (requestId !== forecastRequestId) {
+          return false
+        }
+
+        if (error instanceof WeatherProviderRuntimeError) {
+          providerError.value = error
+        }
+
+        if (cached && cacheFreshness === 'expired' && !weather.value) {
+          restoreCachedForecast(cached, 'expired', commitSelectedLocation)
+        }
+
+        forecastError.value = getErrorMessage(
+          error,
+          'The forecast could not be loaded. Please try again.',
+        )
+        forecastStatus.value = 'error'
+        forecastCacheState.value = weather.value ? 'offline-stale' : 'error-no-data'
         return false
-      }
-
-      if (requestId !== forecastRequestId) {
-        return false
-      }
-
-      if (cached && cacheFreshness === 'expired' && !weather.value) {
-        restoreCachedForecast(cached, 'expired', commitSelectedLocation)
-      }
-
-      forecastError.value = getErrorMessage(
-        error,
-        'The forecast could not be loaded. Please try again.',
-      )
-      forecastStatus.value = 'error'
-      forecastCacheState.value = weather.value ? 'offline-stale' : 'error-no-data'
-      return false
       } finally {
         if (activeForecastKey === cacheKey) {
           activeForecastKey = null
@@ -685,7 +756,15 @@ export const useWeatherStore = defineStore('weather', () => {
       return false
     }
 
-    const cacheKey = createWeatherForecastCacheKey(provider.value, targetLocation)
+    const runtimeProvider = getEffectiveWeatherProvider({
+      provider: provider.value,
+      locale: activeLocale.value,
+      location: targetLocation,
+      xiaomiEnabled: xiaomiWeatherEnabled,
+      hasCaiyunToken: hasCaiyunToken.value,
+    })
+    const cacheKey = createWeatherForecastCacheKey(runtimeProvider, targetLocation)
+    const cacheEnabled = isWeatherProviderCacheEnabled(runtimeProvider)
 
     if (activeLongRangeKey === cacheKey && activeLongRangePromise) {
       return activeLongRangePromise
@@ -693,20 +772,22 @@ export const useWeatherStore = defineStore('weather', () => {
 
     if (
       !options.forceRefresh &&
-      weather.value?.provider === provider.value &&
+      weather.value?.provider === runtimeProvider &&
       createWeatherForecastCacheKey(weather.value.provider, weather.value.location) === cacheKey &&
       weather.value.daily.length > 0
     ) {
       const forecast = createLongRangeForecastFromSnapshot(weather.value)
-      longRangeSessionCache.set(cacheKey, {
-        expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
-        forecast,
-      })
+      if (cacheEnabled) {
+        longRangeSessionCache.set(cacheKey, {
+          expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
+          forecast,
+        })
+      }
       commitLongRangeForecast(forecast)
       return true
     }
 
-    const cached = longRangeSessionCache.get(cacheKey)
+    const cached = cacheEnabled ? longRangeSessionCache.get(cacheKey) : undefined
 
     if (!options.forceRefresh && cached && cached.expiresAt > Date.now()) {
       commitLongRangeForecast(cached.forecast)
@@ -724,14 +805,15 @@ export const useWeatherStore = defineStore('weather', () => {
     activeLongRangePromise = (async () => {
       try {
         const result = await fetchLongRangeForecastForProvider({
-          provider: provider.value,
+          provider: runtimeProvider,
           location: targetLocation,
+          locale: activeLocale.value,
           signal,
         })
 
         if (
           requestId !== longRangeRequestId ||
-          createWeatherForecastCacheKey(provider.value, targetLocation) !== cacheKey
+          createWeatherForecastCacheKey(runtimeProvider, targetLocation) !== cacheKey
         ) {
           return false
         }
@@ -742,10 +824,12 @@ export const useWeatherStore = defineStore('weather', () => {
           return false
         }
 
-        longRangeSessionCache.set(cacheKey, {
-          expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
-          forecast: result.forecast,
-        })
+        if (cacheEnabled) {
+          longRangeSessionCache.set(cacheKey, {
+            expiresAt: Date.now() + LONG_RANGE_SESSION_CACHE_MS,
+            forecast: result.forecast,
+          })
+        }
         commitLongRangeForecast(result.forecast)
         return true
       } catch (error) {
@@ -755,7 +839,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
         if (
           requestId !== longRangeRequestId ||
-          createWeatherForecastCacheKey(provider.value, targetLocation) !== cacheKey
+          createWeatherForecastCacheKey(runtimeProvider, targetLocation) !== cacheKey
         ) {
           return false
         }
@@ -802,10 +886,23 @@ export const useWeatherStore = defineStore('weather', () => {
   }
 
   async function searchCities(query: string, locale: AppLocale = 'en-US') {
+    activeLocale.value = locale
     searchController?.abort()
     searchController = new AbortController()
+    const requestId = ++searchRequestId
     searchQuery.value = query.trim()
-    const cacheKey = `${locale}|${hasAmapKey.value ? 'amap' : 'openMeteo'}|${searchQuery.value.toLocaleLowerCase()}`
+    const xiaomiSearchAvailability = getWeatherProviderAvailability({
+      provider: 'xiaomi',
+      locale,
+      xiaomiEnabled: xiaomiWeatherEnabled,
+      requireLocation: false,
+    })
+    const searchProvider = provider.value === 'xiaomi' && xiaomiSearchAvailability.available
+      ? 'xiaomi'
+      : hasAmapKey.value
+        ? 'amap'
+        : 'openMeteo'
+    const cacheKey = `${locale}|${searchProvider}|${searchQuery.value.toLocaleLowerCase()}`
     const cached = searchCache.get(cacheKey)
 
     if (cached && cached.expiresAt > Date.now()) {
@@ -822,6 +919,40 @@ export const useWeatherStore = defineStore('weather', () => {
     searchResults.value = []
 
     try {
+      if (provider.value === 'xiaomi' && xiaomiSearchAvailability.available) {
+        const results = await weatherProviderRuntime.searchXiaomi(
+          searchQuery.value,
+          searchController.signal,
+        )
+        if (requestId !== searchRequestId) return
+        searchResults.value = results
+        searchStatus.value = 'success'
+        searchCache.set(cacheKey, {
+          expiresAt: Date.now() + WEATHER_SEARCH_CACHE_MS,
+          notice: null,
+          results,
+        })
+        trimSearchCache()
+        return
+      }
+
+      if (provider.value === 'xiaomi' && !xiaomiSearchAvailability.available) {
+        searchNotice.value = xiaomiSearchAvailability.reason === 'unsupported-locale'
+          ? 'xiaomiUnsupportedLocale'
+          : 'xiaomiFeatureDisabled'
+        const results = await searchOpenMeteoLocations(searchQuery.value, searchController.signal)
+        if (requestId !== searchRequestId) return
+        searchResults.value = results.map(normalizeLocation)
+        searchStatus.value = 'success'
+        searchCache.set(cacheKey, {
+          expiresAt: Date.now() + WEATHER_SEARCH_CACHE_MS,
+          notice: searchNotice.value,
+          results: searchResults.value,
+        })
+        trimSearchCache()
+        return
+      }
+
       if (hasAmapKey.value) {
         try {
           const amapResults = await searchAmapLocations(
@@ -831,6 +962,7 @@ export const useWeatherStore = defineStore('weather', () => {
           )
 
           if (amapResults.length > 0) {
+            if (requestId !== searchRequestId) return
             searchResults.value = amapResults
             searchStatus.value = 'success'
             searchCache.set(cacheKey, {
@@ -855,6 +987,7 @@ export const useWeatherStore = defineStore('weather', () => {
       }
 
       const results = await searchOpenMeteoLocations(searchQuery.value, searchController.signal)
+      if (requestId !== searchRequestId) return
       searchResults.value = results.map(normalizeLocation)
       searchStatus.value = 'success'
       searchCache.set(cacheKey, {
@@ -964,7 +1097,10 @@ export const useWeatherStore = defineStore('weather', () => {
       return false
     }
 
+    forecastController?.abort()
+    forecastRequestId += 1
     provider.value = nextProvider
+    providerError.value = null
     providerPersistenceError.value = null
     providerMessage.value = 'providerSaved'
     clearLongRangeForecast()
@@ -1105,6 +1241,7 @@ export const useWeatherStore = defineStore('weather', () => {
 
   function clearSearchResults() {
     searchController?.abort()
+    searchRequestId += 1
     searchResults.value = []
     searchStatus.value = 'idle'
     searchError.value = null
@@ -1121,6 +1258,8 @@ export const useWeatherStore = defineStore('weather', () => {
     clearWeatherForecastCache()
     selectedLocation.value = null
     weather.value = null
+    providerSnapshot.value = null
+    providerError.value = null
     forecastStatus.value = 'idle'
     forecastError.value = null
     lastUpdatedAt.value = null
@@ -1136,6 +1275,8 @@ export const useWeatherStore = defineStore('weather', () => {
     clearAirQuality()
     selectedLocation.value = location
     weather.value = null
+    providerSnapshot.value = null
+    providerError.value = null
     forecastStatus.value = 'idle'
     forecastError.value = null
     lastUpdatedAt.value = null
@@ -1161,11 +1302,30 @@ export const useWeatherStore = defineStore('weather', () => {
     clearLongRangeForecast()
   }
 
+  function setLocale(nextLocale: AppLocale) {
+    if (activeLocale.value === nextLocale) return
+
+    activeLocale.value = nextLocale
+    searchController?.abort()
+    searchRequestId += 1
+    searchResults.value = []
+    searchStatus.value = 'idle'
+    searchNotice.value = null
+    forecastController?.abort()
+    forecastRequestId += 1
+    providerError.value = null
+
+    if (selectedLocation.value) {
+      void loadForecast(selectedLocation.value)
+    }
+  }
+
   return {
     selectedLocation,
     searchQuery,
     searchResults,
     weather,
+    providerSnapshot,
     searchStatus,
     forecastStatus,
     searchError,
@@ -1182,6 +1342,13 @@ export const useWeatherStore = defineStore('weather', () => {
     favoriteCities,
     favoriteMessage,
     provider,
+    preferredProvider: provider,
+    effectiveProvider,
+    providerAvailability,
+    providerError,
+    locationResolutionState,
+    xiaomiWeatherEnabled,
+    activeLocale,
     hasCaiyunToken,
     providerMessage,
     providerPersistenceError,
@@ -1235,6 +1402,7 @@ export const useWeatherStore = defineStore('weather', () => {
     synchronizeLocation,
     synchronizeFavoriteCities,
     synchronizeProviderPreferences,
+    setLocale,
   }
 })
 

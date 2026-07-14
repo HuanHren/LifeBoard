@@ -207,9 +207,12 @@ LifeBoard is hosted on Vercel: https://life-board-two.vercel.app/
 For a Development or Preview environment with the optional Xiaomi variables configured,
 also validate `GET /api/weather/xiaomi/search?q=尉氏县` and
 `GET /api/weather/xiaomi/all?locationKey=...&latitude=...&longitude=...&locale=zh-CN&days=15`.
-These routes establish a server contract only; Xiaomi is not yet a user-facing selectable
-provider. See `docs/weather-w1-xiaomi-proxy-contract.md` for the bounded W1 contract and
-Preview-only safety policy.
+Weather W3 can expose Xiaomi in the existing Settings weather-source control only when the
+non-secret `VITE_XIAOMI_WEATHER_ENABLED=true` feature flag is present. The flag defaults to
+disabled, Xiaomi remains unavailable in Production, and the verified client contract is limited
+to `zh-CN` and `days=15`. See `docs/weather-w1-xiaomi-proxy-contract.md` for the proxy safety
+boundary and `docs/weather-w3-dual-source-integration.md` for runtime eligibility and the
+no-automatic-fallback policy.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 

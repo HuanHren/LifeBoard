@@ -9,7 +9,12 @@ import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 interface Props {
   status: WeatherRequestStatus
   serviceError?: string | null
-  notice?: 'amapMissing' | 'amapUnavailable' | null
+  notice?:
+    | 'amapMissing'
+    | 'amapUnavailable'
+    | 'xiaomiUnsupportedLocale'
+    | 'xiaomiFeatureDisabled'
+    | null
   compact?: boolean
 }
 
@@ -166,7 +171,11 @@ function handleKeydown(event: KeyboardEvent) {
       {{
         notice === 'amapMissing'
           ? t('weather.search.amapMissing')
-          : t('weather.search.amapUnavailable')
+          : notice === 'amapUnavailable'
+            ? t('weather.search.amapUnavailable')
+            : notice === 'xiaomiUnsupportedLocale'
+              ? t('weather.search.xiaomiUnsupportedLocale')
+              : t('weather.search.xiaomiFeatureDisabled')
       }}
     </p>
     <p class="sr-only" aria-live="polite">

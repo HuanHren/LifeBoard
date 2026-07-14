@@ -38,8 +38,18 @@ export function isWeatherLocation(value: unknown): value is WeatherLocation {
     (!('source' in value) ||
       value.source === 'openMeteo' ||
       value.source === 'amap' ||
-      value.source === 'amap-geolocation')
+      value.source === 'amap-geolocation' ||
+      value.source === 'xiaomi') &&
+    (!('providerLocationIds' in value) || isProviderLocationIds(value.providerLocationIds))
   )
+}
+
+function isProviderLocationIds(value: unknown) {
+  if (!isRecord(value)) return false
+
+  const keys = Object.keys(value)
+  return keys.every((key) => key === 'xiaomi' || key === 'openMeteo') &&
+    keys.every((key) => typeof value[key] === 'string' && value[key].trim().length > 0)
 }
 
 export function parseWeatherLocation(value: unknown): WeatherLocation | null {

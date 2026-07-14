@@ -12,6 +12,11 @@ export const WEATHER_PROVIDER_CAPABILITIES = {
     visibility: true,
     airQuality: false,
   },
+  xiaomi: {
+    alerts: false,
+    visibility: true,
+    airQuality: true,
+  },
 } as const satisfies Record<WeatherDataProvider, WeatherProviderCapabilities>
 
 export function getWeatherProviderCapabilities(

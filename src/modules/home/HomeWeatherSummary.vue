@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, shallowRef } from 'vue'
+import { computed, onMounted, shallowRef, watch } from 'vue'
 import { RouterLink } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseError from '@/components/base/BaseError.vue'
@@ -32,7 +32,9 @@ const {
   autoLocationOnHome,
   isInitialized,
 } = storeToRefs(weatherStore)
-const { initializeWeather, loadForecast, selectCurrentCoordinates } = weatherStore
+const { initializeWeather, loadForecast, selectCurrentCoordinates, setLocale } = weatherStore
+
+watch(locale, setLocale, { immediate: true })
 
 const currentLocationStatus = shallowRef<'idle' | 'loading'>('idle')
 const currentLocationMessage = shallowRef<string | null>(null)

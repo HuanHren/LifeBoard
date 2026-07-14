@@ -52,7 +52,11 @@ export function createWeatherVisualSnapshot(
       weather.location.longitude,
       weather.current.time,
       weather.current.condition.code,
-      weather.current.isDay ? 'day' : 'night',
+      weather.current.isDay === true
+        ? 'day'
+        : weather.current.isDay === false
+          ? 'night'
+          : 'unknown',
       atmosphere,
       visual.condition,
       visual.effectGroup,

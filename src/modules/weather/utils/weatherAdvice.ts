@@ -30,20 +30,20 @@ function sum(values: number[]) {
   return values.reduce((total, value) => total + value, 0)
 }
 
-function availableNumbers(values: Array<number | null>) {
-  return values.filter((value): value is number => value !== null)
+function availableNumbers(values: Array<number | null | undefined>) {
+  return values.filter((value): value is number => typeof value === 'number')
 }
 
 function createUmbrellaAdvice(context: AdviceContext): AdviceItem {
   const next6 = context.hourly.slice(0, 6)
   const next12 = context.hourly.slice(0, 12)
-  const sixHourProbability = maximum(next6.map((item) => item.precipitationProbability))
-  const twelveHourProbability = maximum(next12.map((item) => item.precipitationProbability))
-  const sixHourPrecipitation = sum(next6.map((item) => item.precipitation))
-  const twelveHourPrecipitation = sum(next12.map((item) => item.precipitation))
+  const sixHourProbability = maximum(availableNumbers(next6.map((item) => item.precipitationProbability)))
+  const twelveHourProbability = maximum(availableNumbers(next12.map((item) => item.precipitationProbability)))
+  const sixHourPrecipitation = sum(availableNumbers(next6.map((item) => item.precipitation)))
+  const twelveHourPrecipitation = sum(availableNumbers(next12.map((item) => item.precipitation)))
 
   if (
-    context.current.precipitation > 0.1 ||
+    (context.current.precipitation ?? 0) > 0.1 ||
     sixHourProbability >= ADVICE_THRESHOLDS.umbrellaTakeProbability ||
     sixHourPrecipitation >= ADVICE_THRESHOLDS.umbrellaTakePrecipitation
   ) {
@@ -80,10 +80,10 @@ function createUmbrellaAdvice(context: AdviceContext): AdviceItem {
 
 function createClothingAdvice(context: AdviceContext): AdviceItem {
   const next12 = context.hourly.slice(0, 12)
-  const apparentTemperatures = next12.map((item) => item.apparentTemperature)
+  const apparentTemperatures = availableNumbers(next12.map((item) => item.apparentTemperature))
   const low = minimum(apparentTemperatures)
   const high = maximum(apparentTemperatures)
-  const current = context.current.apparentTemperature
+  const current = context.current.apparentTemperature ?? context.current.temperature
   let summary = 'Light, comfortable clothing should suit the conditions.'
   let level: AdviceItem['level'] = 'clear'
 
@@ -111,7 +111,7 @@ function createClothingAdvice(context: AdviceContext): AdviceItem {
     modifiers.push('A wind-resistant layer may help.')
   }
 
-  if (context.current.precipitation > 0.1) {
+  if ((context.current.precipitation ?? 0) > 0.1) {
     modifiers.push('A water-resistant outer layer may be useful.')
   }
 
@@ -136,11 +136,11 @@ function createOutdoorAdvice(context: AdviceContext): AdviceItem {
   )
   const hasHeavyPrecipitation =
     next6.some((item) => isHeavyPrecipitationCode(item.condition.code)) ||
-    maximum(next6.map((item) => item.precipitation)) >=
+    maximum(availableNumbers(next6.map((item) => item.precipitation))) >=
       ADVICE_THRESHOLDS.outdoorHeavyHourlyPrecipitation
   const maximumGust = maximum(availableNumbers(next6.map((item) => item.windGusts)))
-  const minimumApparent = minimum(next6.map((item) => item.apparentTemperature))
-  const maximumApparent = maximum(next6.map((item) => item.apparentTemperature))
+  const minimumApparent = minimum(availableNumbers(next6.map((item) => item.apparentTemperature)))
+  const maximumApparent = maximum(availableNumbers(next6.map((item) => item.apparentTemperature)))
 
   if (
     hasThunderstorm ||
@@ -160,7 +160,7 @@ function createOutdoorAdvice(context: AdviceContext): AdviceItem {
   }
 
   const hasModerateRainRisk = maximum(
-    next6.map((item) => item.precipitationProbability),
+    availableNumbers(next6.map((item) => item.precipitationProbability)),
   ) >= ADVICE_THRESHOLDS.umbrellaConsiderProbability
   const hasElevatedUv =
     maximum(availableNumbers(next6.map((item) => item.uvIndex))) >=
@@ -199,7 +199,7 @@ function createWeatherNotes(context: AdviceContext) {
   const temperatureValues = next12.map((item) => item.temperature)
   const temperatureRange = maximum(temperatureValues) - minimum(temperatureValues)
   const apparentDifference = Math.abs(
-    context.current.temperature - context.current.apparentTemperature,
+    context.current.temperature - (context.current.apparentTemperature ?? context.current.temperature),
   )
 
   if (maximumGust >= ADVICE_THRESHOLDS.strongGusts) {

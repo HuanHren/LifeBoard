@@ -13,7 +13,7 @@ export type WeatherProviderStorageResult<T = undefined> =
   | { ok: false; error: WeatherProviderStorageError }
 
 export function isWeatherProviderId(value: unknown): value is WeatherProviderId {
-  return value === 'openMeteo' || value === 'caiyun'
+  return value === 'openMeteo' || value === 'caiyun' || value === 'xiaomi'
 }
 
 function getStorage(): WeatherProviderStorageResult<Storage> {

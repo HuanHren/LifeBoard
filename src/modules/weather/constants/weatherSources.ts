@@ -4,7 +4,7 @@ import type {
   WeatherSourceMetadata,
 } from '@/modules/weather/types/weatherSources'
 
-type ActiveWeatherSourceKey = 'openMeteo' | 'caiyun' | 'amap' | 'cams'
+type ActiveWeatherSourceKey = 'openMeteo' | 'caiyun' | 'xiaomi' | 'amap' | 'cams'
 
 export const WEATHER_SOURCE_METADATA = {
   openMeteo: {
@@ -22,6 +22,12 @@ export const WEATHER_SOURCE_METADATA = {
     domains: ['forecast', 'current', 'precipitation-nowcast', 'alerts', 'long-range'],
     officialUrl: 'https://www.caiyunapp.com/',
     requiresUserCredential: true,
+  },
+  xiaomi: {
+    id: 'xiaomi',
+    displayName: 'Xiaomi Weather',
+    domains: ['forecast', 'current', 'air-quality', 'long-range'],
+    requiresUserCredential: false,
   },
   amap: {
     id: 'amap',
@@ -42,9 +48,9 @@ export const WEATHER_SOURCE_METADATA = {
 export function getForecastSourceForProvider(
   provider: WeatherDataProvider,
 ): WeatherSourceMetadata {
-  return provider === 'caiyun'
-    ? WEATHER_SOURCE_METADATA.caiyun
-    : WEATHER_SOURCE_METADATA.openMeteo
+  if (provider === 'caiyun') return WEATHER_SOURCE_METADATA.caiyun
+  if (provider === 'xiaomi') return WEATHER_SOURCE_METADATA.xiaomi
+  return WEATHER_SOURCE_METADATA.openMeteo
 }
 
 export function getWeatherSourceMetadata(

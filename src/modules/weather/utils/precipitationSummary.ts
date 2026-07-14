@@ -6,7 +6,9 @@ import type {
 
 export function hasMeaningfulHourlyPrecipitation(items: HourlyForecastItem[]) {
   return items.some(
-    (item) => item.precipitationProbability > 0 || item.precipitation > 0,
+    (item) =>
+      (typeof item.precipitationProbability === 'number' && item.precipitationProbability > 0) ||
+      (typeof item.precipitation === 'number' && item.precipitation > 0),
   )
 }
 
@@ -14,16 +16,22 @@ export function summarizeHourlyPrecipitation(
   items: HourlyForecastItem[],
   t: Translator,
 ) {
-  if (items.length === 0) {
+  const usableItems = items.filter(
+    (item) =>
+      typeof item.precipitationProbability === 'number' &&
+      typeof item.precipitation === 'number',
+  )
+
+  if (usableItems.length === 0) {
     return t('weather.precipitation.unavailable')
   }
 
-  if (!hasMeaningfulHourlyPrecipitation(items)) {
+  if (!hasMeaningfulHourlyPrecipitation(usableItems)) {
     return t('weather.precipitation.noneExpected')
   }
 
-  const highestChance = Math.max(...items.map((item) => item.precipitationProbability))
-  const totalAmount = items.reduce((sum, item) => sum + item.precipitation, 0)
+  const highestChance = Math.max(...usableItems.map((item) => item.precipitationProbability as number))
+  const totalAmount = usableItems.reduce((sum, item) => sum + (item.precipitation as number), 0)
 
   if (highestChance >= 60 || totalAmount >= 1) {
     return t('weather.precipitation.likely')

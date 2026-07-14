@@ -6,6 +6,7 @@ import {
   onMounted,
   shallowRef,
   useTemplateRef,
+  watch,
 } from 'vue'
 import { storeToRefs } from 'pinia'
 import { RouterLink, useRouter } from 'vue-router'
@@ -48,6 +49,7 @@ const {
   clearFavoriteMessage,
   clearSearchResults,
   selectCurrentCoordinates,
+  setLocale,
 } = weatherStore
 
 const currentLocationStatus = shallowRef<CurrentLocationStatus>('idle')
@@ -245,6 +247,8 @@ onBeforeUnmount(() => {
   clearSearchDebounce()
   document.removeEventListener('pointerdown', handleDocumentPointerdown)
 })
+
+watch(locale, setLocale, { immediate: true })
 </script>
 
 <template>

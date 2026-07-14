@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import BaseEmpty from '@/components/base/BaseEmpty.vue'
@@ -38,6 +38,8 @@ const {
   displayAirQualityStatus,
   displayAirQualityError,
   provider,
+  effectiveProvider,
+  providerAvailability,
   hasCaiyunToken,
   forecastCacheState,
   forecastCacheUpdatedAt,
@@ -46,6 +48,7 @@ const {
   initializeWeather,
   loadForecast,
   retryAirQuality,
+  setLocale,
 } = weatherStore
 const compactDailyForecast = computed(() =>
   weather.value?.daily.slice(0, COMPACT_DAILY_FORECAST_LENGTH) ?? [],
@@ -88,6 +91,8 @@ function openCityManagement() {
 onMounted(() => {
   void initializeWeather()
 })
+
+watch(locale, setLocale, { immediate: true })
 </script>
 
 <template>
@@ -123,8 +128,10 @@ onMounted(() => {
 
     <div v-if="!weather" class="order-1">
       <WeatherProviderNotice
+        :availability-reason="providerAvailability.available ? undefined : providerAvailability.reason"
+        :preferred-provider="provider"
         :has-caiyun-token="hasCaiyunToken"
-        :provider="provider"
+        :provider="effectiveProvider"
       />
     </div>
 
@@ -218,6 +225,7 @@ onMounted(() => {
         </div>
       </div>
       <WeatherAlertSection
+        v-if="weather.providerCapabilities?.alerts !== false"
         :alerts="weather.alerts"
         :status="weatherAlertStatus"
       />
@@ -265,6 +273,7 @@ onMounted(() => {
 
       <div class="grid min-w-0 max-w-full items-start gap-4 xl:grid-cols-2">
         <ShortTermPrecipitationPanel
+          v-if="weather.providerCapabilities?.shortTermPrecipitation !== false"
           :provider="weather.provider"
           :short-term="weather.shortTermPrecipitation"
           :units="weather.units"
@@ -274,7 +283,9 @@ onMounted(() => {
 
       <div class="min-w-0 max-w-full space-y-3">
         <WeatherProviderNotice
+          :availability-reason="providerAvailability.available ? undefined : providerAvailability.reason"
           :has-caiyun-token="hasCaiyunToken"
+          :preferred-provider="provider"
           :provider="weather.provider"
         />
         <WeatherAttribution :provider="weather.provider" />

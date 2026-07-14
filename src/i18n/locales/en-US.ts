@@ -117,12 +117,23 @@ export const enUS = {
   'settings.weatherProvider.legend': 'Forecast provider preference',
   'settings.weatherProvider.helper':
     'Choose whether Weather loads forecasts from Open-Meteo or Caiyun Weather on this browser.',
+  'settings.weatherProvider.helperWithXiaomi':
+    'Choose the weather forecast source used by this browser. Xiaomi is limited to supported Development and Preview verification.',
   'settings.weatherProvider.openMeteoLabel': 'Open-Meteo',
   'settings.weatherProvider.openMeteoDescription':
     'No token required. City search and forecasts can use Open-Meteo.',
   'settings.weatherProvider.caiyunLabel': 'Caiyun Weather',
   'settings.weatherProvider.caiyunDescription':
     'Requires a token you provide. Forecast requests use the selected city coordinates.',
+  'settings.weatherProvider.xiaomiLabel': 'Xiaomi Weather',
+  'settings.weatherProvider.xiaomiDescription':
+    'Development and Preview only. Select a Xiaomi city result before loading its verified Chinese forecast contract.',
+  'settings.weatherProvider.xiaomiUnsupportedLocale':
+    'Unavailable in English because the Xiaomi en-US upstream contract has not been verified.',
+  'settings.weatherProvider.xiaomiLocationRequired':
+    'Choose the city again from Weather city search to attach its Xiaomi location identity. Open-Meteo remains effective until then.',
+  'settings.weatherProvider.xiaomiEffectiveOpenMeteo':
+    'Xiaomi Weather is preferred but currently ineligible. Open-Meteo is the effective provider, and no Xiaomi request is sent.',
   'settings.weatherProvider.tokenLabel': 'Caiyun token',
   'settings.weatherProvider.tokenHelper':
     'Enter a token only if you already have one. It is saved only in this browser and is never shown in full.',

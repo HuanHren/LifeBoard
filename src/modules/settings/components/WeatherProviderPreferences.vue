@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseNotice from '@/components/base/BaseNotice.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
@@ -13,7 +13,11 @@ import type {
 
 interface Props {
   provider: WeatherProviderId
+  effectiveProvider: WeatherProviderId
   hasCaiyunToken: boolean
+  xiaomiEnabled: boolean
+  xiaomiLocaleSupported: boolean
+  locationResolutionRequired: boolean
   message: WeatherProviderMessage | null
   error: WeatherProviderStorageError | null
 }
@@ -31,11 +35,12 @@ const { t } = useI18n()
 
 const tokenInput = ref('')
 
-const providerOptions: Array<{
+const providerOptions = computed<Array<{
   id: WeatherProviderId
   labelKey: TranslationKey
   descriptionKey: TranslationKey
-}> = [
+  disabled?: boolean
+}>>(() => [
   {
     id: 'openMeteo',
     labelKey: 'settings.weatherProvider.openMeteoLabel',
@@ -46,7 +51,19 @@ const providerOptions: Array<{
     labelKey: 'settings.weatherProvider.caiyunLabel',
     descriptionKey: 'settings.weatherProvider.caiyunDescription',
   },
-]
+  ...(props.xiaomiEnabled
+    ? [{
+        id: 'xiaomi' as const,
+        labelKey: 'settings.weatherProvider.xiaomiLabel' as const,
+        descriptionKey: (
+          props.xiaomiLocaleSupported
+            ? 'settings.weatherProvider.xiaomiDescription'
+            : 'settings.weatherProvider.xiaomiUnsupportedLocale'
+        ) as TranslationKey,
+        disabled: !props.xiaomiLocaleSupported,
+      }]
+    : []),
+])
 
 const messageKeys: Record<WeatherProviderMessage, TranslationKey> = {
   providerSaved: 'settings.weatherProvider.message.providerSaved',
@@ -73,25 +90,34 @@ function saveToken() {
         {{ t('settings.weatherProvider.legend') }}
       </legend>
       <p class="max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)]">
-        {{ t('settings.weatherProvider.helper') }}
+        {{
+          t(
+            props.xiaomiEnabled
+              ? 'settings.weatherProvider.helperWithXiaomi'
+              : 'settings.weatherProvider.helper',
+          )
+        }}
       </p>
 
       <div class="grid gap-3 sm:grid-cols-2">
         <label
           v-for="option in providerOptions"
           :key="option.id"
-          class="interactive-surface flex min-h-24 cursor-pointer gap-3 rounded-[var(--radius-md)] border p-4"
+          class="interactive-surface flex min-h-24 gap-3 rounded-[var(--radius-md)] border p-4"
           :class="
-            provider === option.id
+            option.disabled
+              ? 'cursor-not-allowed border-[var(--color-border-soft)] bg-[var(--color-surface-inset)] opacity-75'
+              : provider === option.id
               ? 'border-[var(--color-accent)] bg-[var(--color-accent-wash)]'
-              : 'border-[var(--color-border-soft)] bg-[var(--color-surface)] hover:border-[var(--color-control-border)]'
+              : 'cursor-pointer border-[var(--color-border-soft)] bg-[var(--color-surface)] hover:border-[var(--color-control-border)]'
           "
         >
           <input
-            class="mt-1 size-4 accent-[var(--color-accent)]"
+            class="mt-1 size-4 accent-[var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
             name="weather-provider"
             type="radio"
             :checked="provider === option.id"
+            :disabled="option.disabled"
             @change="emit('updateProvider', option.id)"
           />
           <span>
@@ -104,6 +130,18 @@ function saveToken() {
           </span>
         </label>
       </div>
+
+      <BaseNotice
+        v-if="provider === 'xiaomi' && effectiveProvider !== 'xiaomi'"
+        tone="info"
+        aria-live="polite"
+      >
+        {{
+          locationResolutionRequired
+            ? t('settings.weatherProvider.xiaomiLocationRequired')
+            : t('settings.weatherProvider.xiaomiEffectiveOpenMeteo')
+        }}
+      </BaseNotice>
     </fieldset>
 
     <div class="space-y-4 border-t border-[var(--color-border-soft)] pt-5">

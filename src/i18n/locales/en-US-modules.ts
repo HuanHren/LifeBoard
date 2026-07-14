@@ -163,6 +163,10 @@ export const enUSModules = {
     'AMap key is not saved, so LifeBoard is using Open-Meteo city search.',
   'weather.search.amapUnavailable':
     'AMap geocoding is unavailable or returned no match, so LifeBoard is trying Open-Meteo.',
+  'weather.search.xiaomiUnsupportedLocale':
+    'Xiaomi Weather is not verified for English. LifeBoard is using Open-Meteo city search without calling Xiaomi.',
+  'weather.search.xiaomiFeatureDisabled':
+    'Xiaomi Weather is disabled in this environment. LifeBoard is using Open-Meteo city search.',
   'weather.results.chooseTitle': 'Choose a location',
   'weather.results.emptyTitle': 'No matching cities found',
   'weather.results.matches': '{count} matches for {query}.',
@@ -191,6 +195,14 @@ export const enUSModules = {
     'Caiyun Weather is selected, but no token is saved. Add one in Settings before loading Caiyun forecasts.',
   'weather.providerNotice.caiyunActive':
     'Forecasts are powered by Caiyun Weather for the selected city. City search still uses Open-Meteo.',
+  'weather.providerNotice.xiaomiActive':
+    'Forecasts are powered by the protected LifeBoard Xiaomi Weather proxy for the selected city.',
+  'weather.providerNotice.xiaomiUnsupportedLocale':
+    'Xiaomi Weather is preferred, but English upstream support is not verified. Open-Meteo is the effective provider and Xiaomi is not requested.',
+  'weather.providerNotice.xiaomiLocationRequired':
+    'Xiaomi Weather is preferred, but this city has no verified Xiaomi location identity. Open-Meteo remains effective until you choose a Xiaomi search result.',
+  'weather.providerNotice.xiaomiDisabled':
+    'Xiaomi Weather is preferred but disabled in this environment. Open-Meteo is the effective provider.',
   'weather.location.capitalCity': 'Capital city',
   'weather.location.regionalCapital': 'Regional capital',
   'weather.location.country': 'Country',
@@ -205,6 +217,7 @@ export const enUSModules = {
   'weather.hero.low': 'Low {temperature}',
   'weather.hero.provider.openMeteo': 'Open-Meteo forecast',
   'weather.hero.provider.caiyun': 'Caiyun Weather forecast',
+  'weather.hero.provider.xiaomi': 'Xiaomi Weather forecast',
   'weather.hero.summary':
     '{location}: {temperature}, {condition}. High {high}, low {low}.',
   'weather.hero.updatedForCity': 'Weather updated for {city}.',

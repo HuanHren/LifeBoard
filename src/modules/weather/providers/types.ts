@@ -33,6 +33,24 @@ export interface ProviderWeatherLocation {
   latitude: number
   longitude: number
   timezone?: string
+  kind?:
+    | 'Capital city'
+    | 'Regional capital'
+    | 'Country'
+    | 'Administrative area'
+    | 'Locality'
+    | 'Location'
+  countryCode?: string
+  elevation?: number | null
+  displayLabel?: string
+  providerLocationIds?: ProviderLocationIds
+  localId?: number | string
+  source?: 'openMeteo' | 'amap' | 'amap-geolocation' | 'xiaomi'
+}
+
+export interface ProviderLocationIds {
+  xiaomi?: string
+  openMeteo?: string
 }
 
 export type CanonicalWeatherCondition =
@@ -69,12 +87,26 @@ export interface NormalizedCurrentWeather {
   pressureHpa?: number
   visibilityKm?: number
   uvIndex?: number
+  precipitationMm?: number
+  rainMm?: number
+  showersMm?: number
+  snowfallCm?: number
+  cloudCoverPercent?: number
+  windGustKmh?: number
+  isDay?: boolean
   condition: ProviderWeatherCondition
 }
 
 export interface NormalizedHourlyWeather {
   time: string
   temperatureC: number
+  apparentTemperatureC?: number
+  precipitationProbabilityPercent?: number
+  precipitationMm?: number
+  windSpeedKmh?: number
+  windGustKmh?: number
+  uvIndex?: number
+  isDay?: boolean
   condition: ProviderWeatherCondition
 }
 
@@ -86,6 +118,14 @@ export interface NormalizedDailyWeather {
   nightCondition: ProviderWeatherCondition
   sunrise?: string
   sunset?: string
+  apparentTemperatureMaxC?: number
+  apparentTemperatureMinC?: number
+  precipitationSumMm?: number
+  precipitationProbabilityMaxPercent?: number
+  windSpeedMaxKmh?: number
+  windDirectionDominantDegrees?: number
+  windGustMaxKmh?: number
+  uvIndexMax?: number
 }
 
 export interface NormalizedAirQuality {
@@ -112,6 +152,8 @@ export interface ProviderWeatherSnapshot<TExtensions = unknown> {
   provider: WeatherProviderId
   location: ProviderWeatherLocation
   updatedAt: string
+  timezone?: string
+  timezoneAbbreviation?: string
   current: NormalizedCurrentWeather
   hourly: NormalizedHourlyWeather[]
   daily: NormalizedDailyWeather[]

@@ -1,9 +1,13 @@
 import type { WeatherAlert } from '@/modules/weather/types/weatherAlert'
-import type { WeatherProviderCapabilities } from '@/modules/weather/types/weatherProvider'
+import type {
+  WeatherProviderCapabilities,
+  WeatherProviderId,
+} from '@/modules/weather/types/weatherProvider'
+import type { ProviderLocationIds } from '@/modules/weather/providers/types'
 
 export type WeatherRequestStatus = 'idle' | 'loading' | 'success' | 'error'
-export type WeatherDataProvider = 'openMeteo' | 'caiyun'
-export type WeatherLocationSource = 'openMeteo' | 'amap' | 'amap-geolocation'
+export type WeatherDataProvider = WeatherProviderId
+export type WeatherLocationSource = 'openMeteo' | 'amap' | 'amap-geolocation' | 'xiaomi'
 export type AdviceLevel = 'clear' | 'consider' | 'caution'
 export type AdviceKind = 'umbrella' | 'clothing' | 'outdoor'
 export type WeatherLocationKind =
@@ -27,6 +31,7 @@ export interface WeatherLocation {
   timezone: string
   displayLabel?: string
   source?: WeatherLocationSource
+  providerLocationIds?: ProviderLocationIds
 }
 
 export interface WeatherCondition {
@@ -49,33 +54,33 @@ export interface WeatherUnits {
 export interface CurrentConditions {
   time: string
   temperature: number
-  apparentTemperature: number
-  relativeHumidity: number
-  precipitation: number
-  rain: number
-  showers: number
-  snowfall: number
-  cloudCover: number
-  windSpeed: number
-  windDirection: number
+  apparentTemperature: number | null
+  relativeHumidity: number | null
+  precipitation: number | null
+  rain: number | null
+  showers: number | null
+  snowfall: number | null
+  cloudCover: number | null
+  windSpeed: number | null
+  windDirection: number | null
   windGusts: number | null
   uvIndex: number | null
   pressure: number | null
   visibility: number | null
-  isDay: boolean
+  isDay: boolean | null
   condition: WeatherCondition
 }
 
 export interface HourlyForecastItem {
   time: string
   temperature: number
-  apparentTemperature: number
-  precipitationProbability: number
-  precipitation: number
-  windSpeed: number
+  apparentTemperature: number | null
+  precipitationProbability: number | null
+  precipitation: number | null
+  windSpeed: number | null
   windGusts: number | null
   uvIndex: number | null
-  isDay: boolean
+  isDay: boolean | null
   condition: WeatherCondition
 }
 
@@ -83,16 +88,16 @@ export interface DailyForecastItem {
   date: string
   temperatureMax: number
   temperatureMin: number
-  apparentTemperatureMax: number
-  apparentTemperatureMin: number
-  precipitationSum: number
-  precipitationProbabilityMax: number
-  windSpeedMax: number
+  apparentTemperatureMax: number | null
+  apparentTemperatureMin: number | null
+  precipitationSum: number | null
+  precipitationProbabilityMax: number | null
+  windSpeedMax: number | null
   windDirectionDominant: number | null
   windGustsMax: number | null
   uvIndexMax: number | null
-  sunrise: string
-  sunset: string
+  sunrise: string | null
+  sunset: string | null
   condition: WeatherCondition
 }
 

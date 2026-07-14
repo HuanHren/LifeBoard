@@ -33,12 +33,15 @@ export function buildWeatherSceneContext({
   const condition = getLifeBoardConditionFromWmo(weatherCode)
   const effectGroup = getWeatherEffectGroup(condition)
   const today = weather.daily[0] ?? null
-  const precipitationIntensity = [
+  const precipitationValues = [
     weather.current.precipitation,
     weather.current.rain,
     weather.current.showers,
     weather.current.snowfall,
-  ].reduce((total, value) => total + value, 0)
+  ].filter((value): value is number => typeof value === 'number' && Number.isFinite(value))
+  const precipitationIntensity = precipitationValues.length > 0
+    ? precipitationValues.reduce((total, value) => total + value, 0)
+    : undefined
 
   return {
     condition,

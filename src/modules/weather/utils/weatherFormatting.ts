@@ -22,15 +22,18 @@ export function formatLocationName(location: WeatherLocation) {
   return [location.name, region, location.country].filter(Boolean).join(', ')
 }
 
-export function formatTemperature(value: number, unit = '°C') {
+export function formatTemperature(value: number | null | undefined, unit = '°C', unavailableLabel = '—') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return unavailableLabel
   return `${Math.round(value)}${unit}`
 }
 
-export function formatPercentage(value: number) {
+export function formatPercentage(value: number | null | undefined, unavailableLabel = '—') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return unavailableLabel
   return `${Math.round(value)}%`
 }
 
-export function formatWind(value: number, unit = 'km/h') {
+export function formatWind(value: number | null | undefined, unit = 'km/h', unavailableLabel = '—') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return unavailableLabel
   return `${Math.round(value)} ${unit}`
 }
 
@@ -42,7 +45,8 @@ export function formatOptionalWind(
   return value === null ? unavailableLabel : formatWind(value, unit)
 }
 
-export function formatPrecipitation(value: number, unit = 'mm') {
+export function formatPrecipitation(value: number | null | undefined, unit = 'mm', unavailableLabel = '—') {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return unavailableLabel
   return `${value < 1 ? value.toFixed(1) : Math.round(value)} ${unit}`
 }
 
@@ -155,7 +159,12 @@ export function formatDateLabel(value: string, locale: AppLocale) {
   }).format(date)
 }
 
-export function formatWindDirection(degrees: number, t: Translator) {
+export function formatWindDirection(
+  degrees: number | null | undefined,
+  t: Translator,
+  unavailableLabel = '—',
+) {
+  if (typeof degrees !== 'number' || !Number.isFinite(degrees)) return unavailableLabel
   const directions = [
     t('weather.wind.n'),
     t('weather.wind.ne'),

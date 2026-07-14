@@ -8,7 +8,7 @@ export type WeatherDataDomain =
   | 'temperature-normal'
   | 'location'
 
-export type WeatherSourceId = 'open-meteo' | 'caiyun' | 'amap' | 'cams'
+export type WeatherSourceId = 'open-meteo' | 'caiyun' | 'xiaomi' | 'amap' | 'cams'
 
 export interface WeatherSourceMetadata {
   id: WeatherSourceId

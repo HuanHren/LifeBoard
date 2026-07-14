@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { useI18n } from '@/i18n/useI18n'
-import type { WeatherProviderId } from '@/modules/weather/types/weatherProvider'
+import type {
+  WeatherProviderAvailabilityReason,
+  WeatherProviderId,
+} from '@/modules/weather/types/weatherProvider'
 
 interface Props {
   provider: WeatherProviderId
+  preferredProvider?: WeatherProviderId
+  availabilityReason?: WeatherProviderAvailabilityReason
   hasCaiyunToken: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const { t } = useI18n()
 </script>
 
@@ -18,7 +23,15 @@ const { t } = useI18n()
   >
     <p>
       {{
-        provider === 'caiyun' && !hasCaiyunToken
+        props.preferredProvider === 'xiaomi' && provider !== 'xiaomi'
+          ? availabilityReason === 'unsupported-locale'
+            ? t('weather.providerNotice.xiaomiUnsupportedLocale')
+            : availabilityReason === 'missing-provider-location'
+              ? t('weather.providerNotice.xiaomiLocationRequired')
+              : t('weather.providerNotice.xiaomiDisabled')
+          : provider === 'xiaomi'
+            ? t('weather.providerNotice.xiaomiActive')
+            : provider === 'caiyun' && !hasCaiyunToken
           ? t('weather.providerNotice.caiyunMissingToken')
           : provider === 'caiyun'
             ? t('weather.providerNotice.caiyunActive')

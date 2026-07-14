@@ -19,11 +19,18 @@ const { locale, t } = useI18n()
 
 const firstDayItems = computed(() => props.items.slice(0, 24))
 const summary = computed(() => summarizeHourlyPrecipitation(firstDayItems.value, t))
-const hasUsableData = computed(() => firstDayItems.value.length > 0)
+const usableItems = computed(() => firstDayItems.value.filter(
+  (item) =>
+    typeof item.precipitationProbability === 'number' &&
+    typeof item.precipitation === 'number',
+))
+const hasUsableData = computed(() => usableItems.value.length > 0)
 
 function barWidth(item: HourlyForecastItem) {
-  const probabilityWidth = Math.max(6, Math.min(100, item.precipitationProbability))
-  const amountWidth = Math.max(8, Math.min(100, item.precipitation * 18))
+  const probability = item.precipitationProbability ?? 0
+  const amount = item.precipitation ?? 0
+  const probabilityWidth = Math.max(6, Math.min(100, probability))
+  const amountWidth = Math.max(8, Math.min(100, amount * 18))
   return `${Math.max(probabilityWidth, amountWidth)}%`
 }
 </script>
@@ -58,7 +65,7 @@ function barWidth(item: HourlyForecastItem) {
       >
         <ol class="flex w-max gap-2">
           <li
-            v-for="(item, index) in firstDayItems"
+            v-for="(item, index) in usableItems"
             :key="item.time"
             class="w-24 shrink-0 rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-3 py-3 sm:w-28"
           >

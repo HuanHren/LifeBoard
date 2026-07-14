@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef } from 'vue'
+import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import BaseSection from '@/components/base/BaseSection.vue'
 import BaseSurface from '@/components/base/BaseSurface.vue'
@@ -46,6 +46,8 @@ import {
 import { useBookmarksStore } from '@/modules/bookmarks/stores/bookmarks'
 import { useTodosStore } from '@/modules/todos/stores/todos'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
+import type { WeatherProviderId } from '@/modules/weather/types/weatherProvider'
+import { xiaomiWeatherEnabled } from '@/modules/weather/providers/weatherFeatureFlags'
 import type {
   ClearOperationKind,
   LifeBoardLocale,
@@ -69,11 +71,15 @@ const todosStore = useTodosStore()
 const bookmarksStore = useBookmarksStore()
 const { locale, t } = useI18n()
 
+watch(locale, weatherStore.setLocale, { immediate: true })
+
 const { mode, persistenceError: themeError } = storeToRefs(themeStore)
 const {
   selectedLocation,
   favoriteCities,
   provider,
+  effectiveProvider,
+  locationResolutionState,
   hasCaiyunToken,
   providerMessage,
   providerPersistenceError,
@@ -168,7 +174,9 @@ const currentLanguageLabel = computed(() =>
 const providerLabel = computed(() =>
   provider.value === 'caiyun'
     ? t('settings.weatherProvider.caiyunLabel')
-    : t('settings.weatherProvider.openMeteoLabel'),
+    : provider.value === 'xiaomi'
+      ? t('settings.weatherProvider.xiaomiLabel')
+      : t('settings.weatherProvider.openMeteoLabel'),
 )
 
 const heroFacts = computed(() => [
@@ -283,7 +291,7 @@ function applySnapshotToStores(snapshot: SettingsDataSnapshot, replaceWeather = 
 
 interface SettingsMemorySnapshot extends SettingsDataSnapshot {
   language: LifeBoardLocale
-  provider: 'openMeteo' | 'caiyun'
+  provider: WeatherProviderId
   hasCaiyunToken: boolean
   hasAmapKey: boolean
   autoLocationOnHome: boolean
@@ -405,7 +413,7 @@ function changeTheme(nextMode: ThemeMode) {
   themeStore.setMode(nextMode)
 }
 
-function changeWeatherProvider(nextProvider: 'openMeteo' | 'caiyun') {
+function changeWeatherProvider(nextProvider: WeatherProviderId) {
   backupSuccess.value = null
   clearSuccess.value = null
   weatherStore.setProvider(nextProvider)
@@ -781,9 +789,13 @@ onMounted(() => {
         >
           <WeatherProviderPreferences
             :error="providerPersistenceError"
+            :effective-provider="effectiveProvider"
             :has-caiyun-token="hasCaiyunToken"
+            :location-resolution-required="locationResolutionState === 'required'"
             :message="providerMessage"
             :provider="provider"
+            :xiaomi-enabled="xiaomiWeatherEnabled"
+            :xiaomi-locale-supported="locale === 'zh-CN'"
             @clear-message="weatherStore.clearProviderMessage"
             @clear-token="weatherStore.clearCaiyunToken"
             @save-token="weatherStore.saveCaiyunToken"
