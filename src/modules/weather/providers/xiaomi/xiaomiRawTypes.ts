@@ -110,6 +110,7 @@ export interface XiaomiProxyFailure {
   error: {
     code: string
     upstreamStatus?: number
+    retryAfterSeconds?: number
   }
 }
 

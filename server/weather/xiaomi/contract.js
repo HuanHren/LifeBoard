@@ -57,11 +57,9 @@ function cloneJson(value) {
 }
 
 function removeKnownSecretEchoes(value) {
-  const clientInfo = value?.sourceMaps?.clientInfo
-
-  if (isPlainObject(clientInfo)) {
-    delete clientInfo.appKey
-    delete clientInfo.appVersion
+  const sourceMaps = value?.sourceMaps
+  if (isPlainObject(sourceMaps) && Object.prototype.hasOwnProperty.call(sourceMaps, 'clientInfo')) {
+    delete sourceMaps.clientInfo
   }
 }
 

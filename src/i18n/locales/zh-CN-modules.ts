@@ -49,6 +49,11 @@ export const zhCNModules = {
   'home.weather.umbrella': '雨伞',
   'home.weather.stale': '使用已缓存天气',
   'home.weather.refreshing': '正在刷新缓存',
+  'home.weather.freshCache': '使用仍然新鲜的已保存天气',
+  'home.weather.fallback': '当前暂由 Open-Meteo 提供小米天气选择的数据',
+  'home.weather.offline': '离线 · 使用已保存天气',
+  'home.weather.rateLimited': '服务冷却中 · 使用已保存天气',
+  'home.weather.updateFailed': '更新失败 · 使用上一份有效天气',
   'home.weather.high': '最高',
   'home.weather.low': '最低',
   'home.weather.loadTitle': '加载 {city} 的天气',
@@ -188,6 +193,8 @@ export const zhCNModules = {
     '当前所选城市的预报由 Caiyun Weather 提供。城市搜索仍使用 Open-Meteo。',
   'weather.providerNotice.xiaomiActive':
     '当前所选城市的预报由 LifeBoard 受保护的小米天气代理提供。',
+  'weather.providerNotice.xiaomiFallback':
+    '小米天气暂时不可用，当前临时显示 Open-Meteo 数据；你的首选来源没有改变。',
   'weather.providerNotice.xiaomiUnsupportedLocale':
     '偏好数据源为小米天气，但英文上游合同尚未验证。当前有效数据源为 Open-Meteo，并且不会请求小米接口。',
   'weather.providerNotice.xiaomiLocationRequired':
@@ -513,6 +520,16 @@ export const zhCNModules = {
   'weather.cache.refreshing': '正在后台更新天气。上次更新于 {time}。',
   'weather.cache.stale': '正在显示最近保存的天气，并尝试更新。上次更新于 {time}。',
   'weather.cache.offlineStale': '由于最新更新失败，正在显示已保存的天气。上次更新于 {time}。',
+  'weather.recovery.unknownTime': '未知时间',
+  'weather.recovery.freshCache': '正在显示 {time} 保存且仍然新鲜的预报；无需重复请求。',
+  'weather.recovery.staleCache': '正在显示 {time} 保存的预报，同时尝试安全更新。',
+  'weather.recovery.retrying': '实时天气请求已失败一次。LifeBoard 正在进行唯一一次有界重试。',
+  'weather.recovery.refreshFailed': '更新失败，继续显示 {time} 的上一份已验证预报。',
+  'weather.recovery.offline': 'LifeBoard 似乎处于离线状态，正在显示 {time} 的上一份已验证预报。',
+  'weather.recovery.rateLimited': '天气服务要求暂停请求。可在 {time} 后重试。',
+  'weather.recovery.fallback': '小米天气暂时不可用，当前由 Open-Meteo 提供预报；你的小米偏好没有改变。',
+  'weather.recovery.retry': '重试实时天气',
+  'weather.recovery.retryWaiting': '等待冷却结束',
   'weather.error.saveCity': '无法在此浏览器中保存所选城市。请检查本地存储权限后重试。',
   'weather.error.clearCity': '无法从此浏览器清除所选城市。请检查本地存储权限后重试。',
   'weather.error.readCity': '无法从此浏览器读取已保存城市。请检查本地存储权限并重新加载。',

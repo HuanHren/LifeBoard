@@ -8,6 +8,7 @@ import type {
 interface Props {
   provider: WeatherProviderId
   preferredProvider?: WeatherProviderId
+  fallbackFromProvider?: WeatherProviderId | null
   availabilityReason?: WeatherProviderAvailabilityReason
   hasCaiyunToken: boolean
 }
@@ -23,7 +24,9 @@ const { t } = useI18n()
   >
     <p>
       {{
-        props.preferredProvider === 'xiaomi' && provider !== 'xiaomi'
+        props.fallbackFromProvider === 'xiaomi'
+          ? t('weather.providerNotice.xiaomiFallback')
+          : props.preferredProvider === 'xiaomi' && provider !== 'xiaomi'
           ? availabilityReason === 'unsupported-locale'
             ? t('weather.providerNotice.xiaomiUnsupportedLocale')
             : availabilityReason === 'missing-provider-location'

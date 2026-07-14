@@ -3,7 +3,8 @@ import {
   WEATHER_ENDPOINTS,
 } from '@/modules/weather/constants/weather'
 import {
-  fetchWithTimeoutAndRetry,
+  fetchWithTimeout,
+  parseRetryAfterMs,
   WeatherRequestTimeoutError,
 } from '@/modules/weather/services/weatherRequest'
 import type {
@@ -14,9 +15,20 @@ import type { WeatherLocation } from '@/modules/weather/types/weather'
 import type { AppLocale } from '@/i18n/types'
 
 export class CaiyunWeatherServiceError extends Error {
-  constructor(message: string) {
+  readonly kind: 'network' | 'timeout' | 'http' | 'contract' | 'configuration'
+  readonly status?: number
+  readonly retryAfterMs?: number
+
+  constructor(
+    message: string,
+    kind: 'network' | 'timeout' | 'http' | 'contract' | 'configuration' = 'network',
+    details: { status?: number; retryAfterMs?: number } = {},
+  ) {
     super(message)
     this.name = 'CaiyunWeatherServiceError'
+    this.kind = kind
+    this.status = details.status
+    this.retryAfterMs = details.retryAfterMs
   }
 }
 
@@ -88,7 +100,7 @@ export async function fetchCaiyunWeatherForecast(
   let response: Response
 
   try {
-    response = await fetchWithTimeoutAndRetry(WEATHER_ENDPOINTS.caiyunForecast, {
+    response = await fetchWithTimeout(WEATHER_ENDPOINTS.caiyunForecast, {
       body: JSON.stringify({
         token,
         longitude: location.longitude,
@@ -108,11 +120,12 @@ export async function fetchCaiyunWeatherForecast(
     }
 
     if (error instanceof WeatherRequestTimeoutError) {
-      throw new CaiyunWeatherServiceError(error.message)
+      throw new CaiyunWeatherServiceError(error.message, 'timeout')
     }
 
     throw new CaiyunWeatherServiceError(
       'LifeBoard could not reach the Caiyun Weather proxy. Check the deployment or switch back to Open-Meteo.',
+      'network',
     )
   }
 
@@ -121,16 +134,22 @@ export async function fetchCaiyunWeatherForecast(
   try {
     payload = await response.json()
   } catch {
-    throw new CaiyunWeatherServiceError('Caiyun Weather returned an unreadable response.')
+    throw new CaiyunWeatherServiceError('Caiyun Weather returned an unreadable response.', 'contract', {
+      status: response.status,
+    })
   }
 
   if (!response.ok) {
-    throw new CaiyunWeatherServiceError(errorForProxyResponse(response, payload))
+    throw new CaiyunWeatherServiceError(errorForProxyResponse(response, payload), 'http', {
+      status: response.status,
+      retryAfterMs: parseRetryAfterMs(response.headers.get('retry-after')),
+    })
   }
 
   if (isCaiyunFailureResponse(payload)) {
     throw new CaiyunWeatherServiceError(
       'Caiyun Weather rejected the request. Check the saved token or switch back to Open-Meteo.',
+      'contract',
     )
   }
 

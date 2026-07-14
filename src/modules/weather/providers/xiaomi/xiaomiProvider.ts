@@ -34,17 +34,22 @@ export class XiaomiProviderError extends Error {
   readonly kind: 'input' | 'network' | 'http' | 'proxy' | 'contract' | 'unreadable' | 'aborted'
   readonly code: XiaomiProxyErrorCode
   readonly status?: number
+  readonly upstreamStatus?: number
+  readonly retryAfterMs?: number
 
   constructor(
     kind: 'input' | 'network' | 'http' | 'proxy' | 'contract' | 'unreadable' | 'aborted',
     code: XiaomiProxyErrorCode,
     status?: number,
+    details: { upstreamStatus?: number; retryAfterMs?: number } = {},
   ) {
     super(`Xiaomi provider request failed (${code}).`)
     this.name = 'XiaomiProviderError'
     this.kind = kind
     this.code = code
     this.status = status
+    this.upstreamStatus = details.upstreamStatus
+    this.retryAfterMs = details.retryAfterMs
   }
 }
 
@@ -87,7 +92,12 @@ async function fetchPayload(url: string, options: XiaomiProviderOptions) {
 
   const failure = parseXiaomiProxyFailure(payload)
   if (failure) {
-    throw new XiaomiProviderError('proxy', failure.error.code, response.status)
+    throw new XiaomiProviderError('proxy', failure.error.code, response.status, {
+      upstreamStatus: failure.error.upstreamStatus,
+      retryAfterMs: failure.error.retryAfterSeconds === undefined
+        ? undefined
+        : failure.error.retryAfterSeconds * 1_000,
+    })
   }
   if (!response.ok) {
     throw new XiaomiProviderError('http', 'httpError', response.status)

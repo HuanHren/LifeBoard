@@ -1,8 +1,10 @@
 export const WEATHER_STORAGE_KEY = 'lifeboard-weather-location'
 export const WEATHER_FORECAST_CACHE_STORAGE_KEY = 'lifeboard.weather.forecastCache.v1'
 export const WEATHER_FORECAST_CACHE_VERSION = 1
-export const WEATHER_FORECAST_FRESH_MS = 10 * 60 * 1000
-export const WEATHER_FORECAST_STALE_MS = 60 * 60 * 1000
+export const WEATHER_FORECAST_CACHE_ENTRY_VERSION = 1
+export const WEATHER_FORECAST_CACHE_MAX_ENTRIES = 4
+export const WEATHER_FORECAST_FRESH_MS = 15 * 60 * 1000
+export const WEATHER_FORECAST_STALE_MS = 2 * 60 * 60 * 1000
 export const WEATHER_FAVORITES_STORAGE_KEY = 'lifeboard-weather-favorite-cities'
 export const WEATHER_FAVORITES_STORAGE_VERSION = 1
 export const WEATHER_PROVIDER_STORAGE_KEY = 'lifeboard.weather.provider'

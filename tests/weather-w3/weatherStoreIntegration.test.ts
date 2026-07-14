@@ -140,22 +140,34 @@ describe('Weather W3 Store integration', () => {
     }))
   })
 
-  it('surfaces a Xiaomi failure without automatic Open-Meteo network fallback', async () => {
+  it('preserves the Xiaomi preference while W5 transparently serves Open-Meteo after a recoverable timeout', async () => {
     configureProvider('xiaomi')
     const store = useWeatherStore()
     store.initializeProviderPreferences()
     store.setLocale('zh-CN')
     store.synchronizeLocation(xiaomiWeatherLocation)
-    runtime.fetchSnapshot.mockRejectedValueOnce(new WeatherProviderRuntimeError(
-      'xiaomi', 'forecast', 'proxy', 'xiaomiTimeout', 'Timed out.',
-    ))
+    runtime.fetchSnapshot
+      .mockRejectedValueOnce(new WeatherProviderRuntimeError(
+        'xiaomi', 'forecast', 'proxy', 'xiaomiTimeout', 'Timed out.',
+      ))
+      .mockRejectedValueOnce(new WeatherProviderRuntimeError(
+        'xiaomi', 'forecast', 'proxy', 'xiaomiTimeout', 'Timed out.',
+      ))
+      .mockResolvedValueOnce(snapshotFor('openMeteo'))
 
-    await expect(store.loadForecast()).resolves.toBe(false)
-    expect(runtime.fetchSnapshot).toHaveBeenCalledTimes(1)
+    await expect(store.loadForecast()).resolves.toBe(true)
+    expect(runtime.fetchSnapshot).toHaveBeenCalledTimes(3)
     expect(runtime.fetchSnapshot).toHaveBeenCalledWith(expect.objectContaining({ provider: 'xiaomi' }))
-    expect(store.providerError).toMatchObject({ provider: 'xiaomi', code: 'xiaomiTimeout' })
-    expect(store.weather).toBeNull()
-    expect(store.forecastStatus).toBe('error')
+    expect(runtime.fetchSnapshot).toHaveBeenLastCalledWith(expect.objectContaining({ provider: 'openMeteo' }))
+    expect(store.preferredProvider).toBe('xiaomi')
+    expect(store.servingProvider).toBe('openMeteo')
+    expect(store.fallbackFromProvider).toBe('xiaomi')
+    expect(store.refreshError).toMatchObject({ provider: 'xiaomi', code: 'xiaomiTimeout' })
+    expect(store.weather?.provider).toBe('openMeteo')
+    expect(store.forecastStatus).toBe('success')
+
+    await expect(store.loadForecast()).resolves.toBe(true)
+    expect(runtime.fetchSnapshot).toHaveBeenCalledTimes(3)
   })
 
   it('prevents an older Xiaomi response from replacing a newer Open-Meteo response', async () => {

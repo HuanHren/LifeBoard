@@ -9,8 +9,15 @@ import {
   searchXiaomiLocations,
   XiaomiProviderError,
 } from '@/modules/weather/providers/xiaomi/xiaomiProvider'
-import { fetchCaiyunWeatherForecast } from '@/modules/weather/services/caiyunWeatherService'
-import { fetchOpenMeteoForecast } from '@/modules/weather/services/openMeteoService'
+import { XiaomiNormalizationError } from '@/modules/weather/providers/xiaomi/xiaomiNormalizer'
+import {
+  CaiyunWeatherServiceError,
+  fetchCaiyunWeatherForecast,
+} from '@/modules/weather/services/caiyunWeatherService'
+import {
+  fetchOpenMeteoForecast,
+  WeatherServiceError,
+} from '@/modules/weather/services/openMeteoService'
 import { readCaiyunTokenForRequest } from '@/modules/weather/services/weatherProviderStorage'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import { normalizeCaiyunWeatherForecast } from '@/modules/weather/utils/caiyunWeatherNormalizer'
@@ -25,9 +32,13 @@ export type WeatherProviderRuntimeErrorCategory =
   | 'eligibility'
   | 'location-resolution'
   | 'network'
+  | 'timeout'
   | 'http'
+  | 'http-recoverable'
+  | 'rate-limited'
   | 'proxy'
   | 'contract'
+  | 'secret-boundary'
   | 'aborted'
   | 'normalization'
   | 'configuration'
@@ -37,6 +48,8 @@ export class WeatherProviderRuntimeError extends Error {
   readonly operation: 'search' | 'forecast'
   readonly category: WeatherProviderRuntimeErrorCategory
   readonly code: string
+  readonly status?: number
+  readonly retryAfterMs?: number
   override readonly cause?: unknown
 
   constructor(
@@ -46,6 +59,7 @@ export class WeatherProviderRuntimeError extends Error {
     code: string,
     message: string,
     cause?: unknown,
+    details: { status?: number; retryAfterMs?: number } = {},
   ) {
     super(message)
     this.name = 'WeatherProviderRuntimeError'
@@ -54,6 +68,8 @@ export class WeatherProviderRuntimeError extends Error {
     this.category = category
     this.code = code
     this.cause = cause
+    this.status = details.status
+    this.retryAfterMs = details.retryAfterMs
   }
 }
 
@@ -137,16 +153,30 @@ function wrapRuntimeError(
     )
   }
 
+  if (error instanceof XiaomiNormalizationError) {
+    throw new WeatherProviderRuntimeError(
+      provider,
+      operation,
+      error.code === 'secret-detected' ? 'secret-boundary' : 'normalization',
+      error.code,
+      'The Xiaomi weather response could not be safely normalized.',
+      error,
+    )
+  }
+
   if (error instanceof XiaomiProviderError) {
-    const category = error.kind === 'proxy'
-      ? 'proxy'
-      : error.kind === 'http'
-        ? 'http'
-        : error.kind === 'network'
-          ? 'network'
-          : error.kind === 'input'
-            ? 'input'
-            : 'contract'
+    const upstreamStatus = error.upstreamStatus ?? error.status
+    const category: WeatherProviderRuntimeErrorCategory = error.code === 'xiaomiResponseSecretLeak'
+      ? 'secret-boundary'
+      : error.kind === 'proxy'
+        ? 'proxy'
+              : error.kind === 'http'
+                ? 'http'
+                : error.kind === 'network'
+                  ? 'network'
+                  : error.kind === 'input'
+                    ? 'input'
+                    : 'contract'
 
     throw new WeatherProviderRuntimeError(
       provider,
@@ -155,6 +185,35 @@ function wrapRuntimeError(
       error.code,
       error.message,
       error,
+      { status: upstreamStatus, retryAfterMs: error.retryAfterMs },
+    )
+  }
+
+
+  if (error instanceof WeatherServiceError || error instanceof CaiyunWeatherServiceError) {
+    const category: WeatherProviderRuntimeErrorCategory = error.kind === 'timeout'
+      ? 'timeout'
+      : error.kind === 'contract'
+        ? 'contract'
+        : error.kind === 'configuration'
+          ? 'configuration'
+          : error.status === 429
+            ? 'rate-limited'
+            : error.kind === 'http' && error.status !== undefined && (
+                error.status === 408 || error.status === 425 || error.status >= 500
+              )
+              ? 'http-recoverable'
+              : error.kind === 'http'
+                ? 'http'
+                : 'network'
+    throw new WeatherProviderRuntimeError(
+      provider,
+      operation,
+      category,
+      category === 'rate-limited' ? 'weatherRateLimited' : `weather${category}`,
+      error.message,
+      error,
+      { status: error.status, retryAfterMs: error.retryAfterMs },
     )
   }
 
@@ -177,7 +236,14 @@ export function createWeatherProviderRuntime(
   > = {
     openMeteo: async ({ location, signal }) => {
       const response = await dependencies.fetchOpenMeteo(location, signal)
-      return adaptLegacyWeatherSnapshot(dependencies.normalizeOpenMeteo(response, location))
+      try {
+        return adaptLegacyWeatherSnapshot(dependencies.normalizeOpenMeteo(response, location))
+      } catch (error) {
+        throw new WeatherProviderRuntimeError(
+          'openMeteo', 'forecast', 'normalization', 'openMeteoNormalizationFailed',
+          'Open-Meteo returned a forecast that LifeBoard could not normalize.', error,
+        )
+      }
     },
     caiyun: async ({ location, signal }) => {
       const token = dependencies.readCaiyunToken()
@@ -191,7 +257,14 @@ export function createWeatherProviderRuntime(
         )
       }
       const response = await dependencies.fetchCaiyun(location, token.data, signal)
-      return adaptLegacyWeatherSnapshot(dependencies.normalizeCaiyun(response, location))
+      try {
+        return adaptLegacyWeatherSnapshot(dependencies.normalizeCaiyun(response, location))
+      } catch (error) {
+        throw new WeatherProviderRuntimeError(
+          'caiyun', 'forecast', 'normalization', 'caiyunNormalizationFailed',
+          'Caiyun returned a forecast that LifeBoard could not normalize.', error,
+        )
+      }
     },
     xiaomi: async ({ location, locale, signal }) => dependencies.fetchXiaomi(
       {

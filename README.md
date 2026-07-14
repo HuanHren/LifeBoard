@@ -211,8 +211,10 @@ Weather W3 can expose Xiaomi in the existing Settings weather-source control onl
 non-secret `VITE_XIAOMI_WEATHER_ENABLED=true` feature flag is present. The flag defaults to
 disabled, Xiaomi remains unavailable in Production, and the verified client contract is limited
 to `zh-CN` and `days=15`. See `docs/weather-w1-xiaomi-proxy-contract.md` for the proxy safety
-boundary and `docs/weather-w3-dual-source-integration.md` for runtime eligibility and the
-no-automatic-fallback policy.
+boundary, `docs/weather-w3-dual-source-integration.md` for runtime eligibility, and
+`docs/weather-w5-resilience-finalization.md` for the bounded cache, retry, cooldown, and
+transparent Xiaomi-to-Open-Meteo recovery policy. Production Xiaomi remains disabled until a
+separate, explicit release task completes the production checklist.
 
 A custom domain can be connected from Vercel Project Settings > Domains after the project is imported.
 

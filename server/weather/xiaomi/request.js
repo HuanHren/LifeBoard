@@ -17,11 +17,25 @@ export class XiaomiUnavailableError extends Error {
 }
 
 export class XiaomiRejectedError extends Error {
-  constructor(status) {
+  constructor(status, retryAfterSeconds) {
     super('Xiaomi Weather upstream rejected the request.')
     this.name = 'XiaomiRejectedError'
     this.status = status
+    this.retryAfterSeconds = retryAfterSeconds
   }
+}
+
+function parseRetryAfterSeconds(value, now = Date.now()) {
+  if (typeof value !== 'string') return undefined
+  const trimmed = value.trim()
+  if (/^\d+$/.test(trimmed)) {
+    const seconds = Number(trimmed)
+    return Number.isFinite(seconds) && seconds <= 3_600 ? seconds : undefined
+  }
+  const date = Date.parse(trimmed)
+  if (!Number.isFinite(date)) return undefined
+  const seconds = Math.max(0, Math.ceil((date - now) / 1_000))
+  return seconds <= 3_600 ? seconds : undefined
 }
 
 export class XiaomiUnreadableError extends Error {
@@ -108,7 +122,10 @@ export async function requestXiaomiJson(
     }
 
     if (!upstreamResponse.ok) {
-      throw new XiaomiRejectedError(upstreamResponse.status)
+      throw new XiaomiRejectedError(
+        upstreamResponse.status,
+        parseRetryAfterSeconds(upstreamResponse.headers.get('retry-after')),
+      )
     }
 
     try {
@@ -127,3 +144,5 @@ export async function requestXiaomiJson(
     clearTimeout(timeoutId)
   }
 }
+
+export const xiaomiRequestTestInternals = { parseRetryAfterSeconds }

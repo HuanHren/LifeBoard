@@ -5,6 +5,21 @@ export class WeatherRequestTimeoutError extends Error {
   }
 }
 
+export function parseRetryAfterMs(value: string | null, now = Date.now()) {
+  if (!value) return undefined
+  const trimmed = value.trim()
+  if (/^\d+$/.test(trimmed)) {
+    const milliseconds = Number(trimmed) * 1_000
+    return Number.isFinite(milliseconds) && milliseconds <= 3_600_000
+      ? milliseconds
+      : undefined
+  }
+  const retryAt = Date.parse(trimmed)
+  if (!Number.isFinite(retryAt)) return undefined
+  const milliseconds = Math.max(0, retryAt - now)
+  return milliseconds <= 3_600_000 ? milliseconds : undefined
+}
+
 function isAbortError(error: unknown) {
   return error instanceof DOMException && error.name === 'AbortError'
 }

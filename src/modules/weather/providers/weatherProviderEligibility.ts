@@ -64,5 +64,5 @@ export function getEffectiveWeatherProvider(
 }
 
 export function isWeatherProviderCacheEnabled(provider: WeatherProviderId) {
-  return provider !== 'xiaomi'
+  return provider === 'openMeteo' || provider === 'caiyun' || provider === 'xiaomi'
 }

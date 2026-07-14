@@ -311,7 +311,7 @@ async function interactionFlow(browser, baseUrl, raw) {
   await page.waitForFunction(() => localStorage.getItem('lifeboard.language') === 'zh-CN')
   await page.goto(`${baseUrl}/weather`, { waitUntil: 'domcontentloaded' })
   await page.getByRole('heading', { name: '小米天气补充信息' }).waitFor()
-  if (state.counters.all < initialAll + 2) throw new Error('Provider/locale switching did not restore Xiaomi data.')
+  if (state.counters.all !== initialAll) throw new Error('Provider/locale switching bypassed the fresh Xiaomi cache.')
 
   await page.goto(`${baseUrl}/app`, { waitUntil: 'domcontentloaded' })
   if (await page.getByRole('heading', { name: '小米天气补充信息' }).count()) throw new Error('Home rendered W4 extensions.')

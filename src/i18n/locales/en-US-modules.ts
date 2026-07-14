@@ -50,6 +50,11 @@ export const enUSModules = {
   'home.weather.umbrella': 'Umbrella',
   'home.weather.stale': 'Using cached weather',
   'home.weather.refreshing': 'Refreshing cache',
+  'home.weather.freshCache': 'Saved weather, still fresh',
+  'home.weather.fallback': 'Open-Meteo is temporarily serving this Xiaomi selection',
+  'home.weather.offline': 'Offline · using saved weather',
+  'home.weather.rateLimited': 'Provider cooling down · using saved weather',
+  'home.weather.updateFailed': 'Update failed · using the last valid weather',
   'home.weather.high': 'High',
   'home.weather.low': 'Low',
   'home.weather.loadTitle': 'Load weather for {city}',
@@ -197,6 +202,8 @@ export const enUSModules = {
     'Forecasts are powered by Caiyun Weather for the selected city. City search still uses Open-Meteo.',
   'weather.providerNotice.xiaomiActive':
     'Forecasts are powered by the protected LifeBoard Xiaomi Weather proxy for the selected city.',
+  'weather.providerNotice.xiaomiFallback':
+    'Xiaomi Weather is temporarily unavailable. Open-Meteo data is being shown without changing your preferred provider.',
   'weather.providerNotice.xiaomiUnsupportedLocale':
     'Xiaomi Weather is preferred, but English upstream support is not verified. Open-Meteo is the effective provider and Xiaomi is not requested.',
   'weather.providerNotice.xiaomiLocationRequired':
@@ -580,6 +587,16 @@ export const enUSModules = {
   'weather.cache.refreshing': 'Refreshing weather in the background. Last updated {time}.',
   'weather.cache.stale': 'Showing recently saved weather while LifeBoard refreshes it. Last updated {time}.',
   'weather.cache.offlineStale': 'Showing saved weather because the latest update failed. Last updated {time}.',
+  'weather.recovery.unknownTime': 'an unknown time',
+  'weather.recovery.freshCache': 'Showing a fresh saved forecast from {time}; no duplicate request was needed.',
+  'weather.recovery.staleCache': 'Showing a saved forecast from {time} while a safe refresh is attempted.',
+  'weather.recovery.retrying': 'The live weather request failed once. LifeBoard is making one bounded retry.',
+  'weather.recovery.refreshFailed': 'The refresh failed, so the last validated forecast from {time} remains visible.',
+  'weather.recovery.offline': 'LifeBoard appears offline. Showing the last validated forecast from {time}.',
+  'weather.recovery.rateLimited': 'The weather provider asked LifeBoard to pause requests. Retry is available after {time}.',
+  'weather.recovery.fallback': 'Xiaomi Weather is temporarily unavailable. Open-Meteo is serving this forecast; your Xiaomi preference is unchanged.',
+  'weather.recovery.retry': 'Retry live weather',
+  'weather.recovery.retryWaiting': 'Retry after cooldown',
   'weather.error.saveCity':
     'The selected city could not be saved in this browser. Check local storage access and try again.',
   'weather.error.clearCity':

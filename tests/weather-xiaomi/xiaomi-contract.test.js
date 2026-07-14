@@ -83,7 +83,7 @@ describe('Xiaomi all-weather response contract', () => {
     }
     const sanitized = sanitizeXiaomiPayload(input, ['real-secret', 'real-version-secret'])
 
-    expect(sanitized.sourceMaps.clientInfo).toEqual({ locale: 'zh_cn' })
+    expect(sanitized.sourceMaps).not.toHaveProperty('clientInfo')
     expect(input.sourceMaps.clientInfo.appKey).toBe('real-secret')
     expect(input.sourceMaps.clientInfo.appVersion).toBe('real-version-secret')
   })

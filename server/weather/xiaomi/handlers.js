@@ -75,7 +75,12 @@ function handleKnownError(response, error) {
   }
 
   if (error instanceof XiaomiRejectedError) {
-    sendError(response, 502, 'xiaomiRejected', { upstreamStatus: error.status })
+    sendError(response, 502, 'xiaomiRejected', {
+      upstreamStatus: error.status,
+      ...(error.retryAfterSeconds !== undefined
+        ? { retryAfterSeconds: error.retryAfterSeconds }
+        : {}),
+    })
     return true
   }
 

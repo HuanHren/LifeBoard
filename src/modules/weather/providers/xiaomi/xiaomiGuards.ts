@@ -68,11 +68,20 @@ export function parseXiaomiProxyFailure(value: unknown): XiaomiProxyFailure | nu
     return null
   }
 
+  const retryAfterSeconds = value.error.retryAfterSeconds
+  if (
+    retryAfterSeconds !== undefined &&
+    (typeof retryAfterSeconds !== 'number' || !Number.isFinite(retryAfterSeconds) || retryAfterSeconds < 0 || retryAfterSeconds > 3_600)
+  ) {
+    return null
+  }
+
   return {
     ok: false,
     error: {
       code: value.error.code,
       ...(typeof upstreamStatus === 'number' ? { upstreamStatus } : {}),
+      ...(typeof retryAfterSeconds === 'number' ? { retryAfterSeconds } : {}),
     },
   }
 }

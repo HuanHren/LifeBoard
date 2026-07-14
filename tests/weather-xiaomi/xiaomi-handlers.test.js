@@ -160,8 +160,7 @@ describe('GET /api/weather/xiaomi/all', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body.ok).toBe(true)
     expect(response.body.operation).toBe('all')
-    expect(response.body.data.sourceMaps.clientInfo).not.toHaveProperty('appKey')
-    expect(response.body.data.sourceMaps.clientInfo).not.toHaveProperty('appVersion')
+    expect(response.body.data.sourceMaps).not.toHaveProperty('clientInfo')
     expect(response.body.meta.capabilities).toMatchObject({
       current: 'available',
       hourly: 'available',

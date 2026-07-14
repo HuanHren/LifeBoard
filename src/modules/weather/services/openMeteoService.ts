@@ -9,7 +9,8 @@ import {
   WEATHER_ENDPOINTS,
 } from '@/modules/weather/constants/weather'
 import {
-  fetchWithTimeoutAndRetry,
+  fetchWithTimeout,
+  parseRetryAfterMs,
   WeatherRequestTimeoutError,
 } from '@/modules/weather/services/weatherRequest'
 import type {
@@ -20,9 +21,20 @@ import type {
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 
 export class WeatherServiceError extends Error {
-  constructor(message: string) {
+  readonly kind: 'network' | 'timeout' | 'http' | 'contract'
+  readonly status?: number
+  readonly retryAfterMs?: number
+
+  constructor(
+    message: string,
+    kind: 'network' | 'timeout' | 'http' | 'contract' = 'network',
+    details: { status?: number; retryAfterMs?: number } = {},
+  ) {
     super(message)
     this.name = 'WeatherServiceError'
+    this.kind = kind
+    this.status = details.status
+    this.retryAfterMs = details.retryAfterMs
   }
 }
 
@@ -41,7 +53,7 @@ async function fetchJson<T>(url: URL, signal?: AbortSignal): Promise<T> {
   let response: Response
 
   try {
-    response = await fetchWithTimeoutAndRetry(url, {
+    response = await fetchWithTimeout(url, {
       headers: {
         Accept: 'application/json',
       },
@@ -53,11 +65,12 @@ async function fetchJson<T>(url: URL, signal?: AbortSignal): Promise<T> {
     }
 
     if (error instanceof WeatherRequestTimeoutError) {
-      throw new WeatherServiceError(error.message)
+      throw new WeatherServiceError(error.message, 'timeout')
     }
 
     throw new WeatherServiceError(
       'Unable to reach Open-Meteo. The browser received no response; check your connection or network policy.',
+      'network',
     )
   }
 
@@ -66,15 +79,22 @@ async function fetchJson<T>(url: URL, signal?: AbortSignal): Promise<T> {
   try {
     payload = await response.json()
   } catch {
-    throw new WeatherServiceError('The weather service returned an unreadable response.')
-  }
-
-  if (isOpenMeteoError(payload)) {
-    throw new WeatherServiceError(payload.reason)
+    throw new WeatherServiceError('The weather service returned an unreadable response.', 'contract', {
+      status: response.status,
+    })
   }
 
   if (!response.ok) {
-    throw new WeatherServiceError(`The weather service returned status ${response.status}.`)
+    throw new WeatherServiceError(`The weather service returned status ${response.status}.`, 'http', {
+      status: response.status,
+      retryAfterMs: parseRetryAfterMs(response.headers.get('retry-after')),
+    })
+  }
+
+  if (isOpenMeteoError(payload)) {
+    throw new WeatherServiceError('Open-Meteo rejected the weather request.', 'contract', {
+      status: response.status,
+    })
   }
 
   return payload as T

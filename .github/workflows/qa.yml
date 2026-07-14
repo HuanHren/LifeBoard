@@ -51,6 +51,9 @@ jobs:
       - name: Run Xiaomi extended Weather UI tests
         run: npm run test:weather-w4:ci
 
+      - name: Run Weather resilience tests
+        run: npm run test:weather-w5:ci
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 

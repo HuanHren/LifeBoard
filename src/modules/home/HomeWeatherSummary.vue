@@ -29,6 +29,10 @@ const {
   forecastStatus,
   forecastError,
   forecastCacheState,
+  dataFreshness,
+  recoveryState,
+  servingProvider,
+  fallbackFromProvider,
   autoLocationOnHome,
   isInitialized,
 } = storeToRefs(weatherStore)
@@ -40,9 +44,18 @@ const currentLocationStatus = shallowRef<'idle' | 'loading'>('idle')
 const currentLocationMessage = shallowRef<string | null>(null)
 const hasAttemptedAutoLocation = shallowRef(false)
 
-const isPreparing = computed(() => !isInitialized.value || forecastStatus.value === 'loading')
+const isPreparing = computed(() => !isInitialized.value || (
+  forecastStatus.value === 'loading' && !weather.value
+))
 const todayForecast = computed(() => weather.value?.daily[0] ?? null)
 const weatherStatusLabel = computed(() => {
+  if (recoveryState.value === 'fallback' && fallbackFromProvider.value === 'xiaomi' && servingProvider.value === 'openMeteo') {
+    return t('home.weather.fallback')
+  }
+  if (recoveryState.value === 'offline') return t('home.weather.offline')
+  if (recoveryState.value === 'rate-limited') return t('home.weather.rateLimited')
+  if (recoveryState.value === 'failed' && weather.value) return t('home.weather.updateFailed')
+  if (dataFreshness.value === 'fresh-cache') return t('home.weather.freshCache')
   if (forecastCacheState.value === 'stale' || forecastCacheState.value === 'offline-stale') {
     return t('home.weather.stale')
   }
@@ -168,7 +181,7 @@ onMounted(() => {
     <BaseSkeleton v-if="isPreparing" :label="t('home.weather.loading')" />
 
     <BaseError
-      v-else-if="forecastStatus === 'error' && selectedLocation"
+      v-else-if="forecastStatus === 'error' && selectedLocation && !weather"
       :action-label="t('home.weather.retry')"
       :message="localizeWeatherError(forecastError, t) ?? t('home.weather.errorFallback')"
       :title="t('home.weather.errorTitle')"

@@ -17,14 +17,12 @@ import WeatherDetailsGrid from '@/modules/weather/components/WeatherDetailsGrid.
 import WeatherHero from '@/modules/weather/components/WeatherHero.vue'
 import WeatherLoadingState from '@/modules/weather/components/WeatherLoadingState.vue'
 import WeatherProviderNotice from '@/modules/weather/components/WeatherProviderNotice.vue'
+import WeatherRecoveryNotice from '@/modules/weather/components/WeatherRecoveryNotice.vue'
 import XiaomiExtendedWeatherRegion from '@/modules/weather/components/XiaomiExtendedWeatherRegion.vue'
 import { COMPACT_DAILY_FORECAST_LENGTH } from '@/modules/weather/constants/weather'
 import { buildXiaomiExtendedWeatherViewModel } from '@/modules/weather/extended/xiaomiExtendedWeatherAdapters'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
-import {
-  formatFullLocalTime,
-  formatLocationName,
-} from '@/modules/weather/utils/weatherFormatting'
+import { formatLocationName } from '@/modules/weather/utils/weatherFormatting'
 import { resolveWeatherAlertStatus } from '@/modules/weather/utils/weatherAlerts'
 import { localizeWeatherError } from '@/modules/weather/utils/weatherI18n'
 
@@ -44,12 +42,17 @@ const {
   effectiveProvider,
   providerAvailability,
   hasCaiyunToken,
-  forecastCacheState,
   forecastCacheUpdatedAt,
+  dataFreshness,
+  recoveryState,
+  servingProvider,
+  fallbackFromProvider,
+  retryAvailableAt,
 } = storeToRefs(weatherStore)
 const {
   initializeWeather,
   loadForecast,
+  retryForecast,
   retryAirQuality,
   setLocale,
 } = weatherStore
@@ -62,7 +65,8 @@ const activeLocationLabel = computed(() => {
   return location ? formatLocationName(location) : t('weather.page.noCity')
 })
 const showPreviousForecastError = computed(
-  () => Boolean(weather.value) && forecastStatus.value === 'error' && Boolean(forecastError.value),
+  () => Boolean(weather.value) && forecastStatus.value === 'error' &&
+    recoveryState.value === 'idle' && Boolean(forecastError.value),
 )
 const weatherAlertStatus = computed(() => resolveWeatherAlertStatus(weather.value))
 const xiaomiExtendedWeather = computed(() => {
@@ -73,28 +77,6 @@ const xiaomiExtendedWeather = computed(() => {
     locale.value,
   ).viewModel
 })
-const cacheStatusMessage = computed(() => {
-  if (!weather.value) return null
-
-  const time = forecastCacheUpdatedAt.value
-    ? formatFullLocalTime(forecastCacheUpdatedAt.value, locale.value)
-    : ''
-
-  if (forecastCacheState.value === 'refreshing') {
-    return t('weather.cache.refreshing', { time })
-  }
-
-  if (forecastCacheState.value === 'stale') {
-    return t('weather.cache.stale', { time })
-  }
-
-  if (forecastCacheState.value === 'offline-stale') {
-    return t('weather.cache.offlineStale', { time })
-  }
-
-  return null
-})
-
 function openCityManagement() {
   void router.push({ name: 'weather-cities' })
 }
@@ -218,13 +200,13 @@ watch(locale, setLocale, { immediate: true })
       <div class="grid min-w-0 max-w-full gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <WeatherAdvicePanel :advice="weather.advice" />
         <div class="min-w-0 max-w-full space-y-3">
-          <p
-            v-if="cacheStatusMessage"
-            class="rounded-[var(--radius-md)] border border-[var(--color-border-soft)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
-            role="status"
-          >
-            {{ cacheStatusMessage }}
-          </p>
+          <WeatherRecoveryNotice
+            :cached-at="forecastCacheUpdatedAt"
+            :data-freshness="dataFreshness"
+            :recovery-state="recoveryState"
+            :retry-available-at="retryAvailableAt"
+            @retry="retryForecast"
+          />
           <p
             v-if="showPreviousForecastError"
             class="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm leading-6 text-[var(--color-text-secondary)]"
@@ -285,7 +267,7 @@ watch(locale, setLocale, { immediate: true })
       <div class="grid min-w-0 max-w-full items-start gap-4 xl:grid-cols-2">
         <ShortTermPrecipitationPanel
           v-if="weather.providerCapabilities?.shortTermPrecipitation !== false"
-          :provider="weather.provider"
+          :provider="servingProvider ?? weather.provider"
           :short-term="weather.shortTermPrecipitation"
           :units="weather.units"
         />
@@ -300,6 +282,7 @@ watch(locale, setLocale, { immediate: true })
       <div class="min-w-0 max-w-full space-y-3">
         <WeatherProviderNotice
           :availability-reason="providerAvailability.available ? undefined : providerAvailability.reason"
+          :fallback-from-provider="fallbackFromProvider"
           :has-caiyun-token="hasCaiyunToken"
           :preferred-provider="provider"
           :provider="weather.provider"
