@@ -1384,6 +1384,18 @@ export const useWeatherStore = defineStore('weather', () => {
     return selectLocation(location)
   }
 
+  async function selectUnresolvedCurrentCoordinates({
+    latitude,
+    longitude,
+    fallbackName,
+  }: {
+    latitude: number
+    longitude: number
+    fallbackName: string
+  }) {
+    return selectLocation(createCurrentLocation({ latitude, longitude, fallbackName }))
+  }
+
   function clearSearchResults() {
     searchController?.abort()
     searchRequestId += 1
@@ -1547,6 +1559,7 @@ export const useWeatherStore = defineStore('weather', () => {
     setAutoLocationOnHome,
     clearAmapMessage,
     selectCurrentCoordinates,
+    selectUnresolvedCurrentCoordinates,
     loadForecast,
     retryForecast,
     loadLongRangeForecast,

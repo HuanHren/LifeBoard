@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, shallowRef, watch } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseError from '@/components/base/BaseError.vue'
 import BaseIcon from '@/components/base/BaseIcon.vue'
@@ -10,6 +10,8 @@ import BaseSurface from '@/components/base/BaseSurface.vue'
 import SectionHeader from '@/components/base/SectionHeader.vue'
 import { useI18n } from '@/i18n/useI18n'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
+import XiaomiCurrentLocationDialog from '@/modules/weather/components/XiaomiCurrentLocationDialog.vue'
+import { useCurrentLocationWeather } from '@/modules/weather/composables/useCurrentLocationWeather'
 import {
   formatFullLocalTime,
   formatLocationName,
@@ -17,11 +19,13 @@ import {
 } from '@/modules/weather/utils/weatherFormatting'
 import {
   localizeAdviceItem,
+  localizeCurrentLocationResolutionError,
   localizeWeatherCondition,
   localizeWeatherError,
 } from '@/modules/weather/utils/weatherI18n'
 
 const { locale, t } = useI18n()
+const router = useRouter()
 const weatherStore = useWeatherStore()
 const {
   selectedLocation,
@@ -34,13 +38,13 @@ const {
   servingProvider,
   fallbackFromProvider,
   autoLocationOnHome,
+  provider,
   isInitialized,
 } = storeToRefs(weatherStore)
-const { initializeWeather, loadForecast, selectCurrentCoordinates, setLocale } = weatherStore
+const { initializeWeather, loadForecast, setLocale } = weatherStore
 
 watch(locale, setLocale, { immediate: true })
 
-const currentLocationStatus = shallowRef<'idle' | 'loading'>('idle')
 const currentLocationMessage = shallowRef<string | null>(null)
 const hasAttemptedAutoLocation = shallowRef(false)
 
@@ -79,74 +83,40 @@ function refreshWeather() {
   void loadForecast()
 }
 
-function isLocationSecureContext() {
-  return (
-    window.isSecureContext ||
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1'
-  )
+async function handleCurrentLocationSelected() {
+  currentLocationMessage.value = t('home.weather.locationLoaded')
 }
 
-function geolocationPosition() {
-  return new Promise<GeolocationPosition>((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: false,
-      maximumAge: 300000,
-      timeout: 10000,
-    })
-  })
+async function openManualCitySearch() {
+  await router.push({ name: 'weather-cities', hash: '#weather-city-search-section-title' })
 }
 
-async function useCurrentLocationWeather() {
+const currentLocation = useCurrentLocationWeather({
+  locale,
+  fallbackName: () => t('home.weather.currentLocationLabel'),
+  onSelected: handleCurrentLocationSelected,
+  onManualSearch: openManualCitySearch,
+})
+
+async function requestCurrentLocationWeather() {
   currentLocationMessage.value = null
-
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    currentLocationMessage.value = t('home.weather.locationUnsupported')
-    return
-  }
-
-  if (!isLocationSecureContext()) {
-    currentLocationMessage.value = t('home.weather.locationSecureContext')
-    return
-  }
-
-  if (typeof navigator.geolocation?.getCurrentPosition !== 'function') {
-    currentLocationMessage.value = t('home.weather.locationUnsupported')
-    return
-  }
-
-  currentLocationStatus.value = 'loading'
-
-  try {
-    const position = await geolocationPosition()
-    await selectCurrentCoordinates({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      locale: locale.value,
-      fallbackName: t('home.weather.currentLocationLabel'),
-    })
-    currentLocationMessage.value = t('home.weather.locationLoaded')
-  } catch (error) {
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'code' in error &&
-      error.code === 1
-    ) {
-      currentLocationMessage.value = t('home.weather.locationDenied')
-    } else {
-      currentLocationMessage.value = t('home.weather.locationUnavailable')
-    }
-  } finally {
-    currentLocationStatus.value = 'idle'
-  }
+  await currentLocation.requestCurrentLocation()
 }
+
+watch(currentLocation.errorCode, (code) => {
+  currentLocationMessage.value = localizeCurrentLocationResolutionError(code, t)
+})
 
 onMounted(() => {
   void initializeWeather().then(() => {
-    if (autoLocationOnHome.value && !hasAttemptedAutoLocation.value && !selectedLocation.value) {
+    if (
+      autoLocationOnHome.value
+      && provider.value !== 'xiaomi'
+      && !hasAttemptedAutoLocation.value
+      && !selectedLocation.value
+    ) {
       hasAttemptedAutoLocation.value = true
-      void useCurrentLocationWeather()
+      void requestCurrentLocationWeather()
     }
   })
 })
@@ -293,20 +263,34 @@ onMounted(() => {
           {{ t('home.weather.chooseCity') }}
         </RouterLink>
         <BaseButton
-          :aria-busy="currentLocationStatus === 'loading'"
-          :disabled="currentLocationStatus === 'loading'"
+          data-qa="home-use-current-location"
+          :aria-busy="currentLocation.status.value === 'locating'"
+          :disabled="currentLocation.status.value === 'locating'"
           size="sm"
           variant="secondary"
-          @click="useCurrentLocationWeather"
+          @click="requestCurrentLocationWeather"
         >
           {{
-            currentLocationStatus === 'loading'
+            currentLocation.status.value === 'locating'
               ? t('home.weather.currentLocationLoading')
               : t('home.weather.useCurrentLocation')
           }}
         </BaseButton>
       </div>
     </BaseSurface>
+
+    <XiaomiCurrentLocationDialog
+      :candidates="currentLocation.candidates.value"
+      :error-message="localizeCurrentLocationResolutionError(currentLocation.errorCode.value, t)"
+      :mode="currentLocation.dialogMode.value"
+      :open="currentLocation.dialogOpen.value"
+      :selected-index="currentLocation.selectedCandidateIndex.value"
+      @cancel="currentLocation.cancel"
+      @confirm="currentLocation.confirmCandidate"
+      @continue="currentLocation.continueResolution"
+      @manual="currentLocation.chooseOtherLocation"
+      @select="currentLocation.selectCandidate"
+    />
   </section>
 </template>
 

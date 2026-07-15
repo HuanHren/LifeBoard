@@ -5,6 +5,7 @@ import type {
   WeatherCondition,
   WeatherLocationKind,
 } from '@/modules/weather/types/weather'
+import type { CurrentLocationResolutionErrorCode } from '@/modules/weather/types/currentLocationResolution'
 import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 
 const knownConditionCodes = new Set([
@@ -105,6 +106,29 @@ const weatherErrorKeys: Record<string, TranslationKey> = {
     'weather.error.incompleteForecast',
   'The weather request timed out. Check your connection and try again.':
     'weather.error.timeout',
+}
+
+const currentLocationErrorKeys: Record<
+  Exclude<CurrentLocationResolutionErrorCode, 'aborted'>,
+  TranslationKey
+> = {
+  'permission-denied': 'weather.currentLocation.error.permissionDenied',
+  'position-unavailable': 'weather.currentLocation.error.positionUnavailable',
+  'geolocation-timeout': 'weather.currentLocation.error.timeout',
+  'reverse-network': 'weather.currentLocation.error.reverseNetwork',
+  'reverse-http': 'weather.currentLocation.error.reverseHttp',
+  'reverse-contract': 'weather.currentLocation.error.reverseContract',
+  'outside-xiaomi-region': 'weather.currentLocation.error.outsideRegion',
+  'xiaomi-no-candidate': 'weather.currentLocation.error.noCandidate',
+  'xiaomi-ambiguous': 'weather.currentLocation.error.ambiguous',
+}
+
+export function localizeCurrentLocationResolutionError(
+  code: CurrentLocationResolutionErrorCode | null,
+  t: Translator,
+) {
+  if (!code || code === 'aborted') return null
+  return t(currentLocationErrorKeys[code])
 }
 
 export function localizeWeatherCondition(

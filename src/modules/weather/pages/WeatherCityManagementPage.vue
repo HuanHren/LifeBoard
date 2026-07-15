@@ -17,13 +17,14 @@ import { useI18n } from '@/i18n/useI18n'
 import WeatherFavoritesBar from '@/modules/weather/components/WeatherFavoritesBar.vue'
 import WeatherSearchForm from '@/modules/weather/components/WeatherSearchForm.vue'
 import WeatherSearchResults from '@/modules/weather/components/WeatherSearchResults.vue'
+import XiaomiCurrentLocationDialog from '@/modules/weather/components/XiaomiCurrentLocationDialog.vue'
+import { useCurrentLocationWeather } from '@/modules/weather/composables/useCurrentLocationWeather'
 import { MIN_SEARCH_LENGTH } from '@/modules/weather/constants/weather'
 import { useWeatherStore } from '@/modules/weather/stores/weather'
 import type { WeatherLocation } from '@/modules/weather/types/weather'
 import type { WeatherFavoriteCity } from '@/modules/weather/types/weatherFavorites'
 import { formatLocationName } from '@/modules/weather/utils/weatherFormatting'
-
-type CurrentLocationStatus = 'idle' | 'loading'
+import { localizeCurrentLocationResolutionError } from '@/modules/weather/utils/weatherI18n'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
@@ -48,11 +49,9 @@ const {
   removeFavoriteCity,
   clearFavoriteMessage,
   clearSearchResults,
-  selectCurrentCoordinates,
   setLocale,
 } = weatherStore
 
-const currentLocationStatus = shallowRef<CurrentLocationStatus>('idle')
 const pageMessage = shallowRef<string | null>(null)
 const pageError = shallowRef<string | null>(null)
 const titleElement = shallowRef<HTMLHeadingElement | null>(null)
@@ -66,30 +65,15 @@ const selectedLocationLabel = computed(() =>
   selectedLocation.value ? formatLocationName(selectedLocation.value) : null,
 )
 const currentResolvedLocationLabel = computed(() => {
-  if (selectedLocation.value?.source !== 'amap-geolocation') {
+  if (
+    selectedLocation.value?.source !== 'amap-geolocation'
+    && !selectedLocation.value?.providerLocationIds?.xiaomi
+  ) {
     return null
   }
 
   return formatLocationName(selectedLocation.value)
 })
-
-function isLocationSecureContext() {
-  return (
-    window.isSecureContext ||
-    window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1'
-  )
-}
-
-function geolocationPosition() {
-  return new Promise<GeolocationPosition>((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: false,
-      maximumAge: 300000,
-      timeout: 10000,
-    })
-  })
-}
 
 function clearSearchDebounce() {
   if (searchDebounceTimer.value === null) {
@@ -146,57 +130,24 @@ async function returnToWeather() {
   await router.push({ name: 'weather', hash: '#weather-hero-title' })
 }
 
-async function useCurrentLocationWeather() {
-  pageMessage.value = null
-  pageError.value = null
-
-  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    pageError.value = t('weather.cities.currentLocationUnsupported')
-    return
-  }
-
-  if (!isLocationSecureContext()) {
-    pageError.value = t('weather.cities.currentLocationSecureContext')
-    return
-  }
-
-  if (typeof navigator.geolocation?.getCurrentPosition !== 'function') {
-    pageError.value = t('weather.cities.currentLocationUnsupported')
-    return
-  }
-
-  currentLocationStatus.value = 'loading'
-
-  try {
-    const position = await geolocationPosition()
-    const selected = await selectCurrentCoordinates({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      locale: locale.value,
-      fallbackName: t('home.weather.currentLocationLabel'),
-    })
-
-    if (!selected) {
-      pageError.value = t('weather.cities.selectionFailed')
-      return
-    }
-
-    await returnToWeather()
-  } catch (error) {
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'code' in error &&
-      error.code === 1
-    ) {
-      pageError.value = t('weather.cities.currentLocationDenied')
-    } else {
-      pageError.value = t('weather.cities.currentLocationUnavailable')
-    }
-  } finally {
-    currentLocationStatus.value = 'idle'
-  }
+async function focusManualSearch() {
+  await nextTick()
+  searchSection.value?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+  searchSection.value?.querySelector<HTMLInputElement>('#weather-city-search')?.focus()
 }
+
+const currentLocation = useCurrentLocationWeather({
+  locale,
+  fallbackName: () => t('home.weather.currentLocationLabel'),
+  onSelected: returnToWeather,
+  onManualSearch: focusManualSearch,
+})
+const currentLocationErrorMessage = computed(() =>
+  localizeCurrentLocationResolutionError(currentLocation.errorCode.value, t),
+)
+const visiblePageError = computed(() =>
+  pageError.value ?? (currentLocation.dialogOpen.value ? null : currentLocationErrorMessage.value),
+)
 
 async function handleSelectLocation(location: WeatherLocation) {
   pageMessage.value = null
@@ -282,11 +233,11 @@ watch(locale, setLocale, { immediate: true })
       {{ pageMessage }}
     </p>
     <p
-      v-if="pageError"
+      v-if="visiblePageError"
       class="rounded-[var(--radius-md)] border border-[var(--color-danger)] bg-[var(--color-danger-soft)] px-4 py-3 text-sm font-medium leading-6 text-[var(--color-danger)]"
       role="alert"
     >
-      {{ pageError }}
+      {{ visiblePageError }}
     </p>
 
     <section
@@ -309,14 +260,15 @@ watch(locale, setLocale, { immediate: true })
             </p>
           </div>
           <BaseButton
-            :aria-busy="currentLocationStatus === 'loading'"
-            :disabled="currentLocationStatus === 'loading'"
+            data-qa="weather-use-current-location"
+            :aria-busy="currentLocation.status.value === 'locating'"
+            :disabled="currentLocation.status.value === 'locating'"
             size="sm"
             variant="primary"
-            @click="useCurrentLocationWeather"
+            @click="currentLocation.requestCurrentLocation"
           >
             {{
-              currentLocationStatus === 'loading'
+              currentLocation.status.value === 'locating'
                 ? t('weather.cities.currentLocationLoading')
                 : t('weather.cities.useCurrentLocation')
             }}
@@ -432,6 +384,19 @@ watch(locale, setLocale, { immediate: true })
       @clear-message="clearFavoriteMessage"
       @remove="removeFavoriteCity"
       @select="handleSelectFavorite"
+    />
+
+    <XiaomiCurrentLocationDialog
+      :candidates="currentLocation.candidates.value"
+      :error-message="currentLocationErrorMessage"
+      :mode="currentLocation.dialogMode.value"
+      :open="currentLocation.dialogOpen.value"
+      :selected-index="currentLocation.selectedCandidateIndex.value"
+      @cancel="currentLocation.cancel"
+      @confirm="currentLocation.confirmCandidate"
+      @continue="currentLocation.continueResolution"
+      @manual="currentLocation.chooseOtherLocation"
+      @select="currentLocation.selectCandidate"
     />
   </PageLayout>
 </template>
