@@ -45,7 +45,7 @@ const { locale, t } = useI18n()
       <p class="mt-1 text-caption text-pretty text-[var(--color-text-secondary)]">
         {{
           t('weather.current.updated', {
-            time: formatFullLocalTime(current.time, locale),
+            time: formatFullLocalTime(current.time, locale, location.timezone),
             timezone: timezoneAbbreviation,
           })
         }}

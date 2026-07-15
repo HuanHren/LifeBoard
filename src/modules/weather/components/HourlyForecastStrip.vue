@@ -17,6 +17,12 @@ interface Props {
 
 defineProps<Props>()
 const { locale, t } = useI18n()
+
+function hasExtraMetrics(item: HourlyForecastItem) {
+  return item.precipitationProbability !== null
+    || item.precipitation !== null
+    || item.windSpeed !== null
+}
 </script>
 
 <template>
@@ -61,8 +67,11 @@ const { locale, t } = useI18n()
           <p class="mt-1 min-h-10 text-caption leading-5 text-pretty text-[var(--color-text-secondary)]">
             {{ localizeWeatherCondition(item.condition, t, true) }}
           </p>
-          <dl class="mt-4 grid gap-2 border-t border-[var(--color-border-soft)] pt-3">
-            <div>
+          <dl
+            v-if="hasExtraMetrics(item)"
+            class="mt-4 grid gap-2 border-t border-[var(--color-border-soft)] pt-3"
+          >
+            <div v-if="item.precipitationProbability !== null">
               <dt class="text-caption text-[var(--color-text-secondary)]">
                 {{ t('weather.hourly.rainChance') }}
               </dt>
@@ -70,7 +79,7 @@ const { locale, t } = useI18n()
                 {{ formatPercentage(item.precipitationProbability) }}
               </dd>
             </div>
-            <div>
+            <div v-if="item.precipitation !== null">
               <dt class="text-caption text-[var(--color-text-secondary)]">
                 {{ t('weather.hourly.amount') }}
               </dt>
@@ -78,7 +87,7 @@ const { locale, t } = useI18n()
                 {{ formatPrecipitation(item.precipitation, units.precipitation) }}
               </dd>
             </div>
-            <div>
+            <div v-if="item.windSpeed !== null">
               <dt class="text-caption text-[var(--color-text-secondary)]">
                 {{ t('weather.current.wind') }}
               </dt>

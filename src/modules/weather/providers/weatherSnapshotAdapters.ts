@@ -9,6 +9,7 @@ import type {
   WeatherLocation,
   WeatherSnapshot,
 } from '@/modules/weather/types/weather'
+import { WEATHER_CONDITION_CODES } from '@/modules/weather/constants/weatherConditionCodes'
 import { getWeatherCondition } from '@/modules/weather/utils/weatherCodes'
 
 interface LegacyCompatibilityExtension {
@@ -74,18 +75,18 @@ const legacyToCanonical: Readonly<Record<number, CanonicalWeatherCondition>> = {
   95: 'thunderstorm',
   96: 'thunderstorm',
   99: 'thunderstorm',
-  1003: 'cloudy',
-  1045: 'haze',
-  1051: 'sand-dust',
+  [WEATHER_CONDITION_CODES.cloudy]: 'cloudy',
+  [WEATHER_CONDITION_CODES.haze]: 'haze',
+  [WEATHER_CONDITION_CODES.sandDust]: 'sand-dust',
 }
 
 const canonicalToLegacy: Readonly<Record<CanonicalWeatherCondition, number>> = {
   clear: 0,
   'partly-cloudy': 2,
-  cloudy: 1003,
+  cloudy: WEATHER_CONDITION_CODES.cloudy,
   overcast: 3,
   fog: 45,
-  haze: 1045,
+  haze: WEATHER_CONDITION_CODES.haze,
   drizzle: 51,
   'light-rain': 61,
   'moderate-rain': 63,
@@ -95,7 +96,7 @@ const canonicalToLegacy: Readonly<Record<CanonicalWeatherCondition, number>> = {
   'moderate-snow': 73,
   'heavy-snow': 75,
   'sleet-freezing': 66,
-  'sand-dust': 1051,
+  'sand-dust': WEATHER_CONDITION_CODES.sandDust,
   unknown: -1,
 }
 

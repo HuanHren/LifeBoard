@@ -121,7 +121,11 @@ const lowTemperature = computed(() =>
 )
 const updatedTime = computed(() =>
   t('weather.hero.updated', {
-    time: formatFullLocalTime(props.snapshot.weather.current.time, locale.value),
+    time: formatFullLocalTime(
+      props.snapshot.weather.current.time,
+      locale.value,
+      props.snapshot.weather.timezone,
+    ),
     timezone: props.snapshot.weather.timezoneAbbreviation,
   }),
 )

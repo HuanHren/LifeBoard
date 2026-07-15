@@ -73,9 +73,13 @@ const { locale, t } = useI18n()
             </span>
           </p>
           <dl
-            class="mt-4 grid grid-cols-2 gap-3 border-t border-[var(--color-border-soft)] pt-3"
+            v-if="item.precipitationProbabilityMax !== null || item.windGustsMax !== null"
+            class="mt-4 grid gap-3 border-t border-[var(--color-border-soft)] pt-3"
+            :class="item.precipitationProbabilityMax !== null && item.windGustsMax !== null
+              ? 'grid-cols-2'
+              : 'grid-cols-1'"
           >
-            <div>
+            <div v-if="item.precipitationProbabilityMax !== null">
               <dt class="text-caption text-[var(--color-text-secondary)]">
                 {{ t('weather.hourly.rainChance') }}
               </dt>
@@ -83,7 +87,7 @@ const { locale, t } = useI18n()
                 {{ formatPercentage(item.precipitationProbabilityMax) }}
               </dd>
             </div>
-            <div>
+            <div v-if="item.windGustsMax !== null">
               <dt class="text-caption text-[var(--color-text-secondary)]">
                 {{ t('weather.daily.peakGust') }}
               </dt>

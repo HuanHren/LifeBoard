@@ -104,6 +104,7 @@ export interface NormalizedHourlyWeather {
   precipitationProbabilityPercent?: number
   precipitationMm?: number
   windSpeedKmh?: number
+  windDirectionDegrees?: number
   windGustKmh?: number
   uvIndex?: number
   isDay?: boolean

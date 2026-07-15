@@ -124,7 +124,11 @@ const primaryScaleLabel = computed(() =>
 const observedTime = computed(() =>
   props.airQuality
     ? t('weather.airQuality.observedAt', {
-        time: formatFullLocalTime(props.airQuality.observedAt, locale.value),
+        time: formatFullLocalTime(
+          props.airQuality.observedAt,
+          locale.value,
+          props.airQuality.timezone,
+        ),
         timezone: props.airQuality.timezone,
       })
     : '',

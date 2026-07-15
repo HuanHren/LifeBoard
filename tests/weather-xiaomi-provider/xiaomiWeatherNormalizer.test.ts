@@ -29,6 +29,9 @@ describe('Xiaomi weather normalization', () => {
     expect(normalizeXiaomiWeather(loadAllFixture(), xiaomiLocation).hourly).toEqual([{
       time: '2026-01-01T00:00:00.000Z',
       temperatureC: 20,
+      precipitationProbabilityPercent: 0,
+      windSpeedKmh: 0,
+      windDirectionDegrees: 0,
       condition: { id: 'clear', providerCode: '0' },
     }])
   })
@@ -44,6 +47,7 @@ describe('Xiaomi weather normalization', () => {
       temperatureMinC: -8,
       dayCondition: { id: 'clear', providerCode: '0' },
       nightCondition: { id: 'clear', providerCode: '0' },
+      precipitationProbabilityMaxPercent: 0,
       sunrise: '2026-01-01T06:00:00.000Z',
       sunset: '2026-01-01T18:00:00.000Z',
     }])

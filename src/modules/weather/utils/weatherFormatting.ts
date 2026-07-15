@@ -105,7 +105,33 @@ export function formatLocalClockTime(value: string, locale: AppLocale) {
   }).format(date)
 }
 
-export function formatFullLocalTime(value: string, locale: AppLocale) {
+function isAbsoluteTimestamp(value: string) {
+  return /(?:Z|[+-]\d{2}:\d{2})$/i.test(value)
+}
+
+function usableTimeZone(timeZone: string | undefined) {
+  return timeZone && timeZone !== 'auto' ? timeZone : undefined
+}
+
+export function formatFullLocalTime(value: string, locale: AppLocale, timeZone?: string) {
+  if (isAbsoluteTimestamp(value)) {
+    const timestamp = Date.parse(value)
+    if (!Number.isFinite(timestamp)) return value
+
+    try {
+      return new Intl.DateTimeFormat(locale, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        ...(usableTimeZone(timeZone) ? { timeZone: usableTimeZone(timeZone) } : {}),
+      }).format(new Date(timestamp))
+    } catch {
+      return value
+    }
+  }
+
   const date = parseLocalDateParts(value)
   const time = formatHour(value, locale)
 

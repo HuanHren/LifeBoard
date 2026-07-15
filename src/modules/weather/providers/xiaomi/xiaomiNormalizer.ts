@@ -88,6 +88,23 @@ function finiteNumber(value: unknown): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
+function percentage(value: unknown, allowNumericString: boolean): number | null {
+  if (!allowNumericString && typeof value !== 'number') return null
+  const parsed = finiteNumber(value)
+  return parsed !== null && parsed >= 0 && parsed <= 100 ? parsed : null
+}
+
+function windSpeedKmh(value: unknown): number | null {
+  const parsed = finiteNumber(value)
+  return parsed !== null && parsed >= 0 ? parsed : null
+}
+
+function windDirectionDegrees(value: unknown): number | null {
+  const parsed = finiteNumber(value)
+  if (parsed === null) return null
+  return ((parsed % 360) + 360) % 360
+}
+
 function coordinate(value: unknown, min: number, max: number): number | null {
   const parsed = finiteNumber(value)
   return parsed !== null && parsed >= min && parsed <= max ? parsed : null
@@ -239,6 +256,9 @@ function normalizeHourly(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormaliza
   const temperatures = isRecord(hourly.temperature) && Array.isArray(hourly.temperature.value) ? hourly.temperature.value : null
   const weather = isRecord(hourly.weather) && Array.isArray(hourly.weather.value) ? hourly.weather.value : null
   const wind = isRecord(hourly.wind) && Array.isArray(hourly.wind.value) ? hourly.wind.value : null
+  const precipitationProbability = isRecord(hourly.precipitationProbability) && Array.isArray(hourly.precipitationProbability.value)
+    ? hourly.precipitationProbability.value
+    : []
   if (!temperatures || !weather || !wind || temperatures.length !== weather.length || weather.length !== wind.length) {
     throw new XiaomiNormalizationError('invalid-hourly-contract', '$.forecastHourly')
   }
@@ -246,9 +266,6 @@ function normalizeHourly(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormaliza
     diagnostics.push({ path: '$.forecastHourly.temperature.unit', code: 'unmapped-unit' })
     return []
   }
-  diagnostics.push({ path: '$.forecastHourly.wind', code: 'unmapped-unit' })
-  diagnostics.push({ path: '$.forecastHourly.precipitationProbability', code: 'unmapped-unit' })
-
   return temperatures.flatMap((temperature, index) => {
     const temperatureC = finiteNumber(temperature)
     const windEntry = wind[index]
@@ -258,7 +275,31 @@ function normalizeHourly(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormaliza
       diagnostics.push({ path: `$.forecastHourly[${index}]`, code: 'invalid-entry' })
       return []
     }
-    return [{ time, temperatureC, condition: mapXiaomiWeatherCode(code) }]
+    const probabilityValue = precipitationProbability[index]
+    const probability = probabilityValue === undefined ? null : percentage(probabilityValue, false)
+    if (probabilityValue !== undefined && probability === null) {
+      diagnostics.push({ path: `$.forecastHourly.precipitationProbability.value[${index}]`, code: 'invalid-optional-field' })
+    }
+
+    const speedValue = isRecord(windEntry) ? windEntry.speed : undefined
+    const directionValue = isRecord(windEntry) ? windEntry.direction : undefined
+    const speed = speedValue === undefined ? null : windSpeedKmh(speedValue)
+    const direction = directionValue === undefined ? null : windDirectionDegrees(directionValue)
+    if (speedValue !== undefined && speed === null) {
+      diagnostics.push({ path: `$.forecastHourly.wind.value[${index}].speed`, code: 'invalid-optional-field' })
+    }
+    if (directionValue !== undefined && direction === null) {
+      diagnostics.push({ path: `$.forecastHourly.wind.value[${index}].direction`, code: 'invalid-optional-field' })
+    }
+
+    return [{
+      time,
+      temperatureC,
+      condition: mapXiaomiWeatherCode(code),
+      ...(probability !== null ? { precipitationProbabilityPercent: probability } : {}),
+      ...(speed !== null ? { windSpeedKmh: speed } : {}),
+      ...(direction !== null ? { windDirectionDegrees: direction } : {}),
+    }]
   })
 }
 
@@ -276,6 +317,9 @@ function normalizeDaily(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormalizat
   const temperatures = isRecord(daily.temperature) && Array.isArray(daily.temperature.value) ? daily.temperature.value : null
   const weather = isRecord(daily.weather) && Array.isArray(daily.weather.value) ? daily.weather.value : null
   const sunRiseSet = isRecord(daily.sunRiseSet) && Array.isArray(daily.sunRiseSet.value) ? daily.sunRiseSet.value : []
+  const precipitationProbability = isRecord(daily.precipitationProbability) && Array.isArray(daily.precipitationProbability.value)
+    ? daily.precipitationProbability.value
+    : []
   const firstDate = dateOnlyFromTimestamp(daily.pubTime)
   if (!temperatures || !weather || temperatures.length !== weather.length) {
     diagnostics.push({ path: '$.forecastDaily', code: 'capability-invalid' })
@@ -295,6 +339,11 @@ function normalizeDaily(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormalizat
     const sunrise = isoTimestamp(astronomy?.from)
     const sunset = isoTimestamp(astronomy?.to)
     const date = addDaysToDateOnly(firstDate ?? '', index)
+    const probabilityValue = precipitationProbability[index]
+    const probability = probabilityValue === undefined ? null : percentage(probabilityValue, true)
+    if (probabilityValue !== undefined && probability === null) {
+      diagnostics.push({ path: `$.forecastDaily.precipitationProbability.value[${index}]`, code: 'invalid-optional-field' })
+    }
     if (
       temperatureMaxC === null ||
       temperatureMinC === null ||
@@ -312,6 +361,7 @@ function normalizeDaily(raw: XiaomiWeatherAllRaw, diagnostics: WeatherNormalizat
       temperatureMinC,
       dayCondition: mapXiaomiWeatherCode(weatherValue.from),
       nightCondition: mapXiaomiWeatherCode(weatherValue.to),
+      ...(probability !== null ? { precipitationProbabilityMaxPercent: probability } : {}),
       ...(sunrise ? { sunrise } : {}),
       ...(sunset ? { sunset } : {}),
     }]
