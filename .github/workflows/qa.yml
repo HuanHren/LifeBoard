@@ -54,6 +54,9 @@ jobs:
       - name: Run Weather resilience tests
         run: npm run test:weather-w5:ci
 
+      - name: Run Weather display contract hotfix tests
+        run: npm run test:weather-display-hotfix:ci
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
